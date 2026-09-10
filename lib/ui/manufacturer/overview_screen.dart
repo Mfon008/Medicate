@@ -607,19 +607,28 @@ class OverviewScreen extends StatelessWidget {
                                         horizontal: 12.0.w,
                                       ),
                                       decoration: BoxDecoration(
-                                        color: AppColors.fadedyellow,
+                                        color: model.getOrderStatusColorBorder(
+                                          ord.status!,
+                                        ),
                                         borderRadius: BorderRadius.circular(
                                           12.r,
+                                        ),
+                                        border: Border.all(
+                                          color: model.getOrderStatusColor(
+                                            ord.status!,
+                                          ),
                                         ),
                                       ),
                                       child: Center(
                                         child: TextView(
-                                          text: 'Pending',
+                                          text: '${ord.statusLabel}',
                                           textStyle: TextStyle(
                                             fontFamily: 'DMSans',
                                             fontSize: 12.2.sp,
                                             fontWeight: FontWeight.w500,
-                                            color: AppColors.yellow,
+                                            color: model.getOrderStatusColor(
+                                              ord.status!,
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -769,19 +778,31 @@ class OverviewScreen extends StatelessWidget {
                                             horizontal: 12.0.w,
                                           ),
                                           decoration: BoxDecoration(
-                                            color: AppColors.fadedyellow,
+                                            color: model
+                                                .getOrderPaymentStatusColorBorder(
+                                                  ord.paymentStatus!,
+                                                ),
                                             borderRadius: BorderRadius.circular(
                                               12.r,
+                                            ),
+                                            border: Border.all(
+                                              color: model
+                                                  .getOrderPaymentStatusColor(
+                                                    ord.paymentStatus!,
+                                                  ),
                                             ),
                                           ),
                                           child: Center(
                                             child: TextView(
-                                              text: 'Pending',
+                                              text: '${ord.paymentStatusLabel}',
                                               textStyle: TextStyle(
                                                 fontFamily: 'DMSans',
                                                 fontSize: 12.2.sp,
                                                 fontWeight: FontWeight.w500,
-                                                color: AppColors.yellow,
+                                                color: model
+                                                    .getOrderPaymentStatusColor(
+                                                      ord.paymentStatus!,
+                                                    ),
                                               ),
                                             ),
                                           ),
@@ -789,49 +810,51 @@ class OverviewScreen extends StatelessWidget {
                                       ),
                                     ],
                                   ),
-                                  SizedBox(height: 16.20.h),
-                                  GestureDetector(
-                                    child: Container(
-                                      padding: EdgeInsets.symmetric(
-                                        vertical: 8.10.w,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: AppColors.primary,
-                                          width: 1.42,
-                                        ),
-                                        borderRadius: BorderRadius.circular(
-                                          40.r,
-                                        ),
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          SvgPicture.asset(
-                                            AppImage.van,
-                                            height: isTablet(context)
-                                                ? 28.40.h
-                                                : 14.20.h,
-                                            width: isTablet(context)
-                                                ? 28.40.w
-                                                : 14.20.w,
-                                            color: AppColors.primary,
-                                          ),
-                                          SizedBox(width: 7.10.w),
-                                          TextView(
-                                            text: 'Advance',
-                                            textStyle: TextStyle(
-                                              fontFamily: 'DMSans',
-                                              fontSize: 16.20.sp,
-                                              fontWeight: FontWeight.w500,
-                                              color: AppColors.primary,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
+                                  // SizedBox(height: 16.20.h),
+                                  // ord.paymentStatus?.toLowerCase() == 'success'
+                                  //     ? GestureDetector(
+                                  //         onTap: () {},
+                                  //         child: Container(
+                                  //           padding: EdgeInsets.symmetric(
+                                  //             vertical: 8.10.w,
+                                  //           ),
+                                  //           decoration: BoxDecoration(
+                                  //             border: Border.all(
+                                  //               color: AppColors.primary,
+                                  //               width: 1.42,
+                                  //             ),
+                                  //             borderRadius:
+                                  //                 BorderRadius.circular(40.r),
+                                  //           ),
+                                  //           child: Row(
+                                  //             mainAxisAlignment:
+                                  //                 MainAxisAlignment.center,
+                                  //             children: [
+                                  //               SvgPicture.asset(
+                                  //                 AppImage.van,
+                                  //                 height: isTablet(context)
+                                  //                     ? 28.40.h
+                                  //                     : 14.20.h,
+                                  //                 width: isTablet(context)
+                                  //                     ? 28.40.w
+                                  //                     : 14.20.w,
+                                  //                 color: AppColors.primary,
+                                  //               ),
+                                  //               SizedBox(width: 7.10.w),
+                                  //               TextView(
+                                  //                 text: 'Advance',
+                                  //                 textStyle: TextStyle(
+                                  //                   fontFamily: 'DMSans',
+                                  //                   fontSize: 16.20.sp,
+                                  //                   fontWeight: FontWeight.w500,
+                                  //                   color: AppColors.primary,
+                                  //                 ),
+                                  //               ),
+                                  //             ],
+                                  //           ),
+                                  //         ),
+                                  //       )
+                                  //     : SizedBox.shrink(),
                                   SizedBox(height: 2.0.h),
                                 ],
                               ),

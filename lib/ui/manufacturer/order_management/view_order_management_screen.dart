@@ -217,325 +217,837 @@ class ViewOrderManagementScreen extends StatelessWidget {
                             .order!
                             .items!
                             .isNotEmpty)
-                          ...model
-                              .getIncomingOrderDdetailResponseModel!
-                              .data!
-                              .order!
-                              .items!
-                              .map(
-                                (e) => Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      margin: EdgeInsets.only(bottom: 13.10.w),
-                                      padding: EdgeInsets.all(12.20.w),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(
-                                          12.r,
+                          ...model.getIncomingOrderDdetailResponseModel!.data!.order!.items!.map(
+                            (e) => Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  margin: EdgeInsets.only(bottom: 13.10.w),
+                                  padding: EdgeInsets.all(12.20.w),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12.r),
+                                    border: Border.all(
+                                      color: AppColors.infoGrey1,
+                                    ),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        width: 52.w,
+                                        height: 52.h,
+                                        padding: EdgeInsets.all(2.0.w),
+                                        decoration: BoxDecoration(
+                                          color: AppColors.grey,
+                                          borderRadius: BorderRadius.circular(
+                                            10.r,
+                                          ),
+                                          border: Border.all(
+                                            color: const Color.fromARGB(
+                                              255,
+                                              236,
+                                              237,
+                                              237,
+                                            ),
+                                          ),
                                         ),
-                                        border: Border.all(
-                                          color: AppColors.infoGrey1,
-                                        ),
-                                      ),
-                                      child: Row(
-                                        children: [
-                                          Container(
-                                            width: 52.w,
-                                            height: 52.h,
-                                            padding: EdgeInsets.all(2.0.w),
+                                        child: Container(
+                                          padding: EdgeInsets.all(4.0.w),
+                                          decoration: BoxDecoration(
+                                            color: AppColors.white,
+                                            borderRadius: BorderRadius.circular(
+                                              10.r,
+                                            ),
+                                            border: Border.all(
+                                              color: AppColors.grey2,
+                                            ),
+                                          ),
+                                          child: Container(
                                             decoration: BoxDecoration(
-                                              color: AppColors.grey,
-                                              borderRadius:
-                                                  BorderRadius.circular(10.r),
-                                              border: Border.all(
-                                                color: const Color.fromARGB(
-                                                  255,
-                                                  236,
-                                                  237,
-                                                  237,
-                                                ),
-                                              ),
+                                              shape: BoxShape.circle,
+                                              color: AppColors.grey2,
                                             ),
-                                            child: Container(
-                                              padding: EdgeInsets.all(4.0.w),
-                                              decoration: BoxDecoration(
-                                                color: AppColors.white,
-                                                borderRadius:
-                                                    BorderRadius.circular(10.r),
-                                                border: Border.all(
-                                                  color: AppColors.grey2,
-                                                ),
-                                              ),
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                  color: AppColors.grey2,
-                                                ),
-                                                child: ClipOval(
-                                                  child: CachedNetworkImage(
-                                                    imageUrl: e.imageUrl ?? '',
-                                                    height: isTablet(context)
-                                                        ? 58.0.h
-                                                        : 38.8.h,
-                                                    width: isTablet(context)
-                                                        ? 58.0.w
-                                                        : 38.8.w,
-                                                    errorWidget:
-                                                        (
-                                                          context,
-                                                          url,
-                                                          error,
-                                                        ) => SvgPicture.asset(
-                                                          AppImage.box_cart,
-                                                          height:
-                                                              isTablet(context)
-                                                              ? 48.0.h
-                                                              : 38.h,
-                                                          width:
-                                                              isTablet(context)
-                                                              ? 48.0.w
-                                                              : 38.w,
-                                                          color: AppColors
-                                                              .infoGrey,
-                                                        ),
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                ),
+                                            child: ClipOval(
+                                              child: CachedNetworkImage(
+                                                imageUrl: e.imageUrl ?? '',
+                                                height: isTablet(context)
+                                                    ? 58.0.h
+                                                    : 38.8.h,
+                                                width: isTablet(context)
+                                                    ? 58.0.w
+                                                    : 38.8.w,
+                                                errorWidget:
+                                                    (
+                                                      context,
+                                                      url,
+                                                      error,
+                                                    ) => SvgPicture.asset(
+                                                      AppImage.box_cart,
+                                                      height: isTablet(context)
+                                                          ? 48.0.h
+                                                          : 38.h,
+                                                      width: isTablet(context)
+                                                          ? 48.0.w
+                                                          : 38.w,
+                                                      color: AppColors.infoGrey,
+                                                    ),
+                                                fit: BoxFit.cover,
                                               ),
                                             ),
                                           ),
-                                          SizedBox(width: 12.w),
-                                          Expanded(
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                TextView(
-                                                  text: e.productName ?? '',
-                                                  textStyle: TextStyle(
-                                                    fontFamily: 'GoogleSans',
-                                                    fontSize: 16.20.sp,
-                                                    fontWeight: FontWeight.w500,
-                                                    color: AppColors.reminder,
-                                                  ),
-                                                ),
+                                        ),
+                                      ),
+                                      SizedBox(width: 12.w),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            TextView(
+                                              text: e.productName ?? '',
+                                              textStyle: TextStyle(
+                                                fontFamily: 'GoogleSans',
+                                                fontSize: 16.20.sp,
+                                                fontWeight: FontWeight.w500,
+                                                color: AppColors.reminder,
+                                              ),
+                                            ),
 
-                                                SizedBox(height: 2.10.h),
-                                                TextView(
-                                                  text:
-                                                      'Qty ${e.quantity ?? 0} | ${formatNairaDouble(e.unitPrice!.toDouble())}',
-                                                  textStyle: TextStyle(
-                                                    fontFamily: 'GoogleSans',
-                                                    fontSize: 13.20.sp,
-                                                    fontWeight: FontWeight.w400,
-                                                    color: AppColors.infoGrey,
-                                                    letterSpacing: -0.1,
-                                                  ),
-                                                ),
-                                              ],
+                                            SizedBox(height: 2.10.h),
+                                            TextView(
+                                              text:
+                                                  'Qty ${e.quantity ?? 0} | ${formatNairaDouble(e.unitPrice!.toDouble())}',
+                                              textStyle: TextStyle(
+                                                fontFamily: 'GoogleSans',
+                                                fontSize: 13.20.sp,
+                                                fontWeight: FontWeight.w400,
+                                                color: AppColors.infoGrey,
+                                                letterSpacing: -0.1,
+                                              ),
                                             ),
-                                          ),
-                                          TextView(
-                                            text: formatNairaDouble(
-                                              e.lineTotal!.toDouble(),
-                                            ),
-                                            textStyle: TextStyle(
-                                              fontFamily: 'GoogleSans',
-                                              fontSize: 15.20.sp,
-                                              fontWeight: FontWeight.w500,
-                                              color: AppColors.reminder,
-                                            ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                    SizedBox(height: 15.30.h),
-                                    TextView(
-                                      text: 'Fulfilment timeline',
-                                      textStyle: TextStyle(
-                                        fontFamily: 'DMSans',
-                                        fontSize: 15.80.sp,
-                                        fontWeight: FontWeight.w500,
-                                        color: AppColors.reminder,
+                                      TextView(
+                                        text: formatNairaDouble(
+                                          e.lineTotal!.toDouble(),
+                                        ),
+                                        textStyle: TextStyle(
+                                          fontFamily: 'GoogleSans',
+                                          fontSize: 15.20.sp,
+                                          fontWeight: FontWeight.w500,
+                                          color: AppColors.reminder,
+                                        ),
                                       ),
-                                    ),
-                                    Wrap(
-                                      crossAxisAlignment:
-                                          WrapCrossAlignment.center,
-                                      spacing: 10,
-                                      runSpacing: 3.72,
-                                      children: [
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            color: model.getFulfillmentOrderColor(completed: e.fulfillmentTimeline![0].completed,current: e.fulfillmentTimeline![0].current),
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: Padding(
-                                            padding: EdgeInsets.all(10.w),
-                                            child: TextView(
-                                              text: '1',
-                                              textStyle: TextStyle(
-                                                fontFamily: 'DMSans',
-                                                fontSize: 14.20.sp,
-                                                fontWeight: FontWeight.w400,
-                                                color:model.getFulfillmentOrderTextColor(completed: e.fulfillmentTimeline![0].completed,current: e.fulfillmentTimeline![0].current),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        TextView(
-                                          text: e.fulfillmentTimeline![0].label??'',
-                                          textStyle: TextStyle(
-                                            fontFamily: 'DMSans',
-                                            fontSize: 15.20.sp,
-                                            fontWeight: FontWeight.w400,
-                                            color: model.getFulfillmentOrderTextStatusColor(completed: e.fulfillmentTimeline![0].completed,current: e.fulfillmentTimeline![0].current),
-                                            letterSpacing: -0.21,
-                                          ),
-                                        ),
-                                        SvgPicture.asset(
-                                          AppImage.arrow_right,
-                                          color: model.getFulfillmentOrderColorArrow(completed: e.fulfillmentTimeline![0].completed,current: e.fulfillmentTimeline![0].current),
-                                          height: 12.h,
-                                          width: 10.w,
-                                        ),
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            color: model.getFulfillmentOrderColor(completed: e.fulfillmentTimeline![1].completed,current: e.fulfillmentTimeline![1].current),
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: Padding(
-                                            padding: EdgeInsets.all(10.w),
-                                            child: TextView(
-                                              text: '2',
-                                              textStyle: TextStyle(
-                                                fontFamily: 'DMSans',
-                                                fontSize: 14.20.sp,
-                                                fontWeight: FontWeight.w400,
-                                                color: model.getFulfillmentOrderTextColor(completed: e.fulfillmentTimeline![1].completed,current: e.fulfillmentTimeline![1].current),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        TextView(
-                                          text: e.fulfillmentTimeline![1].label??'',
-                                          textStyle: TextStyle(
-                                            fontFamily: 'DMSans',
-                                            fontSize: 15.20.sp,
-                                            fontWeight: FontWeight.w400,
-                                            color: model.getFulfillmentOrderTextStatusColor(completed: e.fulfillmentTimeline![1].completed,current: e.fulfillmentTimeline![1].current),
-                                            letterSpacing: -0.21,
-                                          ),
-                                        ),
-                                        SvgPicture.asset(
-                                          AppImage.arrow_right,
-                                          color: model.getFulfillmentOrderColorArrow(completed: e.fulfillmentTimeline![1].completed,current: e.fulfillmentTimeline![1].current),
-                                          height: 12.h,
-                                          width: 10.w,
-                                        ),
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            color: model.getFulfillmentOrderColor(completed: e.fulfillmentTimeline![2].completed,current: e.fulfillmentTimeline![2].current),
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: Padding(
-                                            padding: EdgeInsets.all(10.w),
-                                            child: TextView(
-                                              text: '3',
-                                              textStyle: TextStyle(
-                                                fontFamily: 'DMSans',
-                                                fontSize: 14.20.sp,
-                                                fontWeight: FontWeight.w400,
-                                                color: model.getFulfillmentOrderTextColor(completed: e.fulfillmentTimeline![2].completed,current: e.fulfillmentTimeline![2].current),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        TextView(
-                                          text: e.fulfillmentTimeline![2].label??'',
-                                          textStyle: TextStyle(
-                                            fontFamily: 'DMSans',
-                                            fontSize: 15.20.sp,
-                                            fontWeight: FontWeight.w400,
-                                            color: model.getFulfillmentOrderTextStatusColor(completed: e.fulfillmentTimeline![2].completed,current: e.fulfillmentTimeline![2].current),
-                                            letterSpacing: -0.21,
-                                          ),
-                                        ),
-                                        SvgPicture.asset(
-                                          AppImage.arrow_right,
-                                          color: model.getFulfillmentOrderColorArrow(completed: e.fulfillmentTimeline![2].completed,current: e.fulfillmentTimeline![2].current),
-                                          height: 12.h,
-                                          width: 10.w,
-                                        ),
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            color: model.getFulfillmentOrderColor(completed: e.fulfillmentTimeline![3].completed,current: e.fulfillmentTimeline![3].current),
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: Padding(
-                                            padding: EdgeInsets.all(10.w),
-                                            child: TextView(
-                                              text: '4',
-                                              textStyle: TextStyle(
-                                                fontFamily: 'DMSans',
-                                                fontSize: 14.20.sp,
-                                                fontWeight: FontWeight.w400,
-                                                color: model.getFulfillmentOrderTextColor(completed: e.fulfillmentTimeline![3].completed,current: e.fulfillmentTimeline![3].current),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        TextView(
-                                          text: e.fulfillmentTimeline![3].label??'',
-                                          textStyle: TextStyle(
-                                            fontFamily: 'DMSans',
-                                            fontSize: 15.20.sp,
-                                            fontWeight: FontWeight.w400,
-                                            color: model.getFulfillmentOrderTextStatusColor(completed: e.fulfillmentTimeline![3].completed,current: e.fulfillmentTimeline![3].current),
-                                            letterSpacing: -0.21,
-                                          ),
-                                        ),
-                                        SvgPicture.asset(
-                                          AppImage.arrow_right,
-                                          color: model.getFulfillmentOrderColorArrow(completed: e.fulfillmentTimeline![3].completed,current: e.fulfillmentTimeline![3].current),
-                                          height: 12.h,
-                                          width: 10.w,
-                                        ),
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            color: model.getFulfillmentOrderColor(completed: e.fulfillmentTimeline![4].completed,current: e.fulfillmentTimeline![4].current),
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: Padding(
-                                            padding: EdgeInsets.all(10.w),
-                                            child: TextView(
-                                              text: '5',
-                                              textStyle: TextStyle(
-                                                fontFamily: 'DMSans',
-                                                fontSize: 14.20.sp,
-                                                fontWeight: FontWeight.w400,
-                                                color: model.getFulfillmentOrderTextColor(completed: e.fulfillmentTimeline![4].completed,current: e.fulfillmentTimeline![4].current),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        TextView(
-                                          text: e.fulfillmentTimeline![4].label??'',
-                                          textStyle: TextStyle(
-                                            fontFamily: 'DMSans',
-                                            fontSize: 15.20.sp,
-                                            fontWeight: FontWeight.w400,
-                                            color: model.getFulfillmentOrderTextStatusColor(completed: e.fulfillmentTimeline![4].completed,current: e.fulfillmentTimeline![4].current),
-                                            letterSpacing: -0.21,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 22.0.h),
-                                  ],
+                                    ],
+                                  ),
+                                ),
+                                // SizedBox(height: 15.30.h),
+                                // TextView(
+                                //   text: 'Fulfilment timeline',
+                                //   textStyle: TextStyle(
+                                //     fontFamily: 'DMSans',
+                                //     fontSize: 15.80.sp,
+                                //     fontWeight: FontWeight.w500,
+                                //     color: AppColors.reminder,
+                                //   ),
+                                // ),
+                                // Wrap(
+                                //   crossAxisAlignment:
+                                //       WrapCrossAlignment.center,
+                                //   spacing: 10,
+                                //   runSpacing: 3.72,
+                                //   children: [
+                                //     Container(
+                                //       decoration: BoxDecoration(
+                                //         color: model.getFulfillmentOrderColor(completed: e.fulfillmentTimeline![0].completed,current: e.fulfillmentTimeline![0].current),
+                                //         shape: BoxShape.circle,
+                                //       ),
+                                //       child: Padding(
+                                //         padding: EdgeInsets.all(10.w),
+                                //         child: TextView(
+                                //           text: '1',
+                                //           textStyle: TextStyle(
+                                //             fontFamily: 'DMSans',
+                                //             fontSize: 14.20.sp,
+                                //             fontWeight: FontWeight.w400,
+                                //             color:model.getFulfillmentOrderTextColor(completed: e.fulfillmentTimeline![0].completed,current: e.fulfillmentTimeline![0].current),
+                                //           ),
+                                //         ),
+                                //       ),
+                                //     ),
+                                //     TextView(
+                                //       text: e.fulfillmentTimeline![0].label??'',
+                                //       textStyle: TextStyle(
+                                //         fontFamily: 'DMSans',
+                                //         fontSize: 15.20.sp,
+                                //         fontWeight: FontWeight.w400,
+                                //         color: model.getFulfillmentOrderTextStatusColor(completed: e.fulfillmentTimeline![0].completed,current: e.fulfillmentTimeline![0].current),
+                                //         letterSpacing: -0.21,
+                                //       ),
+                                //     ),
+                                //     SvgPicture.asset(
+                                //       AppImage.arrow_right,
+                                //       color: model.getFulfillmentOrderColorArrow(completed: e.fulfillmentTimeline![0].completed,current: e.fulfillmentTimeline![0].current),
+                                //       height: 12.h,
+                                //       width: 10.w,
+                                //     ),
+                                //     Container(
+                                //       decoration: BoxDecoration(
+                                //         color: model.getFulfillmentOrderColor(completed: e.fulfillmentTimeline![1].completed,current: e.fulfillmentTimeline![1].current),
+                                //         shape: BoxShape.circle,
+                                //       ),
+                                //       child: Padding(
+                                //         padding: EdgeInsets.all(10.w),
+                                //         child: TextView(
+                                //           text: '2',
+                                //           textStyle: TextStyle(
+                                //             fontFamily: 'DMSans',
+                                //             fontSize: 14.20.sp,
+                                //             fontWeight: FontWeight.w400,
+                                //             color: model.getFulfillmentOrderTextColor(completed: e.fulfillmentTimeline![1].completed,current: e.fulfillmentTimeline![1].current),
+                                //           ),
+                                //         ),
+                                //       ),
+                                //     ),
+                                //     TextView(
+                                //       text: e.fulfillmentTimeline![1].label??'',
+                                //       textStyle: TextStyle(
+                                //         fontFamily: 'DMSans',
+                                //         fontSize: 15.20.sp,
+                                //         fontWeight: FontWeight.w400,
+                                //         color: model.getFulfillmentOrderTextStatusColor(completed: e.fulfillmentTimeline![1].completed,current: e.fulfillmentTimeline![1].current),
+                                //         letterSpacing: -0.21,
+                                //       ),
+                                //     ),
+                                //     SvgPicture.asset(
+                                //       AppImage.arrow_right,
+                                //       color: model.getFulfillmentOrderColorArrow(completed: e.fulfillmentTimeline![1].completed,current: e.fulfillmentTimeline![1].current),
+                                //       height: 12.h,
+                                //       width: 10.w,
+                                //     ),
+                                //     Container(
+                                //       decoration: BoxDecoration(
+                                //         color: model.getFulfillmentOrderColor(completed: e.fulfillmentTimeline![2].completed,current: e.fulfillmentTimeline![2].current),
+                                //         shape: BoxShape.circle,
+                                //       ),
+                                //       child: Padding(
+                                //         padding: EdgeInsets.all(10.w),
+                                //         child: TextView(
+                                //           text: '3',
+                                //           textStyle: TextStyle(
+                                //             fontFamily: 'DMSans',
+                                //             fontSize: 14.20.sp,
+                                //             fontWeight: FontWeight.w400,
+                                //             color: model.getFulfillmentOrderTextColor(completed: e.fulfillmentTimeline![2].completed,current: e.fulfillmentTimeline![2].current),
+                                //           ),
+                                //         ),
+                                //       ),
+                                //     ),
+                                //     TextView(
+                                //       text: e.fulfillmentTimeline![2].label??'',
+                                //       textStyle: TextStyle(
+                                //         fontFamily: 'DMSans',
+                                //         fontSize: 15.20.sp,
+                                //         fontWeight: FontWeight.w400,
+                                //         color: model.getFulfillmentOrderTextStatusColor(completed: e.fulfillmentTimeline![2].completed,current: e.fulfillmentTimeline![2].current),
+                                //         letterSpacing: -0.21,
+                                //       ),
+                                //     ),
+                                //     SvgPicture.asset(
+                                //       AppImage.arrow_right,
+                                //       color: model.getFulfillmentOrderColorArrow(completed: e.fulfillmentTimeline![2].completed,current: e.fulfillmentTimeline![2].current),
+                                //       height: 12.h,
+                                //       width: 10.w,
+                                //     ),
+                                //     Container(
+                                //       decoration: BoxDecoration(
+                                //         color: model.getFulfillmentOrderColor(completed: e.fulfillmentTimeline![3].completed,current: e.fulfillmentTimeline![3].current),
+                                //         shape: BoxShape.circle,
+                                //       ),
+                                //       child: Padding(
+                                //         padding: EdgeInsets.all(10.w),
+                                //         child: TextView(
+                                //           text: '4',
+                                //           textStyle: TextStyle(
+                                //             fontFamily: 'DMSans',
+                                //             fontSize: 14.20.sp,
+                                //             fontWeight: FontWeight.w400,
+                                //             color: model.getFulfillmentOrderTextColor(completed: e.fulfillmentTimeline![3].completed,current: e.fulfillmentTimeline![3].current),
+                                //           ),
+                                //         ),
+                                //       ),
+                                //     ),
+                                //     TextView(
+                                //       text: e.fulfillmentTimeline![3].label??'',
+                                //       textStyle: TextStyle(
+                                //         fontFamily: 'DMSans',
+                                //         fontSize: 15.20.sp,
+                                //         fontWeight: FontWeight.w400,
+                                //         color: model.getFulfillmentOrderTextStatusColor(completed: e.fulfillmentTimeline![3].completed,current: e.fulfillmentTimeline![3].current),
+                                //         letterSpacing: -0.21,
+                                //       ),
+                                //     ),
+                                //     SvgPicture.asset(
+                                //       AppImage.arrow_right,
+                                //       color: model.getFulfillmentOrderColorArrow(completed: e.fulfillmentTimeline![3].completed,current: e.fulfillmentTimeline![3].current),
+                                //       height: 12.h,
+                                //       width: 10.w,
+                                //     ),
+                                //     Container(
+                                //       decoration: BoxDecoration(
+                                //         color: model.getFulfillmentOrderColor(completed: e.fulfillmentTimeline![4].completed,current: e.fulfillmentTimeline![4].current),
+                                //         shape: BoxShape.circle,
+                                //       ),
+                                //       child: Padding(
+                                //         padding: EdgeInsets.all(10.w),
+                                //         child: TextView(
+                                //           text: '5',
+                                //           textStyle: TextStyle(
+                                //             fontFamily: 'DMSans',
+                                //             fontSize: 14.20.sp,
+                                //             fontWeight: FontWeight.w400,
+                                //             color: model.getFulfillmentOrderTextColor(completed: e.fulfillmentTimeline![4].completed,current: e.fulfillmentTimeline![4].current),
+                                //           ),
+                                //         ),
+                                //       ),
+                                //     ),
+                                //     TextView(
+                                //       text: e.fulfillmentTimeline![4].label??'',
+                                //       textStyle: TextStyle(
+                                //         fontFamily: 'DMSans',
+                                //         fontSize: 15.20.sp,
+                                //         fontWeight: FontWeight.w400,
+                                //         color: model.getFulfillmentOrderTextStatusColor(completed: e.fulfillmentTimeline![4].completed,current: e.fulfillmentTimeline![4].current),
+                                //         letterSpacing: -0.21,
+                                //       ),
+                                //     ),
+                                //   ],
+                                // ),
+                                // SizedBox(height: 22.0.h),
+                              ],
+                            ),
+                          ),
+                        if (model.getIncomingOrderDdetailResponseModel !=
+                                null &&
+                            model
+                                .getIncomingOrderDdetailResponseModel!
+                                .data!
+                                .order!
+                                .items!
+                                .isNotEmpty)
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: 15.30.h),
+                              TextView(
+                                text: 'Fulfilment timeline',
+                                textStyle: TextStyle(
+                                  fontFamily: 'DMSans',
+                                  fontSize: 15.80.sp,
+                                  fontWeight: FontWeight.w500,
+                                  color: AppColors.reminder,
                                 ),
                               ),
+                              Wrap(
+                                crossAxisAlignment: WrapCrossAlignment.center,
+                                spacing: 10,
+                                runSpacing: 3.72,
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: model.getFulfillmentOrderColor(
+                                        completed: model
+                                            .getIncomingOrderDdetailResponseModel!
+                                            .data!
+                                            .order!
+                                            .items![0]
+                                            .fulfillmentTimeline![0]
+                                            .completed,
+                                        current: model
+                                            .getIncomingOrderDdetailResponseModel!
+                                            .data!
+                                            .order!
+                                            .items![0]
+                                            .fulfillmentTimeline![0]
+                                            .current,
+                                      ),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Padding(
+                                      padding: EdgeInsets.all(10.w),
+                                      child: TextView(
+                                        text: '1',
+                                        textStyle: TextStyle(
+                                          fontFamily: 'DMSans',
+                                          fontSize: 14.20.sp,
+                                          fontWeight: FontWeight.w400,
+                                          color: model.getFulfillmentOrderTextColor(
+                                            completed: model
+                                                .getIncomingOrderDdetailResponseModel!
+                                                .data!
+                                                .order!
+                                                .items![0]
+                                                .fulfillmentTimeline![0]
+                                                .completed,
+                                            current: model
+                                                .getIncomingOrderDdetailResponseModel!
+                                                .data!
+                                                .order!
+                                                .items![0]
+                                                .fulfillmentTimeline![0]
+                                                .current,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  TextView(
+                                    text:
+                                        model
+                                            .getIncomingOrderDdetailResponseModel!
+                                            .data!
+                                            .order!
+                                            .items![0]
+                                            .fulfillmentTimeline![0]
+                                            .label ??
+                                        '',
+                                    textStyle: TextStyle(
+                                      fontFamily: 'DMSans',
+                                      fontSize: 15.20.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: model.getFulfillmentOrderTextStatusColor(
+                                        completed: model
+                                            .getIncomingOrderDdetailResponseModel!
+                                            .data!
+                                            .order!
+                                            .items![0]
+                                            .fulfillmentTimeline![0]
+                                            .completed,
+                                        current: model
+                                            .getIncomingOrderDdetailResponseModel!
+                                            .data!
+                                            .order!
+                                            .items![0]
+                                            .fulfillmentTimeline![0]
+                                            .current,
+                                      ),
+                                      letterSpacing: -0.21,
+                                    ),
+                                  ),
+                                  SvgPicture.asset(
+                                    AppImage.arrow_right,
+                                    color: model.getFulfillmentOrderColorArrow(
+                                      completed: model
+                                          .getIncomingOrderDdetailResponseModel!
+                                          .data!
+                                          .order!
+                                          .items![0]
+                                          .fulfillmentTimeline![0]
+                                          .completed,
+                                      current: model
+                                          .getIncomingOrderDdetailResponseModel!
+                                          .data!
+                                          .order!
+                                          .items![0]
+                                          .fulfillmentTimeline![0]
+                                          .current,
+                                    ),
+                                    height: 12.h,
+                                    width: 10.w,
+                                  ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: model.getFulfillmentOrderColor(
+                                        completed: model
+                                            .getIncomingOrderDdetailResponseModel!
+                                            .data!
+                                            .order!
+                                            .items![0]
+                                            .fulfillmentTimeline![1]
+                                            .completed,
+                                        current: model
+                                            .getIncomingOrderDdetailResponseModel!
+                                            .data!
+                                            .order!
+                                            .items![0]
+                                            .fulfillmentTimeline![1]
+                                            .current,
+                                      ),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Padding(
+                                      padding: EdgeInsets.all(10.w),
+                                      child: TextView(
+                                        text: '2',
+                                        textStyle: TextStyle(
+                                          fontFamily: 'DMSans',
+                                          fontSize: 14.20.sp,
+                                          fontWeight: FontWeight.w400,
+                                          color: model.getFulfillmentOrderTextColor(
+                                            completed: model
+                                                .getIncomingOrderDdetailResponseModel!
+                                                .data!
+                                                .order!
+                                                .items![0]
+                                                .fulfillmentTimeline![1]
+                                                .completed,
+                                            current: model
+                                                .getIncomingOrderDdetailResponseModel!
+                                                .data!
+                                                .order!
+                                                .items![0]
+                                                .fulfillmentTimeline![1]
+                                                .current,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  TextView(
+                                    text:
+                                        model
+                                            .getIncomingOrderDdetailResponseModel!
+                                            .data!
+                                            .order!
+                                            .items![0]
+                                            .fulfillmentTimeline![1]
+                                            .label ??
+                                        '',
+                                    textStyle: TextStyle(
+                                      fontFamily: 'DMSans',
+                                      fontSize: 15.20.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: model.getFulfillmentOrderTextStatusColor(
+                                        completed: model
+                                            .getIncomingOrderDdetailResponseModel!
+                                            .data!
+                                            .order!
+                                            .items![0]
+                                            .fulfillmentTimeline![1]
+                                            .completed,
+                                        current: model
+                                            .getIncomingOrderDdetailResponseModel!
+                                            .data!
+                                            .order!
+                                            .items![0]
+                                            .fulfillmentTimeline![1]
+                                            .current,
+                                      ),
+                                      letterSpacing: -0.21,
+                                    ),
+                                  ),
+                                  SvgPicture.asset(
+                                    AppImage.arrow_right,
+                                    color: model.getFulfillmentOrderColorArrow(
+                                      completed: model
+                                          .getIncomingOrderDdetailResponseModel!
+                                          .data!
+                                          .order!
+                                          .items![0]
+                                          .fulfillmentTimeline![1]
+                                          .completed,
+                                      current: model
+                                          .getIncomingOrderDdetailResponseModel!
+                                          .data!
+                                          .order!
+                                          .items![0]
+                                          .fulfillmentTimeline![1]
+                                          .current,
+                                    ),
+                                    height: 12.h,
+                                    width: 10.w,
+                                  ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: model.getFulfillmentOrderColor(
+                                        completed: model
+                                            .getIncomingOrderDdetailResponseModel!
+                                            .data!
+                                            .order!
+                                            .items![0]
+                                            .fulfillmentTimeline![2]
+                                            .completed,
+                                        current: model
+                                            .getIncomingOrderDdetailResponseModel!
+                                            .data!
+                                            .order!
+                                            .items![0]
+                                            .fulfillmentTimeline![2]
+                                            .current,
+                                      ),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Padding(
+                                      padding: EdgeInsets.all(10.w),
+                                      child: TextView(
+                                        text: '3',
+                                        textStyle: TextStyle(
+                                          fontFamily: 'DMSans',
+                                          fontSize: 14.20.sp,
+                                          fontWeight: FontWeight.w400,
+                                          color: model.getFulfillmentOrderTextColor(
+                                            completed: model
+                                                .getIncomingOrderDdetailResponseModel!
+                                                .data!
+                                                .order!
+                                                .items![0]
+                                                .fulfillmentTimeline![2]
+                                                .completed,
+                                            current: model
+                                                .getIncomingOrderDdetailResponseModel!
+                                                .data!
+                                                .order!
+                                                .items![0]
+                                                .fulfillmentTimeline![2]
+                                                .current,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  TextView(
+                                    text:
+                                        model
+                                            .getIncomingOrderDdetailResponseModel!
+                                            .data!
+                                            .order!
+                                            .items![0]
+                                            .fulfillmentTimeline![2]
+                                            .label ??
+                                        '',
+                                    textStyle: TextStyle(
+                                      fontFamily: 'DMSans',
+                                      fontSize: 15.20.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: model.getFulfillmentOrderTextStatusColor(
+                                        completed: model
+                                            .getIncomingOrderDdetailResponseModel!
+                                            .data!
+                                            .order!
+                                            .items![0]
+                                            .fulfillmentTimeline![2]
+                                            .completed,
+                                        current: model
+                                            .getIncomingOrderDdetailResponseModel!
+                                            .data!
+                                            .order!
+                                            .items![0]
+                                            .fulfillmentTimeline![2]
+                                            .current,
+                                      ),
+                                      letterSpacing: -0.21,
+                                    ),
+                                  ),
+                                  SvgPicture.asset(
+                                    AppImage.arrow_right,
+                                    color: model.getFulfillmentOrderColorArrow(
+                                      completed: model
+                                          .getIncomingOrderDdetailResponseModel!
+                                          .data!
+                                          .order!
+                                          .items![0]
+                                          .fulfillmentTimeline![2]
+                                          .completed,
+                                      current: model
+                                          .getIncomingOrderDdetailResponseModel!
+                                          .data!
+                                          .order!
+                                          .items![0]
+                                          .fulfillmentTimeline![2]
+                                          .current,
+                                    ),
+                                    height: 12.h,
+                                    width: 10.w,
+                                  ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: model.getFulfillmentOrderColor(
+                                        completed: model
+                                            .getIncomingOrderDdetailResponseModel!
+                                            .data!
+                                            .order!
+                                            .items![0]
+                                            .fulfillmentTimeline![3]
+                                            .completed,
+                                        current: model
+                                            .getIncomingOrderDdetailResponseModel!
+                                            .data!
+                                            .order!
+                                            .items![0]
+                                            .fulfillmentTimeline![3]
+                                            .current,
+                                      ),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Padding(
+                                      padding: EdgeInsets.all(10.w),
+                                      child: TextView(
+                                        text: '4',
+                                        textStyle: TextStyle(
+                                          fontFamily: 'DMSans',
+                                          fontSize: 14.20.sp,
+                                          fontWeight: FontWeight.w400,
+                                          color: model.getFulfillmentOrderTextColor(
+                                            completed: model
+                                                .getIncomingOrderDdetailResponseModel!
+                                                .data!
+                                                .order!
+                                                .items![0]
+                                                .fulfillmentTimeline![3]
+                                                .completed,
+                                            current: model
+                                                .getIncomingOrderDdetailResponseModel!
+                                                .data!
+                                                .order!
+                                                .items![0]
+                                                .fulfillmentTimeline![3]
+                                                .current,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  TextView(
+                                    text:
+                                        model
+                                            .getIncomingOrderDdetailResponseModel!
+                                            .data!
+                                            .order!
+                                            .items![0]
+                                            .fulfillmentTimeline![3]
+                                            .label ??
+                                        '',
+                                    textStyle: TextStyle(
+                                      fontFamily: 'DMSans',
+                                      fontSize: 15.20.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: model.getFulfillmentOrderTextStatusColor(
+                                        completed: model
+                                            .getIncomingOrderDdetailResponseModel!
+                                            .data!
+                                            .order!
+                                            .items![0]
+                                            .fulfillmentTimeline![3]
+                                            .completed,
+                                        current: model
+                                            .getIncomingOrderDdetailResponseModel!
+                                            .data!
+                                            .order!
+                                            .items![0]
+                                            .fulfillmentTimeline![3]
+                                            .current,
+                                      ),
+                                      letterSpacing: -0.21,
+                                    ),
+                                  ),
+                                  SvgPicture.asset(
+                                    AppImage.arrow_right,
+                                    color: model.getFulfillmentOrderColorArrow(
+                                      completed: model
+                                          .getIncomingOrderDdetailResponseModel!
+                                          .data!
+                                          .order!
+                                          .items![0]
+                                          .fulfillmentTimeline![3]
+                                          .completed,
+                                      current: model
+                                          .getIncomingOrderDdetailResponseModel!
+                                          .data!
+                                          .order!
+                                          .items![0]
+                                          .fulfillmentTimeline![3]
+                                          .current,
+                                    ),
+                                    height: 12.h,
+                                    width: 10.w,
+                                  ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: model.getFulfillmentOrderColor(
+                                        completed: model
+                                            .getIncomingOrderDdetailResponseModel!
+                                            .data!
+                                            .order!
+                                            .items![0]
+                                            .fulfillmentTimeline![4]
+                                            .completed,
+                                        current: model
+                                            .getIncomingOrderDdetailResponseModel!
+                                            .data!
+                                            .order!
+                                            .items![0]
+                                            .fulfillmentTimeline![4]
+                                            .current,
+                                      ),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Padding(
+                                      padding: EdgeInsets.all(10.w),
+                                      child: TextView(
+                                        text: '5',
+                                        textStyle: TextStyle(
+                                          fontFamily: 'DMSans',
+                                          fontSize: 14.20.sp,
+                                          fontWeight: FontWeight.w400,
+                                          color: model.getFulfillmentOrderTextColor(
+                                            completed: model
+                                                .getIncomingOrderDdetailResponseModel!
+                                                .data!
+                                                .order!
+                                                .items![0]
+                                                .fulfillmentTimeline![4]
+                                                .completed,
+                                            current: model
+                                                .getIncomingOrderDdetailResponseModel!
+                                                .data!
+                                                .order!
+                                                .items![0]
+                                                .fulfillmentTimeline![4]
+                                                .current,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  TextView(
+                                    text:
+                                        model
+                                            .getIncomingOrderDdetailResponseModel!
+                                            .data!
+                                            .order!
+                                            .items![0]
+                                            .fulfillmentTimeline![4]
+                                            .label ??
+                                        '',
+                                    textStyle: TextStyle(
+                                      fontFamily: 'DMSans',
+                                      fontSize: 15.20.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: model.getFulfillmentOrderTextStatusColor(
+                                        completed: model
+                                            .getIncomingOrderDdetailResponseModel!
+                                            .data!
+                                            .order!
+                                            .items![0]
+                                            .fulfillmentTimeline![4]
+                                            .completed,
+                                        current: model
+                                            .getIncomingOrderDdetailResponseModel!
+                                            .data!
+                                            .order!
+                                            .items![0]
+                                            .fulfillmentTimeline![4]
+                                            .current,
+                                      ),
+                                      letterSpacing: -0.21,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 22.0.h),
+                            ],
+                          ),
 
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,

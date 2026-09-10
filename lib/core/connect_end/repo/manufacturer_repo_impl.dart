@@ -211,12 +211,42 @@ class ManufacturerRepoImpl {
     String? status,
     String? search,
   }) async {
-    final response = await _contract.listIncomingOrder(page: page, status: status, search: search);
+    final response = await _contract.listIncomingOrder(
+      page: page,
+      status: status,
+      search: search,
+    );
     return response;
   }
 
- Future<GetIncomingOrderDdetailResponseModel> getIncomingOrder({String? wholesaleOrderId}) async  {
-    final response = await _contract.getIncomingOrder(wholesaleOrderId: wholesaleOrderId);
+  Future<GetIncomingOrderDdetailResponseModel> getIncomingOrder({
+    String? wholesaleOrderId,
+  }) async {
+    final response = await _contract.getIncomingOrder(
+      wholesaleOrderId: wholesaleOrderId,
+    );
+    return response;
+  }
+
+  Future<dynamic> advanceIncomingOrder({
+    String? wholesaleOrderId,
+    String? wholesaleOrderItemId,
+  }) async {
+    final response = await _contract.advanceIncomingOrder(
+      wholesaleOrderId: wholesaleOrderId,
+      wholesaleOrderItemId: wholesaleOrderItemId,
+    );
+    return response;
+  }
+
+  Future<dynamic> cancelIncomingOrder({
+    String? wholesaleOrderId,
+    String? wholesaleOrderItemId,
+  }) async {
+    final response = await _contract.cancelIncomingOrder(
+      wholesaleOrderId: wholesaleOrderId,
+      wholesaleOrderItemId: wholesaleOrderItemId,
+    );
     return response;
   }
 

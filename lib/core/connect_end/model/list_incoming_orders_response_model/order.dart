@@ -2,6 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 import 'actions.dart';
 import 'customer.dart';
+import 'item.dart';
 import 'status_counts.dart';
 
 part 'order.g.dart';
@@ -13,6 +14,7 @@ class Order {
   Customer? customer;
   String? customerName;
   int? itemsOrdered;
+  List<Item>? items;
   int? orderTotal;
   String? currency;
   DateTime? dateOrdered;
@@ -30,6 +32,7 @@ class Order {
     this.customer,
     this.customerName,
     this.itemsOrdered,
+    this.items,
     this.orderTotal,
     this.currency,
     this.dateOrdered,

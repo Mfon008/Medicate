@@ -450,20 +450,20 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                   ),
                                                   decoration: BoxDecoration(
                                                     color: model.orderStatusColorPackaging(
-                                                      confirmed: model
-                                                          .getWholesaleOrderResponseModel
-                                                          ?.data
-                                                          ?.order
-                                                          ?.items?[0]
-                                                          .tracking?[0]
-                                                          .completed,
-                                                      packaging: model
+                                                      completed: model
                                                           .getWholesaleOrderResponseModel
                                                           ?.data
                                                           ?.order
                                                           ?.items?[0]
                                                           .tracking?[1]
                                                           .completed,
+                                                      current: model
+                                                          .getWholesaleOrderResponseModel
+                                                          ?.data
+                                                          ?.order
+                                                          ?.items?[0]
+                                                          .tracking?[1]
+                                                          .current,
                                                     ),
                                                     borderRadius:
                                                         BorderRadius.circular(
@@ -475,14 +475,14 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                         MainAxisSize.min,
                                                     children: [
                                                       model.orderStatusIconPackaging(
-                                                        confirmed: model
+                                                        completed: model
                                                             .getWholesaleOrderResponseModel
                                                             ?.data
                                                             ?.order
                                                             ?.items?[0]
-                                                            .tracking?[0]
+                                                            .tracking?[1]
                                                             .completed,
-                                                        packaging: model
+                                                        current: model
                                                             .getWholesaleOrderResponseModel
                                                             ?.data
                                                             ?.order
@@ -499,14 +499,14 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                           fontWeight:
                                                               FontWeight.w400,
                                                           color: model.orderStatusTextColorPackaging(
-                                                            confirmed: model
+                                                            completed: model
                                                                 .getWholesaleOrderResponseModel
                                                                 ?.data
                                                                 ?.order
                                                                 ?.items?[0]
-                                                                .tracking?[0]
+                                                                .tracking?[1]
                                                                 .completed,
-                                                            packaging: model
+                                                            current: model
                                                                 .getWholesaleOrderResponseModel
                                                                 ?.data
                                                                 ?.order
@@ -532,21 +532,14 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                   ),
                                                   decoration: BoxDecoration(
                                                     color: model.orderStatusColorIntransit(
-                                                      confirmed: model
+                                                      completed: model
                                                           .getWholesaleOrderResponseModel
                                                           ?.data
                                                           ?.order
                                                           ?.items?[0]
-                                                          .tracking?[0]
+                                                          .tracking?[2]
                                                           .completed,
-                                                      packaging: model
-                                                          .getWholesaleOrderResponseModel
-                                                          ?.data
-                                                          ?.order
-                                                          ?.items?[0]
-                                                          .tracking?[1]
-                                                          .completed,
-                                                      intransit: model
+                                                      current: model
                                                           .getWholesaleOrderResponseModel
                                                           ?.data
                                                           ?.order
@@ -564,21 +557,14 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                         MainAxisSize.min,
                                                     children: [
                                                       model.orderStatusIconIntransit(
-                                                        confirmed: model
+                                                        completed: model
                                                             .getWholesaleOrderResponseModel
                                                             ?.data
                                                             ?.order
                                                             ?.items?[0]
-                                                            .tracking?[0]
+                                                            .tracking?[2]
                                                             .completed,
-                                                        packaging: model
-                                                            .getWholesaleOrderResponseModel
-                                                            ?.data
-                                                            ?.order
-                                                            ?.items?[0]
-                                                            .tracking?[1]
-                                                            .completed,
-                                                        intransit: model
+                                                        current: model
                                                             .getWholesaleOrderResponseModel
                                                             ?.data
                                                             ?.order
@@ -595,27 +581,20 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                           fontWeight:
                                                               FontWeight.w400,
                                                           color: model.orderStatusTextColorIntransit(
-                                                            confirmed: model
-                                                                .getWholesaleOrderResponseModel
-                                                                ?.data
-                                                                ?.order
-                                                                ?.items?[0]
-                                                                .tracking?[0]
-                                                                .completed,
-                                                            packaging: model
-                                                                .getWholesaleOrderResponseModel
-                                                                ?.data
-                                                                ?.order
-                                                                ?.items?[0]
-                                                                .tracking?[1]
-                                                                .completed,
-                                                            intransit: model
+                                                            completed: model
                                                                 .getWholesaleOrderResponseModel
                                                                 ?.data
                                                                 ?.order
                                                                 ?.items?[0]
                                                                 .tracking?[2]
                                                                 .completed,
+                                                            current: model
+                                                                .getWholesaleOrderResponseModel
+                                                                ?.data
+                                                                ?.order
+                                                                ?.items?[0]
+                                                                .tracking?[2]
+                                                                .current,
                                                           ),
                                                         ),
                                                       ),
@@ -630,34 +609,20 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                   ),
                                                   decoration: BoxDecoration(
                                                     color: model.orderStatusColorDelivered(
-                                                      confirmed: model
+                                                      completed: model
                                                           .getWholesaleOrderResponseModel
                                                           ?.data
                                                           ?.order
                                                           ?.items?[0]
-                                                          .tracking?[0]
+                                                          .tracking?[3]
                                                           .completed,
-                                                      packaging: model
+                                                      current: model
                                                           .getWholesaleOrderResponseModel
                                                           ?.data
                                                           ?.order
                                                           ?.items?[0]
-                                                          .tracking?[1]
-                                                          .completed,
-                                                      intransit: model
-                                                          .getWholesaleOrderResponseModel
-                                                          ?.data
-                                                          ?.order
-                                                          ?.items?[0]
-                                                          .tracking?[2]
-                                                          .completed,
-                                                      delivered: model
-                                                          .getWholesaleOrderResponseModel
-                                                          ?.data
-                                                          ?.order
-                                                          ?.items?[0]
-                                                          .tracking?[2]
-                                                          .completed,
+                                                          .tracking?[3]
+                                                          .current,
                                                     ),
                                                     borderRadius:
                                                         BorderRadius.circular(
@@ -669,33 +634,19 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                         MainAxisSize.min,
                                                     children: [
                                                       model.orderStatusIconDelivered(
-                                                        confirmed: model
+                                                        completed: model
                                                             .getWholesaleOrderResponseModel
                                                             ?.data
                                                             ?.order
                                                             ?.items?[0]
-                                                            .tracking?[0]
+                                                            .tracking?[3]
                                                             .completed,
-                                                        packaging: model
+                                                        current: model
                                                             .getWholesaleOrderResponseModel
                                                             ?.data
                                                             ?.order
                                                             ?.items?[0]
-                                                            .tracking?[1]
-                                                            .completed,
-                                                        intransit: model
-                                                            .getWholesaleOrderResponseModel
-                                                            ?.data
-                                                            ?.order
-                                                            ?.items?[0]
-                                                            .tracking?[2]
-                                                            .completed,
-                                                        delivered: model
-                                                            .getWholesaleOrderResponseModel
-                                                            ?.data
-                                                            ?.order
-                                                            ?.items?[0]
-                                                            .tracking?[2]
+                                                            .tracking?[3]
                                                             .completed,
                                                       ),
                                                       SizedBox(width: 4.w),
@@ -707,33 +658,19 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                           fontWeight:
                                                               FontWeight.w400,
                                                           color: model.orderStatusTextColorDelivered(
-                                                            confirmed: model
+                                                            completed: model
                                                                 .getWholesaleOrderResponseModel
                                                                 ?.data
                                                                 ?.order
                                                                 ?.items?[0]
-                                                                .tracking?[0]
+                                                                .tracking?[3]
                                                                 .completed,
-                                                            packaging: model
+                                                            current: model
                                                                 .getWholesaleOrderResponseModel
                                                                 ?.data
                                                                 ?.order
                                                                 ?.items?[0]
-                                                                .tracking?[1]
-                                                                .completed,
-                                                            intransit: model
-                                                                .getWholesaleOrderResponseModel
-                                                                ?.data
-                                                                ?.order
-                                                                ?.items?[0]
-                                                                .tracking?[2]
-                                                                .completed,
-                                                            delivered: model
-                                                                .getWholesaleOrderResponseModel
-                                                                ?.data
-                                                                ?.order
-                                                                ?.items?[0]
-                                                                .tracking?[2]
+                                                                .tracking?[3]
                                                                 .completed,
                                                           ),
                                                         ),
@@ -1147,6 +1084,9 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                   ),
 
                                                   Container(
+                                                    margin: EdgeInsets.only(
+                                                      bottom: 10.w,
+                                                    ),
                                                     padding:
                                                         EdgeInsets.symmetric(
                                                           vertical: 4.w,
@@ -1307,12 +1247,12 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                         decoration: BoxDecoration(
                                                           color: model
                                                               .orderStatusColorPackaging(
-                                                                confirmed: e
-                                                                    .tracking![0]
-                                                                    .completed,
-                                                                packaging: e
+                                                                completed: e
                                                                     .tracking![1]
                                                                     .completed,
+                                                                current: e
+                                                                    .tracking![1]
+                                                                    .current,
                                                               ),
                                                           borderRadius:
                                                               BorderRadius.circular(
@@ -1324,10 +1264,10 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                               MainAxisSize.min,
                                                           children: [
                                                             model.orderStatusIconPackaging(
-                                                              confirmed: e
-                                                                  .tracking![0]
+                                                              completed: e
+                                                                  .tracking![1]
                                                                   .completed,
-                                                              packaging: e
+                                                              current: e
                                                                   .tracking![1]
                                                                   .completed,
                                                             ),
@@ -1344,12 +1284,12 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                                     FontWeight
                                                                         .w400,
                                                                 color: model.orderStatusTextColorPackaging(
-                                                                  confirmed: e
-                                                                      .tracking![0]
-                                                                      .completed,
-                                                                  packaging: e
+                                                                  completed: e
                                                                       .tracking![1]
                                                                       .completed,
+                                                                  current: e
+                                                                      .tracking![1]
+                                                                      .current,
                                                                 ),
                                                               ),
                                                             ),
@@ -1388,15 +1328,12 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                               MainAxisSize.min,
                                                           children: [
                                                             model.orderStatusIconIntransit(
-                                                              confirmed: e
-                                                                  .tracking![0]
-                                                                  .completed,
-                                                              packaging: e
-                                                                  .tracking![1]
-                                                                  .completed,
-                                                              intransit: e
+                                                              completed: e
                                                                   .tracking![2]
                                                                   .completed,
+                                                              current: e
+                                                                  .tracking![2]
+                                                                  .current,
                                                             ),
                                                             SizedBox(
                                                               width: 4.w,
@@ -1412,15 +1349,12 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                                     FontWeight
                                                                         .w400,
                                                                 color: model.orderStatusTextColorIntransit(
-                                                                  confirmed: e
-                                                                      .tracking![0]
-                                                                      .completed,
-                                                                  packaging: e
-                                                                      .tracking![1]
-                                                                      .completed,
-                                                                  intransit: e
+                                                                  completed: e
                                                                       .tracking![2]
                                                                       .completed,
+                                                                  current: e
+                                                                      .tracking![2]
+                                                                      .current,
                                                                 ),
                                                               ),
                                                             ),
@@ -1438,18 +1372,12 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                         decoration: BoxDecoration(
                                                           color: model
                                                               .orderStatusColorDelivered(
-                                                                confirmed: e
-                                                                    .tracking![0]
-                                                                    .completed,
-                                                                packaging: e
-                                                                    .tracking![1]
-                                                                    .completed,
-                                                                intransit: e
-                                                                    .tracking![2]
-                                                                    .completed,
-                                                                delivered: e
+                                                                completed: e
                                                                     .tracking![3]
                                                                     .completed,
+                                                                current: e
+                                                                    .tracking![3]
+                                                                    .current,
                                                               ),
                                                           borderRadius:
                                                               BorderRadius.circular(
@@ -1461,16 +1389,10 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                               MainAxisSize.min,
                                                           children: [
                                                             model.orderStatusIconDelivered(
-                                                              confirmed: e
-                                                                  .tracking![0]
+                                                              completed: e
+                                                                  .tracking![3]
                                                                   .completed,
-                                                              packaging: e
-                                                                  .tracking![1]
-                                                                  .completed,
-                                                              intransit: e
-                                                                  .tracking![2]
-                                                                  .completed,
-                                                              delivered: e
+                                                              current: e
                                                                   .tracking![3]
                                                                   .completed,
                                                             ),
@@ -1488,16 +1410,10 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                                     FontWeight
                                                                         .w400,
                                                                 color: model.orderStatusTextColorDelivered(
-                                                                  confirmed: e
-                                                                      .tracking![0]
+                                                                  completed: e
+                                                                      .tracking![3]
                                                                       .completed,
-                                                                  packaging: e
-                                                                      .tracking![1]
-                                                                      .completed,
-                                                                  intransit: e
-                                                                      .tracking![2]
-                                                                      .completed,
-                                                                  delivered: e
+                                                                  current: e
                                                                       .tracking![3]
                                                                       .completed,
                                                                 ),

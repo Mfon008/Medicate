@@ -174,7 +174,7 @@ class _SpecialistsProviderDashboardState
                       SizedBox(height: 6.0.w),
                     ],
                   ),
-                  label: 'Wholesale Store',
+                  label: 'B2B Store',
                 ),
                 BottomNavigationBarItem(
                   icon: Column(

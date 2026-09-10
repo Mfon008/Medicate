@@ -107,12 +107,15 @@ class ManufacturerViewModel extends BaseViewModel {
   NafdacRegistrationNumberResponseModel?
   get nafdacRegistrationNumberResponseModel =>
       _nafdacRegistrationNumberResponseModel;
-  
+
   ListIncomingOrdersResponseModel? _listIncomingOrdersResponseModel;
-  ListIncomingOrdersResponseModel? get listIncomingOrdersResponseModel => _listIncomingOrdersResponseModel;
+  ListIncomingOrdersResponseModel? get listIncomingOrdersResponseModel =>
+      _listIncomingOrdersResponseModel;
   GetIncomingOrderDdetailResponseModel? _getIncomingOrderDdetailResponseModel;
-  GetIncomingOrderDdetailResponseModel? get getIncomingOrderDdetailResponseModel => _getIncomingOrderDdetailResponseModel;
-  
+  GetIncomingOrderDdetailResponseModel?
+  get getIncomingOrderDdetailResponseModel =>
+      _getIncomingOrderDdetailResponseModel;
+
   // GetUserDetailsResponseModel? _getUserDetailsResponseModel;
   // GetUserDetailsResponseModel? get getUserDetailsResponseModel =>
   //     _getUserDetailsResponseModel;
@@ -184,70 +187,162 @@ class ManufacturerViewModel extends BaseViewModel {
   //   notifyListeners();
   // }
 
-  getFilterTextOrder(s){
-    if(s=='All'){
+  getOrderPaymentStatusColorBorder(String s) {
+    if (s.toLowerCase() == 'pending') {
+      return AppColors.yellow.withValues(alpha: .1);
+    }
+    if (s.toLowerCase() == 'failed') {
+      return AppColors.red.withValues(alpha: .1);
+    }
+    if (s.toLowerCase() == 'success') {
+      return AppColors.app_green.withValues(alpha: .1);
+    } else {
+      AppColors.infoGrey.withValues(alpha: .1);
+    }
+  }
+
+  getOrderPaymentStatusColor(String s) {
+    if (s.toLowerCase() == 'pending') {
+      return AppColors.yellow;
+    }
+    if (s.toLowerCase() == 'failed') {
+      return AppColors.red;
+    }
+    if (s.toLowerCase() == 'success') {
+      return AppColors.app_green;
+    } else {
+      AppColors.infoGrey;
+    }
+  }
+
+  getOrderStatusColorBorder(String s) {
+    if (s.toLowerCase() == 'delivered') {
+      return AppColors.app_green.withValues(alpha: .1);
+    }
+    if (s.toLowerCase() == 'cancelled') {
+      return AppColors.red.withValues(alpha: .1);
+    }
+    if (s.toLowerCase() == 'pending') {
+      return AppColors.yellow.withValues(alpha: .1);
+    }
+    if (s.toLowerCase() == 'shipped') {
+      return AppColors.purple.withValues(alpha: .1);
+    } else {
+      AppColors.infoGrey.withValues(alpha: .1);
+    }
+  }
+
+  getOrderStatusColor(String s) {
+    if (s.toLowerCase() == 'delivered') {
+      return AppColors.app_green;
+    }
+    if (s.toLowerCase() == 'cancelled') {
+      return AppColors.red;
+    }
+    if (s.toLowerCase() == 'pending') {
+      return AppColors.yellow;
+    }
+    if (s.toLowerCase() == 'shipped') {
+      return AppColors.purple;
+    } else {
+      AppColors.infoGrey;
+    }
+  }
+
+  advanceStatusHighlights({String? stat, String? text}) {
+    if (stat == 'PENDING' && text == 'confirmed') {
+      return false;
+    }
+    if (stat == 'PENDING' && text == 'cancelled' ||
+        stat == 'CONFIRMED' && text == 'cancelled' ||
+        stat == 'PROCESSING' && text == 'cancelled' ||
+        stat == 'SHIPPED' && text == 'cancelled') {
+      return false;
+    }
+    if (stat == 'PENDING' && text == 'rejected') {
+      return false;
+    }
+    if (stat == 'CONFIRMED' && text == 'processing') {
+      return false;
+    }
+    if (stat == 'PROCESSING' && text == 'shipped') {
+      return false;
+    }
+    if (stat == 'SHIPPED' && text == 'delivered') {
+      return false;
+    }
+    if (stat == 'DELIVERED' && text == 'returned') {
+      return false;
+    }
+    return true;
+  }
+
+  getFilterTextOrder(s) {
+    if (s == 'All') {
       return 'All';
     }
-    if(s=='Pending'){
+    if (s == 'Pending') {
       return 'Pending';
     }
-    if(s=='Confirmed'){
+    if (s == 'Confirmed') {
       return 'Confirmed';
     }
-    if(s=='Packaging'){
+    if (s == 'Packaging') {
       return 'Processing';
     }
-    if(s=='In Transit'){
+    if (s == 'In Transit') {
       return 'Shipped';
     }
-    if(s=='Delivered'){
+    if (s == 'Delivered') {
       return 'Delivered';
     }
-    if(s=='Cancelled'){
+    if (s == 'Cancelled') {
       return 'Cancelled';
     }
   }
 
-  getFulfillmentOrderColor({bool? completed, bool? current}){
-    if(completed == true && current == true){
+  getFulfillmentOrderColor({bool? completed, bool? current}) {
+    if (completed == true && current == true) {
       return AppColors.app_green;
-    } else if(completed == false && current == true){
+    } else if (completed == false && current == true) {
       return AppColors.amber;
-    } else if(completed == false && current == false){
+    } else if (completed == false && current == false) {
       return AppColors.grey;
     } else {
       return AppColors.grey;
     }
   }
-  getFulfillmentOrderColorArrow({bool? completed, bool? current}){
-    if(completed == true && current == true){
+
+  getFulfillmentOrderColorArrow({bool? completed, bool? current}) {
+    if (completed == true && current == true) {
       return AppColors.app_green;
-    } else if(completed == false && current == true){
+    } else if (completed == false && current == true) {
       return AppColors.grey1;
-    } else if(completed == false && current == false){
+    } else if (completed == false && current == false) {
       return AppColors.infoGrey;
     } else {
       return AppColors.infoGrey;
     }
   }
 
-  getFulfillmentOrderTextColor({bool? completed, bool? current}){
-    if(completed == true && current == true){
+  getFulfillmentOrderTextColor({bool? completed, bool? current}) {
+    if (completed == true && current == true) {
       return AppColors.white;
-    } else if(completed == false && current == true){
+    } else if (completed == false && current == true) {
       return AppColors.white;
-    } else if(completed == false && current == false){
+    } else if (completed == false && current == false) {
       return AppColors.infoGrey;
     } else {
       return AppColors.infoGrey;
     }
   }
-  getFulfillmentOrderTextStatusColor({bool? completed, bool? current}){
-    if(completed == true && current == true){
+
+  getFulfillmentOrderTextStatusColor({bool? completed, bool? current}) {
+    if (completed == true && current == true) {
       return AppColors.white;
-    } else if(completed == false && current == true){
+    } else if (completed == false && current == true) {
       return AppColors.reminder;
-    } else if(completed == false && current == false){
+    } else if (completed == false && current == false) {
       return AppColors.infoGrey;
     } else {
       return AppColors.infoGrey;
@@ -1808,11 +1903,7 @@ class ManufacturerViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void listIncomingOrder(
-    context, {
-    String? status,
-    String? search,
-  }) async {
+  void listIncomingOrder(context, {String? status, String? search}) async {
     try {
       _isLoading = true;
       _listIncomingOrdersResponseModel = await runBusyFuture(
@@ -1832,16 +1923,39 @@ class ManufacturerViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void getIncomingOrderDetail(
-    context, {
-    String? id
-  }) async {
+  void getIncomingOrderDetail(context, {String? id}) async {
     try {
       _isLoading = true;
       _getIncomingOrderDdetailResponseModel = await runBusyFuture(
         repositoryImply.getIncomingOrder(wholesaleOrderId: id),
         throwException: true,
       );
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  void advaceIncomingOrder(
+    context, {
+    String? orderId,
+    String? orderItemId,
+    // int? itemList,
+  }) async {
+    try {
+      _isLoading = true;
+      var v = await runBusyFuture(
+        repositoryImply.advanceIncomingOrder(
+          wholesaleOrderId: orderId,
+          wholesaleOrderItemId: orderItemId,
+        ),
+        throwException: true,
+      );
+
+      AppUtils.snackbar(context, message: v['message']);
       _isLoading = false;
     } catch (e) {
       _isLoading = false;

@@ -94,8 +94,18 @@ class _PharmacyHomeScreenState extends State<PharmacyHomeScreen> {
                         .usersData['memberships'][0]['role'] !=
                     'OWNER'
                 ? SizedBox.shrink()
+                : SharedPreferencesService
+                              .instance
+                              .usersData['memberships'][0]['role'] ==
+                          'OWNER' &&
+                      SharedPreferencesService
+                              .instance
+                              .usersData['memberships'][0]['profileCompletionPercentage'] ==
+                          100
+                ? SizedBox.shrink()
                 : GestureDetector(
-                    onTap: () => navigate.navigateTo(Routes.profileScreen),
+                    onTap: () =>
+                        navigate.navigateTo(Routes.pharmacyProfileScreen),
                     child: Container(
                       // margin: EdgeInsets.symmetric(horizontal: 4.0.w),
                       padding: EdgeInsets.symmetric(
@@ -148,7 +158,7 @@ class _PharmacyHomeScreenState extends State<PharmacyHomeScreen> {
                                             null &&
                                         SharedPreferencesService
                                                 .instance
-                                                .usersData['memberships'][0] ==
+                                                .usersData['memberships'][0]['profileCompletionPercentage'] ==
                                             100
                                     ? 'Completed'
                                     : 'Complete Registration',

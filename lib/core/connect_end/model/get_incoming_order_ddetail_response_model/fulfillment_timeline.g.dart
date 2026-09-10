@@ -12,7 +12,7 @@ FulfillmentTimeline _$FulfillmentTimelineFromJson(Map<String, dynamic> json) =>
       label: json['label'] as String?,
       completed: json['completed'] as bool?,
       current: json['current'] as bool?,
-      occurredAt: json['occurredAt']
+      occurredAt: json['occurredAt'],
     );
 
 Map<String, dynamic> _$FulfillmentTimelineToJson(
@@ -22,5 +22,5 @@ Map<String, dynamic> _$FulfillmentTimelineToJson(
   'label': instance.label,
   'completed': instance.completed,
   'current': instance.current,
-  'occurredAt': instance.occurredAt?.toIso8601String(),
+  'occurredAt': instance.occurredAt,
 };

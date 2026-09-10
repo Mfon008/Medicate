@@ -128,8 +128,25 @@ class ManufacturerContractImpl {
     String? page,
     String? status,
     String? search,
-  }) async => await _api.listIncomingOrder(page: page, status: status, search: search);
-  Future<GetIncomingOrderDdetailResponseModel> getIncomingOrder({String? wholesaleOrderId}) async => await _api.getIncomingOrder(wholesaleOrderId: wholesaleOrderId);
+  }) async =>
+      await _api.listIncomingOrder(page: page, status: status, search: search);
+  Future<GetIncomingOrderDdetailResponseModel> getIncomingOrder({
+    String? wholesaleOrderId,
+  }) async => await _api.getIncomingOrder(wholesaleOrderId: wholesaleOrderId);
+  Future<dynamic> advanceIncomingOrder({
+    String? wholesaleOrderId,
+    String? wholesaleOrderItemId,
+  }) async => await _api.advanceIncomingOrder(
+    wholesaleOrderId: wholesaleOrderId,
+    wholesaleOrderItemId: wholesaleOrderItemId,
+  );
+  Future<dynamic> cancelIncomingOrder({
+    String? wholesaleOrderId,
+    String? wholesaleOrderItemId,
+  }) async => await _api.cancelIncomingOrder(
+    wholesaleOrderId: wholesaleOrderId,
+    wholesaleOrderItemId: wholesaleOrderItemId,
+  );
   // Future<GetUserDetailsResponseModel> getUserDetails(String phoneNo) async =>
   //     await _api.getUserDetails(phoneNo);
 }

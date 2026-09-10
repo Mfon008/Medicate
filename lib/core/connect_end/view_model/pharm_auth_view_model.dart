@@ -665,16 +665,16 @@ class PharmViewModel extends BaseViewModel {
   DateTime? pickedDatedStart;
   String? pickedDatedStartString;
 
-  orderStatusColorConfirmed(bool? confirmed) {
-    if (confirmed == true) {
+  orderStatusColorConfirmed(bool? completed) {
+    if (completed == true) {
       return AppColors.app_green;
     } else {
       return AppColors.yellow;
     }
   }
 
-  orderStatusIconConfirmed(bool? confirmed) {
-    if (confirmed == true) {
+  orderStatusIconConfirmed(bool? completed) {
+    if (completed == true) {
       return Icon(Icons.check, size: 15.80.sp, color: AppColors.white);
     } else {
       return SvgPicture.asset(
@@ -686,132 +686,102 @@ class PharmViewModel extends BaseViewModel {
     }
   }
 
-  orderStatusColorPackaging({bool? confirmed, bool? packaging}) {
-    if (confirmed == true && packaging == true) {
+  orderStatusColorPackaging({bool? completed, bool? current}) {
+    if (completed == true) {
       return AppColors.app_green;
-    } else if (confirmed == true && packaging == false) {
+    } else if (completed == false && current == true) {
       return AppColors.yellow;
     } else {
       return AppColors.grey;
     }
   }
 
-  orderStatusTextColorPackaging({bool? confirmed, bool? packaging}) {
-    if (confirmed == true && packaging == true) {
+  orderStatusTextColorPackaging({bool? completed, bool? current}) {
+    if (completed == true) {
       return AppColors.appWhite;
-    } else if (confirmed == true && packaging == false) {
+    } else if (completed == false && current == true) {
       return AppColors.white;
     } else {
       return AppColors.infoGrey;
     }
   }
 
-  orderStatusIconPackaging({bool? confirmed, bool? packaging}) {
-    if (confirmed == true && packaging == true) {
+  orderStatusIconPackaging({bool? completed, bool? current}) {
+    if (completed == true) {
       return Icon(Icons.check, size: 15.80.sp, color: AppColors.white);
     } else {
       return SvgPicture.asset(
         AppImage.box_cart,
         height: 12.80.sp,
         width: 12.80.sp,
-        color: AppColors.infoGrey,
+        color: completed == false && current == true
+            ? AppColors.white
+            : AppColors.infoGrey,
       );
     }
   }
 
-  orderStatusColorIntransit({
-    bool? confirmed,
-    bool? packaging,
-    bool? intransit,
-  }) {
-    if (confirmed == true && packaging == true && intransit == true) {
+  orderStatusColorIntransit({bool? completed, bool? current}) {
+    if (completed == true) {
       return AppColors.app_green;
-    } else if (confirmed == true && packaging == true && intransit == false) {
+    } else if (completed == false && current == true) {
       return AppColors.yellow;
     } else {
       return AppColors.grey;
     }
   }
 
-  orderStatusTextColorIntransit({
-    bool? confirmed,
-    bool? packaging,
-    bool? intransit,
-  }) {
-    if (confirmed == true && packaging == true && intransit == true) {
+  orderStatusTextColorIntransit({bool? completed, bool? current}) {
+    if (completed == true) {
       return AppColors.white;
-    } else if (confirmed == true && packaging == true && intransit == false) {
+    } else if (completed == false && current == true) {
       return AppColors.white;
     } else {
       return AppColors.infoGrey;
     }
   }
 
-  orderStatusIconIntransit({
-    bool? confirmed,
-    bool? packaging,
-    bool? intransit,
-  }) {
-    if (confirmed == true && packaging == true && intransit == true) {
+  orderStatusIconIntransit({bool? completed, bool? current}) {
+    if (completed == true) {
       return Icon(Icons.check, size: 15.80.sp, color: AppColors.white);
     } else {
-      return SvgPicture.asset(AppImage.delivery, color: AppColors.infoGrey);
+      return SvgPicture.asset(
+        AppImage.delivery,
+        color: completed == false && current == true
+            ? AppColors.white
+            : AppColors.infoGrey,
+      );
     }
   }
 
-  orderStatusTextColorDelivered({
-    bool? confirmed,
-    bool? packaging,
-    bool? intransit,
-    bool? delivered,
-  }) {
-    if (confirmed == true &&
-        packaging == true &&
-        intransit == true &&
-        delivered == true) {
+  orderStatusTextColorDelivered({bool? completed, bool? current}) {
+    if (completed == true) {
       return AppColors.white;
-    } else if (confirmed == true &&
-        packaging == true &&
-        intransit == true &&
-        delivered == false) {
+    } else if (completed == false && current == true) {
       return AppColors.white;
     } else {
       return AppColors.infoGrey;
     }
   }
 
-  orderStatusIconDelivered({
-    bool? confirmed,
-    bool? packaging,
-    bool? intransit,
-    bool? delivered,
-  }) {
-    if (confirmed == true && packaging == true && intransit == true) {
+  orderStatusIconDelivered({bool? completed, bool? current}) {
+    if (completed == true) {
       return Icon(Icons.check, size: 15.80.sp, color: AppColors.white);
     } else {
       return Icon(
         Icons.check_circle_outline_outlined,
         size: 14.sp,
-        color: AppColors.infoGrey,
+        color: completed == false && current == true
+            ? AppColors.white
+            : AppColors.infoGrey,
       );
     }
   }
 
-  orderStatusColorDelivered({
-    bool? confirmed,
-    bool? packaging,
-    bool? intransit,
-    bool? delivered,
-  }) {
-    if (confirmed == true &&
-        packaging == true &&
-        intransit == true &&
-        delivered == true) {
+  orderStatusColorDelivered({bool? completed, bool? current}) {
+    if (completed == true) {
       return AppColors.app_green;
-    } else if (confirmed == true &&
-        packaging == true &&
-        intransit == true &&
-        delivered == false) {
+    } else if (completed == false && current == true) {
       return AppColors.yellow;
     } else {
       return AppColors.grey;
@@ -19418,7 +19388,6 @@ class PharmViewModel extends BaseViewModel {
         ),
       );
     }
-    if (payMethod == PayMethod.paystack) {}
     if (payMethod == PayMethod.flutterwave) {}
     notifyListeners();
   }

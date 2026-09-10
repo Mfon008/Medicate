@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:medicate_app/core/app_assets/constant.dart';
+import 'package:medicate_app/core/connect_end/model/list_incoming_orders_response_model/order.dart';
 import 'package:stacked/stacked.dart';
 import '../../../core/app_assets/image.dart';
 import '../../../core/config/colors.dart';
@@ -32,7 +33,18 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
     'Cancelled',
   ];
 
+  List<String> advancecStatusList = [
+    'confirmed',
+    'processing',
+    'shipped',
+    'delivered',
+    'cancelled',
+    'rejected',
+    'returned',
+  ];
+
   String s = 'All';
+  String adStats = '';
 
   @override
   Widget build(BuildContext context) {
@@ -262,9 +274,11 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
                             Spacer(),
                             IconButton(
                               onPressed: () {
-                                _showStatusListMenu(context:context, model:model);
+                                _showStatusListMenu(
+                                  context: context,
+                                  model: model,
+                                );
                                 model.notifyListeners();
-                                
                               },
                               icon: Icon(
                                 Icons.keyboard_arrow_down_sharp,
@@ -348,19 +362,28 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
                                         horizontal: 12.0.w,
                                       ),
                                       decoration: BoxDecoration(
-                                        color: AppColors.fadedyellow,
+                                        color: model.getOrderStatusColorBorder(
+                                          ord.status!,
+                                        ),
                                         borderRadius: BorderRadius.circular(
                                           12.r,
+                                        ),
+                                        border: Border.all(
+                                          color: model.getOrderStatusColor(
+                                            ord.status!,
+                                          ),
                                         ),
                                       ),
                                       child: Center(
                                         child: TextView(
-                                          text: 'Pending',
+                                          text: '${ord.statusLabel}',
                                           textStyle: TextStyle(
                                             fontFamily: 'DMSans',
                                             fontSize: 12.2.sp,
                                             fontWeight: FontWeight.w500,
-                                            color: AppColors.yellow,
+                                            color: model.getOrderStatusColor(
+                                              ord.status!,
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -502,7 +525,6 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
                                         ),
                                       ),
                                       SizedBox(height: 10.h),
-
                                       IntrinsicWidth(
                                         child: Container(
                                           padding: EdgeInsets.symmetric(
@@ -510,19 +532,32 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
                                             horizontal: 12.0.w,
                                           ),
                                           decoration: BoxDecoration(
-                                            color: AppColors.fadedyellow,
+                                            color: model
+                                                .getOrderPaymentStatusColor(
+                                                  ord.paymentStatus!,
+                                                )
+                                                .withOpacity(.1),
                                             borderRadius: BorderRadius.circular(
                                               12.r,
+                                            ),
+                                            border: Border.all(
+                                              color: model
+                                                  .getOrderPaymentStatusColor(
+                                                    ord.paymentStatus!,
+                                                  ),
                                             ),
                                           ),
                                           child: Center(
                                             child: TextView(
-                                              text: 'Pending',
+                                              text: '${ord.paymentStatusLabel}',
                                               textStyle: TextStyle(
                                                 fontFamily: 'DMSans',
                                                 fontSize: 12.2.sp,
                                                 fontWeight: FontWeight.w500,
-                                                color: AppColors.yellow,
+                                                color: model
+                                                    .getOrderPaymentStatusColor(
+                                                      ord.paymentStatus!,
+                                                    ),
                                               ),
                                             ),
                                           ),
@@ -531,51 +566,55 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
                                     ],
                                   ),
                                   SizedBox(height: 16.20.h),
-                                  GestureDetector(
-                                    onTap: () => navigate.navigateTo(
-                                      Routes.viewOrderManagementScreen,
-                                    ),
-                                    child: Container(
-                                      padding: EdgeInsets.symmetric(
-                                        vertical: 8.10.w,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: AppColors.primary,
-                                          width: 1.42,
-                                        ),
-                                        borderRadius: BorderRadius.circular(
-                                          40.r,
-                                        ),
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          SvgPicture.asset(
-                                            AppImage.van,
-                                            height: isTablet(context)
-                                                ? 28.40.h
-                                                : 14.20.h,
-                                            width: isTablet(context)
-                                                ? 28.40.w
-                                                : 14.20.w,
-                                            color: AppColors.primary,
-                                          ),
-                                          SizedBox(width: 7.10.w),
-                                          TextView(
-                                            text: 'Advance',
-                                            textStyle: TextStyle(
-                                              fontFamily: 'DMSans',
-                                              fontSize: 16.20.sp,
-                                              fontWeight: FontWeight.w500,
-                                              color: AppColors.primary,
+                                  ord.paymentStatus?.toLowerCase() == 'success'
+                                      ? GestureDetector(
+                                          onTap: () =>
+                                              _showAdvanceStatusListMenu(
+                                                context: context,
+                                                model: model,
+                                                order: ord,
+                                              ),
+                                          child: Container(
+                                            padding: EdgeInsets.symmetric(
+                                              vertical: 8.10.w,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                color: AppColors.primary,
+                                                width: 1.42,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(40.r),
+                                            ),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                SvgPicture.asset(
+                                                  AppImage.van,
+                                                  height: isTablet(context)
+                                                      ? 28.40.h
+                                                      : 14.20.h,
+                                                  width: isTablet(context)
+                                                      ? 28.40.w
+                                                      : 14.20.w,
+                                                  color: AppColors.primary,
+                                                ),
+                                                SizedBox(width: 7.10.w),
+                                                TextView(
+                                                  text: 'Advance',
+                                                  textStyle: TextStyle(
+                                                    fontFamily: 'DMSans',
+                                                    fontSize: 16.20.sp,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: AppColors.primary,
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
+                                        )
+                                      : SizedBox.shrink(),
                                   SizedBox(height: 2.0.h),
                                 ],
                               ),
@@ -699,7 +738,10 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
     );
   }
 
-  void _showStatusListMenu({BuildContext? context, ManufacturerViewModel? model}) async {
+  void _showStatusListMenu({
+    BuildContext? context,
+    ManufacturerViewModel? model,
+  }) async {
     final RenderBox overlay =
         Overlay.of(context!).context.findRenderObject() as RenderBox;
 
@@ -774,7 +816,11 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
                           s = e;
                         });
 
-                        model!.listIncomingOrder(context, status: model.getFilterTextOrder(s),search: model.searchProductController!.text.trim());
+                        model!.listIncomingOrder(
+                          context,
+                          status: model.getFilterTextOrder(s),
+                          search: model.searchProductController!.text.trim(),
+                        );
                         model.notifyListeners();
 
                         // Allow the user to see the selected state
@@ -813,6 +859,172 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
                             fontSize: 16.2.sp,
                             fontWeight: FontWeight.w500,
                             color: isSelected
+                                ? AppColors.primary
+                                : AppColors.reminder,
+                          ),
+                        ),
+                      ),
+                    );
+                  }),
+                ],
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _showAdvanceStatusListMenu({
+    BuildContext? context,
+    ManufacturerViewModel? model,
+    Order? order,
+  }) async {
+    final RenderBox overlay =
+        Overlay.of(context!).context.findRenderObject() as RenderBox;
+
+    final double popupWidth = 250.w;
+    final double rightMargin = 10.w;
+
+    // Approximate height of the popup
+    final double popupHeight = 300.h;
+
+    // Vertically center the popup
+    final double top = (overlay.size.height - popupHeight) / 2;
+
+    final RelativeRect menuPosition = RelativeRect.fromLTRB(
+      overlay.size.width - popupWidth - rightMargin,
+      top,
+      rightMargin,
+      top,
+    );
+
+    // Keep the currently selected value
+    String selectedStatus = adStats;
+
+    await showMenu(
+      context: context,
+      position: menuPosition,
+      color: AppColors.white,
+      elevation: .8,
+
+      items: [
+        PopupMenuItem(
+          enabled: false,
+          padding: EdgeInsets.zero,
+          child: StatefulBuilder(
+            builder: (context, menuSetState) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // HEADER
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 12.w,
+                      vertical: 8.w,
+                    ),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: TextView(
+                        text: 'Advance',
+                        textStyle: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 15.2.sp,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.infoGrey,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  // STATUS LIST
+                  ...advancecStatusList.map((e) {
+                    final bool isSelected = selectedStatus == e;
+
+                    return GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () async {
+                        // Update ONLY the local popup state first
+                        menuSetState(() {
+                          if (model.advanceStatusHighlights(
+                            stat: order?.status,
+                            text: e,
+                          )) {
+                          } else {
+                            selectedStatus = e;
+                          }
+                        });
+
+                        // Update your actual page state
+                        setState(() {
+                          if (model.advanceStatusHighlights(
+                            stat: order?.status,
+                            text: e,
+                          )) {
+                          } else {
+                            adStats = e;
+                          }
+                        });
+                        print('......${order?.status}');
+
+                        ;
+                        if (model.advanceStatusHighlights(
+                          stat: order?.status,
+                          text: e,
+                        )) {
+                        } else {
+                          model.advaceIncomingOrder(context);
+                        }
+                        model.notifyListeners();
+
+                        // Allow the user to see the selected state
+                        await Future.delayed(const Duration(milliseconds: 300));
+
+                        // Close popup
+                        if (context.mounted) {
+                          Navigator.pop(context);
+                        }
+                      },
+                      child: Container(
+                        width: double.infinity,
+                        margin: EdgeInsets.symmetric(
+                          horizontal: 8.w,
+                          vertical: 3.w,
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          vertical: 8.w,
+                          horizontal: 12.w,
+                        ),
+                        decoration: BoxDecoration(
+                          color:
+                              model!.advanceStatusHighlights(
+                                stat: order?.status,
+                                text: e,
+                              )
+                              ? AppColors.transparent
+                              : isSelected
+                              ? AppColors.skyBlue
+                              : AppColors.transparent,
+                          borderRadius: BorderRadius.circular(12.r),
+                          border: Border.all(
+                            color: isSelected
+                                ? AppColors.cool_blue
+                                : AppColors.transparent,
+                          ),
+                        ),
+                        child: TextView(
+                          text: 'Mark as $e',
+                          textStyle: TextStyle(
+                            fontFamily: 'DMSans',
+                            fontSize: 16.2.sp,
+                            fontWeight: FontWeight.w400,
+                            color:
+                                model!.advanceStatusHighlights(
+                                  stat: order?.status,
+                                  text: e,
+                                )
+                                ? AppColors.infoGrey
+                                : isSelected
                                 ? AppColors.primary
                                 : AppColors.reminder,
                           ),

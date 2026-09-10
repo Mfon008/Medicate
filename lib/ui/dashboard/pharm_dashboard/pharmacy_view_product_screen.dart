@@ -681,8 +681,7 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                                     ),
                                                     TextView(
                                                       text: formatNaira(
-                                                        o['enlistedPricePerUnit']
-                                                            .toInt(),
+                                                        o['enlistedPricePerUnit'],
                                                       ),
                                                       textStyle: TextStyle(
                                                         fontFamily: 'DMSans',

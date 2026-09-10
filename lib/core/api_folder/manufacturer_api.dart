@@ -439,7 +439,9 @@ class ManufacturerApi {
     }
   }
 
-  Future<GetIncomingOrderDdetailResponseModel> getIncomingOrder({String? wholesaleOrderId}) async {
+  Future<GetIncomingOrderDdetailResponseModel> getIncomingOrder({
+    String? wholesaleOrderId,
+  }) async {
     try {
       final response = await _service.call(
         '${UrlConfig.wholesale_incoming_orders}/$wholesaleOrderId',
@@ -453,10 +455,13 @@ class ManufacturerApi {
     }
   }
 
-  Future<dynamic> advanceIncomingOrder({String? wholesaleOrderId}) async {
+  Future<dynamic> advanceIncomingOrder({
+    String? wholesaleOrderId,
+    String? wholesaleOrderItemId,
+  }) async {
     try {
       final response = await _service.call(
-        '${UrlConfig.wholesale_incoming_orders}/$wholesaleOrderId/advance',
+        '${UrlConfig.wholesale_incoming_orders}/$wholesaleOrderId/items/$wholesaleOrderItemId/advance',
         RequestMethod.patch,
       );
       logger.d(response.data);
@@ -467,10 +472,47 @@ class ManufacturerApi {
     }
   }
 
-  Future<dynamic> cancelIncomingOrder({String? wholesaleOrderId}) async {
+  Future<dynamic> cancelIncomingOrder({
+    String? wholesaleOrderId,
+    String? wholesaleOrderItemId,
+  }) async {
     try {
       final response = await _service.call(
-        '${UrlConfig.wholesale_incoming_orders}/$wholesaleOrderId/cancel',
+        '${UrlConfig.wholesale_incoming_orders}/$wholesaleOrderId/items/$wholesaleOrderItemId/cancel',
+        RequestMethod.patch,
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> rejectIncomingOrder({
+    String? wholesaleOrderId,
+    String? wholesaleOrderItemId,
+  }) async {
+    try {
+      final response = await _service.call(
+        '${UrlConfig.wholesale_incoming_orders}/$wholesaleOrderId/items/$wholesaleOrderItemId/reject',
+        RequestMethod.patch,
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> returnIncomingOrder({
+    String? wholesaleOrderId,
+    String? wholesaleOrderItemId,
+  }) async {
+    try {
+      final response = await _service.call(
+        '${UrlConfig.wholesale_incoming_orders}/$wholesaleOrderId/items/$wholesaleOrderItemId/return',
         RequestMethod.patch,
       );
       logger.d(response.data);

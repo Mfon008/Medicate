@@ -115,18 +115,22 @@ class ManufacturerProfileScreen extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 2.10.h),
-                  Center(
-                    child: TextView(
-                      text:
-                          '${SharedPreferencesService.instance.usersData['user']['email'] ?? ''}',
-                      textStyle: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 14.2.sp,
-                        fontWeight: FontWeight.w400,
-                        color: AppColors.fineGrey,
-                      ),
-                    ),
-                  ),
+                  SharedPreferencesService.instance.usersData != null &&
+                          SharedPreferencesService.instance.usersData['user'] !=
+                              null
+                      ? Center(
+                          child: TextView(
+                            text:
+                                '${SharedPreferencesService.instance.usersData['user']['email'] ?? ''}',
+                            textStyle: TextStyle(
+                              fontFamily: 'Arial',
+                              fontSize: 14.2.sp,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.fineGrey,
+                            ),
+                          ),
+                        )
+                      : SizedBox.shrink(),
 
                   SizedBox(height: 20.h),
                   profileContainer(
