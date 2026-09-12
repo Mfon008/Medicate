@@ -16,6 +16,7 @@ Data _$DataFromJson(Map<String, dynamic> json) => Data(
   country: json['country'] as String?,
   state: json['state'] as String?,
   lga: json['lga'] as String?,
+  logo: json['logo'] == null? null:Logo.fromJson(json['logo'] as Map<String, dynamic>),
   phone: json['phone'] as String?,
   kycStatus: json['kycStatus'] as String?,
   isProfileComplete: json['isProfileComplete'] as bool?,

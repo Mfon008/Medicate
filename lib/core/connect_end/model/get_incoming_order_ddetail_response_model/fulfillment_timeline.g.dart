@@ -10,10 +10,10 @@ FulfillmentTimeline _$FulfillmentTimelineFromJson(Map<String, dynamic> json) =>
     FulfillmentTimeline(
       status: json['status'] as String?,
       label: json['label'] as String?,
-      note: json['note'] as String?,
       completed: json['completed'] as bool?,
       current: json['current'] as bool?,
       occurredAt: json['occurredAt'],
+      note: json['note'] as String?,
     );
 
 Map<String, dynamic> _$FulfillmentTimelineToJson(
@@ -21,8 +21,8 @@ Map<String, dynamic> _$FulfillmentTimelineToJson(
 ) => <String, dynamic>{
   'status': instance.status,
   'label': instance.label,
+  'note': instance.note,
   'completed': instance.completed,
   'current': instance.current,
   'occurredAt': instance.occurredAt,
-  'note': instance.note,
 };

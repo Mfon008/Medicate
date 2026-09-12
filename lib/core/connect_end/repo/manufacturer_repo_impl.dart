@@ -9,9 +9,9 @@ import '../model/create_distributor_product_entity_model/create_distributor_prod
 import '../model/distributor_wholesale_category_model/distributor_wholesale_category_model.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
 import '../model/get_all_product_list_response_model/get_all_product_list_response_model.dart';
+import '../model/get_distributor_profile_response_model/get_distributor_profile_response_model.dart';
 import '../model/get_incoming_order_ddetail_response_model/get_incoming_order_ddetail_response_model.dart';
 import '../model/get_single_product_response_model/get_single_product_response_model.dart';
-// import '../model/get_user_details_response_model/get_user_details_response_model.dart';
 import '../model/list_incoming_orders_response_model/list_incoming_orders_response_model.dart';
 import '../model/login_entity_model.dart';
 import '../model/nafdac_registration_number_entity_model.dart';
@@ -23,6 +23,7 @@ import '../model/reset_password_entity_model.dart';
 import '../model/set_pin_entity_model.dart';
 import '../model/set_pin_pharm_response_model/set_pin_pharm_response_model.dart';
 import '../model/sign_up_phamary_response_model/sign_up_phamary_response_model.dart';
+import '../model/update_distributor_profile_entity_model.dart';
 import '../model/update_product_management_entity_model/update_product_management_entity_model.dart';
 import '../model/upload_product_image_response_model/upload_product_image_response_model.dart';
 import '../model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
@@ -247,23 +248,24 @@ class ManufacturerRepoImpl {
     final response = await _contract.cancelIncomingOrder(
       wholesaleOrderId: wholesaleOrderId,
       wholesaleOrderItemId: wholesaleOrderItemId,
-      reason:reason
+      reason: reason,
     );
     return response;
   }
 
   Future<dynamic> rejectIncomingOrder({
     String? wholesaleOrderId,
-    String? wholesaleOrderItemId, 
+    String? wholesaleOrderItemId,
     String? reason,
   }) async {
     final response = await _contract.rejectIncomingOrder(
       wholesaleOrderId: wholesaleOrderId,
       wholesaleOrderItemId: wholesaleOrderItemId,
-      reason:reason
+      reason: reason,
     );
     return response;
   }
+
   Future<dynamic> returnIncomingOrder({
     String? wholesaleOrderId,
     String? wholesaleOrderItemId,
@@ -275,10 +277,22 @@ class ManufacturerRepoImpl {
     return response;
   }
 
-  // Future<GetUserDetailsResponseModel> getUserDetails(String phoneNo) async {
-  //   final response = await _contract.getUserDetails(phoneNo);
-  //   return response;
-  // }
+  Future<GetDistributorProfileResponseModel> getUserDetails() async {
+    final response = await _contract.getUserDetails();
+    return response;
+  }
+
+  Future<dynamic> updateDistributorProfile(
+    UpdateDistributorProfileEntityModel updateEntity,
+  ) async {
+    final response = await _contract.updateDistributorProfile(updateEntity);
+    return response;
+  }
+
+  Future<dynamic> updateDistributorProfilePicture(MultipartFile file) async {
+    final response = await _contract.updateDistributorProfilePicture(file);
+    return response;
+  }
 
   void _chache(data) {
     if (data != null) {

@@ -59,10 +59,9 @@ class _ProductScreenState extends State<ProductScreen> {
                     height: isTablet(context) ? 32.h : 12.h,
                     width: isTablet(context) ? 32.w : 12.w,
                   ),
-                  onPressed: () {},
-                  // onPressed: () => navigate.navigateTo(
-                  //   Routes.moreScreen,
-                  // ), // makes ripple effect round
+                  onPressed: () => navigate.navigateTo(
+                    Routes.manufacturerProfileScreen,
+                  ), // makes ripple effect round
                 ),
               ),
               SvgPicture.asset(AppImage.applogoSvg, height: 28.h, width: 28.w),

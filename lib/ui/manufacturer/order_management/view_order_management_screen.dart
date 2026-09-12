@@ -140,7 +140,8 @@ class ViewOrderManagementScreen extends StatelessWidget {
                                         .data!
                                         .order!
                                         .customer
-                                        ?.name ??
+                                        ?.name
+                                        ?.capitalize() ??
                                     '',
                                 textStyle: TextStyle(
                                   fontFamily: 'DMSans',
@@ -163,7 +164,13 @@ class ViewOrderManagementScreen extends StatelessWidget {
                                   Expanded(
                                     child: TextView(
                                       text:
-                                          '${model.getIncomingOrderDdetailResponseModel!.data!.order!.customer?.address ?? ''} ${model.getIncomingOrderDdetailResponseModel!.data!.order!.customer?.lga ?? ''} ${model.getIncomingOrderDdetailResponseModel!.data!.order!.customer?.state ?? ''}',
+                                          model
+                                              .getIncomingOrderDdetailResponseModel!
+                                              .data!
+                                              .order!
+                                              .customer
+                                              ?.address ??
+                                          '',
                                       textStyle: TextStyle(
                                         fontFamily: 'DMSans',
                                         fontSize: 14.2.sp,
@@ -216,6 +223,33 @@ class ViewOrderManagementScreen extends StatelessWidget {
                             color: AppColors.reminder,
                           ),
                         ),
+                        SizedBox(height: 10.h),
+                        Padding(
+                          padding: EdgeInsets.only(left: 4.0.w),
+                          child: TextView(
+                            text:
+                                model
+                                        .getIncomingOrderDdetailResponseModel!
+                                        .data!
+                                        .order!
+                                        .orderNotes !=
+                                    ''
+                                ? model
+                                      .getIncomingOrderDdetailResponseModel!
+                                      .data!
+                                      .order!
+                                      .orderNotes!
+                                      .capitalize()
+                                : 'No note',
+                            textStyle: TextStyle(
+                              fontFamily: 'DMSans',
+                              fontSize: 15.02.sp,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.reminder,
+                              letterSpacing: -0.98,
+                            ),
+                          ),
+                        ),
                         SizedBox(height: 13.20.h),
                         TextView(
                           text:
@@ -234,7 +268,7 @@ class ViewOrderManagementScreen extends StatelessWidget {
                           children: [
                             TextView(
                               text:
-                                  'items (${model.getIncomingOrderDdetailResponseModel!.data!.order!.items?.length ?? 0})',
+                                  'Items (${model.getIncomingOrderDdetailResponseModel!.data!.order!.items?.length ?? 0})',
                               textStyle: TextStyle(
                                 fontFamily: 'DMSans',
                                 fontSize: 15.82.sp,
@@ -369,7 +403,7 @@ class ViewOrderManagementScreen extends StatelessWidget {
                                                 SizedBox(height: 2.10.h),
                                                 TextView(
                                                   text:
-                                                      'Qty ${e.quantity ?? 0} | ${formatNairaDouble(e.unitPrice!.toDouble())}',
+                                                      'Qty ${e.quantity ?? 0} | ${formatNairaDouble(e.unitPrice!)}',
                                                   textStyle: TextStyle(
                                                     fontFamily: 'GoogleSans',
                                                     fontSize: 13.20.sp,
@@ -422,7 +456,7 @@ class ViewOrderManagementScreen extends StatelessWidget {
                                           .toLowerCase() ==
                                       'rejected'
                               ? Container(
-                                width: double.infinity,
+                                  width: double.infinity,
                                   padding: EdgeInsets.symmetric(
                                     horizontal: 12.w,
                                     vertical: 10.w,
@@ -430,13 +464,16 @@ class ViewOrderManagementScreen extends StatelessWidget {
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10.r),
                                     color: AppColors.red_bar.withOpacity(.1),
-                                    border: Border.all(color: AppColors.red_bar)
+                                    border: Border.all(
+                                      color: AppColors.red_bar,
+                                    ),
                                   ),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       TextView(
-                                        text:'Comment',
+                                        text: 'Comment',
                                         textStyle: TextStyle(
                                           fontFamily: 'DMSans',
                                           fontSize: 15.2.sp,
@@ -444,14 +481,16 @@ class ViewOrderManagementScreen extends StatelessWidget {
                                           color: AppColors.red_bar,
                                         ),
                                       ),
-                                      SizedBox(height: 6.10.h,),
+                                      SizedBox(height: 6.10.h),
                                       TextView(
                                         text:
                                             model
                                                 .getIncomingOrderDdetailResponseModel!
                                                 .data!
                                                 .order!
-                                                .items?[0].fulfillmentTimeline?[5].note ??
+                                                .items?[0]
+                                                .fulfillmentTimeline?[5]
+                                                .note ??
                                             '',
                                         textStyle: TextStyle(
                                           fontFamily: 'DMSans',

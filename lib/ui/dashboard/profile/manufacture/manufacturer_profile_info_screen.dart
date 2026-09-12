@@ -1,13 +1,18 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:medicate_app/core/core_folder/manager/shared_preference.dart';
 import 'package:medicate_app/main.dart';
 import 'package:stacked/stacked.dart';
 import '../../../../core/app_assets/app_validation.dart';
 import '../../../../core/app_assets/image.dart';
+import '../../../../core/app_assets/state_lga_format.dart';
 import '../../../../core/config/colors.dart';
+import '../../../../core/connect_end/model/update_distributor_profile_entity_model.dart';
 import '../../../../core/connect_end/view_model/manufacturer_view_model.dart';
 import '../../../widget/button.dart';
 import '../../../widget/text.dart';
@@ -34,6 +39,9 @@ class _ManufacturerProfileInfoScreenState
   TextEditingController contactDetailsController = TextEditingController();
   TextEditingController bankNameController = TextEditingController();
   TextEditingController bankNoController = TextEditingController();
+
+  TextEditingController stateController = TextEditingController();
+  TextEditingController lgaController = TextEditingController();
 
   bool isPhone = false;
   bool isPhoneValid = false;
@@ -68,64 +76,40 @@ class _ManufacturerProfileInfoScreenState
           viewModelBuilder: () => ManufacturerViewModel(),
           onViewModelReady: (model) async {
             WidgetsBinding.instance.addPostFrameCallback((_) async {
-              // await model.getTenant(context);
-              // nameController.text =
-              //     model.getTetantResponseModel?.data?.name ?? '';
-              // phoneController.text = SharedPreferencesService
-              //     .instance
-              //     .usersData['user']['phone']
-              //     .toString()
-              //     .substring(4);
+              await model.getUserDetails(context);
+              nameController.text =
+                  model
+                      .getDistributorDetailsResponseModel
+                      ?.data
+                      ?.distributorManufacturerName ??
+                  '';
+              phoneController.text =
+                  SharedPreferencesService
+                      .instance
+                      .usersData['user']['phone'] ??
+                  '';
 
-              // licenceNoController.text =
-              //     model.getTetantResponseModel?.data?.licenseNumber ?? '';
-              // businessAddController.text =
-              //     model.getTetantResponseModel?.data?.businessAddress ?? '';
-              // bankNameController.text =
-              //     model
-              //         .getTetantResponseModel
-              //         ?.data
-              //         ?.bankDetails?[0]
-              //         .bankName ??
-              //     "";
-              // bankNoController.text =
-              //     model
-              //         .getTetantResponseModel
-              //         ?.data
-              //         ?.bankDetails?[0]
-              //         .accountNumber ??
-              //     '';
-              // emailController.text =
-              //     model.getTetantResponseModel?.data?.email ?? '';
-              // model.countryController.text =
-              //     model.getTetantResponseModel?.data?.country ?? '';
-              // model.stateController.text =
-              //     model.getTetantResponseModel?.data?.state ?? '';
-              // model.lgaController.text =
-              //     model.getTetantResponseModel?.data?.lga ?? '';
-              // model.selectService =
-              //     model.getTetantResponseModel?.data?.servicesOffered ?? [];
-              // contactDetailsController.text =
-              //     model
-              //         .getTetantResponseModel
-              //         ?.data
-              //         ?.bankDetails?[0]
-              //         .accountName ??
-              //     '';
-              // bankNameController.text =
-              //     model
-              //         .getTetantResponseModel
-              //         ?.data
-              //         ?.bankDetails?[0]
-              //         .bankName ??
-              //     '';
-              // bankNoController.text =
-              //     model
-              //         .getTetantResponseModel
-              //         ?.data
-              //         ?.bankDetails?[0]
-              //         .accountNumber ??
-              //     '';
+              licenceNoController.text =
+                  model
+                      .getDistributorDetailsResponseModel
+                      ?.data
+                      ?.registrationNumber ??
+                  '';
+              businessAddController.text =
+                  model
+                      .getDistributorDetailsResponseModel
+                      ?.data
+                      ?.businessAddress ??
+                  '';
+
+              emailController.text =
+                  model.getDistributorDetailsResponseModel?.data?.email ?? '';
+              countryController.text =
+                  model.getDistributorDetailsResponseModel?.data?.country ?? '';
+              stateController.text =
+                  model.getDistributorDetailsResponseModel?.data?.state ?? '';
+              lgaController.text =
+                  model.getDistributorDetailsResponseModel?.data?.lga ?? '';
             });
           },
           disposeViewModel: false,
@@ -146,8 +130,8 @@ class _ManufacturerProfileInfoScreenState
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        bankNameController.text.isEmpty ||
-                                bankNoController.text.isEmpty
+                        nameController.text.isEmpty ||
+                                countryController.text.isEmpty
                             ? Container(
                                 padding: EdgeInsets.symmetric(
                                   vertical: 12.w,
@@ -175,6 +159,8 @@ class _ManufacturerProfileInfoScreenState
                                 ),
                               )
                             : SizedBox.shrink(),
+
+                        SizedBox(height: 10.h),
                         SizedBox(
                           height:
                               bankNameController.text.isEmpty ||
@@ -214,12 +200,19 @@ class _ManufacturerProfileInfoScreenState
                             ),
 
                             GestureDetector(
-                              // onTap: () => model.sendOtpPharmacy(
-                              //   context,
-                              //   phone: SharedPreferencesService
-                              //       .instance
-                              //       .usersData['user']['phone'],
-                              // ),
+                              onTap: () => model.changeNumberManufacturer(
+                                context,
+                                phone:
+                                    model
+                                        .getDistributorDetailsResponseModel
+                                        ?.data
+                                        ?.phone ??
+                                    '',
+                                id: model
+                                    .getDistributorDetailsResponseModel
+                                    ?.data
+                                    ?.id,
+                              ),
 
                               child: model.isLoading
                                   ? SpinKitCircle(
@@ -289,7 +282,6 @@ class _ManufacturerProfileInfoScreenState
                                   borderTopRight: 10,
                                   borderBottomLeft: 0,
                                   borderBottomRight: 10,
-
                                   labelStyle: TextStyle(
                                     fontWeight: FontWeight.w400,
                                     fontFamily: 'Arial',
@@ -321,7 +313,7 @@ class _ManufacturerProfileInfoScreenState
 
                         SizedBox(height: 20.h),
                         TextFormWidget(
-                          hint: 'Pharmacy ID',
+                          hint: 'Distributor/Manufacturer name',
                           hintSize: 14,
                           borderColor: AppColors.transparent,
                           borderTopLeft: 10.r,
@@ -343,40 +335,14 @@ class _ManufacturerProfileInfoScreenState
                           fillColor: AppColors.grey,
                           isFilled: true,
                           readOnly: true,
-                          obscureText: isSeeId ? false : true,
-                          controller: TextEditingController(
-                            // text: model.getTetantResponseModel?.data?.id ?? '',
-                          ),
+                          controller: nameController,
                           onChange: (p0) {
                             setState(() {});
                           },
                         ),
                         SizedBox(height: 20.h),
                         TextFormWidget(
-                          hint: 'Pharmacy name',
-                          hintSize: 14,
-                          borderColor: AppColors.transparent,
-                          borderTopLeft: 10.r,
-                          borderTopRight: 10.r,
-                          borderBottomLeft: 10.r,
-                          borderBottomRight: 10.r,
-                          labelStyle: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontFamily: 'Arial',
-                            fontSize: 14.2.sp,
-                            color: AppColors.infoGrey,
-                          ),
-                          fillColor: AppColors.grey,
-                          isFilled: true,
-                          readOnly: true,
-                          label: nameController.text,
-                          onChange: (p0) {
-                            setState(() {});
-                          },
-                        ),
-                        SizedBox(height: 20.h),
-                        TextFormWidget(
-                          hint: 'Pharmacy license number',
+                          hint: 'Business Registration Number',
                           hintSize: 14,
                           borderColor: AppColors.transparent,
                           borderTopLeft: 10.r,
@@ -393,6 +359,29 @@ class _ManufacturerProfileInfoScreenState
                           isFilled: true,
                           readOnly: true,
                           label: licenceNoController.text,
+                          onChange: (p0) {
+                            setState(() {});
+                          },
+                        ),
+                        SizedBox(height: 20.h),
+                        TextFormWidget(
+                          hint: 'Email',
+                          hintSize: 14,
+                          borderColor: AppColors.transparent,
+                          borderTopLeft: 10.r,
+                          borderTopRight: 10.r,
+                          borderBottomLeft: 10.r,
+                          borderBottomRight: 10.r,
+                          validator: AppValidator.validateEmail(),
+                          labelStyle: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'Arial',
+                            fontSize: 14.2.sp,
+                            color: AppColors.infoGrey,
+                          ),
+                          fillColor: AppColors.grey,
+                          isFilled: true,
+                          controller: emailController,
                           onChange: (p0) {
                             setState(() {});
                           },
@@ -439,248 +428,413 @@ class _ManufacturerProfileInfoScreenState
                           ),
                           fillColor: AppColors.grey,
                           isFilled: true,
-                          // controller: model.countryController,
+                          controller: countryController,
                           validator: AppValidator.validateString(),
-                          suffixWidget: GestureDetector(
-                            // onTap: () =>
-                            //     model.modalBottomSheetMenuCountry(context),
+                          suffixWidget: Builder(
+                            builder: (context) {
+                              return GestureDetector(
+                                onTap: () async {
+                                  final RenderBox button =
+                                      context.findRenderObject() as RenderBox;
 
-                            child: Padding(
-                              padding: EdgeInsets.all(14.20.w),
-                              child: SvgPicture.asset(AppImage.arrow_down),
-                            ),
+                                  final RenderBox overlay =
+                                      Overlay.of(
+                                            context,
+                                          ).context.findRenderObject()
+                                          as RenderBox;
+
+                                  final Offset buttonPosition = button
+                                      .localToGlobal(
+                                        Offset.zero,
+                                        ancestor: overlay,
+                                      );
+
+                                  final Size buttonSize = button.size;
+
+                                  final selectedState = await showMenu<String>(
+                                    context: context,
+
+                                    position: RelativeRect.fromLTRB(
+                                      buttonPosition.dx,
+                                      buttonPosition.dy +
+                                          buttonSize.height +
+                                          5.h,
+                                      overlay.size.width -
+                                          buttonPosition.dx -
+                                          buttonSize.width,
+                                      0,
+                                    ),
+
+                                    constraints: BoxConstraints(
+                                      minWidth: 200.w,
+                                      maxWidth: 250.w,
+                                      minHeight: 60.h,
+                                      maxHeight: 450.h,
+                                    ),
+
+                                    color: AppColors.white,
+
+                                    elevation: 4,
+
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10.r),
+                                    ),
+
+                                    items: ['Nigeria']
+                                        .map<PopupMenuEntry<String>>((s) {
+                                          final String country = s;
+
+                                          return PopupMenuItem<String>(
+                                            value: country,
+                                            height: 38.h,
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 14.w,
+                                            ),
+                                            child: TextView(
+                                              text: country,
+                                              textStyle: TextStyle(
+                                                fontFamily: 'GoogleSans',
+                                                fontSize: 13.70.sp,
+                                                fontWeight: FontWeight.w500,
+                                                color: AppColors.black,
+                                              ),
+                                            ),
+                                          );
+                                        })
+                                        .toList(),
+                                  );
+
+                                  if (selectedState != null) {
+                                    countryController.text = selectedState;
+
+                                    // Reset LGA whenever state changes
+                                    lgaController.clear();
+                                    setState(() {});
+
+                                    model.notifyListeners();
+                                  }
+                                },
+
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 8.w,
+                                  ),
+                                  child: Icon(
+                                    Icons.keyboard_arrow_down,
+                                    color: AppColors.grey1,
+                                  ),
+                                ),
+                              );
+                            },
                           ),
                         ),
                         SizedBox(height: 20.h),
-                        TextFormWidget(
-                          hint: 'Email Address',
-                          hintSize: 14,
-                          borderColor: AppColors.transparent,
-                          borderTopLeft: 10.r,
-                          borderTopRight: 10.r,
-                          borderBottomLeft: 10.r,
-                          borderBottomRight: 10.r,
-                          labelStyle: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontFamily: 'Arial',
-                            fontSize: 14.2.sp,
-                            color: AppColors.infoGrey,
-                          ),
-                          fillColor: AppColors.grey,
-                          isFilled: true,
-                          controller: emailController,
-                          validator: AppValidator.validateEmail(),
-                          onChange: (p0) {
-                            setState(() {});
-                          },
-                        ),
-                        SizedBox(height: 20.h),
+
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Expanded(
                               child: TextFormWidget(
                                 hint: 'State',
-                                hintSize: 14,
-                                label: '',
-                                borderColor: AppColors.transparent,
+                                label: 'Select State',
+                                hintColor: AppColors.reminder,
+                                hintSize: Platform.isAndroid ? 14.sp : 13.46.sp,
+                                borderColor: AppColors.infoGrey1,
                                 borderTopLeft: 10.r,
                                 borderTopRight: 10.r,
                                 borderBottomLeft: 10.r,
                                 borderBottomRight: 10.r,
-                                // readOnly: true,
-                                labelStyle: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  fontFamily: 'Arial',
-                                  fontSize: 14.2.sp,
-                                  color: AppColors.infoGrey,
-                                ),
-                                fillColor: AppColors.grey,
+                                readOnly: true,
+                                fillColor: AppColors.white,
                                 isFilled: true,
-                                // controller: model.stateController,
+                                controller: stateController,
+                                suffixWidget: Builder(
+                                  builder: (context) {
+                                    return GestureDetector(
+                                      onTap: () async {
+                                        final RenderBox button =
+                                            context.findRenderObject()
+                                                as RenderBox;
+
+                                        final RenderBox overlay =
+                                            Overlay.of(
+                                                  context,
+                                                ).context.findRenderObject()
+                                                as RenderBox;
+
+                                        final Offset buttonPosition = button
+                                            .localToGlobal(
+                                              Offset.zero,
+                                              ancestor: overlay,
+                                            );
+
+                                        final Size buttonSize = button.size;
+
+                                        final selectedState =
+                                            await showMenu<String>(
+                                              context: context,
+
+                                              position: RelativeRect.fromLTRB(
+                                                buttonPosition.dx,
+                                                buttonPosition.dy +
+                                                    buttonSize.height +
+                                                    5.h,
+                                                overlay.size.width -
+                                                    buttonPosition.dx -
+                                                    buttonSize.width,
+                                                0,
+                                              ),
+
+                                              constraints: BoxConstraints(
+                                                minWidth: 200.w,
+                                                maxWidth: 250.w,
+                                                minHeight: 150.h,
+                                                maxHeight: 450.h,
+                                              ),
+
+                                              color: AppColors.white,
+
+                                              elevation: 4,
+
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10.r),
+                                              ),
+
+                                              items: stateLgaFormat
+                                                  .map<PopupMenuEntry<String>>((
+                                                    s,
+                                                  ) {
+                                                    final String state =
+                                                        s['state']
+                                                            ?.toString() ??
+                                                        '';
+
+                                                    return PopupMenuItem<
+                                                      String
+                                                    >(
+                                                      value: state,
+                                                      height: 38.h,
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                            horizontal: 14.w,
+                                                          ),
+                                                      child: TextView(
+                                                        text: state,
+                                                        textStyle: TextStyle(
+                                                          fontFamily:
+                                                              'GoogleSans',
+                                                          fontSize: 13.70.sp,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          color:
+                                                              AppColors.black,
+                                                        ),
+                                                      ),
+                                                    );
+                                                  })
+                                                  .toList(),
+                                            );
+
+                                        if (selectedState != null) {
+                                          stateController.text = selectedState;
+
+                                          // Reset LGA whenever state changes
+                                          lgaController.clear();
+                                          setState(() {});
+
+                                          model.notifyListeners();
+                                        }
+                                      },
+
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 8.w,
+                                        ),
+                                        child: Icon(
+                                          Icons.keyboard_arrow_down,
+                                          color: AppColors.grey1,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+
                                 validator: AppValidator.validateString(),
-                                // suffixWidget: GestureDetector(
-                                //   onTap: () =>
-                                //       model.modalBottomSheetMenuState(context),
-                                //   child: Padding(
-                                //     padding: EdgeInsets.all(14.20.w),
-                                //     child: SvgPicture.asset(
-                                //       AppImage.arrow_down,
-                                //     ),
-                                //   ),
-                                // ),
-                                // onChange: (p0) {
-                                //   setState(() {});
-                                // },
+
+                                style: TextStyle(
+                                  fontSize: 16.20.sp,
+                                  fontWeight: FontWeight.w400,
+                                  fontFamily: 'DMSans',
+                                ),
+
+                                labelStyle: TextStyle(
+                                  fontSize: 15.20.sp,
+                                  fontWeight: FontWeight.w400,
+                                  fontFamily: 'DMSans',
+                                  color: AppColors.faintedGrey,
+                                ),
                               ),
                             ),
-                            SizedBox(width: 12.w),
+                            SizedBox(width: 14.20.w),
                             Expanded(
                               child: TextFormWidget(
                                 hint: 'LGA',
-                                hintSize: 14,
-                                label: '',
-                                borderColor: AppColors.transparent,
+                                label: '-Select-',
+                                hintColor: AppColors.reminder,
+                                hintSize: Platform.isAndroid ? 14.sp : 12.sp,
+                                borderColor: AppColors.infoGrey1,
                                 borderTopLeft: 10.r,
                                 borderTopRight: 10.r,
                                 borderBottomLeft: 10.r,
                                 borderBottomRight: 10.r,
-                                // readOnly: true,
-                                labelStyle: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  fontFamily: 'Arial',
-                                  fontSize: 14.2.sp,
-                                  color: AppColors.infoGrey,
-                                ),
-                                fillColor: AppColors.grey,
+                                fillColor: AppColors.white,
                                 isFilled: true,
-                                // controller: model.lgaController,
+                                readOnly: true,
+                                controller: lgaController,
+                                suffixWidget: Builder(
+                                  builder: (context) {
+                                    return GestureDetector(
+                                      onTap: () async {
+                                        final RenderBox button =
+                                            context.findRenderObject()
+                                                as RenderBox;
+
+                                        final RenderBox overlay =
+                                            Overlay.of(
+                                                  context,
+                                                ).context.findRenderObject()
+                                                as RenderBox;
+
+                                        final Offset buttonPosition = button
+                                            .localToGlobal(
+                                              Offset.zero,
+                                              ancestor: overlay,
+                                            );
+
+                                        final Size buttonSize = button.size;
+
+                                        final selectedState = stateLgaFormat
+                                            .firstWhere(
+                                              (state) =>
+                                                  state['state']
+                                                      .toString()
+                                                      .trim()
+                                                      .toLowerCase() ==
+                                                  stateController.text
+                                                      .trim()
+                                                      .toLowerCase(),
+                                              orElse: () => <String, dynamic>{
+                                                'state': '',
+                                                'lgas': <String>[],
+                                              },
+                                            );
+
+                                        final List<dynamic> lgas =
+                                            selectedState['lgas'] ?? [];
+
+                                        if (lgas.isEmpty) {
+                                          return;
+                                        }
+
+                                        final selectedLga =
+                                            await showMenu<String>(
+                                              context: context,
+
+                                              position: RelativeRect.fromLTRB(
+                                                buttonPosition.dx,
+                                                buttonPosition.dy +
+                                                    buttonSize.height +
+                                                    5.h,
+                                                overlay.size.width -
+                                                    buttonPosition.dx -
+                                                    buttonSize.width,
+                                                0,
+                                              ),
+
+                                              constraints: BoxConstraints(
+                                                minWidth: 200.w,
+                                                maxWidth: 250.w,
+                                                minHeight: 110.h,
+                                                maxHeight: 420.h,
+                                              ),
+
+                                              color: AppColors.white,
+
+                                              elevation: 4,
+
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10.r),
+                                              ),
+
+                                              items: lgas
+                                                  .map<PopupMenuEntry<String>>((
+                                                    lga,
+                                                  ) {
+                                                    return PopupMenuItem<
+                                                      String
+                                                    >(
+                                                      value: lga.toString(),
+                                                      height: 38.h,
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                            horizontal: 14.w,
+                                                          ),
+                                                      child: TextView(
+                                                        text: lga.toString(),
+                                                        textStyle: TextStyle(
+                                                          fontFamily:
+                                                              'GoogleSans',
+                                                          fontSize: 13.70.sp,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          color:
+                                                              AppColors.black,
+                                                        ),
+                                                      ),
+                                                    );
+                                                  })
+                                                  .toList(),
+                                            );
+
+                                        if (selectedLga != null) {
+                                          lgaController.text = selectedLga;
+                                          setState(() {});
+                                          model.notifyListeners();
+                                        }
+                                      },
+
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 8.w,
+                                        ),
+                                        child: Icon(
+                                          Icons.keyboard_arrow_down,
+                                          color: AppColors.grey1,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
                                 validator: AppValidator.validateString(),
-                                // suffixWidget: GestureDetector(
-                                //   onTap: () =>
-                                //       model.modalBottomSheetMenuLga(context),
-                                //   child: Padding(
-                                //     padding: EdgeInsets.all(14.20.w),
-                                //     child: SvgPicture.asset(
-                                //       AppImage.arrow_down,
-                                //     ),
-                                //   ),
-                                // ),
-                                // onChange: (p0) {
-                                //   setState(() {});
-                                // },
+                                style: TextStyle(
+                                  fontSize: 16.20.sp,
+                                  fontWeight: FontWeight.w400,
+                                  fontFamily: 'DMSans',
+                                ),
+
+                                labelStyle: TextStyle(
+                                  fontSize: 15.20.sp,
+                                  fontWeight: FontWeight.w400,
+                                  fontFamily: 'DMSans',
+                                  color: AppColors.faintedGrey,
+                                ),
                               ),
                             ),
                           ],
                         ),
                         SizedBox(height: 20.h),
-                        TextView(
-                          text: 'Select service',
-                          textStyle: TextStyle(
-                            fontFamily: 'Arial',
-                            fontSize: 15.2.sp,
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.black,
-                          ),
-                        ),
-
-                        SizedBox(height: 20.h),
-                        TextView(
-                          text: 'Contact Details',
-                          textStyle: TextStyle(
-                            fontSize: 16.2.sp,
-                            fontWeight: FontWeight.w700,
-                            color: AppColors.black,
-                          ),
-                        ),
-                        SizedBox(height: 6.h),
-                        Divider(
-                          color: const Color.fromARGB(255, 227, 227, 228),
-                        ),
-                        SizedBox(height: 6.h),
-
-                        TextFormWidget(
-                          hint: 'Contact person name',
-                          hintSize: 14,
-                          borderColor: AppColors.transparent,
-                          borderTopLeft: 10.r,
-                          borderTopRight: 10.r,
-                          borderBottomLeft: 10.r,
-                          borderBottomRight: 10.r,
-                          keyboardType: TextInputType.text,
-                          labelStyle: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontFamily: 'Arial',
-                            fontSize: 14.2.sp,
-                            color: AppColors.infoGrey,
-                          ),
-                          fillColor: AppColors.grey,
-                          isFilled: true,
-                          controller: contactDetailsController,
-                          validator: AppValidator.validateString(),
-                        ),
-                        SizedBox(height: 20.h),
-                        TextFormWidget(
-                          hint: 'Contact email',
-                          hintSize: 14,
-                          borderColor: AppColors.transparent,
-                          borderTopLeft: 10.r,
-                          borderTopRight: 10.r,
-                          borderBottomLeft: 10.r,
-                          borderBottomRight: 10.r,
-                          keyboardType: TextInputType.text,
-                          labelStyle: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontFamily: 'Arial',
-                            fontSize: 14.2.sp,
-                            color: AppColors.infoGrey,
-                          ),
-                          fillColor: AppColors.grey,
-                          isFilled: true,
-                          controller: emailController,
-                          inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.allow(RegExp("[a-z]")),
-                          ],
-                          // validator: AppValidator.validateString(),
-                        ),
-                        SizedBox(height: 30.h),
-                        TextView(
-                          text: 'Bank Information',
-                          textStyle: TextStyle(
-                            fontSize: 16.2.sp,
-                            fontWeight: FontWeight.w700,
-                            color: AppColors.black,
-                          ),
-                        ),
-                        SizedBox(height: 6.h),
-                        Divider(
-                          color: const Color.fromARGB(255, 227, 227, 228),
-                        ),
-                        SizedBox(height: 6.h),
-
-                        TextFormWidget(
-                          hint: 'Bank name',
-                          hintSize: 14,
-                          borderColor: AppColors.transparent,
-                          borderTopLeft: 10.r,
-                          borderTopRight: 10.r,
-                          borderBottomLeft: 10.r,
-                          borderBottomRight: 10.r,
-                          keyboardType: TextInputType.text,
-                          labelStyle: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontFamily: 'Arial',
-                            fontSize: 14.2.sp,
-                            color: AppColors.infoGrey,
-                          ),
-                          fillColor: AppColors.grey,
-                          isFilled: true,
-                          controller: bankNameController,
-                          validator: AppValidator.validateString(),
-                        ),
-                        SizedBox(height: 20.h),
-                        TextFormWidget(
-                          hint: 'Account number',
-                          hintSize: 14,
-                          borderColor: AppColors.transparent,
-                          borderTopLeft: 10.r,
-                          borderTopRight: 10.r,
-                          borderBottomLeft: 10.r,
-                          borderBottomRight: 10.r,
-                          label: 'Enter account number',
-                          keyboardType: TextInputType.number,
-                          labelStyle: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontFamily: 'Arial',
-                            fontSize: 14.2.sp,
-                            color: AppColors.infoGrey,
-                          ),
-                          fillColor: AppColors.grey,
-                          isFilled: true,
-                          controller: bankNoController,
-                          validator: AppValidator.validateString(),
-                          // ),
-                        ),
                       ],
                     ),
                   ),
@@ -712,7 +866,26 @@ class _ManufacturerProfileInfoScreenState
                           isLoading: model.isLoading,
                           buttonBorderColor: AppColors.transparent,
                           onPressed: () {
-                            if (formKey.currentState!.validate()) {}
+                            if (formKey.currentState!.validate()) {
+                              model.updateDistributorProfile(
+                                context,
+                                updateEntity:
+                                    UpdateDistributorProfileEntityModel(
+                                      distributorManufacturerName:
+                                          nameController.text.trim(),
+                                      registrationNumber: licenceNoController
+                                          .text
+                                          .trim(),
+                                      email: emailController.text.trim(),
+                                      businessAddress: businessAddController
+                                          .text
+                                          .trim(),
+                                      country: countryController.text.trim(),
+                                      state: stateController.text.trim(),
+                                      lga: lgaController.text.trim(),
+                                    ),
+                              );
+                            }
                           },
                         ),
                       ),

@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:medicate_app/core/connect_end/model/get_distributor_profile_response_model/logo.dart';
 
 part 'data.g.dart';
 
@@ -16,6 +17,7 @@ class Data {
   String? phone;
   String? kycStatus;
   bool? isProfileComplete;
+  Logo? logo;
   int? profileCompletionPercentage;
   List<String>? missingFields;
   DateTime? createdAt;
@@ -31,6 +33,7 @@ class Data {
     this.businessAddress,
     this.country,
     this.state,
+    this.logo,
     this.lga,
     this.phone,
     this.kycStatus,

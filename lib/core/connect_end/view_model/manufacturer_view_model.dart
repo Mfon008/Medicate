@@ -11,6 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:medicate_app/core/connect_end/model/distributor_wholesale_category_model/distributor_wholesale_category_model.dart';
 import 'package:medicate_app/core/connect_end/model/forgot_password_response_model/forgot_password_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/sign_up_phamary_response_model/sign_up_phamary_response_model.dart';
+import 'package:medicate_app/core/connect_end/model/update_distributor_profile_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/update_product_management_entity_model/update_product_management_entity_model.dart';
 import 'package:medicate_app/main.dart';
 import 'package:pinput/pinput.dart';
@@ -31,6 +32,7 @@ import '../../core_folder/manager/shared_preference.dart';
 import '../model/create_distributor_product_entity_model/create_distributor_product_entity_model.dart';
 import '../model/distributor_wholesale_category_model/category.dart';
 import '../model/get_all_product_list_response_model/get_all_product_list_response_model.dart';
+import '../model/get_distributor_profile_response_model/get_distributor_profile_response_model.dart';
 import '../model/get_incoming_order_ddetail_response_model/get_incoming_order_ddetail_response_model.dart';
 import '../model/get_single_product_response_model/get_single_product_response_model.dart';
 import '../model/list_incoming_orders_response_model/item.dart';
@@ -73,6 +75,8 @@ class ManufacturerViewModel extends BaseViewModel {
   bool get isLoadingNaf => _isLoadingNaf;
   bool _isLoadingProductImage = false;
   bool get isLoadingProductImage => _isLoadingProductImage;
+
+  final _pickImage = ImagePickerHandler();
 
   ManufacturerViewModel({this.context});
 
@@ -120,9 +124,9 @@ class ManufacturerViewModel extends BaseViewModel {
   get getIncomingOrderDdetailResponseModel =>
       _getIncomingOrderDdetailResponseModel;
 
-  // GetUserDetailsResponseModel? _getUserDetailsResponseModel;
-  // GetUserDetailsResponseModel? get getUserDetailsResponseModel =>
-  //     _getUserDetailsResponseModel;
+  GetDistributorProfileResponseModel? _getDistributorDetailsResponseModel;
+  GetDistributorProfileResponseModel? get getDistributorDetailsResponseModel =>
+      _getDistributorDetailsResponseModel;
 
   String? pinInput;
 
@@ -151,7 +155,6 @@ class ManufacturerViewModel extends BaseViewModel {
   GetSingleProductResponseModel? get getSingleProductResponseModel =>
       _getSingleProductResponseModel;
 
-  final _pickImage = ImagePickerHandler();
   File? image;
   String? filename;
   List<iml.Image>? imagesProductList = [];
@@ -165,35 +168,85 @@ class ManufacturerViewModel extends BaseViewModel {
 
   TextEditingController? searchProductController = TextEditingController();
 
-  // void getUserDetails({context, phoneNo}) async {
-  //   try {
-  //     _isLoading = true;
-  //     _getUserDetailsResponseModel = await runBusyFuture(
-  //       repositoryImply.getUserDetails(phoneNo),
-  //       throwException: true,
-  //     );
-  //     _isLoading = false;
-  //   } catch (e) {
-  //     _isLoading = false;
-  //     logger.d(e);
-  //   }
-  //   notifyListeners();
-  // }
+   void pickImage(BuildContext context) {
+    try {
+      _pickImage.pickImage(
+        context: context,
+        file: (file) async {
+          image = file;
+          filename = image!.path.split("/").last;
+          await uploadProfilePicture(
+            context: context,
+            file: MultipartFile.fromBytes(
+              formartFileImage(image).readAsBytesSync(),
+              filename: image!.path.split("/").last,
+            ),
+          );
+          notifyListeners();
+        },
+      );
+    } catch (e) {
+      logger.e(e);
+    }
+  }
 
-  // void getUserDetails(context) async {
-  //   try {
-  //     _isLoading = true;
-  //     _getUserDetailsResponseModel = await runBusyFuture(
-  //       repositoryImply.getUserDetails(phoneNo),
-  //       throwException: true,
-  //     );
-  //     _isLoading = false;
-  //   } catch (e) {
-  //     _isLoading = false;
-  //     logger.d(e);
-  //   }
-  //   notifyListeners();
-  // }
+  Future<void> uploadProfilePicture({context, MultipartFile? file}) async {
+    try {
+      _isLoading = true;
+      var v = await runBusyFuture(
+        repositoryImply.updateDistributorProfilePicture(file!),
+        throwException: true,
+      );
+      if(v['statusCode']==200 || v['statusCode']==201){
+        await AppUtils.snackbar(context, message: v['message']);
+        getUserDetails(context);
+      }
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> getUserDetails(context) async {
+    try {
+      _isLoading = true;
+      _getDistributorDetailsResponseModel = await runBusyFuture(
+        repositoryImply.getUserDetails(),
+        throwException: true,
+      );
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+    }
+    notifyListeners();
+  }
+
+  Future<void> updateDistributorProfile(
+    context, {
+    UpdateDistributorProfileEntityModel? updateEntity,
+  }) async {
+    try {
+      _isLoading = true;
+      var v = await runBusyFuture(
+        repositoryImply.updateDistributorProfile(updateEntity!),
+        throwException: true,
+      );
+      if (v['statusCode'] == 200 || v['statusCode'] == 201) {
+        await AppUtils.snackbar(context, message: v['message']);
+        navigate.clearStackAndShow(Routes.overviewDashboard);
+      }
+      _isLoading = false;
+    } catch (e) {
+       await AppUtils.snackbar(context, message: e.toString(),error: true);
+      _isLoading = false;
+      logger.d(e);
+    }
+    notifyListeners();
+  }
 
   getOrderPaymentStatusColorBorder(String s) {
     if (s.toLowerCase() == 'pending') {

@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:medicate_app/core/app_assets/constant.dart';
 import 'package:medicate_app/core/app_assets/image.dart';
 import 'package:medicate_app/core/core_folder/app/app.router.dart';
 import 'package:medicate_app/main.dart';
@@ -21,7 +22,9 @@ class ManufacturerProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<ManufacturerViewModel>.reactive(
       viewModelBuilder: () => locator<ManufacturerViewModel>(),
-      onViewModelReady: (model) {},
+      onViewModelReady: (model) {
+        model.getUserDetails(context);
+      },
       disposeViewModel: false,
       builder: (_, ManufacturerViewModel model, _) {
         return Scaffold(
@@ -51,45 +54,45 @@ class ManufacturerProfileScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // model.getUserDetailsResponseModel != null &&
-                  //         model.getUserDetailsResponseModel!.data!.logo != null
-                  //     ? Center(
-                  //         child: CircleAvatar(
-                  //           radius: 60.0, // Adjust the size as needed
-                  //           backgroundImage: NetworkImage(
-                  //             model.getTetantResponseModel!.data!.logo!.url!,
-                  //           ),
-                  //         ),
-                  //       )
-                  //     : Center(
-                  //         child:
-                  //             SharedPreferencesService.instance.usersData ==
-                  //                     null ||
-                  //                 SharedPreferencesService
-                  //                         .instance
-                  //                         .usersData['user'] ==
-                  //                     null ||
-                  //                 SharedPreferencesService
-                  //                         .instance
-                  //                         .usersData['user']['profilePicture'] ==
-                  //                     null ||
-                  //                 model.getTetantResponseModel!.data!.logo ==
-                  //                     null
-                  //             ? SvgPicture.asset(AppImage.profile_image)
-                  //             :
-                  //  CircleAvatar(
-                  //     radius: 60.0, // Adjust the size as needed
-                  //     backgroundImage: NetworkImage(
-                  //       SharedPreferencesService
-                  //           .instance
-                  //           .usersData['profile']['profilePicture']['url'],
-                  //     ),
-                  //   ),
-                  // ),
+                  model.getDistributorDetailsResponseModel != null &&
+                          model.getDistributorDetailsResponseModel!.data!.logo != null
+                      ? Center(
+                          child: CircleAvatar(
+                            radius: 60.0, // Adjust the size as needed
+                            backgroundImage: NetworkImage(
+                              model.getDistributorDetailsResponseModel!.data!.logo!.url!,
+                            ),
+                          ),
+                        )
+                      : Center(
+                          child:
+                              SharedPreferencesService.instance.usersData ==
+                                      null ||
+                                  SharedPreferencesService
+                                          .instance
+                                          .usersData['user'] ==
+                                      null ||
+                                  SharedPreferencesService
+                                          .instance
+                                          .usersData['user']['profilePicture'] ==
+                                      null ||
+                                  model.getDistributorDetailsResponseModel!.data!.logo ==
+                                      null
+                              ? SvgPicture.asset(AppImage.profile_image)
+                              :
+                   CircleAvatar(
+                      radius: 60.0, // Adjust the size as needed
+                      backgroundImage: NetworkImage(
+                        SharedPreferencesService
+                            .instance
+                            .usersData['profile']['profilePicture']['url'],
+                      ),
+                    ),
+                  ),
                   SizedBox(height: 10.h),
                   Center(
                     child: GestureDetector(
-                      // onTap: () => model.pickImage(context),
+                      onTap: () => model.pickImage(context),
                       child: TextView(
                         text: 'Change Photo',
                         textStyle: TextStyle(
@@ -106,7 +109,7 @@ class ManufacturerProfileScreen extends StatelessWidget {
                   SizedBox(height: 6.h),
                   Center(
                     child: TextView(
-                      text: 'KNOWN NAME',
+                      text: model.getDistributorDetailsResponseModel?.data?.distributorManufacturerName?.capitalize()??'',
                       textStyle: TextStyle(
                         fontSize: 16.2.sp,
                         fontWeight: FontWeight.w500,

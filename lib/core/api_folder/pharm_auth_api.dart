@@ -280,20 +280,6 @@ class PharmApi {
     }
   }
 
-  // Future<dynamic> refreshToken() async {
-  //   try {
-  //     final response = await _service.call(
-  //       UrlConfig.refresh_token,
-  //       RequestMethod.post,
-  //     );
-  //     logger.d(response.data);
-  //     return response.data;
-  //   } catch (e) {
-  //     logger.d("response:$e");
-  //     rethrow;
-  //   }
-  // }
-
   Future<GetUserDetailsResponseModel> getUserDetails(String phoneNo) async {
     try {
       final response = await _service.call(
@@ -943,8 +929,7 @@ class PharmApi {
     }
   }
 
-  Future<WholesaleGetProductAddedToCartResponseModel>
-  getWholesaleProductAddedToCart() async {
+  Future<WholesaleGetProductAddedToCartResponseModel> getWholesaleProductAddedToCart() async {
     try {
       final response = await _service.call(
         UrlConfig.wholesale_cart,

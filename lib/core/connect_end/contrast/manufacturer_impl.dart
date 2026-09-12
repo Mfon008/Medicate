@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:medicate_app/core/connect_end/model/get_distributor_profile_response_model/get_distributor_profile_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/manufacturer_signup_entity_model.dart';
 
 import '../../api_folder/manufacturer_api.dart';
@@ -9,7 +10,6 @@ import '../model/forgot_password_response_model/forgot_password_response_model.d
 import '../model/get_all_product_list_response_model/get_all_product_list_response_model.dart';
 import '../model/get_incoming_order_ddetail_response_model/get_incoming_order_ddetail_response_model.dart';
 import '../model/get_single_product_response_model/get_single_product_response_model.dart';
-// import '../model/get_user_details_response_model/get_user_details_response_model.dart';
 import '../model/list_incoming_orders_response_model/list_incoming_orders_response_model.dart';
 import '../model/login_entity_model.dart';
 import '../model/nafdac_registration_number_entity_model.dart';
@@ -21,6 +21,7 @@ import '../model/reset_password_entity_model.dart';
 import '../model/set_pin_entity_model.dart';
 import '../model/set_pin_pharm_response_model/set_pin_pharm_response_model.dart';
 import '../model/sign_up_phamary_response_model/sign_up_phamary_response_model.dart';
+import '../model/update_distributor_profile_entity_model.dart';
 import '../model/update_product_management_entity_model/update_product_management_entity_model.dart';
 import '../model/upload_product_image_response_model/upload_product_image_response_model.dart';
 import '../model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
@@ -142,11 +143,12 @@ class ManufacturerContractImpl {
   );
   Future<dynamic> cancelIncomingOrder({
     String? wholesaleOrderId,
-    String? wholesaleOrderItemId, String? reason,
+    String? wholesaleOrderItemId,
+    String? reason,
   }) async => await _api.cancelIncomingOrder(
     wholesaleOrderId: wholesaleOrderId,
     wholesaleOrderItemId: wholesaleOrderItemId,
-    reason:reason
+    reason: reason,
   );
   Future<dynamic> rejectIncomingOrder({
     String? wholesaleOrderId,
@@ -155,9 +157,9 @@ class ManufacturerContractImpl {
   }) async => await _api.rejectIncomingOrder(
     wholesaleOrderId: wholesaleOrderId,
     wholesaleOrderItemId: wholesaleOrderItemId,
-    reason: reason
+    reason: reason,
   );
-  
+
   Future<dynamic> returnIncomingOrder({
     String? wholesaleOrderId,
     String? wholesaleOrderItemId,
@@ -165,6 +167,13 @@ class ManufacturerContractImpl {
     wholesaleOrderId: wholesaleOrderId,
     wholesaleOrderItemId: wholesaleOrderItemId,
   );
-  // Future<GetUserDetailsResponseModel> getUserDetails(String phoneNo) async =>
-  //     await _api.getUserDetails(phoneNo);
+  Future<GetDistributorProfileResponseModel> getUserDetails() async =>
+      await _api.getUserDetails();
+  Future<dynamic> updateDistributorProfile(
+    UpdateDistributorProfileEntityModel updateEntity,
+  ) async  =>
+      await _api.updateDistributorProfile(updateEntity);
+   Future<dynamic> updateDistributorProfilePicture(MultipartFile file) async  =>
+      await _api.updateDistributorProfilePicture(file);
+  
 }

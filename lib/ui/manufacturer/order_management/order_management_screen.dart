@@ -85,7 +85,7 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
                         width: isTablet(context) ? 32.w : 12.w,
                       ),
                       onPressed: () => navigate.navigateTo(
-                        Routes.pharmMoreScreen,
+                        Routes.manufacturerProfileScreen,
                       ), // makes ripple effect round
                     ),
                   ),
@@ -567,9 +567,9 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
                                   ),
                                   SizedBox(height: 16.20.h),
                                   ord.paymentStatus?.toLowerCase() ==
-                                                  'success' &&
-                                              ord.status?.toLowerCase() !=
-                                                  'cancelled'
+                                              'success' &&
+                                          ord.status?.toLowerCase() !=
+                                              'cancelled'
                                       ? GestureDetector(
                                           onTap: () =>
                                               _showAdvanceStatusListMenu(
@@ -605,8 +605,7 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
                                                 ),
                                                 SizedBox(width: 7.10.w),
                                                 TextView(
-                                                  text:
-                                                      'Advance',
+                                                  text: 'Advance',
                                                   textStyle: TextStyle(
                                                     fontFamily: 'DMSans',
                                                     fontSize: 16.20.sp,

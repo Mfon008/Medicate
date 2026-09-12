@@ -13,7 +13,7 @@ Item _$ItemFromJson(Map<String, dynamic> json) => Item(
   sku: json['sku'] as String?,
   imageUrl: json['imageUrl'] as String?,
   quantity: (json['quantity'] as num?)?.toInt(),
-  unitPrice: (json['unitPrice'] as num?)?.toInt(),
+  unitPrice: (json['unitPrice'] as num?)?.toDouble(),
   lineTotal: (json['lineTotal'] as num?)?.toInt(),
   minimumOrderQuantity: (json['minimumOrderQuantity'] as num?)?.toInt(),
   packSize: (json['packSize'] as num?)?.toInt(),

@@ -499,7 +499,7 @@ class ManufacturerApi {
     try {
       final response = await _service.call(
         '${UrlConfig.wholesale_incoming_orders}/$wholesaleOrderId/items/$wholesaleOrderItemId/reject',
-         data: {"reason": reason},
+        data: {"reason": reason},
         RequestMethod.patch,
       );
       logger.d(response.data);
@@ -557,4 +557,21 @@ class ManufacturerApi {
       rethrow;
     }
   }
+
+  Future<dynamic> updateDistributorProfilePicture(MultipartFile file) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.auth_distributor_profile_pic,
+        RequestMethod.post,
+        data:FormData.fromMap({'file': file}),
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  
 }
