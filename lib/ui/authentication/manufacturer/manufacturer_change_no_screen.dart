@@ -17,7 +17,6 @@ class ManufacturerChangePhoneNumber extends StatefulWidget {
   ManufacturerChangePhoneNumber({super.key, required this.id});
 
   String? id;
-  String? name;
 
   @override
   State<ManufacturerChangePhoneNumber> createState() =>
@@ -207,16 +206,19 @@ class _ManufacturerChangePhoneNumberState
                     buttonText: 'Continue',
                     color: AppColors.white,
                     buttonBorderColor: AppColors.transparent,
-                    // isLoading: model.isLoading,
+                    isLoading: model.isLoading,
                     onPressed: !isPassed(isPhone: isPhone)
                         ? () {}
                         : () {
                             if (formKey.currentState!.validate()) {
-                              // model.changeNumberHealthCare(
-                              //   context,
-                              //   phone: '+234${phoneController.text.trim()}',
-                              //   id: widget.id,
-                              // );
+                              model.changeNumberManufacturer(
+                                context,
+                                phone: model
+                                    .returnAddingPhoneNoStructureWith234(
+                                      phoneController.text.trim(),
+                                    ),
+                                id: widget.id,
+                              );
                             }
                           },
                   ),

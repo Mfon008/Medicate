@@ -929,7 +929,8 @@ class PharmApi {
     }
   }
 
-  Future<WholesaleGetProductAddedToCartResponseModel> getWholesaleProductAddedToCart() async {
+  Future<WholesaleGetProductAddedToCartResponseModel>
+  getWholesaleProductAddedToCart() async {
     try {
       final response = await _service.call(
         UrlConfig.wholesale_cart,

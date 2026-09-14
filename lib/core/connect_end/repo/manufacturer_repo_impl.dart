@@ -1,6 +1,7 @@
 // ignore_for_file: strict_top_level_inference
 
 import 'package:dio/dio.dart';
+import 'package:medicate_app/core/connect_end/model/get_user_details_response_model/get_user_details_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/manufacturer_signup_entity_model.dart';
 import '../../core_folder/app/app.locator.dart';
 import '../../core_folder/manager/shared_preference.dart';
@@ -301,5 +302,12 @@ class ManufacturerRepoImpl {
       _session.usersData = data.data.toJson();
       _session.authType = 'manufacturer';
     }
+  }
+
+  Future<GetUserDetailsResponseModel> getManufacturerDetails(
+    String phoneNo,
+  ) async {
+    final response = await _contract.getManufacturerDetails(phoneNo);
+    return response;
   }
 }

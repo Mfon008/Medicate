@@ -35,6 +35,7 @@ import '../model/get_all_product_list_response_model/get_all_product_list_respon
 import '../model/get_distributor_profile_response_model/get_distributor_profile_response_model.dart';
 import '../model/get_incoming_order_ddetail_response_model/get_incoming_order_ddetail_response_model.dart';
 import '../model/get_single_product_response_model/get_single_product_response_model.dart';
+import '../model/get_user_details_response_model/get_user_details_response_model.dart';
 import '../model/list_incoming_orders_response_model/item.dart';
 import '../model/list_incoming_orders_response_model/list_incoming_orders_response_model.dart';
 import '../model/login_entity_model.dart';
@@ -128,6 +129,9 @@ class ManufacturerViewModel extends BaseViewModel {
   GetDistributorProfileResponseModel? get getDistributorDetailsResponseModel =>
       _getDistributorDetailsResponseModel;
 
+  GetUserDetailsResponseModel? _getUserDetailsResponseModel;
+  GetUserDetailsResponseModel? get getUserDetailsResponseModel =>
+      _getUserDetailsResponseModel;
   String? pinInput;
 
   int? minimumOrderQuantity;
@@ -168,7 +172,7 @@ class ManufacturerViewModel extends BaseViewModel {
 
   TextEditingController? searchProductController = TextEditingController();
 
-   void pickImage(BuildContext context) {
+  void pickImage(BuildContext context) {
     try {
       _pickImage.pickImage(
         context: context,
@@ -197,7 +201,7 @@ class ManufacturerViewModel extends BaseViewModel {
         repositoryImply.updateDistributorProfilePicture(file!),
         throwException: true,
       );
-      if(v['statusCode']==200 || v['statusCode']==201){
+      if (v['statusCode'] == 200 || v['statusCode'] == 201) {
         await AppUtils.snackbar(context, message: v['message']);
         getUserDetails(context);
       }
@@ -241,7 +245,7 @@ class ManufacturerViewModel extends BaseViewModel {
       }
       _isLoading = false;
     } catch (e) {
-       await AppUtils.snackbar(context, message: e.toString(),error: true);
+      await AppUtils.snackbar(context, message: e.toString(), error: true);
       _isLoading = false;
       logger.d(e);
     }
@@ -3759,5 +3763,30 @@ class ManufacturerViewModel extends BaseViewModel {
         );
       },
     );
+  }
+
+  String returnAddingPhoneNoStructureWith234(String phoneNo) {
+    if (phoneNo.substring(0).startsWith('0')) {
+      phoneNo = '+234${phoneNo.substring(1)}';
+    } else {
+      phoneNo = '+234$phoneNo';
+    }
+    notifyListeners();
+    return phoneNo;
+  }
+
+  void getManufacturerDetails({context, phoneNo}) async {
+    try {
+      _isLoading = true;
+      _getUserDetailsResponseModel = await runBusyFuture(
+        repositoryImply.getManufacturerDetails(phoneNo),
+        throwException: true,
+      );
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+    }
+    notifyListeners();
   }
 }

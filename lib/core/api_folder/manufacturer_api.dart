@@ -4,6 +4,7 @@ import 'package:medicate_app/core/connect_end/model/get_all_product_list_respons
 import 'package:medicate_app/core/connect_end/model/get_distributor_profile_response_model/get_distributor_profile_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/get_incoming_order_ddetail_response_model/get_incoming_order_ddetail_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/get_single_product_response_model/get_single_product_response_model.dart';
+import 'package:medicate_app/core/connect_end/model/get_user_details_response_model/get_user_details_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/manufacturer_signup_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/nafdac_registration_number_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/nafdac_registration_number_response_model/nafdac_registration_number_response_model.dart';
@@ -563,7 +564,7 @@ class ManufacturerApi {
       final response = await _service.call(
         UrlConfig.auth_distributor_profile_pic,
         RequestMethod.post,
-        data:FormData.fromMap({'file': file}),
+        data: FormData.fromMap({'file': file}),
       );
       logger.d(response.data);
       return response.data;
@@ -573,5 +574,19 @@ class ManufacturerApi {
     }
   }
 
-  
+  Future<GetUserDetailsResponseModel> getManufacturerDetails(
+    String phoneNo,
+  ) async {
+    try {
+      final response = await _service.call(
+        '${UrlConfig.user_detail}/$phoneNo',
+        RequestMethod.get,
+      );
+      logger.d(response.data);
+      return GetUserDetailsResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
 }

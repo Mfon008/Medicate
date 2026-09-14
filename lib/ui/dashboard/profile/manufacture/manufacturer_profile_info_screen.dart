@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
@@ -200,18 +199,11 @@ class _ManufacturerProfileInfoScreenState
                             ),
 
                             GestureDetector(
-                              onTap: () => model.changeNumberManufacturer(
+                              onTap: () => model.sendOtpManufacturer(
                                 context,
-                                phone:
-                                    model
-                                        .getDistributorDetailsResponseModel
-                                        ?.data
-                                        ?.phone ??
-                                    '',
-                                id: model
-                                    .getDistributorDetailsResponseModel
-                                    ?.data
-                                    ?.id,
+                                phone: SharedPreferencesService
+                                    .instance
+                                    .usersData['user']['phone'],
                               ),
 
                               child: model.isLoading

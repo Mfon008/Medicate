@@ -237,7 +237,10 @@ class _ManufacturerLoginScreenState extends State<ManufacturerLoginScreen> {
                               navigate.navigateTo(
                                 Routes.manufacturerWelcomeScreen,
                                 arguments: ManufacturerWelcomeScreenArguments(
-                                  phone: '+234${phoneController.text}',
+                                  phone: model
+                                      .returnAddingPhoneNoStructureWith234(
+                                        phoneController.text.trim(),
+                                      ),
                                 ),
                               );
                             }

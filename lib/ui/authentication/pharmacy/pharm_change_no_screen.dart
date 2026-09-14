@@ -17,7 +17,6 @@ import '../../widget/text_form_widget.dart';
 class PharmacyChangePhoneNumber extends StatefulWidget {
   PharmacyChangePhoneNumber({super.key, required this.id});
   String? id;
-  String? name;
 
   @override
   State<PharmacyChangePhoneNumber> createState() =>
@@ -213,7 +212,10 @@ class _PharmacyChangePhoneNumberState extends State<PharmacyChangePhoneNumber> {
                             if (formKey.currentState!.validate()) {
                               model.changeNumberPharmacy(
                                 context,
-                                phone: '+234${phoneController.text.trim()}',
+                                phone: model
+                                    .returnAddingPhoneNoStructureWith234(
+                                      phoneController.text.trim(),
+                                    ),
                                 id: widget.id,
                               );
                             }

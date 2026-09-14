@@ -55,12 +55,20 @@ class ManufacturerProfileScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   model.getDistributorDetailsResponseModel != null &&
-                          model.getDistributorDetailsResponseModel!.data!.logo != null
+                          model
+                                  .getDistributorDetailsResponseModel!
+                                  .data!
+                                  .logo !=
+                              null
                       ? Center(
                           child: CircleAvatar(
                             radius: 60.0, // Adjust the size as needed
                             backgroundImage: NetworkImage(
-                              model.getDistributorDetailsResponseModel!.data!.logo!.url!,
+                              model
+                                  .getDistributorDetailsResponseModel!
+                                  .data!
+                                  .logo!
+                                  .url!,
                             ),
                           ),
                         )
@@ -76,19 +84,21 @@ class ManufacturerProfileScreen extends StatelessWidget {
                                           .instance
                                           .usersData['user']['profilePicture'] ==
                                       null ||
-                                  model.getDistributorDetailsResponseModel!.data!.logo ==
+                                  model
+                                          .getDistributorDetailsResponseModel!
+                                          .data!
+                                          .logo ==
                                       null
                               ? SvgPicture.asset(AppImage.profile_image)
-                              :
-                   CircleAvatar(
-                      radius: 60.0, // Adjust the size as needed
-                      backgroundImage: NetworkImage(
-                        SharedPreferencesService
-                            .instance
-                            .usersData['profile']['profilePicture']['url'],
-                      ),
-                    ),
-                  ),
+                              : CircleAvatar(
+                                  radius: 60.0, // Adjust the size as needed
+                                  backgroundImage: NetworkImage(
+                                    SharedPreferencesService
+                                        .instance
+                                        .usersData['profile']['profilePicture']['url'],
+                                  ),
+                                ),
+                        ),
                   SizedBox(height: 10.h),
                   Center(
                     child: GestureDetector(
@@ -109,7 +119,13 @@ class ManufacturerProfileScreen extends StatelessWidget {
                   SizedBox(height: 6.h),
                   Center(
                     child: TextView(
-                      text: model.getDistributorDetailsResponseModel?.data?.distributorManufacturerName?.capitalize()??'',
+                      text:
+                          model
+                              .getDistributorDetailsResponseModel
+                              ?.data
+                              ?.distributorManufacturerName
+                              ?.capitalize() ??
+                          '',
                       textStyle: TextStyle(
                         fontSize: 16.2.sp,
                         fontWeight: FontWeight.w500,

@@ -10,6 +10,7 @@ import '../model/forgot_password_response_model/forgot_password_response_model.d
 import '../model/get_all_product_list_response_model/get_all_product_list_response_model.dart';
 import '../model/get_incoming_order_ddetail_response_model/get_incoming_order_ddetail_response_model.dart';
 import '../model/get_single_product_response_model/get_single_product_response_model.dart';
+import '../model/get_user_details_response_model/get_user_details_response_model.dart';
 import '../model/list_incoming_orders_response_model/list_incoming_orders_response_model.dart';
 import '../model/login_entity_model.dart';
 import '../model/nafdac_registration_number_entity_model.dart';
@@ -171,9 +172,11 @@ class ManufacturerContractImpl {
       await _api.getUserDetails();
   Future<dynamic> updateDistributorProfile(
     UpdateDistributorProfileEntityModel updateEntity,
-  ) async  =>
-      await _api.updateDistributorProfile(updateEntity);
-   Future<dynamic> updateDistributorProfilePicture(MultipartFile file) async  =>
+  ) async => await _api.updateDistributorProfile(updateEntity);
+  Future<dynamic> updateDistributorProfilePicture(MultipartFile file) async =>
       await _api.updateDistributorProfilePicture(file);
-  
+
+  Future<GetUserDetailsResponseModel> getManufacturerDetails(
+    String phoneNo,
+  ) async => await _api.getManufacturerDetails(phoneNo);
 }

@@ -12,6 +12,7 @@ import '../../../core/app_assets/app_validation.dart';
 import '../../../core/app_assets/constant.dart';
 import '../../../core/app_assets/image.dart';
 import '../../../core/config/colors.dart';
+import '../../../core/connect_end/model/login_entity_model.dart';
 import '../../../core/connect_end/view_model/manufacturer_view_model.dart';
 import '../../../core/core_folder/app/app.locator.dart';
 import '../../../core/core_folder/app/app.router.dart';
@@ -62,12 +63,12 @@ class _ManufacturerWelcomeScreenState extends State<ManufacturerWelcomeScreen> {
         viewModelBuilder: () => locator<ManufacturerViewModel>(),
         onViewModelReady: (model) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            // model.getUserDetails(
-            //   context: context,
-            //   phoneNo:
-            //       widget.phone ??
-            //       SharedPreferencesService.instance.usersData['user']['phone'],
-            // );
+            model.getManufacturerDetails(
+              context: context,
+              phoneNo:
+                  widget.phone ??
+                  SharedPreferencesService.instance.usersData['user']['phone'],
+            );
           });
         },
         disposeViewModel: false,
@@ -210,19 +211,17 @@ class _ManufacturerWelcomeScreenState extends State<ManufacturerWelcomeScreen> {
                         onTap: () async {
                           bool auth = await Authentication.authentication();
                           if (auth) {
-                            // model.signInHealthcare(
-                            //   context,
-                            //   signInEntity: LoginEntityModel(
-                            //     phone:
-                            //         widget.phone ??
-                            //         SharedPreferencesService
-                            //             .instance
-                            //             .usersData['user']['phone'],
-                            //     pin: SharedPreferencesService
-                            //         .instance
-                            //         .pinSet,
-                            //   ),
-                            // );
+                            model.signInManufacturer(
+                              context,
+                              signInEntity: LoginEntityModel(
+                                phone:
+                                    widget.phone ??
+                                    SharedPreferencesService
+                                        .instance
+                                        .usersData['user']['phone'],
+                                pin: pinInput,
+                              ),
+                            );
                           }
                         },
                         child: Container(
@@ -255,20 +254,20 @@ class _ManufacturerWelcomeScreenState extends State<ManufacturerWelcomeScreen> {
                     buttonText: 'Continue',
                     color: AppColors.white,
                     buttonBorderColor: AppColors.transparent,
-                    // isLoading: model.isLoading,
+                    isLoading: model.isLoading,
                     onPressed: () {
                       if (formKey.currentState!.validate()) {
-                        // model.signInHealthcare(
-                        //   context,
-                        //   signInEntity: LoginEntityModel(
-                        //     phone:
-                        //         widget.phone ??
-                        //         SharedPreferencesService
-                        //             .instance
-                        //             .usersData['user']['phone'],
-                        //     pin: pinInput,
-                        //   ),
-                        // );
+                        model.signInManufacturer(
+                          context,
+                          signInEntity: LoginEntityModel(
+                            phone:
+                                widget.phone ??
+                                SharedPreferencesService
+                                    .instance
+                                    .usersData['user']['phone'],
+                            pin: pinInput,
+                          ),
+                        );
                       }
                     },
                   ),
