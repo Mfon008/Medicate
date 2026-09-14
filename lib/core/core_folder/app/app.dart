@@ -89,6 +89,7 @@ import '../../../ui/dashboard/profile/hmo/hmo_plan_tiers_management_screen.dart'
 import '../../../ui/dashboard/profile/hmo/hmo_two_factor_auth_screen.dart';
 import '../../../ui/dashboard/profile/hmo/hmo_two_factor_auth_verification_first_screen.dart';
 import '../../../ui/dashboard/profile/hmo/hmo_two_factor_auth_verification_second_screen.dart';
+import '../../../ui/dashboard/profile/manufacture/kyc/kyc_screen.dart';
 import '../../../ui/dashboard/profile/manufacture/manufacturer_profile_info_screen.dart';
 import '../../../ui/dashboard/profile/manufacture/manufacturer_profile_screen.dart';
 import '../../../ui/dashboard/profile/manufacture/manufacturer_setting_screen.dart';
@@ -314,6 +315,7 @@ import '../network/support_network_service.dart';
     MaterialRoute(page: PharmacyWholeSaleCheckout),
     MaterialRoute(page: ManufacturerProfileInfoScreen),
     MaterialRoute(page: ManufacturerSettingScreen),
+    MaterialRoute(page: DistributorKycScreen),
     CustomRoute(
       page: NotificationScreen,
       transitionsBuilder: TransitionsBuilders.slideLeft,
