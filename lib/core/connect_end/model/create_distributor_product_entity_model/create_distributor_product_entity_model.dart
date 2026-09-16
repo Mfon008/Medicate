@@ -18,6 +18,7 @@ class CreateDistributorProductEntityModel {
   List<Image>? images;
   List<VolumePricing>? volumePricing;
   String? serialNumber;
+  String? manufacturerName;
 
   CreateDistributorProductEntityModel({
     this.productName,
@@ -32,6 +33,7 @@ class CreateDistributorProductEntityModel {
     this.nafdacRegistrationNumber,
     this.batchNumber,
     this.manufacturedDate,
+    this.manufacturerName,
     this.expiryDate,
     this.images,
     this.volumePricing,
@@ -48,6 +50,7 @@ class CreateDistributorProductEntityModel {
       sku: json['sku'] as String?,
       packSize: json['packSize'] as int?,
       unit: json['unit'] as String?,
+      manufacturerName: json['manufacturerName'] as String?,
       minimumOrderQuantity: json['minimumOrderQuantity'] as int?,
       pricePerUnit: json['pricePerUnit'] as int?,
       stock: json['stock'] as int?,
@@ -70,6 +73,7 @@ class CreateDistributorProductEntityModel {
     'description': description,
     'categoryId': categoryId,
     'sku': sku,
+    'manufacturerName': manufacturerName,
     'packSize': packSize,
     'unit': unit,
     'minimumOrderQuantity': minimumOrderQuantity,

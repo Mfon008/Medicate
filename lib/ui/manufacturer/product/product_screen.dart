@@ -819,7 +819,10 @@ class _ProductScreenState extends State<ProductScreen> {
               GestureDetector(
                 onTap: () {
                   Navigator.pop(context);
-                  navigate.navigateTo(Routes.addProductScreen);
+                  navigate.navigateTo(
+                    Routes.addProductScreen,
+                    arguments: AddProductScreenArguments(isEdit: false),
+                  );
                 },
                 child: Container(
                   padding: EdgeInsets.symmetric(

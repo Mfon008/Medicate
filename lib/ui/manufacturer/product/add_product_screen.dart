@@ -55,6 +55,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
   TextEditingController priceUnit = TextEditingController();
   TextEditingController stock = TextEditingController();
   TextEditingController batchNo = TextEditingController();
+  TextEditingController manufacturerName = TextEditingController();
   TextEditingController serialNo = TextEditingController();
 
   @override
@@ -79,6 +80,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
               '';
           sku.text =
               model.getSingleProductResponseModel?.data?.product?.sku ?? '';
+          manufacturerName.text = model.getSingleProductResponseModel?.data?.product?.manufacturerName??'';
           packSize.text =
               model.getSingleProductResponseModel?.data?.product?.packSize
                   .toString() ??
@@ -395,7 +397,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       fillColor: AppColors.dashboard,
                       isFilled: true,
                       controller: packSize,
-                      validator: AppValidator.validateString(),
+                      validator: AppValidator.validateInt(),
                       keyboardType: TextInputType.number,
                       onChange: (p0) {},
                     ),
@@ -481,8 +483,37 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       fillColor: AppColors.dashboard,
                       isFilled: true,
                       controller: priceUnit,
-                      validator: AppValidator.validateString(),
+                      validator: AppValidator.validateInt(),
                       keyboardType: TextInputType.number,
+                      onChange: (p0) {},
+                    ),
+                    SizedBox(height: 20.h),
+                    TextFormWidget(
+                      hint: 'Manufacturer Name',
+                      label: 'Enter manufacturer name',
+                      borderColor: AppColors.transparent,
+                      borderTopLeft: 10.r,
+                      borderTopRight: 10.r,
+                      borderBottomLeft: 10.r,
+                      borderBottomRight: 10.r,
+                      hintSize: isTablet(context) ? 16.82.sp : 16.0.sp,
+                      labelStyle: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontFamily: 'DMSans',
+                        fontSize: 15.4.sp,
+                        color: AppColors.infoGrey,
+                      ),
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontFamily: 'DMSans',
+                        fontSize: 16.sp,
+                        color: AppColors.reminder1,
+                      ),
+                      fillColor: AppColors.dashboard,
+                      isFilled: true,
+                      controller: manufacturerName,
+                      validator: AppValidator.validateString(),
+                      keyboardType: TextInputType.name,
                       onChange: (p0) {},
                     ),
                     SizedBox(height: 20.h),
@@ -1446,6 +1477,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                         pricePerUnit: int.parse(
                                           priceUnit.text.trim(),
                                         ),
+                                        manufacturerName:manufacturerName.text.trim(),
                                         stock: int.parse(stock.text.trim()),
                                         batchNumber: batchNo.text.trim(),
                                         serialNumber: serialNo.text.trim(),

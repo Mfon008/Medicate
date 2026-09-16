@@ -32,6 +32,7 @@ class Product {
   NafdacVerification? nafdacVerification;
   String? batchNumber;
   String? serialNumber;
+  String? manufacturerName;
   DateTime? manufacturedDate;
   DateTime? expiryDate;
   List<Image>? images;
@@ -59,6 +60,7 @@ class Product {
     this.categoryId,
     this.category,
     this.categorySlug,
+    this.manufacturerName,
     this.sku,
     this.packSize,
     this.unit,

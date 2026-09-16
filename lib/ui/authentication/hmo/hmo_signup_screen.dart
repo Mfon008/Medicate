@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -211,7 +213,7 @@ class _HMOSignUpScreenState extends State<HMOSignUpScreen> {
                     borderBottomLeft: 10.r,
                     borderBottomRight: 10.r,
                     label: 'Enter HMO name',
-                    hintSize: isTablet(context) ? 6.82.sp : 14.0.sp,
+                    hintSize: isTablet(context) ? 6.82.sp : Platform.isAndroid? 16.98.sp:14.68.sp,
                     labelStyle: TextStyle(
                       fontWeight: FontWeight.w400,
                       fontFamily: 'Arial',
@@ -232,7 +234,7 @@ class _HMOSignUpScreenState extends State<HMOSignUpScreen> {
                     borderBottomLeft: 10.r,
                     borderBottomRight: 10.r,
                     label: '',
-                    hintSize: isTablet(context) ? 6.82.sp : 14.0.sp,
+                    hintSize: isTablet(context) ? 6.82.sp : Platform.isAndroid? 16.98.sp:14.68.sp,
                     labelStyle: TextStyle(
                       fontWeight: FontWeight.w400,
                       fontFamily: 'Arial',
@@ -253,7 +255,7 @@ class _HMOSignUpScreenState extends State<HMOSignUpScreen> {
                     borderBottomLeft: 10.r,
                     borderBottomRight: 10.r,
                     label: '',
-                    hintSize: isTablet(context) ? 6.82.sp : 14.0.sp,
+                    hintSize: isTablet(context) ? 6.82.sp : Platform.isAndroid? 16.98.sp:14.68.sp,
                     labelStyle: TextStyle(
                       fontWeight: FontWeight.w400,
                       fontFamily: 'Arial',
@@ -274,7 +276,7 @@ class _HMOSignUpScreenState extends State<HMOSignUpScreen> {
                     borderBottomLeft: 10.r,
                     borderBottomRight: 10.r,
                     label: 'Enter designation',
-                    hintSize: isTablet(context) ? 6.82.sp : 14.0.sp,
+                    hintSize: isTablet(context) ? 6.82.sp : Platform.isAndroid? 16.98.sp:14.68.sp,
                     labelStyle: TextStyle(
                       fontWeight: FontWeight.w400,
                       fontFamily: 'Arial',
@@ -295,7 +297,7 @@ class _HMOSignUpScreenState extends State<HMOSignUpScreen> {
                     borderBottomLeft: 10.r,
                     borderBottomRight: 10.r,
                     label: 'Enter email address',
-                    hintSize: isTablet(context) ? 6.82.sp : 14.0.sp,
+                    hintSize: isTablet(context) ? 6.82.sp : Platform.isAndroid? 16.98.sp:14.68.sp,
                     labelStyle: TextStyle(
                       fontWeight: FontWeight.w400,
                       fontFamily: 'Arial',
@@ -316,7 +318,7 @@ class _HMOSignUpScreenState extends State<HMOSignUpScreen> {
                     borderBottomLeft: 10.r,
                     borderBottomRight: 10.r,
                     label: 'Enter business address',
-                    hintSize: isTablet(context) ? 6.82.sp : 14.0.sp,
+                    hintSize: isTablet(context) ? 6.82.sp : Platform.isAndroid? 16.98.sp:14.68.sp,
                     labelStyle: TextStyle(
                       fontWeight: FontWeight.w400,
                       fontFamily: 'Arial',

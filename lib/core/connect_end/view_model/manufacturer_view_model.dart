@@ -306,6 +306,9 @@ class ManufacturerViewModel extends BaseViewModel {
     if (s.toLowerCase() == 'cancelled') {
       return AppColors.red.withValues(alpha: .1);
     }
+    if (s.toLowerCase() == 'rejected') {
+      return AppColors.red.withValues(alpha: .1);
+    }
     if (s.toLowerCase() == 'pending') {
       return AppColors.yellow.withValues(alpha: .1);
     }
@@ -329,6 +332,9 @@ class ManufacturerViewModel extends BaseViewModel {
       return AppColors.app_green;
     }
     if (s.toLowerCase() == 'cancelled') {
+      return AppColors.red;
+    }
+    if (s.toLowerCase() == 'rejected') {
       return AppColors.red;
     }
     if (s.toLowerCase() == 'pending') {
@@ -398,6 +404,12 @@ class ManufacturerViewModel extends BaseViewModel {
     }
     if (s == 'Cancelled') {
       return 'Cancelled';
+    }
+    if (s == 'Rejected') {
+      return 'Rejected';
+    }
+    if (s == 'Returned') {
+      return 'Returned';
     }
   }
 
@@ -2125,6 +2137,8 @@ class ManufacturerViewModel extends BaseViewModel {
       );
       await AppUtils.snackbar(context, message: v['message']);
       await listIncomingOrder(context, status: 'All');
+      cancelOrderReasonController.clear();
+      // Navigator.pop(context); 
 
       return true;
     } catch (e) {
@@ -2153,6 +2167,8 @@ class ManufacturerViewModel extends BaseViewModel {
       );
       await AppUtils.snackbar(context, message: v['message']);
       await listIncomingOrder(context, status: 'All');
+      rejectOrderReasonController.clear();
+      // Navigator.pop(context);
 
       return true;
     } catch (e) {
@@ -2862,7 +2878,7 @@ class ManufacturerViewModel extends BaseViewModel {
                     Expanded(
                       child: ListenableBuilder(
                         listenable: model,
-                        builder: (context, child) {
+                        builder: (_, child) {
                           return ElevatedButton(
                             onPressed: model.isLoading
                                 ? null
@@ -2870,40 +2886,40 @@ class ManufacturerViewModel extends BaseViewModel {
                                     bool success = true;
 
                                     // for (final item in itemsOrderId) {
-                                    if (text == 'returned') {
-                                      final result = await model
-                                          .returnIncomingOrder(
-                                            context,
-                                            orderId: orderId,
-                                          );
+                                    // if (text == 'returned') {
+                                    //   final result = await model
+                                    //       .returnIncomingOrder(
+                                    //         context,
+                                    //         orderId: orderId,
+                                    //       );
 
-                                      if (!result) {
-                                        success = false;
-                                        // break;
-                                      }
-                                    } else if (text == 'rejected') {
-                                      final result = await model
-                                          .rejectIncomingOrder(
-                                            context,
-                                            orderId: orderId,
-                                          );
+                                    //   if (!result) {
+                                    //     success = false;
+                                    //     // break;
+                                    //   }
+                                    // } else if (text == 'rejected') {
+                                    //   final result = await model
+                                    //       .rejectIncomingOrder(
+                                    //         context,
+                                    //         orderId: orderId,
+                                    //       );
 
-                                      if (!result) {
-                                        success = false;
-                                        // break;
-                                      }
-                                    } else if (text == 'cancelled') {
-                                      final result = await model
-                                          .cancelIncomingOrder(
-                                            context,
-                                            orderId: orderId,
-                                          );
+                                    //   if (!result) {
+                                    //     success = false;
+                                    //     // break;
+                                    //   }
+                                    // } else if (text == 'cancelled') {
+                                    //   final result = await model
+                                    //       .cancelIncomingOrder(
+                                    //         context,
+                                    //         orderId: orderId,
+                                    //       );
 
-                                      if (!result) {
-                                        success = false;
-                                        // break;
-                                      }
-                                    } else {
+                                    //   if (!result) {
+                                    //     success = false;
+                                    //     // break;
+                                    //   }
+                                    // } else {
                                       final result = await model
                                           .advaceIncomingOrder(
                                             context,
@@ -2914,7 +2930,7 @@ class ManufacturerViewModel extends BaseViewModel {
                                         success = false;
                                         // break;
                                       }
-                                    }
+                                    // }
                                     // }
 
                                     if (!dialogContext.mounted) return;
@@ -3049,7 +3065,7 @@ class ManufacturerViewModel extends BaseViewModel {
                     // CANCEL BUTTON
                     ListenableBuilder(
                       listenable: model,
-                      builder: (context, child) {
+                      builder: (contxt, child) {
                         return OutlinedButton(
                           onPressed: model.isLoading
                               ? null
@@ -3085,12 +3101,13 @@ class ManufacturerViewModel extends BaseViewModel {
                     Expanded(
                       child: ListenableBuilder(
                         listenable: model,
-                        builder: (context, child) {
+                        builder: (_, child) {
                           return ElevatedButton(
                             onPressed: model.isLoading
                                 ? null
                                 : () async {
                                     bool success = true;
+
                                     if (text == 'returned') {
                                       final result = await model
                                           .returnIncomingOrder(
@@ -3107,17 +3124,45 @@ class ManufacturerViewModel extends BaseViewModel {
                                         Navigator.pop(dialogContext);
                                       }
                                     } else if (text == 'rejected') {
-                                      model.rejectIncomingOrderDialog(
+                                      if (!dialogContext.mounted) {
+                                        return;
+                                      }
+                                      Navigator.of(dialogContext).pop();
+                                      // Give Flutter a frame to remove // the current dialog before opening // another one.
+                                      await Future<void>.delayed(
+                                        const Duration(milliseconds: 100),
+                                      );
+                                      // IMPORTANT: // Do NOT use dialogContext here.
+                                      if (!context.mounted) {
+                                        return;
+                                      }
+                                      await model.rejectIncomingOrderDialog(
                                         context: context,
                                         orderId: orderId,
                                         model: model,
                                       );
+
+                                      return;
                                     } else if (text == 'cancelled') {
-                                      model.cancelIncomingOrderDialog(
+
+                                      if (!dialogContext.mounted) {
+                                        return;
+                                      }
+                                      Navigator.of(dialogContext).pop();
+                                      // Give Flutter a frame to remove // the current dialog before opening // another one.
+                                      await Future<void>.delayed(
+                                        const Duration(milliseconds: 100),
+                                      );
+                                      // IMPORTANT: // Do NOT use dialogContext here.
+                                      if (!context.mounted) {
+                                        return;
+                                      }
+                                      await model.cancelIncomingOrderDialog(
                                         context: context,
                                         orderId: orderId,
                                         model: model,
                                       );
+                                      return;
                                     } else {
                                       final result = await model
                                           .advaceIncomingOrder(
@@ -3336,6 +3381,11 @@ class ManufacturerViewModel extends BaseViewModel {
                                         if (!result) {
                                           success = false;
                                         }
+                                        if (!dialogContext.mounted) return;
+
+                                        if (success) {
+                                          Navigator.pop(dialogContext);
+                                        }
                                       }
                                     },
                               style: ElevatedButton.styleFrom(
@@ -3538,9 +3588,7 @@ class ManufacturerViewModel extends BaseViewModel {
 
                                         if (!result) {
                                           success = false;
-                                          // break;
                                         }
-                                        // }
 
                                         if (!dialogContext.mounted) return;
 

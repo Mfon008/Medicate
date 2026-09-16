@@ -31,6 +31,8 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
     'In Transit',
     'Delivered',
     'Cancelled',
+    'Rejected',
+    'Returned',
   ];
 
   List<String> advancecStatusList = [
@@ -401,9 +403,8 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
                                   ),
                                   SizedBox(height: 8.2.h),
                                   TextView(
-                                    text:
-                                        '${ord.customer?.address}'
-                                            .capitalizeWords(),
+                                    text: '${ord.customer?.address}'
+                                        .capitalizeWords(),
                                     textStyle: TextStyle(
                                       fontFamily: 'DMSans',
                                       fontSize: 15.22.sp,
@@ -569,7 +570,11 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
                                   ord.paymentStatus?.toLowerCase() ==
                                               'success' &&
                                           ord.status?.toLowerCase() !=
-                                              'cancelled'
+                                              'cancelled' &&
+                                          ord.status?.toLowerCase() !=
+                                              'rejected' &&
+                                          ord.status?.toLowerCase() !=
+                                              'returned'
                                       ? GestureDetector(
                                           onTap: () =>
                                               _showAdvanceStatusListMenu(
@@ -817,6 +822,7 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
                         // Update your actual page state
                         setState(() {
                           s = e;
+                          model!.page = 1;
                         });
 
                         model!.listIncomingOrder(
@@ -916,7 +922,7 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
           enabled: false,
           padding: EdgeInsets.zero,
           child: StatefulBuilder(
-            builder: (context, menuSetState) {
+            builder: (contxt, menuSetState) {
               return Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -981,12 +987,14 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
                           await Future.delayed(
                             const Duration(milliseconds: 100),
                           );
-                          model.advanceIncomingOrderDialog(
-                            context: context,
-                            orderId: order!.id,
-                            text: e,
-                            model: model,
-                          );
+                          if (context.mounted) {
+                            model.advanceIncomingOrderDialog(
+                              context: context,
+                              orderId: order!.id,
+                              text: e,
+                              model: model,
+                            );
+                          }
                         }
                         model.notifyListeners();
                       },
