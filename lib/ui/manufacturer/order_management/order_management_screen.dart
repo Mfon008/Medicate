@@ -402,7 +402,7 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
                                   SizedBox(height: 8.2.h),
                                   TextView(
                                     text:
-                                        '${ord.customer?.address}, ${ord.customer?.lga}, ${ord.customer?.state}'
+                                        '${ord.customer?.address}'
                                             .capitalizeWords(),
                                     textStyle: TextStyle(
                                       fontFamily: 'DMSans',
@@ -982,10 +982,8 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
                             const Duration(milliseconds: 100),
                           );
                           model.advanceIncomingOrderDialog(
-                            // ignore: use_build_context_synchronously
                             context: context,
                             orderId: order!.id,
-                            itemsOrderId: order.items,
                             text: e,
                             model: model,
                           );

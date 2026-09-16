@@ -35,12 +35,15 @@ class AppImage {
   static const String upload_arr_up = 'assets/svgs/upload_arr_up.svg';
   static const String role = 'assets/svgs/role.svg';
   static const String kyc_file = 'assets/svgs/file_kyc.svg';
+  static const String open_padlock = 'assets/svgs/open_padlock.svg';
+  static const String locked_padlock = 'assets/svgs/locked_padlock.svg';
   static const String kyc_eye = 'assets/svgs/kyc_eye.svg';
   static const String tablet = 'assets/svgs/tablet.svg';
   static const String square_edit = 'assets/svgs/square_edit.svg';
   static const String pending = 'assets/svgs/pending.svg';
   static const String panadol = 'assets/images/panadol.png';
   static const String cancel = 'assets/svgs/cancel.svg';
+  static const String plane = 'assets/svgs/plane.svg';
   static const String upload_icon = 'assets/svgs/upload_icon.svg';
   static const String download_icon = 'assets/svgs/download_icon.svg';
   static const String subscription = 'assets/svgs/subscription.svg';
@@ -74,6 +77,7 @@ class AppImage {
   static const String empty_cart = 'assets/svgs/empty_cart.svg';
   static const String box_cart = 'assets/svgs/cart_box.svg';
   static const String truck = 'assets/svgs/truck.svg';
+  static const String truck_out = 'assets/svgs/truck_out.svg';
   static const String van = 'assets/svgs/van.svg';
   static const String naira = 'assets/svgs/naira.svg';
   static const String delivery = 'assets/svgs/delivery.svg';

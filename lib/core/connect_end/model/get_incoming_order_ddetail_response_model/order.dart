@@ -17,7 +17,7 @@ class Order {
   String? orderNotes;
   List<Item>? items;
   int? itemCount;
-  int? subtotal;
+  double? subtotal;
   String? currency;
   String? paymentStatus;
   String? paymentStatusLabel;

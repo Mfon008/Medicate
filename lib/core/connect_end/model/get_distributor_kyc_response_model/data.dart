@@ -14,8 +14,8 @@ class Data {
   Level2? level2;
   Level3? level3;
   List<String>? businessTypes;
-  int? currentLevel;
-  int? completionPercentage;
+  dynamic currentLevel;
+  dynamic completionPercentage;
 
   Data({
     this.distributorId,

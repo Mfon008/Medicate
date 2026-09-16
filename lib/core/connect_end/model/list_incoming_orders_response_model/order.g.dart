@@ -17,7 +17,7 @@ Order _$OrderFromJson(Map<String, dynamic> json) => Order(
   items: (json['items'] as List<dynamic>?)
       ?.map((e) => Item.fromJson(e as Map<String, dynamic>))
       .toList(),
-  orderTotal: (json['orderTotal'] as num?)?.toInt(),
+  orderTotal: (json['orderTotal'] as num?)?.toDouble(),
   currency: json['currency'] as String?,
   dateOrdered: json['dateOrdered'] == null
       ? null

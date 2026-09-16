@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:medicate_app/core/connect_end/model/distributor_wholesale_category_model/distributor_wholesale_category_model.dart';
 import 'package:medicate_app/core/connect_end/model/get_all_product_list_response_model/get_all_product_list_response_model.dart';
+import 'package:medicate_app/core/connect_end/model/get_distributor_kyc_response_model/get_distributor_kyc_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/get_distributor_profile_response_model/get_distributor_profile_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/get_incoming_order_ddetail_response_model/get_incoming_order_ddetail_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/get_single_product_response_model/get_single_product_response_model.dart';
@@ -12,6 +13,8 @@ import 'package:medicate_app/core/connect_end/model/update_distributor_profile_e
 
 import '../connect_end/model/create_distributor_product_entity_model/create_distributor_product_entity_model.dart';
 import '../connect_end/model/forgot_password_response_model/forgot_password_response_model.dart';
+import '../connect_end/model/level_three_distributor_kyc_entity_model.dart';
+import '../connect_end/model/level_two_distributor_kyc_entity_model/level_two_distributor_kyc_entity_model.dart';
 import '../connect_end/model/list_incoming_orders_response_model/list_incoming_orders_response_model.dart';
 import '../connect_end/model/login_entity_model.dart';
 import '../connect_end/model/pharmacy_login_response_model/pharmacy_login_response_model.dart';
@@ -458,11 +461,10 @@ class ManufacturerApi {
 
   Future<dynamic> advanceIncomingOrder({
     String? wholesaleOrderId,
-    String? wholesaleOrderItemId,
   }) async {
     try {
       final response = await _service.call(
-        '${UrlConfig.wholesale_incoming_orders}/$wholesaleOrderId/items/$wholesaleOrderItemId/advance',
+        '${UrlConfig.wholesale_incoming_orders}/$wholesaleOrderId/advance',
         RequestMethod.patch,
       );
       logger.d(response.data);
@@ -475,12 +477,11 @@ class ManufacturerApi {
 
   Future<dynamic> cancelIncomingOrder({
     String? wholesaleOrderId,
-    String? wholesaleOrderItemId,
     String? reason,
   }) async {
     try {
       final response = await _service.call(
-        '${UrlConfig.wholesale_incoming_orders}/$wholesaleOrderId/items/$wholesaleOrderItemId/cancel',
+        '${UrlConfig.wholesale_incoming_orders}/$wholesaleOrderId/cancel',
         data: {"reason": reason},
         RequestMethod.patch,
       );
@@ -494,12 +495,11 @@ class ManufacturerApi {
 
   Future<dynamic> rejectIncomingOrder({
     String? wholesaleOrderId,
-    String? wholesaleOrderItemId,
     String? reason,
   }) async {
     try {
       final response = await _service.call(
-        '${UrlConfig.wholesale_incoming_orders}/$wholesaleOrderId/items/$wholesaleOrderItemId/reject',
+        '${UrlConfig.wholesale_incoming_orders}/$wholesaleOrderId/reject',
         data: {"reason": reason},
         RequestMethod.patch,
       );
@@ -513,11 +513,10 @@ class ManufacturerApi {
 
   Future<dynamic> returnIncomingOrder({
     String? wholesaleOrderId,
-    String? wholesaleOrderItemId,
   }) async {
     try {
       final response = await _service.call(
-        '${UrlConfig.wholesale_incoming_orders}/$wholesaleOrderId/items/$wholesaleOrderItemId/return',
+        '${UrlConfig.wholesale_incoming_orders}/$wholesaleOrderId/return',
         RequestMethod.patch,
       );
       logger.d(response.data);
@@ -589,4 +588,68 @@ class ManufacturerApi {
       rethrow;
     }
   }
+
+  Future<GetDistributorKycResponseModel> getManAndDistributorKyc() async {
+    try {
+      final response = await _service.call(
+        UrlConfig.auth_distributor_kyc_status,
+        RequestMethod.get,
+      );
+      logger.d(response.data);
+      return GetDistributorKycResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> saveLevelTwoManAndDistributorKycProgress(
+   LevelTwoDistributorKycEntityModel kycEntity,
+  ) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.auth_distributor_kyc_level_two_save,
+        RequestMethod.patch,
+        data: kycEntity.toJson()
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> submitLevelTwoManAndDistributorKyc(
+    LevelTwoDistributorKycEntityModel kycEntity,
+  ) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.auth_distributor_kyc_level_two_submit,
+        RequestMethod.patch, data: kycEntity.toJson()
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> submitLevelThreeManAndDistributorKyc(
+    LevelThreeDistributorKycEntityModel kycEntity,
+  ) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.auth_distributor_kyc_level_three_submit,
+        RequestMethod.post, data: kycEntity.toJson()
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
 }

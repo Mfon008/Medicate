@@ -15,7 +15,7 @@ class Order {
   String? customerName;
   int? itemsOrdered;
   List<Item>? items;
-  int? orderTotal;
+  double? orderTotal;
   String? currency;
   DateTime? dateOrdered;
   String? paymentStatus;

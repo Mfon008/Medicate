@@ -1,47 +1,41 @@
-import 'business_details.dart';
-import 'company_documents.dart';
-import 'role_documents.dart';
+import 'distributor.dart';
+import 'importer.dart';
+import 'manufacturer.dart';
 
 class LevelTwoDistributorKycEntityModel {
-  BusinessDetails? businessDetails;
-  CompanyDocuments? companyDocuments;
   List<String>? businessTypes;
-  RoleDocuments? roleDocuments;
+  Distributor? distributor;
+  Manufacturer? manufacturer;
+  Importer? importer;
 
   LevelTwoDistributorKycEntityModel({
-    this.businessDetails,
-    this.companyDocuments,
     this.businessTypes,
-    this.roleDocuments,
+    this.distributor,
+    this.manufacturer,
+    this.importer,
   });
 
   factory LevelTwoDistributorKycEntityModel.fromJson(
     Map<String, dynamic> json,
   ) {
     return LevelTwoDistributorKycEntityModel(
-      businessDetails: json['businessDetails'] == null
-          ? null
-          : BusinessDetails.fromJson(
-              json['businessDetails'] as Map<String, dynamic>,
-            ),
-      companyDocuments: json['companyDocuments'] == null
-          ? null
-          : CompanyDocuments.fromJson(
-              json['companyDocuments'] as Map<String, dynamic>,
-            ),
       businessTypes: json['businessTypes'] as List<String>?,
-      roleDocuments: json['roleDocuments'] == null
+      distributor: json['distributor'] == null
           ? null
-          : RoleDocuments.fromJson(
-              json['roleDocuments'] as Map<String, dynamic>,
-            ),
+          : Distributor.fromJson(json['distributor'] as Map<String, dynamic>),
+      manufacturer: json['manufacturer'] == null
+          ? null
+          : Manufacturer.fromJson(json['manufacturer'] as Map<String, dynamic>),
+      importer: json['importer'] == null
+          ? null
+          : Importer.fromJson(json['importer'] as Map<String, dynamic>),
     );
   }
 
   Map<String, dynamic> toJson() => {
-    'businessDetails': businessDetails?.toJson(),
-    'companyDocuments': companyDocuments?.toJson(),
     'businessTypes': businessTypes,
-    'roleDocuments': roleDocuments?.toJson(),
+    'distributor': distributor?.toJson(),
+    'manufacturer': manufacturer?.toJson(),
+    'importer': importer?.toJson(),
   };
 }

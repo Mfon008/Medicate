@@ -44,6 +44,7 @@ class TextFormWidget extends StatelessWidget {
   final Color? prefixIconColor;
   final Key? formKey;
   final double? size;
+  final double? rightPos;
   final int? maxline;
   final int? minline;
   final double? borderTopRight;
@@ -69,6 +70,7 @@ class TextFormWidget extends StatelessWidget {
     this.suffixWidget,
     this.prefixWidget,
     this.validator,
+    this.rightPos = -12.10,
     this.hintWeight = FontWeight.w500,
     this.onPasswordToggle,
     this.initialValue,
@@ -131,7 +133,7 @@ class TextFormWidget extends StatelessWidget {
 
                   !isShowHint
                       ? Positioned(
-                          right: -12.10,
+                          right: rightPos,
                           child: TextView(
                             text: '*',
                             textStyle: TextStyle(

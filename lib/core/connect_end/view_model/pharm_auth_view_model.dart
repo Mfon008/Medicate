@@ -18460,6 +18460,488 @@ class PharmViewModel extends BaseViewModel {
     return takenCount / totalCount;
   }
 
+  void makePaymentWallet({context, double? amount}) {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // prevent closing by tapping outside
+      builder: (BuildContext context) {
+        return ViewModelBuilder<PharmViewModel>.reactive(
+          viewModelBuilder: () => PharmViewModel(),
+          onViewModelReady: (model) async {
+            await model.getWalletBalance(context);
+          },
+          disposeViewModel: false,
+          builder: (_, PharmViewModel model, _) {
+            return model.getWalletBalanceResponseModel != null
+                ? Container(
+                    color: AppColors.transparent,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Align(
+                          alignment: Alignment.topCenter,
+                          child: TextButton.icon(
+                            onPressed: () => Navigator.pop(context),
+                            icon: Icon(
+                              Icons.close,
+                              color: Colors.white,
+                              size: 18,
+                            ),
+                            label: Text(
+                              "Close",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            style: TextButton.styleFrom(
+                              backgroundColor: AppColors.primary,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 10.w,
+                                vertical: 4.w,
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 6.10.h),
+                        Dialog(
+                          insetPadding: EdgeInsets.all(16.20.w),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          backgroundColor: AppColors.white,
+                          child: Padding(
+                            padding: EdgeInsets.all(20.w),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    SvgPicture.asset(
+                                      AppImage.wallet,
+                                      height: 13.2.h,
+                                      width: 13.2.w,
+                                    ),
+                                    SizedBox(width: 12.w),
+                                    TextView(
+                                      text: 'Wallet payment',
+                                      textStyle: TextStyle(
+                                        fontFamily: 'DMSans',
+                                        color: AppColors.black,
+                                        fontSize: 16.20.sp,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 12.h),
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: 10.w,
+                                    horizontal: 12.w,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.f1,
+                                    borderRadius: BorderRadius.circular(12.r),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          TextView(
+                                            text: 'Wallet Balance',
+                                            textStyle: TextStyle(
+                                              fontFamily: 'DMSans',
+                                              color: AppColors.black,
+                                              fontSize: 16.20.sp,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                          SizedBox(height: 6.h),
+                                          TextView(
+                                            text: formatNaira(
+                                              double.parse(
+                                                model
+                                                        .getWalletBalanceResponseModel
+                                                        ?.data
+                                                        ?.balance ??
+                                                    '0.0',
+                                              ),
+                                            ),
+
+                                            letterSpacing: -2,
+                                            textStyle: TextStyle(
+                                              fontFamily: 'DMSans',
+                                              color: AppColors.black,
+                                              fontSize: 22.0.sp,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(height: 12.h),
+                                      GestureDetector(
+                                        onTap: () => model
+                                            .fundPaymentWalletProduct(context),
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(
+                                            vertical: 8.w,
+                                            horizontal: 10.w,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(
+                                              22.r,
+                                            ),
+                                            color: AppColors.primary,
+                                          ),
+                                          child: TextView(
+                                            text: '+ Top Up',
+                                            textStyle: TextStyle(
+                                              fontFamily: 'DMSans',
+                                              color: AppColors.white,
+                                              fontSize: 17.20.sp,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(height: 15.20.h),
+                                double.parse(
+                                          model
+                                              .getWalletBalanceResponseModel!
+                                              .data!
+                                              .balance!,
+                                        ) <
+                                        amount!
+                                    ? TextView(
+                                        text:
+                                            'Insufficient balance. Top up ${formatNaira(amount)} more using the button above.',
+                                        textStyle: TextStyle(
+                                          fontFamily: 'DMSans',
+                                          color: AppColors.red,
+                                          fontSize: 15.20.sp,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      )
+                                    : SizedBox.shrink(),
+                                SizedBox(height: 20.h),
+
+                                // 🔹 Save button
+                                SizedBox(
+                                  width: double.infinity,
+                                  child: ElevatedButton(
+                                    onPressed:
+                                        double.parse(
+                                              model
+                                                  .getWalletBalanceResponseModel!
+                                                  .data!
+                                                  .balance!,
+                                            ) <
+                                            amount
+                                        ? () {}
+                                        : () {
+                                            placeOrderWallet(
+                                              context: context,
+                                              amount: amount,
+                                              placeOrderWallet: PlaceOrderWalletEntityModel(
+                                                deliveryMethod:
+                                                    delivery ==
+                                                        Delivery.instance
+                                                    ? 'INSTANT'
+                                                    : 'SCHEDULED_BLOCK',
+                                                deliveryDate:
+                                                    _quoteScheduleDeliveryResponseModel !=
+                                                        null
+                                                    ? convertDate(
+                                                        dateTimeController.text,
+                                                      )
+                                                    : null,
+                                                deliveryDetails:
+                                                    del.DeliveryDetails(
+                                                      state:
+                                                          stateController.text,
+                                                      lga: lgaController.text,
+                                                      contactPhone:
+                                                          phoneController.text,
+                                                      deliveryAddress:
+                                                          deliveryAddressController
+                                                              .text,
+                                                      orderNotes:
+                                                          orderNotesController
+                                                              .text,
+                                                    ),
+                                                paymentMethod: "WALLET",
+                                                stateCode: stateController.text
+                                                    .toUpperCase(),
+                                                lgaCode: lgaController.text
+                                                    .toUpperCase(),
+                                                expectedDeliveryFee:
+                                                    _quoteInstantDeliveryResponseModel !=
+                                                        null
+                                                    ? _quoteInstantDeliveryResponseModel!
+                                                          .data!
+                                                          .checkout!
+                                                          .deliveryFee
+                                                    : _quoteScheduleDeliveryResponseModel!
+                                                          .data!
+                                                          .checkout!
+                                                          .deliveryFee,
+                                                expectedSubtotal:
+                                                    _quoteInstantDeliveryResponseModel !=
+                                                        null
+                                                    ? _quoteInstantDeliveryResponseModel!
+                                                          .data!
+                                                          .checkout!
+                                                          .subtotal!
+                                                    : _quoteScheduleDeliveryResponseModel!
+                                                          .data!
+                                                          .checkout!
+                                                          .subtotal!,
+                                                expectedTotal:
+                                                    _quoteInstantDeliveryResponseModel !=
+                                                        null
+                                                    ? _quoteInstantDeliveryResponseModel!
+                                                          .data!
+                                                          .checkout!
+                                                          .total!
+                                                    : _quoteScheduleDeliveryResponseModel!
+                                                          .data!
+                                                          .checkout!
+                                                          .total!,
+                                                timeBlockStart:
+                                                    _quoteScheduleDeliveryResponseModel !=
+                                                        null
+                                                    ? time!.startTime
+                                                    : null,
+                                                timeBlockEnd:
+                                                    _quoteScheduleDeliveryResponseModel !=
+                                                        null
+                                                    ? time!.endTime
+                                                    : null,
+                                              ),
+                                            );
+
+                                            model.notifyListeners();
+                                          },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor:
+                                          double.parse(
+                                                model
+                                                    .getWalletBalanceResponseModel!
+                                                    .data!
+                                                    .balance!,
+                                              ) <
+                                              amount
+                                          ? AppColors.primaryLight.withOpacity(
+                                              .74,
+                                            )
+                                          : AppColors.primary,
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: 16,
+                                      ),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(30),
+                                      ),
+                                    ),
+                                    child: _isLoadingWallet
+                                        ? SpinKitCircle(
+                                            color: AppColors.white,
+                                            size: 22.sp,
+                                          )
+                                        : Text(
+                                            "Pay ${formatNaira(amount)} & Place Order",
+                                            style: TextStyle(
+                                              fontSize: 16.80,
+                                              fontFamily: 'DMSans',
+                                              color: AppColors.white,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                : SizedBox.shrink();
+          },
+        );
+      },
+    );
+  }
+
+  void orderPaymentSuccess({context, double? amount}) {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // prevent closing by tapping outside
+      builder: (BuildContext context) {
+        return ViewModelBuilder<PharmViewModel>.reactive(
+          viewModelBuilder: () => PharmViewModel(),
+          onViewModelReady: (model) async {},
+          disposeViewModel: false,
+          builder: (_, PharmViewModel model, _) {
+            return Container(
+              color: AppColors.transparent,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: TextButton.icon(
+                      onPressed: () => Navigator.pop(context),
+                      icon: Icon(Icons.close, color: Colors.white, size: 18),
+                      label: Text(
+                        "Close",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      style: TextButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 10.w,
+                          vertical: 4.w,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 6.10.h),
+                  Dialog(
+                    insetPadding: EdgeInsets.all(16.20.w),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    backgroundColor: AppColors.white,
+                    child: Padding(
+                      padding: EdgeInsets.all(20.w),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(10.w),
+                            decoration: BoxDecoration(
+                              color: AppColors.app_green_light,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              Icons.check,
+                              size: 20.sp,
+                              color: AppColors.app_green,
+                            ),
+                          ),
+                          SizedBox(height: 10.h),
+                          TextView(
+                            text: 'Order Placed Successfully!',
+                            textStyle: TextStyle(
+                              fontFamily: 'DMSans',
+                              color: AppColors.black,
+                              fontSize: 18.20.sp,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          SizedBox(height: 5.6.h),
+                          TextView(
+                            text:
+                                'Your payment of${formatNaira(amount!)} was securely processed from your wallet.',
+                                textAlign: TextAlign.center,
+                            textStyle: TextStyle(
+                              fontFamily: 'DMSans',
+                              color: AppColors.black,
+                              fontSize: 15.20.sp,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                          SizedBox(height: 20.h),
+
+                          // 🔹 Save button
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: () => navigate.navigateTo(Routes.pharmacyOrderScreen),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.white,
+                                padding: EdgeInsets.symmetric(vertical: 16),
+
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                  side: BorderSide(
+                                    color: AppColors.primary1,
+                                    width: 1,
+                                  ),
+                                ),
+                              ),
+                              child: Text(
+                                "Track Order",
+                                style: TextStyle(
+                                  fontSize: 18.0,
+                                  fontFamily: 'DMSans',
+                                  color: AppColors.primary1,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 12.h),
+
+                          // 🔹 Save button
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                navigate.navigateTo(
+                                  Routes.pharmacyDashboard,
+                                  arguments: PharmacyDashboardArguments(
+                                    index: 2,
+                                  ),
+                                );
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.primary,
+                                padding: EdgeInsets.symmetric(vertical: 16),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                              ),
+                              child: Text(
+                                "Return to Marketplace",
+                                style: TextStyle(
+                                  fontSize: 18.0,
+                                  fontFamily: 'DMSans',
+                                  color: AppColors.white,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
   void fundPaymentWallet(context) {
     showDialog(
       context: context,
@@ -18613,6 +19095,159 @@ class PharmViewModel extends BaseViewModel {
     );
   }
 
+  void fundPaymentWalletProduct(context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // prevent closing by tapping outside
+      builder: (BuildContext context) {
+        return ViewModelBuilder<PharmViewModel>.reactive(
+          viewModelBuilder: () => PharmViewModel(),
+          onViewModelReady: (model) {},
+          disposeViewModel: false,
+          builder: (_, PharmViewModel model, _) {
+            return Container(
+              color: AppColors.transparent,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: TextButton.icon(
+                      onPressed: () => Navigator.pop(context),
+                      icon: Icon(Icons.close, color: Colors.white, size: 18),
+                      label: Text(
+                        "Close",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      style: TextButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 10.w,
+                          vertical: 4.w,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 6.10.h),
+                  Dialog(
+                    insetPadding: EdgeInsets.all(16.20.w),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    backgroundColor: AppColors.white,
+                    child: Padding(
+                      padding: EdgeInsets.all(34.w),
+                      child: Form(
+                        key: formKeyFundWallet,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            TextView(
+                              text: 'Fund Wallet',
+                              textStyle: TextStyle(
+                                fontFamily: 'GoogleSans',
+                                color: AppColors.black,
+                                fontSize: 20.sp,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            SizedBox(height: 12.h),
+                            TextView(
+                              text: 'Enter Amount',
+                              textStyle: TextStyle(
+                                fontFamily: 'Arial',
+                                color: AppColors.black,
+                                fontSize: 13.20.sp,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                            SizedBox(height: 10.h),
+                            TextFormWidget(
+                              borderColor: AppColors.infoGrey1,
+                              borderTopLeft: 10.r,
+                              borderTopRight: 10.r,
+                              borderBottomLeft: 10.r,
+                              borderBottomRight: 10.r,
+
+                              label: '',
+                              hintSize: 16.60.sp,
+                              controller: fundAmountController,
+                              inputFormatters: [AmountFormatter()],
+                              keyboardType: TextInputType.numberWithOptions(
+                                decimal: true,
+                              ),
+                              validator: AppValidator.validateAmount(
+                                minAmount: 100.00,
+                                maxAmount: 1000000000,
+                              ),
+                              labelStyle: TextStyle(
+                                fontWeight: FontWeight.w400,
+                                fontFamily: 'Arial',
+                                fontSize: 14.2.sp,
+                                color: AppColors.infoGrey,
+                              ),
+                              fillColor: AppColors.transparent,
+                              isFilled: true,
+                            ),
+
+                            SizedBox(height: 35.h),
+                            // 🔹 Save button
+                            SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  if (formKeyFundWallet.currentState!
+                                      .validate()) {
+                                    model.createPaymentProduct(
+                                      context,
+                                      amount: fundAmountController.text
+                                          .trim()
+                                          .replaceAll(',', ''),
+                                    );
+                                  }
+                                  model.notifyListeners();
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.primary,
+                                  padding: EdgeInsets.symmetric(vertical: 16),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                ),
+                                child: model.isLoading
+                                    ? SpinKitCircle(
+                                        color: AppColors.white,
+                                        size: 22.sp,
+                                      )
+                                    : Text(
+                                        "Proceed",
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: AppColors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
   Future<void> createPayment(
     BuildContext context, {
     required String amount,
@@ -18691,6 +19326,99 @@ class PharmViewModel extends BaseViewModel {
         if (result == true) {
           await getWalletBalance(context);
           await getWalletTransactionHistory(context);
+        }
+      } else {
+        AppUtils.snackbar(
+          context,
+          message: 'Unable to make transaction.',
+          error: true,
+        );
+      }
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> createPaymentProduct(
+    BuildContext context, {
+    required String amount,
+    String? description,
+    String? paymentType,
+  }) async {
+    try {
+      _isLoading = true;
+      _createPaymentWalletModel = await runBusyFuture(
+        repositoryImply.createWalletPayment(
+          createPaymentWalletEntityModel: CreatePaymentWalletEntityModel(
+            amount: double.parse(amount).toInt(),
+            currency: "NGN",
+            description: description ?? "Wallet top-up payment",
+            paymentForType: paymentType ?? "WALLET_TOPUP",
+            paymentForId: "wallet-topup-001",
+            callbackUrl: "https://wallet.medicate.health/payments/return",
+          ),
+        ),
+        throwException: true,
+      );
+      _isLoading = false;
+      if (_createPaymentWalletModel?.statusCode == 201) {
+        await AppUtils.snackbar(
+          context,
+          message: _createPaymentWalletModel?.message ?? '',
+        );
+        initiateWalletPaymentProduct(
+          reference: _createPaymentWalletModel?.data?.transactionReference,
+          context: context,
+        );
+      } else {
+        navigate.navigateTo(
+          Routes.paymentStatusScreen,
+          arguments: PaymentStatusScreenArguments(
+            isSuccessful: false,
+            isUserType: 'pharmacy',
+          ),
+        );
+      }
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> initiateWalletPaymentProduct({
+    String? reference,
+    required BuildContext context,
+  }) async {
+    try {
+      _isLoading = true;
+      _initiatePaymentResponseModel = await runBusyFuture(
+        repositoryImply.initiateWalletPayment(
+          initiatePaymentWalletEntityModel: InitiatePaymentWalletEntityModel(
+            reference: reference,
+            callbackUrl: "https://wallet.medicate.health/payments/return",
+          ),
+        ),
+        throwException: true,
+      );
+      _isLoading = false;
+      if (_createPaymentWalletModel?.statusCode == 201) {
+        await AppUtils.snackbar(
+          context,
+          message: _initiatePaymentResponseModel?.message ?? '',
+        );
+        final result = await navigate.navigateTo(
+          Routes.acceleratePaymentViewWallet,
+          arguments: AcceleratePaymentViewWalletArguments(
+            url: _initiatePaymentResponseModel?.data?.redirectUrl,
+          ),
+        );
+        if (result == true) {
+          await getWalletBalance(context);
         }
       } else {
         AppUtils.snackbar(
@@ -19297,7 +20025,7 @@ class PharmViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  paymentMethodFlowWholesale(context) {
+  paymentMethodFlowWholesale(context, {double? amount}) {
     if (payMethod == PayMethod.accelerate) {
       placeOrderAccelerate(
         context: context,
@@ -19348,47 +20076,9 @@ class PharmViewModel extends BaseViewModel {
       );
     }
     if (payMethod == PayMethod.wallet) {
-      placeOrderWallet(
-        context: context,
-        placeOrderWallet: PlaceOrderWalletEntityModel(
-          deliveryMethod: delivery == Delivery.instance
-              ? 'INSTANT'
-              : 'SCHEDULED_BLOCK',
-          deliveryDate: _quoteScheduleDeliveryResponseModel != null
-              ? convertDate(dateTimeController.text)
-              : null,
-          deliveryDetails: del.DeliveryDetails(
-            state: stateController.text,
-            lga: lgaController.text,
-            contactPhone: phoneController.text,
-            deliveryAddress: deliveryAddressController.text,
-            orderNotes: orderNotesController.text,
-          ),
-          paymentMethod: "WALLET",
-          stateCode: stateController.text.toUpperCase(),
-          lgaCode: lgaController.text.toUpperCase(),
-          expectedDeliveryFee: _quoteInstantDeliveryResponseModel != null
-              ? _quoteInstantDeliveryResponseModel!.data!.checkout!.deliveryFee
-              : _quoteScheduleDeliveryResponseModel!
-                    .data!
-                    .checkout!
-                    .deliveryFee,
-          expectedSubtotal: _quoteInstantDeliveryResponseModel != null
-              ? _quoteInstantDeliveryResponseModel!.data!.checkout!.subtotal!
-              : _quoteScheduleDeliveryResponseModel!.data!.checkout!.subtotal!,
-          expectedTotal: _quoteInstantDeliveryResponseModel != null
-              ? _quoteInstantDeliveryResponseModel!.data!.checkout!.total!
-              : _quoteScheduleDeliveryResponseModel!.data!.checkout!.total!,
-          timeBlockStart: _quoteScheduleDeliveryResponseModel != null
-              ? time!.startTime
-              : null,
-          timeBlockEnd: _quoteScheduleDeliveryResponseModel != null
-              ? time!.endTime
-              : null,
-        ),
-      );
+      makePaymentWallet(context: context, amount: amount);
     }
-    if (payMethod == PayMethod.flutterwave) {}
+    // if (payMethod == PayMethod.flutterwave) {}
     notifyListeners();
   }
 
@@ -19499,6 +20189,7 @@ class PharmViewModel extends BaseViewModel {
   Future<void> placeOrderWallet({
     context,
     PlaceOrderWalletEntityModel? placeOrderWallet,
+    double? amount,
   }) async {
     try {
       _isLoadingWallet = true;
@@ -19511,10 +20202,7 @@ class PharmViewModel extends BaseViewModel {
           context,
           message: _placeOrderWalletResponseModel?.message ?? '',
         );
-        navigate.navigateTo(
-          Routes.pharmacyDashboard,
-          arguments: PharmacyDashboardArguments(index: 2),
-        );
+        orderPaymentSuccess(context: context, amount: amount!);
       }
       _isLoadingWallet = false;
     } catch (e) {

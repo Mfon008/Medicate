@@ -10,9 +10,12 @@ import '../model/create_distributor_product_entity_model/create_distributor_prod
 import '../model/distributor_wholesale_category_model/distributor_wholesale_category_model.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
 import '../model/get_all_product_list_response_model/get_all_product_list_response_model.dart';
+import '../model/get_distributor_kyc_response_model/get_distributor_kyc_response_model.dart';
 import '../model/get_distributor_profile_response_model/get_distributor_profile_response_model.dart';
 import '../model/get_incoming_order_ddetail_response_model/get_incoming_order_ddetail_response_model.dart';
 import '../model/get_single_product_response_model/get_single_product_response_model.dart';
+import '../model/level_three_distributor_kyc_entity_model.dart';
+import '../model/level_two_distributor_kyc_entity_model/level_two_distributor_kyc_entity_model.dart';
 import '../model/list_incoming_orders_response_model/list_incoming_orders_response_model.dart';
 import '../model/login_entity_model.dart';
 import '../model/nafdac_registration_number_entity_model.dart';
@@ -232,23 +235,19 @@ class ManufacturerRepoImpl {
 
   Future<dynamic> advanceIncomingOrder({
     String? wholesaleOrderId,
-    String? wholesaleOrderItemId,
   }) async {
     final response = await _contract.advanceIncomingOrder(
       wholesaleOrderId: wholesaleOrderId,
-      wholesaleOrderItemId: wholesaleOrderItemId,
     );
     return response;
   }
 
   Future<dynamic> cancelIncomingOrder({
     String? wholesaleOrderId,
-    String? wholesaleOrderItemId,
     String? reason,
   }) async {
     final response = await _contract.cancelIncomingOrder(
       wholesaleOrderId: wholesaleOrderId,
-      wholesaleOrderItemId: wholesaleOrderItemId,
       reason: reason,
     );
     return response;
@@ -256,12 +255,10 @@ class ManufacturerRepoImpl {
 
   Future<dynamic> rejectIncomingOrder({
     String? wholesaleOrderId,
-    String? wholesaleOrderItemId,
     String? reason,
   }) async {
     final response = await _contract.rejectIncomingOrder(
       wholesaleOrderId: wholesaleOrderId,
-      wholesaleOrderItemId: wholesaleOrderItemId,
       reason: reason,
     );
     return response;
@@ -269,11 +266,9 @@ class ManufacturerRepoImpl {
 
   Future<dynamic> returnIncomingOrder({
     String? wholesaleOrderId,
-    String? wholesaleOrderItemId,
   }) async {
     final response = await _contract.returnIncomingOrder(
       wholesaleOrderId: wholesaleOrderId,
-      wholesaleOrderItemId: wholesaleOrderItemId,
     );
     return response;
   }
@@ -308,6 +303,32 @@ class ManufacturerRepoImpl {
     String phoneNo,
   ) async {
     final response = await _contract.getManufacturerDetails(phoneNo);
+    return response;
+  }
+
+  Future<GetDistributorKycResponseModel> getManAndDistributorKyc() async {
+    final response = await _contract.getManAndDistributorKyc();
+    return response;
+  }
+
+  Future<dynamic> saveLevelTwoManAndDistributorKycProgress(
+   LevelTwoDistributorKycEntityModel kycEntity,
+  ) async {
+    final response = await _contract.saveLevelTwoManAndDistributorKycProgress(kycEntity);
+    return response;
+  }
+
+  Future<dynamic> submitLevelTwoManAndDistributorKyc(
+    LevelTwoDistributorKycEntityModel kycEntity,
+  ) async {
+    final response = await _contract.submitLevelTwoManAndDistributorKyc(kycEntity);
+    return response;
+  }
+
+  Future<dynamic> submitLevelThreeManAndDistributorKyc(
+    LevelThreeDistributorKycEntityModel kycEntity,
+  ) async {
+    final response = await _contract.submitLevelThreeManAndDistributorKyc(kycEntity);
     return response;
   }
 }

@@ -7,8 +7,14 @@ import 'package:medicate_app/core/config/colors.dart';
 class CustomSwitch extends StatefulWidget {
   final bool value;
   final ValueChanged<bool> onChanged;
+  final Color valueColor;
 
-  const CustomSwitch({super.key, required this.value, required this.onChanged});
+  const CustomSwitch({
+    super.key,
+    required this.value,
+    required this.onChanged,
+    this.valueColor = AppColors.app_green,
+  });
 
   @override
   _CustomSwitchState createState() => _CustomSwitchState();
@@ -60,7 +66,7 @@ class _CustomSwitchState extends State<CustomSwitch>
                   _circleAnimation!.value == Alignment.centerLeft &&
                       widget.value == false
                   ? AppColors.infoGrey
-                  : AppColors.app_green,
+                  : widget.valueColor,
             ),
             child: Padding(
               padding: EdgeInsets.only(

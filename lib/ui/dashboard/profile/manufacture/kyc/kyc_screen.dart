@@ -1,5 +1,9 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:medicate_app/ui/dashboard/profile/manufacture/kyc/level_one_card.dart';
+import 'package:medicate_app/ui/dashboard/profile/manufacture/kyc/level_three_card.dart';
 import 'package:stacked/stacked.dart';
 
 import '../../../../../core/config/colors.dart';
@@ -7,9 +11,17 @@ import '../../../../../core/connect_end/view_model/manufacturer_view_model.dart'
 import '../../../../../core/core_folder/app/app.locator.dart';
 import '../../../../widget/button.dart';
 import '../../../../widget/text.dart';
+import 'level_two_card.dart';
 
-class DistributorKycScreen extends StatelessWidget {
+class DistributorKycScreen extends StatefulWidget {
   const DistributorKycScreen({super.key});
+
+  @override
+  State<DistributorKycScreen> createState() => _DistributorKycScreenState();
+}
+
+class _DistributorKycScreenState extends State<DistributorKycScreen> {
+  bool isExpanded = true;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +39,7 @@ class DistributorKycScreen extends StatelessWidget {
           text: 'KYC',
           textStyle: TextStyle(
             fontSize: 17.2.sp,
-            fontWeight: FontWeight.w700,
+            fontWeight: FontWeight.w600,
             color: AppColors.black,
           ),
         ),
@@ -38,31 +50,90 @@ class DistributorKycScreen extends StatelessWidget {
         child: ViewModelBuilder<ManufacturerViewModel>.reactive(
           viewModelBuilder: () => locator<ManufacturerViewModel>(),
           onViewModelReady: (model) {
-            WidgetsBinding.instance.addPostFrameCallback((_) async {
-            
-            });
+            WidgetsBinding.instance.addPostFrameCallback((_) async {});
           },
           disposeViewModel: false,
           builder: (_, ManufacturerViewModel model, _) {
-            return Column(
-              children: [
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    vertical: 22.w,
-                    horizontal: 24.w,
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.symmetric(
+                      vertical: 22.w,
+                      horizontal: 20.w,
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      color: AppColors.white,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: TextView(
+                            text: 'View Levels',
+                            textStyle: TextStyle(
+                              fontSize: 15.6.sp,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.primary,
+                              decoration: TextDecoration.underline,
+                              decorationColor: AppColors.primary,
+                              decorationStyle: TextDecorationStyle.solid,
+                              decorationThickness: .7,
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 12.h),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            TextView(
+                              text: 'Level 0 of 3',
+                              textStyle: TextStyle(
+                                fontSize: 15.06.sp,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.reminder1,
+                              ),
+                            ),
+                            TextView(
+                              text: '33% Complete',
+                              textStyle: TextStyle(
+                                fontSize: 14.90.sp,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.reminder1,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 12.h),
+                        ClipRRect(
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(5.0),
+                          ),
+                          child: LinearProgressIndicator(
+                            minHeight: 4.0, // Adjust height as needed
+                            value: 0 / 3,
+                            color: AppColors.primary, // Progress bar color
+                            backgroundColor:
+                                Colors.grey[300], // Background track color
+                          ),
+                        ),
+                        SizedBox(height: 17.0.h),
+                        LevelOneCard(),
+                        SizedBox(height: 14.0.h),
+                        LevelTwoCard(),
+                        SizedBox(height: 14.0.h),
+                        LevelThreeCard(),
+                        SizedBox(height: 6.0.h),
+                      ],
+                    ),
                   ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: AppColors.white,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [],
-                  ),
-                ),
 
-                SizedBox(height: 50.h),
-              ],
+                  SizedBox(height: 50.h),
+                ],
+              ),
             );
           },
         ),

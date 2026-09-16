@@ -14,7 +14,7 @@ Item _$ItemFromJson(Map<String, dynamic> json) => Item(
   imageUrl: json['imageUrl'] as String?,
   quantity: (json['quantity'] as num?)?.toInt(),
   unitPrice: (json['unitPrice'] as num?)?.toDouble(),
-  lineTotal: (json['lineTotal'] as num?)?.toInt(),
+  lineTotal: (json['lineTotal'] as num?)?.toDouble(),
   minimumOrderQuantity: (json['minimumOrderQuantity'] as num?)?.toInt(),
   packSize: (json['packSize'] as num?)?.toInt(),
   unit: json['unit'] as String?,

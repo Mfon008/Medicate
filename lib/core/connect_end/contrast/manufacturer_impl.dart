@@ -8,9 +8,12 @@ import '../model/create_distributor_product_entity_model/create_distributor_prod
 import '../model/distributor_wholesale_category_model/distributor_wholesale_category_model.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
 import '../model/get_all_product_list_response_model/get_all_product_list_response_model.dart';
+import '../model/get_distributor_kyc_response_model/get_distributor_kyc_response_model.dart';
 import '../model/get_incoming_order_ddetail_response_model/get_incoming_order_ddetail_response_model.dart';
 import '../model/get_single_product_response_model/get_single_product_response_model.dart';
 import '../model/get_user_details_response_model/get_user_details_response_model.dart';
+import '../model/level_three_distributor_kyc_entity_model.dart';
+import '../model/level_two_distributor_kyc_entity_model/level_two_distributor_kyc_entity_model.dart';
 import '../model/list_incoming_orders_response_model/list_incoming_orders_response_model.dart';
 import '../model/login_entity_model.dart';
 import '../model/nafdac_registration_number_entity_model.dart';
@@ -137,36 +140,28 @@ class ManufacturerContractImpl {
   }) async => await _api.getIncomingOrder(wholesaleOrderId: wholesaleOrderId);
   Future<dynamic> advanceIncomingOrder({
     String? wholesaleOrderId,
-    String? wholesaleOrderItemId,
   }) async => await _api.advanceIncomingOrder(
     wholesaleOrderId: wholesaleOrderId,
-    wholesaleOrderItemId: wholesaleOrderItemId,
   );
   Future<dynamic> cancelIncomingOrder({
     String? wholesaleOrderId,
-    String? wholesaleOrderItemId,
     String? reason,
   }) async => await _api.cancelIncomingOrder(
     wholesaleOrderId: wholesaleOrderId,
-    wholesaleOrderItemId: wholesaleOrderItemId,
     reason: reason,
   );
   Future<dynamic> rejectIncomingOrder({
     String? wholesaleOrderId,
-    String? wholesaleOrderItemId,
     String? reason,
   }) async => await _api.rejectIncomingOrder(
     wholesaleOrderId: wholesaleOrderId,
-    wholesaleOrderItemId: wholesaleOrderItemId,
     reason: reason,
   );
 
   Future<dynamic> returnIncomingOrder({
     String? wholesaleOrderId,
-    String? wholesaleOrderItemId,
   }) async => await _api.returnIncomingOrder(
     wholesaleOrderId: wholesaleOrderId,
-    wholesaleOrderItemId: wholesaleOrderItemId,
   );
   Future<GetDistributorProfileResponseModel> getUserDetails() async =>
       await _api.getUserDetails();
@@ -179,4 +174,15 @@ class ManufacturerContractImpl {
   Future<GetUserDetailsResponseModel> getManufacturerDetails(
     String phoneNo,
   ) async => await _api.getManufacturerDetails(phoneNo);
+  Future<GetDistributorKycResponseModel> getManAndDistributorKyc() async => await _api.getManAndDistributorKyc();
+  Future<dynamic> saveLevelTwoManAndDistributorKycProgress(
+   LevelTwoDistributorKycEntityModel kycEntity,
+  ) async  => await _api.saveLevelTwoManAndDistributorKycProgress(kycEntity);
+  Future<dynamic> submitLevelTwoManAndDistributorKyc(
+    LevelTwoDistributorKycEntityModel kycEntity,
+  ) async => await _api.submitLevelTwoManAndDistributorKyc(kycEntity);
+  Future<dynamic> submitLevelThreeManAndDistributorKyc(
+    LevelThreeDistributorKycEntityModel kycEntity,
+  ) async => await _api.submitLevelThreeManAndDistributorKyc(kycEntity);
+
 }

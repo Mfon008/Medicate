@@ -20,7 +20,7 @@ Order _$OrderFromJson(Map<String, dynamic> json) => Order(
       ?.map((e) => Item.fromJson(e as Map<String, dynamic>))
       .toList(),
   itemCount: (json['itemCount'] as num?)?.toInt(),
-  subtotal: (json['subtotal'] as num?)?.toInt(),
+  subtotal: (json['subtotal'] as num?)?.toDouble(),
   currency: json['currency'] as String?,
   paymentStatus: json['paymentStatus'] as String?,
   paymentStatusLabel: json['paymentStatusLabel'] as String?,

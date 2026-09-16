@@ -15,10 +15,10 @@ Data _$DataFromJson(Map<String, dynamic> json) => Data(
   businessAddress: json['businessAddress'] as String?,
   country: json['country'] as String?,
   state: json['state'] as String?,
-  lga: json['lga'] as String?,
   logo: json['logo'] == null
       ? null
       : Logo.fromJson(json['logo'] as Map<String, dynamic>),
+  lga: json['lga'] as String?,
   phone: json['phone'] as String?,
   kycStatus: json['kycStatus'] as String?,
   isProfileComplete: json['isProfileComplete'] as bool?,
@@ -51,6 +51,7 @@ Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
   'phone': instance.phone,
   'kycStatus': instance.kycStatus,
   'isProfileComplete': instance.isProfileComplete,
+  'logo': instance.logo,
   'profileCompletionPercentage': instance.profileCompletionPercentage,
   'missingFields': instance.missingFields,
   'createdAt': instance.createdAt?.toIso8601String(),

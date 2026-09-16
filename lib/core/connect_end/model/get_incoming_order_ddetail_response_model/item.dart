@@ -14,7 +14,7 @@ class Item {
   String? imageUrl;
   int? quantity;
   double? unitPrice;
-  int? lineTotal;
+  double? lineTotal;
   int? minimumOrderQuantity;
   int? packSize;
   String? unit;

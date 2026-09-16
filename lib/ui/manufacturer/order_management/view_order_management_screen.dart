@@ -101,6 +101,9 @@ class ViewOrderManagementScreen extends StatelessWidget {
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(18.r),
                                       color: AppColors.red_bar.withOpacity(.1),
+                                      border: Border.all(
+                                        color: AppColors.red_bar,
+                                      ),
                                     ),
                                     child: TextView(
                                       text:
@@ -115,6 +118,41 @@ class ViewOrderManagementScreen extends StatelessWidget {
                                         fontSize: 11.82.sp,
                                         fontWeight: FontWeight.w500,
                                         color: AppColors.red_bar,
+                                      ),
+                                    ),
+                                  )
+                                : model
+                                          .getIncomingOrderDdetailResponseModel!
+                                          .data!
+                                          .order!
+                                          .status!
+                                          .toLowerCase() ==
+                                      'returned'
+                                ? Container(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 8.w,
+                                      vertical: 4.w,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(18.r),
+                                      color: AppColors.amber.withOpacity(.1),
+                                      border: Border.all(
+                                        color: AppColors.amber,
+                                      ),
+                                    ),
+                                    child: TextView(
+                                      text:
+                                          model
+                                              .getIncomingOrderDdetailResponseModel!
+                                              .data!
+                                              .order!
+                                              .statusLabel ??
+                                          '',
+                                      textStyle: TextStyle(
+                                        fontFamily: 'DMSans',
+                                        fontSize: 11.82.sp,
+                                        fontWeight: FontWeight.w500,
+                                        color: AppColors.amber,
                                       ),
                                     ),
                                   )
@@ -250,19 +288,7 @@ class ViewOrderManagementScreen extends StatelessWidget {
                             ),
                           ),
                         ),
-                        SizedBox(height: 13.20.h),
-                        TextView(
-                          text:
-                              'Call this number ${model.getIncomingOrderDdetailResponseModel!.data!.order!.customer?.phoneNumber ?? ''} for pick up ',
-                          textStyle: TextStyle(
-                            fontFamily: 'DMSans',
-                            fontSize: 15.82.sp,
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.reminder,
-                            letterSpacing: -0.98,
-                          ),
-                        ),
-                        SizedBox(height: 30.h),
+                        SizedBox(height: 20.h),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -278,7 +304,7 @@ class ViewOrderManagementScreen extends StatelessWidget {
                             ),
                             TextView(
                               text:
-                                  'Subtotal: ${formatNaira(model.getIncomingOrderDdetailResponseModel!.data!.order!.subtotal!.toDouble())}',
+                                  'Subtotal: ${formatNairaDouble(model.getIncomingOrderDdetailResponseModel!.data!.order!.subtotal!.toDouble())}',
                               textStyle: TextStyle(
                                 fontFamily: 'DMSans',
                                 fontSize: 16.82.sp,
@@ -1116,114 +1142,166 @@ class ViewOrderManagementScreen extends StatelessWidget {
                                             ),
                                           ],
                                         ),
-                                        SizedBox(height: 22.0.h),
+                                        SizedBox(
+                                          height:
+                                              model
+                                                          .getIncomingOrderDdetailResponseModel!
+                                                          .data!
+                                                          .order!
+                                                          .status
+                                                          ?.toLowerCase() ==
+                                                      'delivered' ||
+                                                  model
+                                                          .getIncomingOrderDdetailResponseModel!
+                                                          .data!
+                                                          .order!
+                                                          .status
+                                                          ?.toLowerCase() ==
+                                                      'returned' ||
+                                                  model
+                                                          .getIncomingOrderDdetailResponseModel!
+                                                          .data!
+                                                          .order!
+                                                          .paymentStatus!
+                                                          .toLowerCase() ==
+                                                      'pending'
+                                              ? 0.h
+                                              : 22.0.h,
+                                        ),
                                       ],
                                     ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        IntrinsicWidth(
-                                          child: GestureDetector(
-                                            onTap: () =>
-                                                model.cancelIncomingOrderDialog(
-                                                  context: context,
-                                                  itemsOrderId: model
-                                                      .getIncomingOrderDdetailResponseModel!
-                                                      .data!
-                                                      .order!
-                                                      .items!,
-                                                  model: model,
-                                                  orderId: id,
-                                                ),
-                                            child: Container(
-                                              padding: EdgeInsets.symmetric(
-                                                vertical: 12.w,
-                                                horizontal: 22.w,
-                                              ),
-                                              decoration: BoxDecoration(
-                                                border: Border.all(
-                                                  color: AppColors.primary,
-                                                  width: 1.42,
-                                                ),
-                                                borderRadius:
-                                                    BorderRadius.circular(40.r),
-                                              ),
-                                              child: TextView(
-                                                text: 'Cancel Order',
-                                                textStyle: TextStyle(
-                                                  fontFamily: 'DMSans',
-                                                  fontSize: 15.20.sp,
-                                                  fontWeight: FontWeight.w500,
-                                                  color: AppColors.primary,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        IntrinsicWidth(
-                                          child: GestureDetector(
-                                            onTap: () => model
-                                                .advanceDetailedIncomingOrderDialog(
-                                                  context: context,
-                                                  orderId: id,
-                                                  itemsOrderId: model
-                                                      .getIncomingOrderDdetailResponseModel!
-                                                      .data!
-                                                      .order!
-                                                      .items,
-                                                  text: model
-                                                      .returnFulfillmentIncomingOrderText(
-                                                        model
-                                                            .getIncomingOrderDdetailResponseModel!
-                                                            .data!
-                                                            .order!
-                                                            .status!,
+                                    model
+                                                    .getIncomingOrderDdetailResponseModel!
+                                                    .data!
+                                                    .order!
+                                                    .status
+                                                    ?.toLowerCase() ==
+                                                'delivered' ||
+                                            model
+                                                    .getIncomingOrderDdetailResponseModel!
+                                                    .data!
+                                                    .order!
+                                                    .status
+                                                    ?.toLowerCase() ==
+                                                'returned' ||
+                                            model
+                                                    .getIncomingOrderDdetailResponseModel!
+                                                    .data!
+                                                    .order!
+                                                    .paymentStatus!
+                                                    .toLowerCase() ==
+                                                'pending'
+                                        ? SizedBox.shrink()
+                                        : Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              IntrinsicWidth(
+                                                child: GestureDetector(
+                                                  onTap: () => model
+                                                      .cancelIncomingOrderDialog(
+                                                        context: context,
+                                                        model: model,
+                                                        orderId: id,
                                                       ),
-                                                  model: model,
-                                                ),
-                                            child: Container(
-                                              padding: EdgeInsets.symmetric(
-                                                vertical: 14.w,
-                                                horizontal: 28.w,
-                                              ),
-                                              decoration: BoxDecoration(
-                                                color: AppColors.primary,
-                                                borderRadius:
-                                                    BorderRadius.circular(40.r),
-                                              ),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  SvgPicture.asset(
-                                                    AppImage.van,
-                                                    height: isTablet(context)
-                                                        ? 28.40.h
-                                                        : 14.20.h,
-                                                    width: isTablet(context)
-                                                        ? 28.40.w
-                                                        : 14.20.w,
-                                                    color: AppColors.white,
-                                                  ),
-                                                  SizedBox(width: 7.10.w),
-                                                  TextView(
-                                                    text: 'Advance',
-                                                    textStyle: TextStyle(
-                                                      fontFamily: 'DMSans',
-                                                      fontSize: 15.60.sp,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      color: AppColors.white,
+                                                  child: Container(
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                          vertical: 12.w,
+                                                          horizontal: 22.w,
+                                                        ),
+                                                    decoration: BoxDecoration(
+                                                      border: Border.all(
+                                                        color:
+                                                            AppColors.primary,
+                                                        width: 1.42,
+                                                      ),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            40.r,
+                                                          ),
+                                                    ),
+                                                    child: TextView(
+                                                      text: 'Cancel Order',
+                                                      textStyle: TextStyle(
+                                                        fontFamily: 'DMSans',
+                                                        fontSize: 15.20.sp,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color:
+                                                            AppColors.primary,
+                                                      ),
                                                     ),
                                                   ),
-                                                ],
+                                                ),
                                               ),
-                                            ),
+                                              IntrinsicWidth(
+                                                child: GestureDetector(
+                                                  onTap: () => model
+                                                      .advanceDetailedIncomingOrderDialog(
+                                                        context: context,
+                                                        orderId: id,
+                                                        text: model
+                                                            .returnFulfillmentIncomingOrderText(
+                                                              model
+                                                                  .getIncomingOrderDdetailResponseModel!
+                                                                  .data!
+                                                                  .order!
+                                                                  .status!,
+                                                            ),
+                                                        model: model,
+                                                      ),
+                                                  child: Container(
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                          vertical: 14.w,
+                                                          horizontal: 28.w,
+                                                        ),
+                                                    decoration: BoxDecoration(
+                                                      color: AppColors.primary,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            40.r,
+                                                          ),
+                                                    ),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        SvgPicture.asset(
+                                                          AppImage.van,
+                                                          height:
+                                                              isTablet(context)
+                                                              ? 28.40.h
+                                                              : 14.20.h,
+                                                          width:
+                                                              isTablet(context)
+                                                              ? 28.40.w
+                                                              : 14.20.w,
+                                                          color:
+                                                              AppColors.white,
+                                                        ),
+                                                        SizedBox(width: 7.10.w),
+                                                        TextView(
+                                                          text: 'Advance',
+                                                          textStyle: TextStyle(
+                                                            fontFamily:
+                                                                'DMSans',
+                                                            fontSize: 15.60.sp,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                            color:
+                                                                AppColors.white,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                        ),
-                                      ],
-                                    ),
                                   ],
                                 ),
 

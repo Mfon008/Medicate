@@ -32,11 +32,17 @@ import '../../core_folder/manager/shared_preference.dart';
 import '../model/create_distributor_product_entity_model/create_distributor_product_entity_model.dart';
 import '../model/distributor_wholesale_category_model/category.dart';
 import '../model/get_all_product_list_response_model/get_all_product_list_response_model.dart';
+import '../model/get_distributor_kyc_response_model/get_distributor_kyc_response_model.dart';
 import '../model/get_distributor_profile_response_model/get_distributor_profile_response_model.dart';
 import '../model/get_incoming_order_ddetail_response_model/get_incoming_order_ddetail_response_model.dart';
 import '../model/get_single_product_response_model/get_single_product_response_model.dart';
+import '../model/get_transaction_wallet_response_model/get_transaction_wallet_response_model.dart';
 import '../model/get_user_details_response_model/get_user_details_response_model.dart';
-import '../model/list_incoming_orders_response_model/item.dart';
+import '../model/get_wallet_response_model/get_wallet_response_model.dart';
+import '../model/initiate_payment_response_model/initiate_payment_response_model.dart';
+import '../model/level_three_distributor_kyc_entity_model.dart';
+import '../model/level_two_distributor_kyc_entity_model/level_two_distributor_kyc_entity_model.dart';
+// import '../model/list_incoming_orders_response_model/item.dart';
 import '../model/list_incoming_orders_response_model/list_incoming_orders_response_model.dart';
 import '../model/login_entity_model.dart';
 import '../model/manufacturer_signup_entity_model.dart';
@@ -57,8 +63,9 @@ import 'package:medicate_app/core/connect_end/model/create_distributor_product_e
     as iml;
 import 'package:medicate_app/core/connect_end/model/get_single_product_response_model/image.dart'
     as im;
-import 'package:medicate_app/core/connect_end/model/get_incoming_order_ddetail_response_model/item.dart'
-    as getIncom;
+
+// import 'package:medicate_app/core/connect_end/model/get_incoming_order_ddetail_response_model/item.dart'
+//     as getIncom;
 
 class ManufacturerViewModel extends BaseViewModel {
   final BuildContext? context;
@@ -99,6 +106,17 @@ class ManufacturerViewModel extends BaseViewModel {
     ),
   );
 
+  InitiatePaymentResponseModel? _initiatePaymentResponseModel;
+  InitiatePaymentResponseModel? get initiatePaymentResponseModel =>
+      _initiatePaymentResponseModel;
+  GetWalletResponseModel? _getWalletBalanceResponseModel;
+  GetWalletResponseModel? get getWalletBalanceResponseModel =>
+      _getWalletBalanceResponseModel;
+  GetTransactionWalletResponseModel? _getWalletTransactionHistoryResponseModel;
+  GetTransactionWalletResponseModel?
+  get getWalletTransactionHistoryResponseModel =>
+      _getWalletTransactionHistoryResponseModel;
+
   SignUpPhamaryResponseModel? _signUpPhamaryResponseModel;
   PharmacyLoginResponseModel? _loginPharmacyResponseModel;
   VerifyPharmacyOtpModel? _verifyPharmOtpRespnseModel;
@@ -132,6 +150,9 @@ class ManufacturerViewModel extends BaseViewModel {
   GetUserDetailsResponseModel? _getUserDetailsResponseModel;
   GetUserDetailsResponseModel? get getUserDetailsResponseModel =>
       _getUserDetailsResponseModel;
+  GetDistributorKycResponseModel? _getDistributorKycResponseModel;
+  GetDistributorKycResponseModel? get getDistributorKycResponseModel =>
+      _getDistributorKycResponseModel;
   String? pinInput;
 
   int? minimumOrderQuantity;
@@ -288,6 +309,9 @@ class ManufacturerViewModel extends BaseViewModel {
     if (s.toLowerCase() == 'pending') {
       return AppColors.yellow.withValues(alpha: .1);
     }
+    if (s.toLowerCase() == 'returned') {
+      return AppColors.yellow.withValues(alpha: .1);
+    }
     if (s.toLowerCase() == 'confirmed') {
       return AppColors.primary.withValues(alpha: .1);
     }
@@ -308,6 +332,9 @@ class ManufacturerViewModel extends BaseViewModel {
       return AppColors.red;
     }
     if (s.toLowerCase() == 'pending') {
+      return AppColors.yellow;
+    }
+    if (s.toLowerCase() == 'returned') {
       return AppColors.yellow;
     }
     if (s.toLowerCase() == 'confirmed') {
@@ -2061,15 +2088,11 @@ class ManufacturerViewModel extends BaseViewModel {
   Future<bool> advaceIncomingOrder(
     BuildContext context, {
     String? orderId,
-    String? orderItemId,
   }) async {
     try {
       _isLoading = true;
       var v = await runBusyFuture(
-        repositoryImply.advanceIncomingOrder(
-          wholesaleOrderId: orderId,
-          wholesaleOrderItemId: orderItemId,
-        ),
+        repositoryImply.advanceIncomingOrder(wholesaleOrderId: orderId),
         throwException: true,
       );
       await AppUtils.snackbar(context, message: v['message']);
@@ -2089,7 +2112,6 @@ class ManufacturerViewModel extends BaseViewModel {
   Future<bool> cancelIncomingOrder(
     BuildContext context, {
     String? orderId,
-    String? orderItemId,
     String? reason,
   }) async {
     try {
@@ -2097,7 +2119,6 @@ class ManufacturerViewModel extends BaseViewModel {
       var v = await runBusyFuture(
         repositoryImply.cancelIncomingOrder(
           wholesaleOrderId: orderId,
-          wholesaleOrderItemId: orderItemId,
           reason: reason,
         ),
         throwException: true,
@@ -2119,7 +2140,6 @@ class ManufacturerViewModel extends BaseViewModel {
   Future<bool> rejectIncomingOrder(
     BuildContext context, {
     String? orderId,
-    String? orderItemId,
     String? reason,
   }) async {
     try {
@@ -2127,7 +2147,6 @@ class ManufacturerViewModel extends BaseViewModel {
       var v = await runBusyFuture(
         repositoryImply.rejectIncomingOrder(
           wholesaleOrderId: orderId,
-          wholesaleOrderItemId: orderItemId,
           reason: reason,
         ),
         throwException: true,
@@ -2149,15 +2168,11 @@ class ManufacturerViewModel extends BaseViewModel {
   Future<bool> returnIncomingOrder(
     BuildContext context, {
     String? orderId,
-    String? orderItemId,
   }) async {
     try {
       _isLoading = true;
       var v = await runBusyFuture(
-        repositoryImply.returnIncomingOrder(
-          wholesaleOrderId: orderId,
-          wholesaleOrderItemId: orderItemId,
-        ),
+        repositoryImply.returnIncomingOrder(wholesaleOrderId: orderId),
         throwException: true,
       );
       await AppUtils.snackbar(context, message: v['message']);
@@ -2733,11 +2748,10 @@ class ManufacturerViewModel extends BaseViewModel {
   Future<void> advanceDetailedIncomingOrderDialog({
     BuildContext? context,
     String? orderId,
-    List<getIncom.Item>? itemsOrderId,
     String? text,
     ManufacturerViewModel? model,
   }) async {
-    if (context == null || model == null || itemsOrderId == null) {
+    if (context == null || model == null) {
       return;
     }
 
@@ -2855,57 +2869,53 @@ class ManufacturerViewModel extends BaseViewModel {
                                 : () async {
                                     bool success = true;
 
-                                    for (final item in itemsOrderId) {
-                                      if (text == 'returned') {
-                                        final result = await model
-                                            .returnIncomingOrder(
-                                              context,
-                                              orderId: orderId,
-                                              orderItemId: item.orderItemId,
-                                            );
+                                    // for (final item in itemsOrderId) {
+                                    if (text == 'returned') {
+                                      final result = await model
+                                          .returnIncomingOrder(
+                                            context,
+                                            orderId: orderId,
+                                          );
 
-                                        if (!result) {
-                                          success = false;
-                                          break;
-                                        }
-                                      } else if (text == 'rejected') {
-                                        final result = await model
-                                            .rejectIncomingOrder(
-                                              context,
-                                              orderId: orderId,
-                                              orderItemId: item.orderItemId,
-                                            );
+                                      if (!result) {
+                                        success = false;
+                                        // break;
+                                      }
+                                    } else if (text == 'rejected') {
+                                      final result = await model
+                                          .rejectIncomingOrder(
+                                            context,
+                                            orderId: orderId,
+                                          );
 
-                                        if (!result) {
-                                          success = false;
-                                          break;
-                                        }
-                                      } else if (text == 'cancelled') {
-                                        final result = await model
-                                            .cancelIncomingOrder(
-                                              context,
-                                              orderId: orderId,
-                                              orderItemId: item.orderItemId,
-                                            );
+                                      if (!result) {
+                                        success = false;
+                                        // break;
+                                      }
+                                    } else if (text == 'cancelled') {
+                                      final result = await model
+                                          .cancelIncomingOrder(
+                                            context,
+                                            orderId: orderId,
+                                          );
 
-                                        if (!result) {
-                                          success = false;
-                                          break;
-                                        }
-                                      } else {
-                                        final result = await model
-                                            .advaceIncomingOrder(
-                                              context,
-                                              orderId: orderId,
-                                              orderItemId: item.orderItemId,
-                                            );
+                                      if (!result) {
+                                        success = false;
+                                        // break;
+                                      }
+                                    } else {
+                                      final result = await model
+                                          .advaceIncomingOrder(
+                                            context,
+                                            orderId: orderId,
+                                          );
 
-                                        if (!result) {
-                                          success = false;
-                                          break;
-                                        }
+                                      if (!result) {
+                                        success = false;
+                                        // break;
                                       }
                                     }
+                                    // }
 
                                     if (!dialogContext.mounted) return;
 
@@ -2961,11 +2971,10 @@ class ManufacturerViewModel extends BaseViewModel {
   Future<void> advanceIncomingOrderDialog({
     BuildContext? context,
     String? orderId,
-    List<Item>? itemsOrderId,
     String? text,
     ManufacturerViewModel? model,
   }) async {
-    if (context == null || model == null || itemsOrderId == null) {
+    if (context == null || model == null) {
       return;
     }
 
@@ -3082,74 +3091,50 @@ class ManufacturerViewModel extends BaseViewModel {
                                 ? null
                                 : () async {
                                     bool success = true;
+                                    if (text == 'returned') {
+                                      final result = await model
+                                          .returnIncomingOrder(
+                                            context,
+                                            orderId: orderId,
+                                          );
 
-                                    for (final item in itemsOrderId) {
-                                      if (text == 'returned') {
-                                        final result = await model
-                                            .returnIncomingOrder(
-                                              context,
-                                              orderId: orderId,
-                                              orderItemId: item.orderItemId,
-                                            );
+                                      if (!result) {
+                                        success = false;
+                                      }
+                                      if (!dialogContext.mounted) return;
 
-                                        if (!result) {
-                                          success = false;
-                                          break;
-                                        }
-                                      } else if (text == 'rejected') {
-                                        model.rejectIncomingOrderDialog(
-                                          context: context,
-                                          orderId: orderId,
-                                          itemsOrderId: itemsOrderId
-                                              .map(
-                                                (item) => getIncom.Item(
-                                                  orderItemId: item.orderItemId,
-                                                  productId: item.productId,
-                                                  productName: item.productName,
-                                                  fulfillmentStatus:
-                                                      item.fulfillmentStatus,
-                                                ),
-                                              )
-                                              .toList(),
-                                          model: model,
-                                        );
-                                      } else if (text == 'cancelled') {
-                                        model.cancelIncomingOrderDialog(
-                                          context: context,
-                                          orderId: orderId,
-                                          itemsOrderId: itemsOrderId
-                                              .map(
-                                                (item) => getIncom.Item(
-                                                  orderItemId: item.orderItemId,
-                                                  productId: item.productId,
-                                                  productName: item.productName,
-                                                  fulfillmentStatus:
-                                                      item.fulfillmentStatus,
-                                                ),
-                                              )
-                                              .toList(),
-                                          model: model,
-                                        );
-                                      } else {
-                                        final result = await model
-                                            .advaceIncomingOrder(
-                                              context,
-                                              orderId: orderId,
-                                              orderItemId: item.orderItemId,
-                                            );
+                                      if (success) {
+                                        Navigator.pop(dialogContext);
+                                      }
+                                    } else if (text == 'rejected') {
+                                      model.rejectIncomingOrderDialog(
+                                        context: context,
+                                        orderId: orderId,
+                                        model: model,
+                                      );
+                                    } else if (text == 'cancelled') {
+                                      model.cancelIncomingOrderDialog(
+                                        context: context,
+                                        orderId: orderId,
+                                        model: model,
+                                      );
+                                    } else {
+                                      final result = await model
+                                          .advaceIncomingOrder(
+                                            context,
+                                            orderId: orderId,
+                                          );
 
-                                        if (!result) {
-                                          success = false;
-                                          break;
-                                        }
+                                      if (!result) {
+                                        success = false;
+                                      }
+                                      if (!dialogContext.mounted) return;
+
+                                      if (success) {
+                                        Navigator.pop(dialogContext);
                                       }
                                     }
-
-                                    if (!dialogContext.mounted) return;
-
-                                    if (success) {
-                                      Navigator.pop(dialogContext);
-                                    }
+                                    model.notifyListeners();
                                   },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.primary,
@@ -3194,10 +3179,9 @@ class ManufacturerViewModel extends BaseViewModel {
   Future<void> cancelIncomingOrderDialog({
     BuildContext? context,
     String? orderId,
-    List<getIncom.Item>? itemsOrderId,
     ManufacturerViewModel? model,
   }) async {
-    if (context == null || model == null || itemsOrderId == null) {
+    if (context == null || model == null) {
       return;
     }
 
@@ -3336,30 +3320,21 @@ class ManufacturerViewModel extends BaseViewModel {
                                       if (formKeyValidateCancelOrder
                                           .currentState!
                                           .validate()) {
+                                        // ignore: unused_local_variable
                                         bool success = true;
 
-                                        for (final item in itemsOrderId) {
-                                          final result = await model
-                                              .cancelIncomingOrder(
-                                                context,
-                                                orderId: orderId,
-                                                orderItemId: item.orderItemId,
-                                                reason:
-                                                    cancelOrderReasonController
-                                                        .text
-                                                        .trim(),
-                                              );
+                                        final result = await model
+                                            .cancelIncomingOrder(
+                                              context,
+                                              orderId: orderId,
+                                              reason:
+                                                  cancelOrderReasonController
+                                                      .text
+                                                      .trim(),
+                                            );
 
-                                          if (!result) {
-                                            success = false;
-                                            break;
-                                          }
-                                        }
-
-                                        if (!dialogContext.mounted) return;
-
-                                        if (success) {
-                                          Navigator.pop(dialogContext);
+                                        if (!result) {
+                                          success = false;
                                         }
                                       }
                                     },
@@ -3407,10 +3382,9 @@ class ManufacturerViewModel extends BaseViewModel {
   Future<void> rejectIncomingOrderDialog({
     BuildContext? context,
     String? orderId,
-    List<getIncom.Item>? itemsOrderId,
     ManufacturerViewModel? model,
   }) async {
-    if (context == null || model == null || itemsOrderId == null) {
+    if (context == null || model == null) {
       return;
     }
 
@@ -3551,23 +3525,22 @@ class ManufacturerViewModel extends BaseViewModel {
                                           .validate()) {
                                         bool success = true;
 
-                                        for (final item in itemsOrderId) {
-                                          final result = await model
-                                              .rejectIncomingOrder(
-                                                context,
-                                                orderId: orderId,
-                                                orderItemId: item.orderItemId,
-                                                reason:
-                                                    rejectOrderReasonController
-                                                        .text
-                                                        .trim(),
-                                              );
+                                        // for (final item in itemsOrderId) {
+                                        final result = await model
+                                            .rejectIncomingOrder(
+                                              context,
+                                              orderId: orderId,
+                                              reason:
+                                                  rejectOrderReasonController
+                                                      .text
+                                                      .trim(),
+                                            );
 
-                                          if (!result) {
-                                            success = false;
-                                            break;
-                                          }
+                                        if (!result) {
+                                          success = false;
+                                          // break;
                                         }
+                                        // }
 
                                         if (!dialogContext.mounted) return;
 
@@ -3782,6 +3755,78 @@ class ManufacturerViewModel extends BaseViewModel {
         repositoryImply.getManufacturerDetails(phoneNo),
         throwException: true,
       );
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+    }
+    notifyListeners();
+  }
+
+  void getManAndDistributorKyc({context, phoneNo}) async {
+    try {
+      _isLoading = true;
+      _getDistributorKycResponseModel = await runBusyFuture(
+        repositoryImply.getManAndDistributorKyc(),
+        throwException: true,
+      );
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+    }
+    notifyListeners();
+  }
+
+  void saveLevelTwoManAndDistributorKycProgress({
+    context,
+    LevelTwoDistributorKycEntityModel? kycEntity,
+  }) async {
+    try {
+      _isLoading = true;
+      var v = await runBusyFuture(
+        repositoryImply.saveLevelTwoManAndDistributorKycProgress(kycEntity!),
+        throwException: true,
+      );
+      if (v['message'] == 200 || v['message'] == 201) {}
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+    }
+    notifyListeners();
+  }
+
+  void submitLevelTwoManAndDistributorKyc({
+    context,
+    LevelTwoDistributorKycEntityModel? kycEntity,
+  }) async {
+    try {
+      _isLoading = true;
+      var v = await runBusyFuture(
+        repositoryImply.submitLevelTwoManAndDistributorKyc(kycEntity!),
+        throwException: true,
+      );
+      if (v['message'] == 200 || v['message'] == 201) {}
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+    }
+    notifyListeners();
+  }
+
+  void submitLevelThreeManAndDistributorKyc({
+    context,
+    LevelThreeDistributorKycEntityModel? kycEntity,
+  }) async {
+    try {
+      _isLoading = true;
+      var v = await runBusyFuture(
+        repositoryImply.submitLevelThreeManAndDistributorKyc(kycEntity!),
+        throwException: true,
+      );
+      if (v['message'] == 200 || v['message'] == 201) {}
       _isLoading = false;
     } catch (e) {
       _isLoading = false;

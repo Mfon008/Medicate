@@ -22,7 +22,7 @@ class InfoItem extends StatelessWidget {
             text: title,
             textStyle: TextStyle(
               fontFamily: 'Arial',
-              fontSize: 12.6.sp,
+              fontSize: 13.6.sp,
               fontWeight: FontWeight.w400,
               color: AppColors.infoGrey,
             ),
@@ -36,9 +36,9 @@ class InfoItem extends StatelessWidget {
               textOverflow: TextOverflow.ellipsis,
               textStyle: TextStyle(
                 fontFamily: 'Arial',
-                fontSize: 14.6.sp,
+                fontSize: 15.6.sp,
                 fontWeight: FontWeight.w400,
-                color: AppColors.reminder,
+                color: AppColors.reminder1,
               ),
             ),
           ),

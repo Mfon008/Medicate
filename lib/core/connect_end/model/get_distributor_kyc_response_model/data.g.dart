@@ -21,8 +21,8 @@ Data _$DataFromJson(Map<String, dynamic> json) => Data(
   businessTypes: (json['businessTypes'] as List<dynamic>?)
       ?.map((e) => e as String)
       .toList(),
-  currentLevel: (json['currentLevel'] as num?)?.toInt(),
-  completionPercentage: (json['completionPercentage'] as num?)?.toInt(),
+  currentLevel: json['currentLevel'],
+  completionPercentage: json['completionPercentage'],
 );
 
 Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{

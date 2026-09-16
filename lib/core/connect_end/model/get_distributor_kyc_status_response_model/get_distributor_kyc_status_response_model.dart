@@ -6,8 +6,12 @@ class GetDistributorKycStatusResponseModel {
   String? message;
   Data? data;
 
-  GetDistributorKycStatusResponseModel(
-      {this.success, this.statusCode, this.message, this.data});
+  GetDistributorKycStatusResponseModel({
+    this.success,
+    this.statusCode,
+    this.message,
+    this.data,
+  });
 
   GetDistributorKycStatusResponseModel.fromJson(Map<String, dynamic> json) {
     success = json['success'];
@@ -39,16 +43,17 @@ class Data {
   int? completionPercentage;
   LevelOne? levelOne;
 
-  Data(
-      {this.distributorId,
-      this.kycStatus,
-      this.kycLevels,
-      this.levelTwo,
-      this.levelThree,
-      this.businessTypes,
-      this.currentLevel,
-      this.completionPercentage,
-      this.levelOne});
+  Data({
+    this.distributorId,
+    this.kycStatus,
+    this.kycLevels,
+    this.levelTwo,
+    this.levelThree,
+    this.businessTypes,
+    this.currentLevel,
+    this.completionPercentage,
+    this.levelOne,
+  });
 
   Data.fromJson(Map<String, dynamic> json) {
     distributorId = json['distributorId'];
@@ -104,13 +109,14 @@ class KycLevels {
   String? reviewedBy;
   String? approvalStatus;
 
-  KycLevels(
-      {this.level,
-      this.status,
-      this.submittedAt,
-      this.reviewedAt,
-      this.reviewedBy,
-      this.approvalStatus});
+  KycLevels({
+    this.level,
+    this.status,
+    this.submittedAt,
+    this.reviewedAt,
+    this.reviewedBy,
+    this.approvalStatus,
+  });
 
   KycLevels.fromJson(Map<String, dynamic> json) {
     level = json['level'];
@@ -183,14 +189,15 @@ class LevelOne {
   String? state;
   String? lga;
 
-  LevelOne(
-      {this.distributorManufacturerName,
-      this.phoneNumber,
-      this.registrationNumber,
-      this.businessAddress,
-      this.country,
-      this.state,
-      this.lga});
+  LevelOne({
+    this.distributorManufacturerName,
+    this.phoneNumber,
+    this.registrationNumber,
+    this.businessAddress,
+    this.country,
+    this.state,
+    this.lga,
+  });
 
   LevelOne.fromJson(Map<String, dynamic> json) {
     distributorManufacturerName = json['distributorManufacturerName'];

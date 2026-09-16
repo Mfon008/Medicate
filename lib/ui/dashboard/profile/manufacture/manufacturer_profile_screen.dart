@@ -169,7 +169,8 @@ class ManufacturerProfileScreen extends StatelessWidget {
                     bottomLeft: 12,
                     bottomRight: 12,
                     text: 'KYC',
-                    onTap: () {},
+                    onTap: () =>
+                        navigate.navigateTo(Routes.distributorKycScreen),
                   ),
                   SizedBox(height: 30.h),
                   TextView(

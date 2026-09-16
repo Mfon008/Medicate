@@ -1495,7 +1495,7 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                         ),
                       ),
 
-                      SizedBox(height: 10.h),
+                      // SizedBox(height: 10.h),
                       // GestureDetector(
                       //   onTap: () {
                       //     model.payMethod = PayMethod.paystack;
@@ -1574,83 +1574,82 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                       // ),
 
                       // SizedBox(height: 10.h),
-                      GestureDetector(
-                        onTap: () {
-                          model.payMethod = PayMethod.flutterwave;
-                          model.notifyListeners();
-                        },
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 15.6.w,
-                            vertical: 16.20.w,
-                          ),
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: model.payMethod == PayMethod.flutterwave
-                                  ? AppColors.primary
-                                  : AppColors.infoGrey1,
-                              width: 1.22,
-                            ),
-                            borderRadius: BorderRadius.circular(10.r),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Radio<PayMethod>(
-                                    value: PayMethod.flutterwave,
-                                    groupValue: model.payMethod,
-                                    fillColor: WidgetStateProperty.all(
-                                      model.payMethod == PayMethod.flutterwave
-                                          ? AppColors.primary
-                                          : AppColors.infoGrey,
-                                    ),
-                                    materialTapTargetSize:
-                                        MaterialTapTargetSize.shrinkWrap,
-                                    visualDensity: VisualDensity(
-                                      horizontal: -4,
-                                      vertical: -4,
-                                    ),
-                                    onChanged: (value) {
-                                      model.payMethod = value!;
-                                      model.notifyListeners();
-                                    },
-                                  ),
+                      // GestureDetector(
+                      //   onTap: () {
+                      //     model.payMethod = PayMethod.flutterwave;
+                      //     model.notifyListeners();
+                      //   },
+                      //   child: Container(
+                      //     padding: EdgeInsets.symmetric(
+                      //       horizontal: 15.6.w,
+                      //       vertical: 16.20.w,
+                      //     ),
+                      //     decoration: BoxDecoration(
+                      //       border: Border.all(
+                      //         color: model.payMethod == PayMethod.flutterwave
+                      //             ? AppColors.primary
+                      //             : AppColors.infoGrey1,
+                      //         width: 1.22,
+                      //       ),
+                      //       borderRadius: BorderRadius.circular(10.r),
+                      //     ),
+                      //     child: Column(
+                      //       crossAxisAlignment: CrossAxisAlignment.start,
+                      //       children: [
+                      //         Row(
+                      //           mainAxisAlignment: MainAxisAlignment.start,
+                      //           children: [
+                      //             Radio<PayMethod>(
+                      //               value: PayMethod.flutterwave,
+                      //               groupValue: model.payMethod,
+                      //               fillColor: WidgetStateProperty.all(
+                      //                 model.payMethod == PayMethod.flutterwave
+                      //                     ? AppColors.primary
+                      //                     : AppColors.infoGrey,
+                      //               ),
+                      //               materialTapTargetSize:
+                      //                   MaterialTapTargetSize.shrinkWrap,
+                      //               visualDensity: VisualDensity(
+                      //                 horizontal: -4,
+                      //                 vertical: -4,
+                      //               ),
+                      //               onChanged: (value) {
+                      //                 model.payMethod = value!;
+                      //                 model.notifyListeners();
+                      //               },
+                      //             ),
 
-                                  SizedBox(width: 6.12.w),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Image.asset(
-                                          AppImage.flutterwave,
-                                          height: 16.h,
-                                          width: 90.w,
-                                        ),
-                                        SizedBox(height: 8.10.h),
-                                        TextView(
-                                          text:
-                                              'Card, mobile money and international payments.',
-                                          textStyle: TextStyle(
-                                            fontFamily: 'DMSans',
-                                            fontSize: 13.62.sp,
-                                            fontWeight: FontWeight.w500,
-                                            color: AppColors.faintedGrey,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-
+                      //             SizedBox(width: 6.12.w),
+                      //             Expanded(
+                      //               child: Column(
+                      //                 crossAxisAlignment:
+                      //                     CrossAxisAlignment.start,
+                      //                 children: [
+                      //                   Image.asset(
+                      //                     AppImage.flutterwave,
+                      //                     height: 16.h,
+                      //                     width: 90.w,
+                      //                   ),
+                      //                   SizedBox(height: 8.10.h),
+                      //                   TextView(
+                      //                     text:
+                      //                         'Card, mobile money and international payments.',
+                      //                     textStyle: TextStyle(
+                      //                       fontFamily: 'DMSans',
+                      //                       fontSize: 13.62.sp,
+                      //                       fontWeight: FontWeight.w500,
+                      //                       color: AppColors.faintedGrey,
+                      //                     ),
+                      //                   ),
+                      //                 ],
+                      //               ),
+                      //             ),
+                      //           ],
+                      //         ),
+                      //       ],
+                      //     ),
+                      //   ),
+                      // ),
                       SizedBox(height: 30.h),
                       model.quoteInstantDeliveryResponseModel != null ||
                               model.quoteScheduleDeliveryResponseModel != null
@@ -1658,7 +1657,22 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                               child: GestureDetector(
                                 onTap: () {
                                   if (formKey.currentState!.validate()) {
-                                    model.paymentMethodFlowWholesale(context);
+                                    model.paymentMethodFlowWholesale(
+                                      context,
+                                      amount:
+                                          model.quoteInstantDeliveryResponseModel !=
+                                              null
+                                          ? model
+                                                .quoteInstantDeliveryResponseModel!
+                                                .data!
+                                                .checkout!
+                                                .total!
+                                          : model
+                                                .quoteScheduleDeliveryResponseModel!
+                                                .data!
+                                                .checkout!
+                                                .total!,
+                                    );
                                     model.notifyListeners();
                                   }
                                 },
