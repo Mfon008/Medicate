@@ -356,6 +356,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                       ),
                                       isSwitchedDistributor
                                           ? Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
                                                 SizedBox(height: 10.h),
 
@@ -757,7 +758,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                   height: 2.0.h,
                                                                 ),
                                                                 SizedBox(
-                                                                  width: 150.w,
+                                                                  width: 130.w,
                                                                   child: TextView(
                                                                     text:
                                                                         'Max file size: 2MB (.jpg,'
@@ -900,7 +901,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                   height: 2.0.h,
                                                                 ),
                                                                 SizedBox(
-                                                                  width: 150.w,
+                                                                  width: 130.w,
                                                                   child: TextView(
                                                                     text:
                                                                         'Max file size: 2MB (.jpg,'
@@ -1041,7 +1042,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                   height: 2.0.h,
                                                                 ),
                                                                 SizedBox(
-                                                                  width: 150.w,
+                                                                  width: 130.w,
                                                                   child: TextView(
                                                                     text:
                                                                         'Max file size: 2MB (.jpg,'
@@ -1183,7 +1184,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                   height: 2.0.h,
                                                                 ),
                                                                 SizedBox(
-                                                                  width: 150.w,
+                                                                  width: 130.w,
                                                                   child: TextView(
                                                                     text:
                                                                         'Max file size: 2MB (.jpg,'
@@ -1324,7 +1325,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                   height: 2.0.h,
                                                                 ),
                                                                 SizedBox(
-                                                                  width: 150.w,
+                                                                  width: 130.w,
                                                                   child: TextView(
                                                                     text:
                                                                         'Max file size: 2MB (.jpg,'
@@ -1437,6 +1438,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                       ),
                                       isSwitchedManufaturer
                                           ? Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
                                                 SizedBox(height: 10.h),
 
@@ -1837,7 +1839,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                   height: 2.0.h,
                                                                 ),
                                                                 SizedBox(
-                                                                  width: 150.w,
+                                                                  width: 130.w,
                                                                   child: TextView(
                                                                     text:
                                                                         'Max file size: 2MB (.jpg,'
@@ -1980,7 +1982,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                   height: 2.0.h,
                                                                 ),
                                                                 SizedBox(
-                                                                  width: 150.w,
+                                                                  width: 130.w,
                                                                   child: TextView(
                                                                     text:
                                                                         'Max file size: 2MB (.jpg,'
@@ -2121,7 +2123,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                   height: 2.0.h,
                                                                 ),
                                                                 SizedBox(
-                                                                  width: 150.w,
+                                                                  width: 130.w,
                                                                   child: TextView(
                                                                     text:
                                                                         'Max file size: 2MB (.jpg,'
@@ -2263,7 +2265,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                   height: 2.0.h,
                                                                 ),
                                                                 SizedBox(
-                                                                  width: 150.w,
+                                                                  width: 130.w,
                                                                   child: TextView(
                                                                     text:
                                                                         'Max file size: 2MB (.jpg,'
@@ -2404,7 +2406,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                   height: 2.0.h,
                                                                 ),
                                                                 SizedBox(
-                                                                  width: 150.w,
+                                                                  width: 130.w,
                                                                   child: TextView(
                                                                     text:
                                                                         'Max file size: 2MB (.jpg,'
@@ -2517,6 +2519,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                       ),
                                       isSwitchedImporter
                                           ? Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
                                                 SizedBox(height: 10.h),
 
@@ -2864,7 +2867,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                   height: 2.0.h,
                                                                 ),
                                                                 SizedBox(
-                                                                  width: 150.w,
+                                                                  width: 130.w,
                                                                   child: TextView(
                                                                     text:
                                                                         'Max file size: 2MB (.jpg,'
@@ -3005,7 +3008,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                   height: 2.0.h,
                                                                 ),
                                                                 SizedBox(
-                                                                  width: 150.w,
+                                                                  width: 130.w,
                                                                   child: TextView(
                                                                     text:
                                                                         'Max file size: 2MB (.jpg,'
@@ -3147,7 +3150,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                   height: 2.0.h,
                                                                 ),
                                                                 SizedBox(
-                                                                  width: 150.w,
+                                                                  width: 130.w,
                                                                   child: TextView(
                                                                     text:
                                                                         'Max file size: 2MB (.jpg,'
@@ -3288,7 +3291,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                   height: 2.0.h,
                                                                 ),
                                                                 SizedBox(
-                                                                  width: 150.w,
+                                                                  width: 130.w,
                                                                   child: TextView(
                                                                     text:
                                                                         'Max file size: 2MB (.jpg,'

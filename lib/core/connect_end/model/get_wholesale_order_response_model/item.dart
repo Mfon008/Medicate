@@ -21,6 +21,8 @@ class Item {
   DateTime? estimatedDeliveryDate;
   String? fulfillmentStatus;
   String? fulfillmentStatusLabel;
+  String? manufacturerName;
+  String? orderItemId;
   List<Tracking>? tracking;
 
   Item({
@@ -40,6 +42,8 @@ class Item {
     this.fulfillmentStatus,
     this.fulfillmentStatusLabel,
     this.tracking,
+    this.manufacturerName,
+    this.orderItemId
   });
 
   factory Item.fromJson(Map<String, dynamic> json) => _$ItemFromJson(json);

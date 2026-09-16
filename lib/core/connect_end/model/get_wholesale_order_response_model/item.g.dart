@@ -24,6 +24,8 @@ Item _$ItemFromJson(Map<String, dynamic> json) => Item(
       : DateTime.parse(json['estimatedDeliveryDate'] as String),
   fulfillmentStatus: json['fulfillmentStatus'] as String?,
   fulfillmentStatusLabel: json['fulfillmentStatusLabel'] as String?,
+  manufacturerName: json['manufacturerName'] as String?,
+  orderItemId: json['orderItemId'] as String?,
   tracking: (json['tracking'] as List<dynamic>?)
       ?.map((e) => Tracking.fromJson(e as Map<String, dynamic>))
       .toList(),
@@ -45,5 +47,7 @@ Map<String, dynamic> _$ItemToJson(Item instance) => <String, dynamic>{
   'estimatedDeliveryDate': instance.estimatedDeliveryDate?.toIso8601String(),
   'fulfillmentStatus': instance.fulfillmentStatus,
   'fulfillmentStatusLabel': instance.fulfillmentStatusLabel,
+  'manufacturerName': instance.manufacturerName,
+  'orderItemId': instance.orderItemId,
   'tracking': instance.tracking,
 };

@@ -744,7 +744,8 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                 width: 230.w,
                                                 child: TextView(
                                                   text:
-                                                      '${model.getWholesaleOrderResponseModel!.data!.order!.deliveryDetails?.address?.capitalize()},${model.getWholesaleOrderResponseModel!.data!.order!.deliveryDetails?.lga ?? ''},${model.getWholesaleOrderResponseModel!.data!.order!.deliveryDetails?.state ?? ''}',
+                                                      '${model.getWholesaleOrderResponseModel!.data!.order!.deliveryDetails?.address?.capitalize()}',
+                                                  //,${model.getWholesaleOrderResponseModel!.data!.order!.deliveryDetails?.lga ?? ''},${model.getWholesaleOrderResponseModel!.data!.order!.deliveryDetails?.state ?? ''}
                                                   maxLines: 4,
                                                   textStyle: TextStyle(
                                                     fontFamily: 'DMSans',
@@ -1122,7 +1123,12 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                         Expanded(
                                                           child: TextView(
                                                             text:
-                                                                ' ${e.manufacturerDistributorName}',
+                                                                e.manufacturerName !=
+                                                                        null ||
+                                                                    e.manufacturerName !=
+                                                                        ''
+                                                                ? ' ${e.manufacturerName}'
+                                                                : 'Not Available',
                                                             textStyle: TextStyle(
                                                               fontFamily:
                                                                   'DMSans',
@@ -1632,7 +1638,22 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                   Expanded(
                                                     child: TextView(
                                                       text:
-                                                          ' ${model.getWholesaleOrderResponseModel!.data!.order!.items![0].manufacturerDistributorName ?? ''}',
+                                                          model
+                                                                      .getWholesaleOrderResponseModel!
+                                                                      .data!
+                                                                      .order!
+                                                                      .items![0]
+                                                                      .manufacturerName !=
+                                                                  null ||
+                                                              model
+                                                                      .getWholesaleOrderResponseModel!
+                                                                      .data!
+                                                                      .order!
+                                                                      .items![0]
+                                                                      .manufacturerName !=
+                                                                  ''
+                                                          ? ' ${model.getWholesaleOrderResponseModel!.data!.order!.items![0].manufacturerName ?? 'Not Available'}'
+                                                          : 'Not Available',
                                                       textStyle: TextStyle(
                                                         fontFamily: 'DMSans',
                                                         fontSize: 13.20.sp,

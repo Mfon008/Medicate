@@ -1,5 +1,7 @@
 // ignore_for_file: must_be_immutable
 
+import 'dart:io';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -212,7 +214,7 @@ class _ManufacturerSignUpScreenState extends State<ManufacturerSignUpScreen> {
                     borderBottomRight: 10.r,
                     label: 'Enter name',
                     hintWeight: FontWeight.w400,
-                    hintSize: isTablet(context) ? 6.82.sp : 16.98.sp,
+                    hintSize: isTablet(context) ? 6.82.sp : Platform.isAndroid? 16.98.sp:14.68.sp,
                     labelStyle: TextStyle(
                       fontWeight: FontWeight.w400,
                       fontFamily: 'Arial',
@@ -242,7 +244,7 @@ class _ManufacturerSignUpScreenState extends State<ManufacturerSignUpScreen> {
                     borderBottomRight: 10.r,
                     label: 'Enter business registration number',
                     hintWeight: FontWeight.w400,
-                    hintSize: isTablet(context) ? 6.82.sp : 16.98.sp,
+                    hintSize:isTablet(context) ? 6.82.sp : Platform.isAndroid? 16.98.sp:14.68.sp,
                     labelStyle: TextStyle(
                       fontWeight: FontWeight.w400,
                       fontFamily: 'Arial',
@@ -264,7 +266,7 @@ class _ManufacturerSignUpScreenState extends State<ManufacturerSignUpScreen> {
                     borderBottomRight: 10.r,
                     label: 'Enter business address',
                     hintWeight: FontWeight.w400,
-                    hintSize: isTablet(context) ? 6.82.sp : 16.98.sp,
+                    hintSize: isTablet(context) ? 6.82.sp : Platform.isAndroid? 16.98.sp:14.68.sp,
                     labelStyle: TextStyle(
                       fontWeight: FontWeight.w400,
                       fontFamily: 'Arial',
