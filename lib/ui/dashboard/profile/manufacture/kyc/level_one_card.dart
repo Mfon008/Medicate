@@ -1,13 +1,16 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:medicate_app/core/config/colors.dart';
 import 'package:medicate_app/ui/widget/text.dart';
-
+import '../../../../../core/connect_end/view_model/manufacturer_view_model.dart';
 import '../../../../widget/info_item_widget.dart';
 import '../dashed_border_painter.dart';
 
 class LevelOneCard extends StatefulWidget {
-  const LevelOneCard({super.key});
+  LevelOneCard({super.key, this.model});
+  ManufacturerViewModel? model;
 
   @override
   State<LevelOneCard> createState() => _LevelOneCardState();
@@ -204,21 +207,42 @@ class _LevelOneCardState extends State<LevelOneCard> {
                               children: [
                                 InfoItem(
                                   title: 'Distributor/Manufacturer name',
-                                  value: 'Emzor Pharmaceuticals',
+                                  value:
+                                      widget
+                                          .model
+                                          ?.getDistributorKycResponseModel
+                                          ?.data
+                                          ?.level1
+                                          ?.distributorManufacturerName ??
+                                      '--',
                                 ),
 
                                 SizedBox(height: 13.6.h),
 
                                 InfoItem(
                                   title: 'Phone Number',
-                                  value: '08012345678',
+                                  value:
+                                      widget
+                                          .model
+                                          ?.getDistributorKycResponseModel
+                                          ?.data
+                                          ?.level1
+                                          ?.phoneNumber ??
+                                      '--',
                                 ),
 
                                 SizedBox(height: 13.6.h),
 
                                 InfoItem(
                                   title: 'Business Registration Number',
-                                  value: 'LAG/PHARM/2023/00789',
+                                  value:
+                                      widget
+                                          .model
+                                          ?.getDistributorKycResponseModel
+                                          ?.data
+                                          ?.level1
+                                          ?.registrationNumber ??
+                                      '--',
                                 ),
 
                                 SizedBox(height: 13.6.h),
@@ -226,20 +250,56 @@ class _LevelOneCardState extends State<LevelOneCard> {
                                 InfoItem(
                                   title: 'Business Address',
                                   value:
-                                      '12 Olowole Street, Ikeja, Lagos State',
+                                      widget
+                                          .model
+                                          ?.getDistributorKycResponseModel
+                                          ?.data
+                                          ?.level1
+                                          ?.businessAddress ??
+                                      '--',
                                 ),
 
                                 SizedBox(height: 13.6.h),
 
-                                InfoItem(title: 'Country', value: 'Nigeria'),
+                                InfoItem(
+                                  title: 'Country',
+                                  value:
+                                      widget
+                                          .model
+                                          ?.getDistributorKycResponseModel
+                                          ?.data
+                                          ?.level1
+                                          ?.country ??
+                                      '--',
+                                ),
 
                                 SizedBox(height: 13.6.h),
 
-                                InfoItem(title: 'State', value: '--'),
+                                InfoItem(
+                                  title: 'State',
+                                  value:
+                                      widget
+                                          .model
+                                          ?.getDistributorKycResponseModel
+                                          ?.data
+                                          ?.level1
+                                          ?.state ??
+                                      '--',
+                                ),
 
                                 SizedBox(height: 13.6.h),
 
-                                InfoItem(title: 'LGA', value: '--'),
+                                InfoItem(
+                                  title: 'LGA',
+                                  value:
+                                      widget
+                                          .model
+                                          ?.getDistributorKycResponseModel
+                                          ?.data
+                                          ?.level1
+                                          ?.lga ??
+                                      '--',
+                                ),
 
                                 SizedBox(height: 22.h),
                               ],

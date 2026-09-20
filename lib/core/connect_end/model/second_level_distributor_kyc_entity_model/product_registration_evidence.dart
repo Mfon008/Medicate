@@ -1,3 +1,8 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'product_registration_evidence.g.dart';
+
+@JsonSerializable()
 class ProductRegistrationEvidence {
   String? url;
   String? mimeType;
@@ -16,22 +21,8 @@ class ProductRegistrationEvidence {
   });
 
   factory ProductRegistrationEvidence.fromJson(Map<String, dynamic> json) {
-    return ProductRegistrationEvidence(
-      url: json['url'] as String?,
-      mimeType: json['mimeType'] as String?,
-      size: json['size'] as int?,
-      format: json['format'] as String?,
-      width: json['width'] as int?,
-      height: json['height'] as int?,
-    );
+    return _$ProductRegistrationEvidenceFromJson(json);
   }
 
-  Map<String, dynamic> toJson() => {
-    'url': url,
-    'mimeType': mimeType,
-    'size': size,
-    'format': format,
-    'width': width,
-    'height': height,
-  };
+  Map<String, dynamic> toJson() => _$ProductRegistrationEvidenceToJson(this);
 }

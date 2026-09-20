@@ -105,7 +105,11 @@ class _HealthCareHospitalAndClinicSignUpScreenState
                     borderBottomRight: 10.r,
                     label: 'Hospital & Clinic',
                     readOnly: true,
-                    hintSize: isTablet(context) ? 6.82.sp : Platform.isAndroid? 16.98.sp:14.68.sp,
+                    hintSize: isTablet(context)
+                        ? 6.82.sp
+                        : Platform.isAndroid
+                        ? 16.98.sp
+                        : 14.68.sp,
                     labelStyle: TextStyle(
                       fontWeight: FontWeight.w400,
                       fontFamily: 'Arial',
@@ -116,8 +120,7 @@ class _HealthCareHospitalAndClinicSignUpScreenState
                     isFilled: true,
                     controller: healthCareTypeController,
                     validator: AppValidator.validateString(),
-                    onChange: (p0) {
-                    },
+                    onChange: (p0) {},
                   ),
                   SizedBox(height: 16.h),
                   TextFormWidget(
@@ -128,7 +131,11 @@ class _HealthCareHospitalAndClinicSignUpScreenState
                     borderBottomLeft: 10.r,
                     borderBottomRight: 10.r,
                     label: 'Enter healthcare facility name',
-                    hintSize: isTablet(context) ? 6.82.sp : Platform.isAndroid? 16.98.sp:14.68.sp,
+                    hintSize: isTablet(context)
+                        ? 6.82.sp
+                        : Platform.isAndroid
+                        ? 16.98.sp
+                        : 14.68.sp,
                     labelStyle: TextStyle(
                       fontWeight: FontWeight.w400,
                       fontFamily: 'Arial',
@@ -149,7 +156,11 @@ class _HealthCareHospitalAndClinicSignUpScreenState
                     borderBottomLeft: 10.r,
                     borderBottomRight: 10.r,
                     label: 'Enter registration number',
-                    hintSize:isTablet(context) ? 6.82.sp : Platform.isAndroid? 16.98.sp:14.68.sp,
+                    hintSize: isTablet(context)
+                        ? 6.82.sp
+                        : Platform.isAndroid
+                        ? 16.98.sp
+                        : 14.68.sp,
                     labelStyle: TextStyle(
                       fontWeight: FontWeight.w400,
                       fontFamily: 'Arial',

@@ -91,3 +91,11 @@ String formatDateNoTime(String date) {
 
   return DateFormat('MMM dd, yyyy').format(parsedDate);
 }
+
+String? cleanValue(String? value) {
+  if (value == null || value.trim().isEmpty) {
+    return null;
+  }
+
+  return value.trim();
+}

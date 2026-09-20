@@ -50,7 +50,9 @@ class _DistributorKycScreenState extends State<DistributorKycScreen> {
         child: ViewModelBuilder<ManufacturerViewModel>.reactive(
           viewModelBuilder: () => locator<ManufacturerViewModel>(),
           onViewModelReady: (model) {
-            WidgetsBinding.instance.addPostFrameCallback((_) async {});
+            WidgetsBinding.instance.addPostFrameCallback((_) async {
+              model.getManAndDistributorKyc(context);
+            });
           },
           disposeViewModel: false,
           builder: (_, ManufacturerViewModel model, _) {
@@ -90,7 +92,8 @@ class _DistributorKycScreenState extends State<DistributorKycScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             TextView(
-                              text: 'Level 0 of 3',
+                              text:
+                                  'Level ${model.getDistributorKycResponseModel?.data?.currentLevel} of 3',
                               textStyle: TextStyle(
                                 fontSize: 15.06.sp,
                                 fontWeight: FontWeight.w500,
@@ -98,7 +101,8 @@ class _DistributorKycScreenState extends State<DistributorKycScreen> {
                               ),
                             ),
                             TextView(
-                              text: '33% Complete',
+                              text:
+                                  '${model.getDistributorKycResponseModel?.data?.completionPercentage}% Complete',
                               textStyle: TextStyle(
                                 fontSize: 14.90.sp,
                                 fontWeight: FontWeight.w500,
@@ -108,24 +112,32 @@ class _DistributorKycScreenState extends State<DistributorKycScreen> {
                           ],
                         ),
                         SizedBox(height: 12.h),
-                        ClipRRect(
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(5.0),
-                          ),
-                          child: LinearProgressIndicator(
-                            minHeight: 4.0, // Adjust height as needed
-                            value: 0 / 3,
-                            color: AppColors.primary, // Progress bar color
-                            backgroundColor:
-                                Colors.grey[300], // Background track color
-                          ),
-                        ),
+                        model.getDistributorKycResponseModel != null
+                            ? ClipRRect(
+                                borderRadius: const BorderRadius.all(
+                                  Radius.circular(5.0),
+                                ),
+                                child: LinearProgressIndicator(
+                                  minHeight: 4.0, // Adjust height as needed
+                                  value:
+                                      model
+                                          .getDistributorKycResponseModel!
+                                          .data!
+                                          .currentLevel! /
+                                      3,
+                                  color:
+                                      AppColors.primary, // Progress bar color
+                                  backgroundColor: Colors
+                                      .grey[300], // Background track color
+                                ),
+                              )
+                            : SizedBox.shrink(),
                         SizedBox(height: 17.0.h),
-                        LevelOneCard(),
+                        LevelOneCard(model: model),
                         SizedBox(height: 14.0.h),
                         LevelTwoCard(),
                         SizedBox(height: 14.0.h),
-                        LevelThreeCard(),
+                        LevelThreeCard(model: model),
                         SizedBox(height: 6.0.h),
                       ],
                     ),

@@ -43,7 +43,7 @@ class Item {
     this.fulfillmentStatusLabel,
     this.tracking,
     this.manufacturerName,
-    this.orderItemId
+    this.orderItemId,
   });
 
   factory Item.fromJson(Map<String, dynamic> json) => _$ItemFromJson(json);

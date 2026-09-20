@@ -12,6 +12,9 @@ Data _$DataFromJson(Map<String, dynamic> json) => Data(
   kycLevels: (json['kycLevels'] as List<dynamic>?)
       ?.map((e) => KycLevel.fromJson(e as Map<String, dynamic>))
       .toList(),
+  level1: json['level1'] == null
+      ? null
+      : Level1.fromJson(json['level1'] as Map<String, dynamic>),
   level2: json['level2'] == null
       ? null
       : Level2.fromJson(json['level2'] as Map<String, dynamic>),
@@ -21,14 +24,15 @@ Data _$DataFromJson(Map<String, dynamic> json) => Data(
   businessTypes: (json['businessTypes'] as List<dynamic>?)
       ?.map((e) => e as String)
       .toList(),
-  currentLevel: json['currentLevel'],
-  completionPercentage: json['completionPercentage'],
+  currentLevel: (json['currentLevel'] as num?)?.toInt(),
+  completionPercentage: (json['completionPercentage'] as num?)?.toInt(),
 );
 
 Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
   'distributorId': instance.distributorId,
   'kycStatus': instance.kycStatus,
   'kycLevels': instance.kycLevels,
+  'level1': instance.level1,
   'level2': instance.level2,
   'level3': instance.level3,
   'businessTypes': instance.businessTypes,

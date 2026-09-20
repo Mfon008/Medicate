@@ -18859,7 +18859,7 @@ class PharmViewModel extends BaseViewModel {
                           TextView(
                             text:
                                 'Your payment of${formatNaira(amount!)} was securely processed from your wallet.',
-                                textAlign: TextAlign.center,
+                            textAlign: TextAlign.center,
                             textStyle: TextStyle(
                               fontFamily: 'DMSans',
                               color: AppColors.black,
@@ -18873,7 +18873,9 @@ class PharmViewModel extends BaseViewModel {
                           SizedBox(
                             width: double.infinity,
                             child: ElevatedButton(
-                              onPressed: () => navigate.navigateTo(Routes.pharmacyOrderScreen),
+                              onPressed: () => navigate.navigateTo(
+                                Routes.pharmacyOrderScreen,
+                              ),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.white,
                                 padding: EdgeInsets.symmetric(vertical: 16),

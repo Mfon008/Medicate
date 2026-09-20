@@ -7,27 +7,23 @@ part of 'level2.dart';
 // **************************************************************************
 
 Level2 _$Level2FromJson(Map<String, dynamic> json) => Level2(
-  businessDetails: json['businessDetails'] == null
-      ? null
-      : BusinessDetails.fromJson(
-          json['businessDetails'] as Map<String, dynamic>,
-        ),
-  companyDocuments: json['companyDocuments'] == null
-      ? null
-      : CompanyDocuments.fromJson(
-          json['companyDocuments'] as Map<String, dynamic>,
-        ),
   businessTypes: (json['businessTypes'] as List<dynamic>?)
       ?.map((e) => e as String)
       .toList(),
-  roleDocuments: json['roleDocuments'] == null
+  distributor: json['distributor'] == null
       ? null
-      : RoleDocuments.fromJson(json['roleDocuments'] as Map<String, dynamic>),
+      : Distributor.fromJson(json['distributor'] as Map<String, dynamic>),
+  manufacturer: json['manufacturer'] == null
+      ? null
+      : Manufacturer.fromJson(json['manufacturer'] as Map<String, dynamic>),
+  importer: json['importer'] == null
+      ? null
+      : Importer.fromJson(json['importer'] as Map<String, dynamic>),
 );
 
 Map<String, dynamic> _$Level2ToJson(Level2 instance) => <String, dynamic>{
-  'businessDetails': instance.businessDetails,
-  'companyDocuments': instance.companyDocuments,
   'businessTypes': instance.businessTypes,
-  'roleDocuments': instance.roleDocuments,
+  'distributor': instance.distributor,
+  'manufacturer': instance.manufacturer,
+  'importer': instance.importer,
 };

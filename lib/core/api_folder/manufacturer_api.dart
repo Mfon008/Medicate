@@ -9,12 +9,12 @@ import 'package:medicate_app/core/connect_end/model/get_user_details_response_mo
 import 'package:medicate_app/core/connect_end/model/manufacturer_signup_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/nafdac_registration_number_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/nafdac_registration_number_response_model/nafdac_registration_number_response_model.dart';
+import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/second_level_distributor_kyc_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/update_distributor_profile_entity_model.dart';
 
 import '../connect_end/model/create_distributor_product_entity_model/create_distributor_product_entity_model.dart';
 import '../connect_end/model/forgot_password_response_model/forgot_password_response_model.dart';
 import '../connect_end/model/level_three_distributor_kyc_entity_model.dart';
-import '../connect_end/model/level_two_distributor_kyc_entity_model/level_two_distributor_kyc_entity_model.dart';
 import '../connect_end/model/list_incoming_orders_response_model/list_incoming_orders_response_model.dart';
 import '../connect_end/model/login_entity_model.dart';
 import '../connect_end/model/pharmacy_login_response_model/pharmacy_login_response_model.dart';
@@ -25,6 +25,7 @@ import '../connect_end/model/set_pin_entity_model.dart';
 import '../connect_end/model/set_pin_pharm_response_model/set_pin_pharm_response_model.dart';
 import '../connect_end/model/sign_up_phamary_response_model/sign_up_phamary_response_model.dart';
 import '../connect_end/model/update_product_management_entity_model/update_product_management_entity_model.dart';
+import '../connect_end/model/upload_image_response_model/upload_image_response_model.dart';
 import '../connect_end/model/upload_product_image_response_model/upload_product_image_response_model.dart';
 import '../connect_end/model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
 import '../connect_end/model/verify_pharmacy_otp_model/verify_pharmacy_otp_model.dart';
@@ -459,9 +460,7 @@ class ManufacturerApi {
     }
   }
 
-  Future<dynamic> advanceIncomingOrder({
-    String? wholesaleOrderId,
-  }) async {
+  Future<dynamic> advanceIncomingOrder({String? wholesaleOrderId}) async {
     try {
       final response = await _service.call(
         '${UrlConfig.wholesale_incoming_orders}/$wholesaleOrderId/advance',
@@ -511,9 +510,7 @@ class ManufacturerApi {
     }
   }
 
-  Future<dynamic> returnIncomingOrder({
-    String? wholesaleOrderId,
-  }) async {
+  Future<dynamic> returnIncomingOrder({String? wholesaleOrderId}) async {
     try {
       final response = await _service.call(
         '${UrlConfig.wholesale_incoming_orders}/$wholesaleOrderId/return',
@@ -604,13 +601,13 @@ class ManufacturerApi {
   }
 
   Future<dynamic> saveLevelTwoManAndDistributorKycProgress(
-   LevelTwoDistributorKycEntityModel kycEntity,
+    SecondLevelDistributorKycEntityModel kycEntity,
   ) async {
     try {
       final response = await _service.call(
         UrlConfig.auth_distributor_kyc_level_two_save,
         RequestMethod.patch,
-        data: kycEntity.toJson()
+        data: kycEntity.toJson(),
       );
       logger.d(response.data);
       return response.data;
@@ -621,12 +618,13 @@ class ManufacturerApi {
   }
 
   Future<dynamic> submitLevelTwoManAndDistributorKyc(
-    LevelTwoDistributorKycEntityModel kycEntity,
+    SecondLevelDistributorKycEntityModel kycEntity,
   ) async {
     try {
       final response = await _service.call(
         UrlConfig.auth_distributor_kyc_level_two_submit,
-        RequestMethod.patch, data: kycEntity.toJson()
+        RequestMethod.patch,
+        data: kycEntity.toJson(),
       );
       logger.d(response.data);
       return response.data;
@@ -642,7 +640,8 @@ class ManufacturerApi {
     try {
       final response = await _service.call(
         UrlConfig.auth_distributor_kyc_level_three_submit,
-        RequestMethod.post, data: kycEntity.toJson()
+        RequestMethod.post,
+        data: kycEntity.toJson(),
       );
       logger.d(response.data);
       return response.data;
@@ -652,4 +651,18 @@ class ManufacturerApi {
     }
   }
 
+  Future<UploadImageResponseModel> uploadImage(MultipartFile file) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.uplaod_image,
+        RequestMethod.upload,
+        formData: FormData.fromMap({'file': file}),
+      );
+      logger.d(response.data);
+      return UploadImageResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
 }

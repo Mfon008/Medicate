@@ -1,3 +1,8 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'nafdac_manufacturing_license.g.dart';
+
+@JsonSerializable()
 class NafdacManufacturingLicense {
   String? url;
   String? mimeType;
@@ -16,22 +21,8 @@ class NafdacManufacturingLicense {
   });
 
   factory NafdacManufacturingLicense.fromJson(Map<String, dynamic> json) {
-    return NafdacManufacturingLicense(
-      url: json['url'] as String?,
-      mimeType: json['mimeType'] as String?,
-      size: json['size'] as int?,
-      format: json['format'] as String?,
-      width: json['width'] as int?,
-      height: json['height'] as int?,
-    );
+    return _$NafdacManufacturingLicenseFromJson(json);
   }
 
-  Map<String, dynamic> toJson() => {
-    'url': url,
-    'mimeType': mimeType,
-    'size': size,
-    'format': format,
-    'width': width,
-    'height': height,
-  };
+  Map<String, dynamic> toJson() => _$NafdacManufacturingLicenseToJson(this);
 }

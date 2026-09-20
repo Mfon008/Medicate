@@ -3,6 +3,7 @@
 import 'package:dio/dio.dart';
 import 'package:medicate_app/core/connect_end/model/get_user_details_response_model/get_user_details_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/manufacturer_signup_entity_model.dart';
+import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/second_level_distributor_kyc_entity_model.dart';
 import '../../core_folder/app/app.locator.dart';
 import '../../core_folder/manager/shared_preference.dart';
 import '../contrast/manufacturer_impl.dart';
@@ -15,7 +16,6 @@ import '../model/get_distributor_profile_response_model/get_distributor_profile_
 import '../model/get_incoming_order_ddetail_response_model/get_incoming_order_ddetail_response_model.dart';
 import '../model/get_single_product_response_model/get_single_product_response_model.dart';
 import '../model/level_three_distributor_kyc_entity_model.dart';
-import '../model/level_two_distributor_kyc_entity_model/level_two_distributor_kyc_entity_model.dart';
 import '../model/list_incoming_orders_response_model/list_incoming_orders_response_model.dart';
 import '../model/login_entity_model.dart';
 import '../model/nafdac_registration_number_entity_model.dart';
@@ -29,6 +29,7 @@ import '../model/set_pin_pharm_response_model/set_pin_pharm_response_model.dart'
 import '../model/sign_up_phamary_response_model/sign_up_phamary_response_model.dart';
 import '../model/update_distributor_profile_entity_model.dart';
 import '../model/update_product_management_entity_model/update_product_management_entity_model.dart';
+import '../model/upload_image_response_model/upload_image_response_model.dart';
 import '../model/upload_product_image_response_model/upload_product_image_response_model.dart';
 import '../model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
 import '../model/verify_pharmacy_otp_model/verify_pharmacy_otp_model.dart';
@@ -233,9 +234,7 @@ class ManufacturerRepoImpl {
     return response;
   }
 
-  Future<dynamic> advanceIncomingOrder({
-    String? wholesaleOrderId,
-  }) async {
+  Future<dynamic> advanceIncomingOrder({String? wholesaleOrderId}) async {
     final response = await _contract.advanceIncomingOrder(
       wholesaleOrderId: wholesaleOrderId,
     );
@@ -264,9 +263,7 @@ class ManufacturerRepoImpl {
     return response;
   }
 
-  Future<dynamic> returnIncomingOrder({
-    String? wholesaleOrderId,
-  }) async {
+  Future<dynamic> returnIncomingOrder({String? wholesaleOrderId}) async {
     final response = await _contract.returnIncomingOrder(
       wholesaleOrderId: wholesaleOrderId,
     );
@@ -312,23 +309,34 @@ class ManufacturerRepoImpl {
   }
 
   Future<dynamic> saveLevelTwoManAndDistributorKycProgress(
-   LevelTwoDistributorKycEntityModel kycEntity,
+    SecondLevelDistributorKycEntityModel kycEntity,
   ) async {
-    final response = await _contract.saveLevelTwoManAndDistributorKycProgress(kycEntity);
+    final response = await _contract.saveLevelTwoManAndDistributorKycProgress(
+      kycEntity,
+    );
     return response;
   }
 
   Future<dynamic> submitLevelTwoManAndDistributorKyc(
-    LevelTwoDistributorKycEntityModel kycEntity,
+    SecondLevelDistributorKycEntityModel kycEntity,
   ) async {
-    final response = await _contract.submitLevelTwoManAndDistributorKyc(kycEntity);
+    final response = await _contract.submitLevelTwoManAndDistributorKyc(
+      kycEntity,
+    );
     return response;
   }
 
   Future<dynamic> submitLevelThreeManAndDistributorKyc(
     LevelThreeDistributorKycEntityModel kycEntity,
   ) async {
-    final response = await _contract.submitLevelThreeManAndDistributorKyc(kycEntity);
+    final response = await _contract.submitLevelThreeManAndDistributorKyc(
+      kycEntity,
+    );
+    return response;
+  }
+
+  Future<UploadImageResponseModel> uploadImage(MultipartFile file) async {
+    final response = await _contract.uploadImage(file);
     return response;
   }
 }

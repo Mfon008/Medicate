@@ -214,7 +214,11 @@ class _ManufacturerSignUpScreenState extends State<ManufacturerSignUpScreen> {
                     borderBottomRight: 10.r,
                     label: 'Enter name',
                     hintWeight: FontWeight.w400,
-                    hintSize: isTablet(context) ? 6.82.sp : Platform.isAndroid? 16.98.sp:14.68.sp,
+                    hintSize: isTablet(context)
+                        ? 6.82.sp
+                        : Platform.isAndroid
+                        ? 16.98.sp
+                        : 14.68.sp,
                     labelStyle: TextStyle(
                       fontWeight: FontWeight.w400,
                       fontFamily: 'Arial',
@@ -244,7 +248,11 @@ class _ManufacturerSignUpScreenState extends State<ManufacturerSignUpScreen> {
                     borderBottomRight: 10.r,
                     label: 'Enter business registration number',
                     hintWeight: FontWeight.w400,
-                    hintSize:isTablet(context) ? 6.82.sp : Platform.isAndroid? 16.98.sp:14.68.sp,
+                    hintSize: isTablet(context)
+                        ? 6.82.sp
+                        : Platform.isAndroid
+                        ? 16.98.sp
+                        : 14.68.sp,
                     labelStyle: TextStyle(
                       fontWeight: FontWeight.w400,
                       fontFamily: 'Arial',
@@ -266,7 +274,11 @@ class _ManufacturerSignUpScreenState extends State<ManufacturerSignUpScreen> {
                     borderBottomRight: 10.r,
                     label: 'Enter business address',
                     hintWeight: FontWeight.w400,
-                    hintSize: isTablet(context) ? 6.82.sp : Platform.isAndroid? 16.98.sp:14.68.sp,
+                    hintSize: isTablet(context)
+                        ? 6.82.sp
+                        : Platform.isAndroid
+                        ? 16.98.sp
+                        : 14.68.sp,
                     labelStyle: TextStyle(
                       fontWeight: FontWeight.w400,
                       fontFamily: 'Arial',

@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously, strict_top_level_inference, public_member_api_docs, sort_constructors_first
+// ignore_for_file: deprecated_member_use, use_build_context_synchronously, strict_top_level_inference, public_member_api_docs, sort_constructors_first
 import 'dart:async';
 import 'dart:io';
 import 'package:dio/dio.dart';
@@ -10,6 +10,14 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:medicate_app/core/connect_end/model/distributor_wholesale_category_model/distributor_wholesale_category_model.dart';
 import 'package:medicate_app/core/connect_end/model/forgot_password_response_model/forgot_password_response_model.dart';
+import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/distributor.dart';
+import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/import_permit.dart';
+import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/importer.dart';
+import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/manufacturer.dart';
+import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/manufacturer_authorization_letter.dart';
+import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/nafdac_permit.dart';
+import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/pharmaceutical_distribution_license.dart';
+import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/pharmacy_council_license.dart';
 import 'package:medicate_app/core/connect_end/model/sign_up_phamary_response_model/sign_up_phamary_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/update_distributor_profile_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/update_product_management_entity_model/update_product_management_entity_model.dart';
@@ -24,6 +32,7 @@ import '../../app_assets/app_validation.dart';
 import '../../app_assets/decouncer_class.dart';
 import '../../app_assets/image.dart';
 import '../../app_assets/image_picker.dart';
+import '../../app_assets/state_lga_format.dart';
 import '../../config/colors.dart';
 import '../../core_folder/app/app.locator.dart';
 import '../../core_folder/app/app.logger.dart';
@@ -41,8 +50,7 @@ import '../model/get_user_details_response_model/get_user_details_response_model
 import '../model/get_wallet_response_model/get_wallet_response_model.dart';
 import '../model/initiate_payment_response_model/initiate_payment_response_model.dart';
 import '../model/level_three_distributor_kyc_entity_model.dart';
-import '../model/level_two_distributor_kyc_entity_model/level_two_distributor_kyc_entity_model.dart';
-// import '../model/list_incoming_orders_response_model/item.dart';
+import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/documents.dart';
 import '../model/list_incoming_orders_response_model/list_incoming_orders_response_model.dart';
 import '../model/login_entity_model.dart';
 import '../model/manufacturer_signup_entity_model.dart';
@@ -52,8 +60,15 @@ import '../model/pharmacy_login_response_model/pharmacy_login_response_model.dar
 import '../model/resend_otp_entity_model.dart';
 import '../model/resend_otp_response_model/resend_otp_response_model.dart';
 import '../model/reset_password_entity_model.dart';
+import '../model/second_level_distributor_kyc_entity_model/cac_certificate.dart';
+import '../model/second_level_distributor_kyc_entity_model/company_logo.dart';
+import '../model/second_level_distributor_kyc_entity_model/gmp_certificate.dart';
+import '../model/second_level_distributor_kyc_entity_model/nafdac_manufacturing_license.dart';
+import '../model/second_level_distributor_kyc_entity_model/product_registration_evidence.dart';
+import '../model/second_level_distributor_kyc_entity_model/second_level_distributor_kyc_entity_model.dart';
 import '../model/set_pin_entity_model.dart';
 import '../model/set_pin_pharm_response_model/set_pin_pharm_response_model.dart';
+import '../model/upload_image_response_model/upload_image_response_model.dart';
 import '../model/upload_product_image_response_model/upload_product_image_response_model.dart';
 import '../model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
 import '../model/verify_pharmacy_otp_model/verify_pharmacy_otp_model.dart';
@@ -64,9 +79,6 @@ import 'package:medicate_app/core/connect_end/model/create_distributor_product_e
 import 'package:medicate_app/core/connect_end/model/get_single_product_response_model/image.dart'
     as im;
 
-// import 'package:medicate_app/core/connect_end/model/get_incoming_order_ddetail_response_model/item.dart'
-//     as getIncom;
-
 class ManufacturerViewModel extends BaseViewModel {
   final BuildContext? context;
   final logger = getLogger(' ManufacturerViewModel');
@@ -75,6 +87,7 @@ class ManufacturerViewModel extends BaseViewModel {
 
   int _start = 60;
   int page = 1;
+  // bool isHideLga = false;
 
   final session = locator<SharedPreferencesService>();
   bool _isLoading = false;
@@ -84,7 +97,26 @@ class ManufacturerViewModel extends BaseViewModel {
   bool _isLoadingProductImage = false;
   bool get isLoadingProductImage => _isLoadingProductImage;
 
+  List<Documents> kycDistributorDocumentsList = [];
+  List<Documents> kycManufacturerDocumentsList = [];
+  List<Documents> kycImporterDocumentsList = [];
+
   final _pickImage = ImagePickerHandler();
+
+  bool _isLoadingCAC = false;
+  bool get isLoadingCAC => _isLoadingCAC;
+
+  bool _isLoadingGMP = false;
+  bool get isLoadingGMP => _isLoadingGMP;
+
+  bool _isLoadingNAF = false;
+  bool get isLoadingNAF => _isLoadingNAF;
+
+  bool _isLoadingProd = false;
+  bool get isLoadingProd => _isLoadingProd;
+
+  bool _isLoadingLogo = false;
+  bool get isLoadingLogo => _isLoadingLogo;
 
   ManufacturerViewModel({this.context});
 
@@ -153,9 +185,61 @@ class ManufacturerViewModel extends BaseViewModel {
   GetDistributorKycResponseModel? _getDistributorKycResponseModel;
   GetDistributorKycResponseModel? get getDistributorKycResponseModel =>
       _getDistributorKycResponseModel;
+
+  UploadImageResponseModel? _uploadImageResponseModel;
+  UploadImageResponseModel? get uploadImageResponseModel =>
+      _uploadImageResponseModel;
+
+  UploadImageResponseModel? _uploadImageResponseModelDisCAC;
+  UploadImageResponseModel? get uploadImageResponseModelDisCAC =>
+      _uploadImageResponseModelDisCAC;
+  UploadImageResponseModel? _uploadImageResponseModelDisPharmLin;
+  UploadImageResponseModel? get uploadImageResponseModelDisPharmLin =>
+      _uploadImageResponseModelDisPharmLin;
+  UploadImageResponseModel? _uploadImageResponseModelDisNAFPermit;
+  UploadImageResponseModel? get uploadImageResponseModelDisNAFPermit =>
+      _uploadImageResponseModelDisNAFPermit;
+  UploadImageResponseModel? _uploadImageResponseModelDisPharmCouncilLin;
+  UploadImageResponseModel? get uploadImageResponseModelDisPharmCouncilLin =>
+      _uploadImageResponseModelDisPharmCouncilLin;
+  UploadImageResponseModel? _uploadImageResponseModelDisComLogo;
+  UploadImageResponseModel? get uploadImageResponseModelDisComLogo =>
+      _uploadImageResponseModelDisComLogo;
+
+  UploadImageResponseModel? _uploadImageResponseModelManCAC;
+  UploadImageResponseModel? get uploadImageResponseModelManCAC =>
+      _uploadImageResponseModelManCAC;
+  UploadImageResponseModel? _uploadImageResponseModelManGMP;
+  UploadImageResponseModel? get uploadImageResponseModelManGMP =>
+      _uploadImageResponseModelManGMP;
+  UploadImageResponseModel? _uploadImageResponseModelNAFManLin;
+  UploadImageResponseModel? get uploadImageResponseModelNAFManLin =>
+      _uploadImageResponseModelNAFManLin;
+  UploadImageResponseModel? _uploadImageResponseModelManProdRegEvi;
+  UploadImageResponseModel? get uploadImageResponseModelManProdRegEvi =>
+      _uploadImageResponseModelManProdRegEvi;
+  UploadImageResponseModel? _uploadImageResponseModelManComLogo;
+  UploadImageResponseModel? get uploadImageResponseModelManComLogo =>
+      _uploadImageResponseModelManComLogo;
+
+  UploadImageResponseModel? _uploadImageResponseModelCAC;
+  UploadImageResponseModel? get uploadImageResponseModelCAC =>
+      _uploadImageResponseModelCAC;
+  UploadImageResponseModel? _uploadImageResponseModelImportPermit;
+  UploadImageResponseModel? get uploadImageResponseModelImportPermit =>
+      _uploadImageResponseModelImportPermit;
+  UploadImageResponseModel? _uploadImageResponseModelManAuthLetter;
+  UploadImageResponseModel? get uploadImageResponseModelManAuthLetter =>
+      _uploadImageResponseModelManAuthLetter;
+  UploadImageResponseModel? _uploadImageResponseModelComLogo;
+  UploadImageResponseModel? get uploadImageResponseModelComLogo =>
+      _uploadImageResponseModelComLogo;
+
   String? pinInput;
 
   int? minimumOrderQuantity;
+  File? imageCAC;
+  String? filenameCAC;
 
   GlobalKey<FormState> formKeyValidate2 = GlobalKey<FormState>();
   GlobalKey<FormState> formKeyValidateCancelOrder = GlobalKey<FormState>();
@@ -2138,7 +2222,7 @@ class ManufacturerViewModel extends BaseViewModel {
       await AppUtils.snackbar(context, message: v['message']);
       await listIncomingOrder(context, status: 'All');
       cancelOrderReasonController.clear();
-      // Navigator.pop(context); 
+      // Navigator.pop(context);
 
       return true;
     } catch (e) {
@@ -2802,7 +2886,6 @@ class ManufacturerViewModel extends BaseViewModel {
                     child: Center(
                       child: SvgPicture.asset(
                         AppImage.ex_error,
-                        // ignore: deprecated_member_use
                         color: AppColors.white,
                       ),
                     ),
@@ -2884,54 +2967,15 @@ class ManufacturerViewModel extends BaseViewModel {
                                 ? null
                                 : () async {
                                     bool success = true;
+                                    final result = await model
+                                        .advaceIncomingOrder(
+                                          context,
+                                          orderId: orderId,
+                                        );
 
-                                    // for (final item in itemsOrderId) {
-                                    // if (text == 'returned') {
-                                    //   final result = await model
-                                    //       .returnIncomingOrder(
-                                    //         context,
-                                    //         orderId: orderId,
-                                    //       );
-
-                                    //   if (!result) {
-                                    //     success = false;
-                                    //     // break;
-                                    //   }
-                                    // } else if (text == 'rejected') {
-                                    //   final result = await model
-                                    //       .rejectIncomingOrder(
-                                    //         context,
-                                    //         orderId: orderId,
-                                    //       );
-
-                                    //   if (!result) {
-                                    //     success = false;
-                                    //     // break;
-                                    //   }
-                                    // } else if (text == 'cancelled') {
-                                    //   final result = await model
-                                    //       .cancelIncomingOrder(
-                                    //         context,
-                                    //         orderId: orderId,
-                                    //       );
-
-                                    //   if (!result) {
-                                    //     success = false;
-                                    //     // break;
-                                    //   }
-                                    // } else {
-                                      final result = await model
-                                          .advaceIncomingOrder(
-                                            context,
-                                            orderId: orderId,
-                                          );
-
-                                      if (!result) {
-                                        success = false;
-                                        // break;
-                                      }
-                                    // }
-                                    // }
+                                    if (!result) {
+                                      success = false;
+                                    }
 
                                     if (!dialogContext.mounted) return;
 
@@ -3025,7 +3069,6 @@ class ManufacturerViewModel extends BaseViewModel {
                     child: Center(
                       child: SvgPicture.asset(
                         AppImage.ex_error,
-                        // ignore: deprecated_member_use
                         color: AppColors.white,
                       ),
                     ),
@@ -3144,7 +3187,6 @@ class ManufacturerViewModel extends BaseViewModel {
 
                                       return;
                                     } else if (text == 'cancelled') {
-
                                       if (!dialogContext.mounted) {
                                         return;
                                       }
@@ -3796,6 +3838,16 @@ class ManufacturerViewModel extends BaseViewModel {
     return phoneNo;
   }
 
+  String returnAddingPhoneNoStructureWith234Kyc(String phoneNo) {
+    if (phoneNo.substring(0).startsWith('0')) {
+      phoneNo = '+234${phoneNo.substring(1)}';
+    } else {
+      phoneNo = '0${phoneNo.substring(4)}';
+    }
+    notifyListeners();
+    return phoneNo;
+  }
+
   void getManufacturerDetails({context, phoneNo}) async {
     try {
       _isLoading = true;
@@ -3811,7 +3863,7 @@ class ManufacturerViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void getManAndDistributorKyc({context, phoneNo}) async {
+  Future<void> getManAndDistributorKyc(context) async {
     try {
       _isLoading = true;
       _getDistributorKycResponseModel = await runBusyFuture(
@@ -3828,7 +3880,7 @@ class ManufacturerViewModel extends BaseViewModel {
 
   void saveLevelTwoManAndDistributorKycProgress({
     context,
-    LevelTwoDistributorKycEntityModel? kycEntity,
+    SecondLevelDistributorKycEntityModel? kycEntity,
   }) async {
     try {
       _isLoading = true;
@@ -3836,10 +3888,13 @@ class ManufacturerViewModel extends BaseViewModel {
         repositoryImply.saveLevelTwoManAndDistributorKycProgress(kycEntity!),
         throwException: true,
       );
-      if (v['message'] == 200 || v['message'] == 201) {}
+      if (v['statusCode'] == 200 || v['statusCode'] == 201) {
+        await AppUtils.snackbar(context, message: v['message']);
+      }
       _isLoading = false;
     } catch (e) {
       _isLoading = false;
+      AppUtils.snackbar(context, message: e.toString(), error: true);
       logger.d(e);
     }
     notifyListeners();
@@ -3847,7 +3902,7 @@ class ManufacturerViewModel extends BaseViewModel {
 
   void submitLevelTwoManAndDistributorKyc({
     context,
-    LevelTwoDistributorKycEntityModel? kycEntity,
+    SecondLevelDistributorKycEntityModel? kycEntity,
   }) async {
     try {
       _isLoading = true;
@@ -3855,10 +3910,13 @@ class ManufacturerViewModel extends BaseViewModel {
         repositoryImply.submitLevelTwoManAndDistributorKyc(kycEntity!),
         throwException: true,
       );
-      if (v['message'] == 200 || v['message'] == 201) {}
+      if (v['statusCode'] == 200 || v['statusCode'] == 201) {
+        await AppUtils.snackbar(context, message: v['message']);
+      }
       _isLoading = false;
     } catch (e) {
       _isLoading = false;
+      AppUtils.snackbar(context, message: e.toString(), error: true);
       logger.d(e);
     }
     notifyListeners();
@@ -3874,12 +3932,1221 @@ class ManufacturerViewModel extends BaseViewModel {
         repositoryImply.submitLevelThreeManAndDistributorKyc(kycEntity!),
         throwException: true,
       );
-      if (v['message'] == 200 || v['message'] == 201) {}
+      if (v['statusCode'] == 200 || v['statusCode'] == 201) {
+        await AppUtils.snackbar(context, message: v['message']);
+      }
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+      logger.d(e);
+    }
+    notifyListeners();
+  }
+
+  String kycStatusText(status) {
+    if (status.toLowerCase() == 'UNDER_REVIEW'.toLowerCase()) {
+      return 'Your KYC is submitted and under '
+          'review. We’ll notify you once it’s '
+          'verified.';
+    }
+    if (status.toLowerCase() == 'NOT_SUBMITTED'.toLowerCase()) {
+      return 'Kindly upload and submit KYC for '
+          'verification to obtain some access '
+          'to platform features.';
+    }
+    if (status.toLowerCase() == 'REJECTED'.toLowerCase()) {
+      return 'Your KYC couldn’t be verified. '
+          'Please review your details and '
+          'resubmit the required documents.';
+    }
+    if (status.toLowerCase() == 'APPROVED'.toLowerCase()) {
+      return 'Your KYC has been successfully '
+          'verified. You can now access '
+          'some services.';
+    }
+    return 'Kindly upload and submit KYC for '
+        'verification to obtain some access '
+        'to platform features.';
+  }
+
+  Color kycStatusColor(status) {
+    if (status.toLowerCase() == 'UNDER_REVIEW'.toLowerCase()) {
+      return AppColors.fadedyellow;
+    }
+    if (status.toLowerCase() == 'NOT_SUBMITTED'.toLowerCase()) {
+      return AppColors.fadedyellow;
+    }
+    if (status.toLowerCase() == 'REJECTED'.toLowerCase()) {
+      return AppColors.red_bar_faded;
+    }
+    if (status.toLowerCase() == 'APPROVED'.toLowerCase()) {
+      return AppColors.app_green_light;
+    }
+    return AppColors.fadedyellow;
+  }
+
+  Color kycStatusColorIcon(status) {
+    if (status.toLowerCase() == 'UNDER_REVIEW'.toLowerCase()) {
+      return AppColors.yellow;
+    }
+    if (status.toLowerCase() == 'NOT_SUBMITTED'.toLowerCase()) {
+      return AppColors.yellow;
+    }
+    if (status.toLowerCase() == 'REJECTED'.toLowerCase()) {
+      return AppColors.red_bar;
+    }
+    if (status.toLowerCase() == 'APPROVED'.toLowerCase()) {
+      return AppColors.app_green;
+    }
+    return AppColors.yellow;
+  }
+
+  Future<void> uploadImage({context, MultipartFile? file}) async {
+    try {
+      _isLoading = true;
+      _uploadImageResponseModel = await runBusyFuture(
+        repositoryImply.uploadImage(file!),
+        throwException: true,
+      );
       _isLoading = false;
     } catch (e) {
       _isLoading = false;
       logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
     }
     notifyListeners();
+  }
+
+  List<String> lgaList = [];
+  List<String> lgaListCopy = [];
+  List<String> lgaAddedList = [];
+  List<Map<String, dynamic>> listOfAddedLocation = [];
+  Map<String, dynamic>? selectedLocation;
+
+  SecondLevelDistributorKycEntityModel?
+  _secondLevelDistributorKycEntityModelCAC;
+  SecondLevelDistributorKycEntityModel?
+  get secondLevelDistributorKycEntityModelCAC =>
+      _secondLevelDistributorKycEntityModelCAC;
+
+  SecondLevelDistributorKycEntityModel?
+  _secondLevelDistributorKycEntityModelPharmLin;
+  SecondLevelDistributorKycEntityModel?
+  get secondLevelDistributorKycEntityModelPharmLin =>
+      _secondLevelDistributorKycEntityModelPharmLin;
+  SecondLevelDistributorKycEntityModel?
+  _secondLevelDistributorKycEntityModelNAF;
+  SecondLevelDistributorKycEntityModel?
+  get secondLevelDistributorKycEntityModelNAF =>
+      _secondLevelDistributorKycEntityModelNAF;
+  SecondLevelDistributorKycEntityModel?
+  _secondLevelDistributorKycEntityModelPharmCouncilLin;
+  SecondLevelDistributorKycEntityModel?
+  get secondLevelDistributorKycEntityModelPharmCouncilLin =>
+      _secondLevelDistributorKycEntityModelPharmCouncilLin;
+  SecondLevelDistributorKycEntityModel?
+  _secondLevelDistributorKycEntityModelLogo;
+  SecondLevelDistributorKycEntityModel?
+  get secondLevelDistributorKycEntityModelLogo =>
+      _secondLevelDistributorKycEntityModelLogo;
+
+  void pickImageDistributorKycCAC(BuildContext context) {
+    try {
+      _pickImage.pickImage(
+        context: context,
+        file: (file) async {
+          imageCAC = file;
+          filenameCAC = imageCAC!.path.split("/").last;
+          _isLoadingCAC = true;
+          await uploadImage(
+            context: context,
+            file: MultipartFile.fromBytes(
+              formartFileImage(imageCAC).readAsBytesSync(),
+              filename: imageCAC!.path.split("/").last,
+            ),
+          );
+          _isLoadingCAC = _isLoading;
+          _uploadImageResponseModelDisCAC = _uploadImageResponseModel;
+          _secondLevelDistributorKycEntityModelCAC =
+              SecondLevelDistributorKycEntityModel(
+                distributor: Distributor(
+                  documents: Documents(
+                    cacCertificate: CacCertificate(
+                      width: _uploadImageResponseModelDisCAC!.data!.width,
+                      height: _uploadImageResponseModelDisCAC!.data!.height,
+                      format: _uploadImageResponseModelDisCAC!.data!.format,
+                      url: _uploadImageResponseModelDisCAC!.data!.url!,
+                      mimeType: _uploadImageResponseModelDisCAC!.data!.mimeType,
+                      size: _uploadImageResponseModelDisCAC!.data!.size,
+                    ),
+                  ),
+                ),
+              );
+        },
+      );
+    } catch (e) {
+      logger.e(e);
+    }
+    notifyListeners();
+  }
+
+  void pickImageDistributorKycPharmLin(BuildContext context) {
+    try {
+      _pickImage.pickImage(
+        context: context,
+        file: (file) async {
+          imageCAC = file;
+          filenameCAC = imageCAC!.path.split("/").last;
+          _isLoadingGMP = true;
+          await uploadImage(
+            context: context,
+            file: MultipartFile.fromBytes(
+              formartFileImage(imageCAC).readAsBytesSync(),
+              filename: imageCAC!.path.split("/").last,
+            ),
+          );
+          _isLoadingGMP = _isLoading;
+          _uploadImageResponseModelDisPharmLin = _uploadImageResponseModel;
+          _secondLevelDistributorKycEntityModelPharmLin =
+              SecondLevelDistributorKycEntityModel(
+                distributor: Distributor(
+                  documents: Documents(
+                    pharmaceuticalDistributionLicense:
+                        PharmaceuticalDistributionLicense(
+                          width:
+                              _uploadImageResponseModelDisPharmLin!.data!.width,
+                          height: _uploadImageResponseModelDisPharmLin!
+                              .data!
+                              .height,
+                          format: _uploadImageResponseModelDisPharmLin!
+                              .data!
+                              .format,
+                          url: _uploadImageResponseModelDisPharmLin!.data!.url!,
+                          mimeType: _uploadImageResponseModelDisPharmLin!
+                              .data!
+                              .mimeType,
+                          size:
+                              _uploadImageResponseModelDisPharmLin!.data!.size,
+                        ),
+                  ),
+                ),
+              );
+        },
+      );
+    } catch (e) {
+      logger.e(e);
+    }
+    notifyListeners();
+  }
+
+  void pickImageDistributorKycNAFPermit(BuildContext context) {
+    try {
+      _pickImage.pickImage(
+        context: context,
+        file: (file) async {
+          imageCAC = file;
+          filenameCAC = imageCAC!.path.split("/").last;
+          _isLoadingNAF = true;
+          await uploadImage(
+            context: context,
+            file: MultipartFile.fromBytes(
+              formartFileImage(imageCAC).readAsBytesSync(),
+              filename: imageCAC!.path.split("/").last,
+            ),
+          );
+          _isLoadingNAF = _isLoading;
+          _uploadImageResponseModelDisNAFPermit = _uploadImageResponseModel;
+          _secondLevelDistributorKycEntityModelNAF =
+              SecondLevelDistributorKycEntityModel(
+                distributor: Distributor(
+                  documents: Documents(
+                    nafdacPermit: NafdacPermit(
+                      width: _uploadImageResponseModelDisNAFPermit!.data!.width,
+                      height:
+                          _uploadImageResponseModelDisNAFPermit!.data!.height,
+                      format:
+                          _uploadImageResponseModelDisNAFPermit!.data!.format,
+                      url: _uploadImageResponseModelDisNAFPermit!.data!.url!,
+                      mimeType:
+                          _uploadImageResponseModelDisNAFPermit!.data!.mimeType,
+                      size: _uploadImageResponseModelDisNAFPermit!.data!.size,
+                    ),
+                  ),
+                ),
+              );
+        },
+      );
+    } catch (e) {
+      logger.e(e);
+    }
+    notifyListeners();
+  }
+
+  void pickImageDistributorKycPharmCouncilLin(BuildContext context) {
+    try {
+      _pickImage.pickImage(
+        context: context,
+        file: (file) async {
+          imageCAC = file;
+          filenameCAC = imageCAC!.path.split("/").last;
+          _isLoadingProd = true;
+          await uploadImage(
+            context: context,
+            file: MultipartFile.fromBytes(
+              formartFileImage(imageCAC).readAsBytesSync(),
+              filename: imageCAC!.path.split("/").last,
+            ),
+          );
+          _isLoadingProd = _isLoading;
+          _uploadImageResponseModelDisPharmCouncilLin =
+              _uploadImageResponseModel;
+          _secondLevelDistributorKycEntityModelPharmCouncilLin =
+              SecondLevelDistributorKycEntityModel(
+                distributor: Distributor(
+                  documents: Documents(
+                    pharmacyCouncilLicense: PharmacyCouncilLicense(
+                      width: _uploadImageResponseModelDisPharmCouncilLin!
+                          .data!
+                          .width,
+                      height: _uploadImageResponseModelDisPharmCouncilLin!
+                          .data!
+                          .height,
+                      format: _uploadImageResponseModelDisPharmCouncilLin!
+                          .data!
+                          .format,
+                      url: _uploadImageResponseModelDisPharmCouncilLin!
+                          .data!
+                          .url!,
+                      mimeType: _uploadImageResponseModelDisPharmCouncilLin!
+                          .data!
+                          .mimeType,
+                      size: _uploadImageResponseModelDisPharmCouncilLin!
+                          .data!
+                          .size,
+                    ),
+                  ),
+                ),
+              );
+        },
+      );
+    } catch (e) {
+      logger.e(e);
+    }
+    notifyListeners();
+  }
+
+  void pickImageDistributorKycLogo(BuildContext context) {
+    try {
+      _pickImage.pickImage(
+        context: context,
+        file: (file) async {
+          imageCAC = file;
+          filenameCAC = imageCAC!.path.split("/").last;
+          _isLoadingLogo = true;
+          await uploadImage(
+            context: context,
+            file: MultipartFile.fromBytes(
+              formartFileImage(imageCAC).readAsBytesSync(),
+              filename: imageCAC!.path.split("/").last,
+            ),
+          );
+          _isLoadingLogo = _isLoading;
+          _uploadImageResponseModelDisComLogo = _uploadImageResponseModel;
+          _secondLevelDistributorKycEntityModelLogo =
+              SecondLevelDistributorKycEntityModel(
+                distributor: Distributor(
+                  documents: Documents(
+                    companyLogo: CompanyLogo(
+                      width: _uploadImageResponseModelDisComLogo!.data!.width,
+                      height: _uploadImageResponseModelDisComLogo!.data!.height,
+                      format: _uploadImageResponseModelDisComLogo!.data!.format,
+                      url: _uploadImageResponseModelDisComLogo!.data!.url!,
+                      mimeType:
+                          _uploadImageResponseModelDisComLogo!.data!.mimeType,
+                      size: _uploadImageResponseModelDisComLogo!.data!.size,
+                    ),
+                  ),
+                ),
+              );
+        },
+      );
+    } catch (e) {
+      logger.e(e);
+    }
+    notifyListeners();
+  }
+
+  SecondLevelDistributorKycEntityModel?
+  _secondLevelDistributorKycEntityModelManCAC;
+  SecondLevelDistributorKycEntityModel?
+  get secondLevelDistributorKycEntityModelManCAC =>
+      _secondLevelDistributorKycEntityModelManCAC;
+
+  SecondLevelDistributorKycEntityModel?
+  _secondLevelDistributorKycEntityModelManGMP;
+  SecondLevelDistributorKycEntityModel?
+  get secondLevelDistributorKycEntityModelManGMP =>
+      _secondLevelDistributorKycEntityModelManGMP;
+  SecondLevelDistributorKycEntityModel?
+  _secondLevelDistributorKycEntityModelManNAF;
+  SecondLevelDistributorKycEntityModel?
+  get secondLevelDistributorKycEntityModelManNAF =>
+      _secondLevelDistributorKycEntityModelManNAF;
+  SecondLevelDistributorKycEntityModel?
+  _secondLevelDistributorKycEntityModelManProd;
+  SecondLevelDistributorKycEntityModel?
+  get secondLevelDistributorKycEntityModelManProd =>
+      _secondLevelDistributorKycEntityModelManProd;
+  SecondLevelDistributorKycEntityModel?
+  _secondLevelDistributorKycEntityModelManLogo;
+  SecondLevelDistributorKycEntityModel?
+  get secondLevelDistributorKycEntityModelManLogo =>
+      _secondLevelDistributorKycEntityModelManLogo;
+
+  void pickImageManufacturerKycCAC(BuildContext context) {
+    try {
+      _pickImage.pickImage(
+        context: context,
+        file: (file) async {
+          imageCAC = file;
+          filenameCAC = imageCAC!.path.split("/").last;
+          _isLoadingCAC = true;
+          await uploadImage(
+            context: context,
+            file: MultipartFile.fromBytes(
+              formartFileImage(imageCAC).readAsBytesSync(),
+              filename: imageCAC!.path.split("/").last,
+            ),
+          );
+          _isLoadingCAC = _isLoading;
+          _uploadImageResponseModelManCAC = _uploadImageResponseModel;
+          _secondLevelDistributorKycEntityModelManCAC =
+              SecondLevelDistributorKycEntityModel(
+                manufacturer: Manufacturer(
+                  documents: Documents(
+                    cacCertificate: CacCertificate(
+                      width: _uploadImageResponseModelManCAC!.data!.width,
+                      height: _uploadImageResponseModelManCAC!.data!.height,
+                      format: _uploadImageResponseModelManCAC!.data!.format,
+                      url: _uploadImageResponseModelManCAC!.data!.url!,
+                      mimeType: _uploadImageResponseModelManCAC!.data!.mimeType,
+                      size: _uploadImageResponseModelManCAC!.data!.size,
+                    ),
+                  ),
+                ),
+              );
+        },
+      );
+    } catch (e) {
+      logger.e(e);
+    }
+    notifyListeners();
+  }
+
+  void pickImageManufacturerKycGMP(BuildContext context) {
+    try {
+      _pickImage.pickImage(
+        context: context,
+        file: (file) async {
+          imageCAC = file;
+          filenameCAC = imageCAC!.path.split("/").last;
+          _isLoadingGMP = true;
+          await uploadImage(
+            context: context,
+            file: MultipartFile.fromBytes(
+              formartFileImage(imageCAC).readAsBytesSync(),
+              filename: imageCAC!.path.split("/").last,
+            ),
+          );
+          _isLoadingGMP = _isLoading;
+          _uploadImageResponseModelManGMP = _uploadImageResponseModel;
+          _secondLevelDistributorKycEntityModelManGMP =
+              SecondLevelDistributorKycEntityModel(
+                manufacturer: Manufacturer(
+                  documents: Documents(
+                    gmpCertificate: GmpCertificate(
+                      width: _uploadImageResponseModelManGMP!.data!.width,
+                      height: _uploadImageResponseModelManGMP!.data!.height,
+                      format: _uploadImageResponseModelManGMP!.data!.format,
+                      url: _uploadImageResponseModelManGMP!.data!.url!,
+                      mimeType: _uploadImageResponseModelManGMP!.data!.mimeType,
+                      size: _uploadImageResponseModelManGMP!.data!.size,
+                    ),
+                  ),
+                ),
+              );
+        },
+      );
+    } catch (e) {
+      logger.e(e);
+    }
+    notifyListeners();
+  }
+
+  void pickImageManufacturerKycNAFManLin(BuildContext context) {
+    try {
+      _pickImage.pickImage(
+        context: context,
+        file: (file) async {
+          imageCAC = file;
+          filenameCAC = imageCAC!.path.split("/").last;
+          _isLoadingNAF = true;
+          await uploadImage(
+            context: context,
+            file: MultipartFile.fromBytes(
+              formartFileImage(imageCAC).readAsBytesSync(),
+              filename: imageCAC!.path.split("/").last,
+            ),
+          );
+          _isLoadingNAF = _isLoading;
+          _uploadImageResponseModelNAFManLin = _uploadImageResponseModel;
+          _secondLevelDistributorKycEntityModelManNAF =
+              SecondLevelDistributorKycEntityModel(
+                manufacturer: Manufacturer(
+                  documents: Documents(
+                    nafdacManufacturingLicense: NafdacManufacturingLicense(
+                      width: _uploadImageResponseModelNAFManLin!.data!.width,
+                      height: _uploadImageResponseModelNAFManLin!.data!.height,
+                      format: _uploadImageResponseModelNAFManLin!.data!.format,
+                      url: _uploadImageResponseModelNAFManLin!.data!.url!,
+                      mimeType:
+                          _uploadImageResponseModelNAFManLin!.data!.mimeType,
+                      size: _uploadImageResponseModelNAFManLin!.data!.size,
+                    ),
+                  ),
+                ),
+              );
+        },
+      );
+    } catch (e) {
+      logger.e(e);
+    }
+    notifyListeners();
+  }
+
+  void pickImageManufacturerKycProdRegEvi(BuildContext context) {
+    try {
+      _pickImage.pickImage(
+        context: context,
+        file: (file) async {
+          imageCAC = file;
+          filenameCAC = imageCAC!.path.split("/").last;
+          _isLoadingProd = true;
+          await uploadImage(
+            context: context,
+            file: MultipartFile.fromBytes(
+              formartFileImage(imageCAC).readAsBytesSync(),
+              filename: imageCAC!.path.split("/").last,
+            ),
+          );
+          _isLoadingProd = _isLoading;
+          _uploadImageResponseModelManProdRegEvi = _uploadImageResponseModel;
+          _secondLevelDistributorKycEntityModelManProd =
+              SecondLevelDistributorKycEntityModel(
+                manufacturer: Manufacturer(
+                  documents: Documents(
+                    productRegistrationEvidence: ProductRegistrationEvidence(
+                      width:
+                          _uploadImageResponseModelManProdRegEvi!.data!.width,
+                      height:
+                          _uploadImageResponseModelManProdRegEvi!.data!.height,
+                      format:
+                          _uploadImageResponseModelManProdRegEvi!.data!.format,
+                      url: _uploadImageResponseModelManProdRegEvi!.data!.url!,
+                      mimeType: _uploadImageResponseModelManProdRegEvi!
+                          .data!
+                          .mimeType,
+                      size: _uploadImageResponseModelManProdRegEvi!.data!.size,
+                    ),
+                  ),
+                ),
+              );
+        },
+      );
+    } catch (e) {
+      logger.e(e);
+    }
+    notifyListeners();
+  }
+
+  void pickImageManufacturerKycComLogo(BuildContext context) {
+    try {
+      _pickImage.pickImage(
+        context: context,
+        file: (file) async {
+          imageCAC = file;
+          filenameCAC = imageCAC!.path.split("/").last;
+          _isLoadingLogo = true;
+          await uploadImage(
+            context: context,
+            file: MultipartFile.fromBytes(
+              formartFileImage(imageCAC).readAsBytesSync(),
+              filename: imageCAC!.path.split("/").last,
+            ),
+          );
+          _isLoadingLogo = _isLoading;
+          _uploadImageResponseModelManComLogo = _uploadImageResponseModel;
+          _secondLevelDistributorKycEntityModelManLogo =
+              SecondLevelDistributorKycEntityModel(
+                manufacturer: Manufacturer(
+                  documents: Documents(
+                    companyLogo: CompanyLogo(
+                      width: _uploadImageResponseModelManComLogo!.data!.width,
+                      height: _uploadImageResponseModelManComLogo!.data!.height,
+                      format: _uploadImageResponseModelManComLogo!.data!.format,
+                      url: _uploadImageResponseModelManComLogo!.data!.url!,
+                      mimeType:
+                          _uploadImageResponseModelManComLogo!.data!.mimeType,
+                      size: _uploadImageResponseModelManComLogo!.data!.size,
+                    ),
+                  ),
+                ),
+              );
+        },
+      );
+    } catch (e) {
+      logger.e(e);
+    }
+    notifyListeners();
+  }
+
+  SecondLevelDistributorKycEntityModel?
+  _secondLevelDistributorKycEntityModelImpCAC;
+  SecondLevelDistributorKycEntityModel?
+  get secondLevelDistributorKycEntityModelImpCAC =>
+      _secondLevelDistributorKycEntityModelImpCAC;
+
+  SecondLevelDistributorKycEntityModel?
+  _secondLevelDistributorKycEntityModelImpPermit;
+  SecondLevelDistributorKycEntityModel?
+  get secondLevelDistributorKycEntityModelImpPermit =>
+      _secondLevelDistributorKycEntityModelImpPermit;
+  SecondLevelDistributorKycEntityModel?
+  _secondLevelDistributorKycEntityModelImpManAuthLetter;
+  SecondLevelDistributorKycEntityModel?
+  get secondLevelDistributorKycEntityModelImpManAuthLetter =>
+      _secondLevelDistributorKycEntityModelImpManAuthLetter;
+  SecondLevelDistributorKycEntityModel?
+  _secondLevelDistributorKycEntityModelImpLogo;
+
+  List<String> businessTypes = [];
+  SecondLevelDistributorKycEntityModel?
+  get secondLevelDistributorKycEntityModelImpLogo =>
+      _secondLevelDistributorKycEntityModelImpLogo;
+
+  void pickImageImporterKycCAC(BuildContext context) {
+    try {
+      _pickImage.pickImage(
+        context: context,
+        file: (file) async {
+          imageCAC = file;
+          filenameCAC = imageCAC!.path.split("/").last;
+          _isLoadingCAC = true;
+          await uploadImage(
+            context: context,
+            file: MultipartFile.fromBytes(
+              formartFileImage(imageCAC).readAsBytesSync(),
+              filename: imageCAC!.path.split("/").last,
+            ),
+          );
+          _isLoadingCAC = _isLoading;
+          _uploadImageResponseModelCAC = _uploadImageResponseModel;
+          _secondLevelDistributorKycEntityModelImpCAC =
+              SecondLevelDistributorKycEntityModel(
+                importer: Importer(
+                  documents: Documents(
+                    cacCertificate: CacCertificate(
+                      width: _uploadImageResponseModelCAC!.data!.width,
+                      height: _uploadImageResponseModelCAC!.data!.height,
+                      format: _uploadImageResponseModelCAC!.data!.format,
+                      url: _uploadImageResponseModelCAC!.data!.url!,
+                      mimeType: _uploadImageResponseModelCAC!.data!.mimeType,
+                      size: _uploadImageResponseModelCAC!.data!.size,
+                    ),
+                  ),
+                ),
+              );
+        },
+      );
+    } catch (e) {
+      logger.e(e);
+    }
+    notifyListeners();
+  }
+
+  void pickImageImporterKycPermit(BuildContext context) {
+    try {
+      _pickImage.pickImage(
+        context: context,
+        file: (file) async {
+          imageCAC = file;
+          filenameCAC = imageCAC!.path.split("/").last;
+          _isLoadingProd = true;
+          await uploadImage(
+            context: context,
+            file: MultipartFile.fromBytes(
+              formartFileImage(imageCAC).readAsBytesSync(),
+              filename: imageCAC!.path.split("/").last,
+            ),
+          );
+          _isLoadingProd = _isLoading;
+          _uploadImageResponseModelImportPermit = _uploadImageResponseModel;
+          _secondLevelDistributorKycEntityModelImpPermit =
+              SecondLevelDistributorKycEntityModel(
+                importer: Importer(
+                  documents: Documents(
+                    importPermit: ImportPermit(
+                      width: _uploadImageResponseModelImportPermit!.data!.width,
+                      height:
+                          _uploadImageResponseModelImportPermit!.data!.height,
+                      format:
+                          _uploadImageResponseModelImportPermit!.data!.format,
+                      url: _uploadImageResponseModelImportPermit!.data!.url!,
+                      mimeType:
+                          _uploadImageResponseModelImportPermit!.data!.mimeType,
+                      size: _uploadImageResponseModelImportPermit!.data!.size,
+                    ),
+                  ),
+                ),
+              );
+        },
+      );
+    } catch (e) {
+      logger.e(e);
+    }
+    notifyListeners();
+  }
+
+  void pickImageImporterKycManAuthLetter(BuildContext context) {
+    try {
+      _pickImage.pickImage(
+        context: context,
+        file: (file) async {
+          imageCAC = file;
+          filenameCAC = imageCAC!.path.split("/").last;
+          _isLoadingNAF = true;
+          await uploadImage(
+            context: context,
+            file: MultipartFile.fromBytes(
+              formartFileImage(imageCAC).readAsBytesSync(),
+              filename: imageCAC!.path.split("/").last,
+            ),
+          );
+          _isLoadingNAF = _isLoading;
+          _uploadImageResponseModelManAuthLetter = _uploadImageResponseModel;
+          _secondLevelDistributorKycEntityModelImpManAuthLetter =
+              SecondLevelDistributorKycEntityModel(
+                importer: Importer(
+                  documents: Documents(
+                    manufacturerAuthorizationLetter:
+                        ManufacturerAuthorizationLetter(
+                          width: _uploadImageResponseModelManAuthLetter!
+                              .data!
+                              .width,
+                          height: _uploadImageResponseModelManAuthLetter!
+                              .data!
+                              .height,
+                          format: _uploadImageResponseModelManAuthLetter!
+                              .data!
+                              .format,
+                          url: _uploadImageResponseModelManAuthLetter!
+                              .data!
+                              .url!,
+                          mimeType: _uploadImageResponseModelManAuthLetter!
+                              .data!
+                              .mimeType,
+                          size: _uploadImageResponseModelManAuthLetter!
+                              .data!
+                              .size,
+                        ),
+                  ),
+                ),
+              );
+        },
+      );
+    } catch (e) {
+      logger.e(e);
+    }
+    notifyListeners();
+  }
+
+  void pickImageImporterKycLogo(BuildContext context) {
+    try {
+      _pickImage.pickImage(
+        context: context,
+        file: (file) async {
+          imageCAC = file;
+          filenameCAC = imageCAC!.path.split("/").last;
+          _isLoadingLogo = true;
+          await uploadImage(
+            context: context,
+            file: MultipartFile.fromBytes(
+              formartFileImage(imageCAC).readAsBytesSync(),
+              filename: imageCAC!.path.split("/").last,
+            ),
+          );
+          _isLoadingLogo = _isLoading;
+          _uploadImageResponseModelComLogo = _uploadImageResponseModel;
+          _secondLevelDistributorKycEntityModelImpLogo =
+              SecondLevelDistributorKycEntityModel(
+                importer: Importer(
+                  documents: Documents(
+                    companyLogo: CompanyLogo(
+                      width: _uploadImageResponseModelComLogo!.data!.width,
+                      height: _uploadImageResponseModelComLogo!.data!.height,
+                      format: _uploadImageResponseModelComLogo!.data!.format,
+                      url: _uploadImageResponseModelComLogo!.data!.url!,
+                      mimeType:
+                          _uploadImageResponseModelComLogo!.data!.mimeType,
+                      size: _uploadImageResponseModelComLogo!.data!.size,
+                    ),
+                  ),
+                ),
+              );
+        },
+      );
+    } catch (e) {
+      logger.e(e);
+    }
+    notifyListeners();
+  }
+
+  TextEditingController stateController = TextEditingController();
+
+  void showLGAAndStateDialog(
+    BuildContext context, {
+    bool isEdit = false,
+    String? editState,
+    List<String>? editLgas,
+  }) {
+    if (isEdit && editState != null) {
+      stateController.text = editState;
+      lgaAddedList.clear();
+
+      lgaAddedList.addAll(List<String>.from(editLgas ?? []));
+
+      // Get all LGAs belonging to this state
+      final selectedStateLga = stateLgaFormat.firstWhere(
+        (state) =>
+            state['state'].toString().trim().toLowerCase() ==
+            editState.trim().toLowerCase(),
+        orElse: () => <String, dynamic>{'state': '', 'lgas': <String>[]},
+      );
+
+      final selectedLgas = List<String>.from(
+        selectedStateLga['lgas'] ?? <String>[],
+      );
+
+      lgaList = List<String>.from(selectedLgas);
+      lgaListCopy = List<String>.from(selectedLgas);
+    }
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return Container(
+              color: AppColors.transparent,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: TextButton.icon(
+                      onPressed: () => Navigator.pop(context),
+                      icon: Icon(Icons.close, color: Colors.white, size: 18),
+                      label: Text(
+                        "Close",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      style: TextButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 10.w,
+                          vertical: 4.w,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 6.10.h),
+                  Dialog(
+                    insetPadding: EdgeInsets.all(16.20.w),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    backgroundColor: AppColors.white,
+                    child: Padding(
+                      padding: EdgeInsets.all(21.4.w),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          TextView(
+                            text: !isEdit
+                                ? 'Add Area/Location'
+                                : 'Edit Area/Location',
+                            textStyle: TextStyle(
+                              fontSize: 15.86.sp,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.reminder1,
+                              fontFamily: 'DMSans',
+                            ),
+                          ),
+                          SizedBox(height: 16.2.h),
+                          TextFormWidget(
+                            hint: 'State',
+                            label: '--Select--',
+                            rightPos: -14,
+                            hintSize: 14,
+                            borderColor: AppColors.transparent,
+                            borderTopLeft: 10.r,
+                            borderTopRight: 10.r,
+                            borderBottomLeft: 10.r,
+                            borderBottomRight: 10.r,
+                            labelStyle: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontFamily: 'Arial',
+                              fontSize: 14.2.sp,
+                              color: AppColors.infoGrey,
+                            ),
+                            fillColor: AppColors.grey,
+                            isFilled: true,
+                            readOnly: true,
+                            controller: stateController,
+                            suffixWidget: Builder(
+                              builder: (context) {
+                                return GestureDetector(
+                                  onTap: isEdit ? (){}: () async {
+                                    final RenderBox button =
+                                        context.findRenderObject() as RenderBox;
+
+                                    final RenderBox overlay =
+                                        Overlay.of(
+                                              context,
+                                            ).context.findRenderObject()
+                                            as RenderBox;
+
+                                    final Offset buttonPosition = button
+                                        .localToGlobal(
+                                          Offset.zero,
+                                          ancestor: overlay,
+                                        );
+
+                                    final Size buttonSize = button.size;
+
+                                    final selectedState =
+                                        await showMenu<String>(
+                                          context: context,
+
+                                          position: RelativeRect.fromLTRB(
+                                            buttonPosition.dx,
+                                            buttonPosition.dy +
+                                                buttonSize.height +
+                                                5.h,
+                                            overlay.size.width -
+                                                buttonPosition.dx -
+                                                buttonSize.width,
+                                            0,
+                                          ),
+
+                                          constraints: BoxConstraints(
+                                            minWidth: 200.w,
+                                            maxWidth: 250.w,
+                                            minHeight: 150.h,
+                                            maxHeight: 450.h,
+                                          ),
+
+                                          color: AppColors.white,
+
+                                          elevation: 4,
+
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              10.r,
+                                            ),
+                                          ),
+
+                                          items: stateLgaFormat
+                                              .map<PopupMenuEntry<String>>((s) {
+                                                final String state =
+                                                    s['state']?.toString() ??
+                                                    '';
+
+                                                return PopupMenuItem<String>(
+                                                  value: state,
+                                                  height: 38.h,
+                                                  padding: EdgeInsets.symmetric(
+                                                    horizontal: 14.w,
+                                                  ),
+                                                  child: TextView(
+                                                    text: state,
+                                                    textStyle: TextStyle(
+                                                      fontFamily: 'GoogleSans',
+                                                      fontSize: 13.70.sp,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      color: AppColors.black,
+                                                    ),
+                                                  ),
+                                                );
+                                              })
+                                              .toList(),
+                                        );
+
+                                    if (selectedState != null) {
+                                      stateController.text = selectedState;
+                                      final selectedStateLga = stateLgaFormat
+                                          .firstWhere(
+                                            (state) =>
+                                                state['state']
+                                                    .toString()
+                                                    .trim()
+                                                    .toLowerCase() ==
+                                                stateController.text
+                                                    .trim()
+                                                    .toLowerCase(),
+                                            orElse: () => <String, dynamic>{
+                                              'state': '',
+                                              'lgas': <String>[],
+                                            },
+                                          );
+
+                                      final selectedLgas = List<String>.from(
+                                        selectedStateLga['lgas'] ?? <String>[],
+                                      );
+
+                                      lgaList = List<String>.from(selectedLgas);
+                                      lgaListCopy = List<String>.from(
+                                        selectedLgas,
+                                      );
+
+                                      // Optional: reset previously selected LGAs
+                                      lgaAddedList.clear();
+                                    }
+                                    setModalState(() {});
+                                    notifyListeners();
+                                  },
+
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 8.w,
+                                    ),
+                                    child: Icon(
+                                      Icons.keyboard_arrow_down,
+                                      color: isEdit ?AppColors.greygreyer: AppColors.grey1,
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+
+                            validator: AppValidator.validateString(),
+                          ),
+
+                          SizedBox(height: 12.30.h),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  TextView(
+                                    text: 'LGA ',
+                                    textStyle: TextStyle(
+                                      fontSize: 13.86.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColors.reminder1,
+                                      fontFamily: 'DMSans',
+                                    ),
+                                  ),
+                                  TextView(
+                                    text: '(Please click to select)',
+                                    textStyle: TextStyle(
+                                      fontSize: 13.86.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColors.infoGrey,
+                                      fontFamily: 'DMSans',
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  lgaAddedList.clear();
+                                  lgaAddedList.addAll(lgaListCopy);
+                                  setModalState(() {});
+                                  notifyListeners();
+                                },
+                                child: TextView(
+                                  text: 'Select all',
+                                  textStyle: TextStyle(
+                                    decoration: TextDecoration.underline,
+                                    decorationColor: AppColors.primary,
+                                    fontSize: 13.86.sp,
+                                    fontWeight: FontWeight.w400,
+                                    color: AppColors.primary,
+                                    fontFamily: 'DMSans',
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 30.h),
+                          Container(
+                            height: lgaListCopy.length > 30 ? 250.h : 120.h,
+                            width: double.infinity,
+                            padding: EdgeInsets.all(16.w),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              color: AppColors.grey,
+                            ),
+                            child: SingleChildScrollView(
+                              child: Wrap(
+                                runSpacing: 10,
+                                spacing: 10,
+                                children: [
+                                  ...lgaListCopy.map(
+                                    (e) => GestureDetector(
+                                      onTap: () {
+                                        if (lgaAddedList.contains(e)) {
+                                          lgaAddedList.remove(e);
+                                        } else {
+                                          lgaAddedList.add(e);
+                                        }
+                                        setModalState(() {});
+                                        notifyListeners();
+                                      },
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Container(
+                                            width: 14.w,
+                                            height: 14.w,
+                                            margin: EdgeInsets.only(top: 1.h),
+                                            decoration: BoxDecoration(
+                                              color: lgaAddedList.contains(e)
+                                                  ? AppColors.app_green
+                                                  : AppColors.infoGrey1,
+                                              shape: BoxShape.circle,
+                                            ),
+                                            child: Icon(
+                                              Icons.check,
+                                              size: 9.sp,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          SizedBox(width: 2.w),
+                                          TextView(
+                                            text: '$e ',
+                                            textStyle: TextStyle(
+                                              fontSize: 13.86.sp,
+                                              fontWeight: FontWeight.w200,
+                                              color: lgaAddedList.contains(e)
+                                                  ? AppColors.reminder
+                                                  : AppColors.infoGrey,
+                                              fontFamily: 'DMSans',
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+
+                          SizedBox(height: 30.h),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: ButtonWidget(
+                                  border: 100.r,
+                                  buttonColor: AppColors.grey,
+                                  buttonText: 'Cancel',
+                                  color: AppColors.reminder1,
+                                  buttonBorderColor: AppColors.transparent,
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                    notifyListeners();
+                                  },
+                                ),
+                              ),
+                              SizedBox(width: 30.w),
+                              Expanded(
+                                child: ButtonWidget(
+                                  border: 100.r,
+                                  buttonColor: AppColors.primary,
+                                  buttonText: !isEdit? 'Add':'Edit',
+                                  color: AppColors.white,
+                                  buttonBorderColor: AppColors.transparent,
+                                  onPressed: () async {
+                                    final state = stateController.text.trim();
+
+                                    if (state.isEmpty) {
+                                      return;
+                                    }
+
+                                    final stateIndex = listOfAddedLocation
+                                        .indexWhere(
+                                          (location) => location.keys.any(
+                                            (key) =>
+                                                key.trim().toLowerCase() ==
+                                                state.toLowerCase(),
+                                          ),
+                                        );
+
+                                    if (isEdit) {
+                                      // EDIT EXISTING STATE
+                                      if (stateIndex != -1) {
+                                        listOfAddedLocation[stateIndex] = {
+                                          state: List<String>.from(
+                                            lgaAddedList,
+                                          ),
+                                        };
+                                      } 
+                                      else {
+                                        // In case the state was changed during editing
+                                        listOfAddedLocation.add({
+                                          state: List<String>.from(
+                                            lgaAddedList,
+                                          ),
+                                        });
+                                      }
+                                    } else {
+                                      // ADD NEW STATE
+                                        listOfAddedLocation.add({
+                                          state: List<String>.from(
+                                            lgaAddedList,
+                                          ),
+                                        });
+                                      // }
+                                    }
+                                    await Future.delayed(Duration(seconds: 1));
+                                    lgaListCopy.clear();
+                                    setModalState(() {});
+                                    Navigator.pop(context);
+                                    notifyListeners();
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 }

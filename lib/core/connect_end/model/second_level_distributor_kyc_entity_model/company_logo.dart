@@ -1,3 +1,8 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'company_logo.g.dart';
+
+@JsonSerializable()
 class CompanyLogo {
   String? url;
   String? mimeType;
@@ -15,21 +20,9 @@ class CompanyLogo {
     this.height,
   });
 
-  factory CompanyLogo.fromJson(Map<String, dynamic> json) => CompanyLogo(
-    url: json['url'] as String?,
-    mimeType: json['mimeType'] as String?,
-    size: json['size'] as int?,
-    format: json['format'] as String?,
-    width: json['width'] as int?,
-    height: json['height'] as int?,
-  );
+  factory CompanyLogo.fromJson(Map<String, dynamic> json) {
+    return _$CompanyLogoFromJson(json);
+  }
 
-  Map<String, dynamic> toJson() => {
-    'url': url,
-    'mimeType': mimeType,
-    'size': size,
-    'format': format,
-    'width': width,
-    'height': height,
-  };
+  Map<String, dynamic> toJson() => _$CompanyLogoToJson(this);
 }

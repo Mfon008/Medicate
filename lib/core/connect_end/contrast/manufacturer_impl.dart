@@ -13,7 +13,6 @@ import '../model/get_incoming_order_ddetail_response_model/get_incoming_order_dd
 import '../model/get_single_product_response_model/get_single_product_response_model.dart';
 import '../model/get_user_details_response_model/get_user_details_response_model.dart';
 import '../model/level_three_distributor_kyc_entity_model.dart';
-import '../model/level_two_distributor_kyc_entity_model/level_two_distributor_kyc_entity_model.dart';
 import '../model/list_incoming_orders_response_model/list_incoming_orders_response_model.dart';
 import '../model/login_entity_model.dart';
 import '../model/nafdac_registration_number_entity_model.dart';
@@ -22,11 +21,13 @@ import '../model/pharmacy_login_response_model/pharmacy_login_response_model.dar
 import '../model/resend_otp_entity_model.dart';
 import '../model/resend_otp_response_model/resend_otp_response_model.dart';
 import '../model/reset_password_entity_model.dart';
+import '../model/second_level_distributor_kyc_entity_model/second_level_distributor_kyc_entity_model.dart';
 import '../model/set_pin_entity_model.dart';
 import '../model/set_pin_pharm_response_model/set_pin_pharm_response_model.dart';
 import '../model/sign_up_phamary_response_model/sign_up_phamary_response_model.dart';
 import '../model/update_distributor_profile_entity_model.dart';
 import '../model/update_product_management_entity_model/update_product_management_entity_model.dart';
+import '../model/upload_image_response_model/upload_image_response_model.dart';
 import '../model/upload_product_image_response_model/upload_product_image_response_model.dart';
 import '../model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
 import '../model/verify_pharmacy_otp_model/verify_pharmacy_otp_model.dart';
@@ -138,11 +139,8 @@ class ManufacturerContractImpl {
   Future<GetIncomingOrderDdetailResponseModel> getIncomingOrder({
     String? wholesaleOrderId,
   }) async => await _api.getIncomingOrder(wholesaleOrderId: wholesaleOrderId);
-  Future<dynamic> advanceIncomingOrder({
-    String? wholesaleOrderId,
-  }) async => await _api.advanceIncomingOrder(
-    wholesaleOrderId: wholesaleOrderId,
-  );
+  Future<dynamic> advanceIncomingOrder({String? wholesaleOrderId}) async =>
+      await _api.advanceIncomingOrder(wholesaleOrderId: wholesaleOrderId);
   Future<dynamic> cancelIncomingOrder({
     String? wholesaleOrderId,
     String? reason,
@@ -158,11 +156,8 @@ class ManufacturerContractImpl {
     reason: reason,
   );
 
-  Future<dynamic> returnIncomingOrder({
-    String? wholesaleOrderId,
-  }) async => await _api.returnIncomingOrder(
-    wholesaleOrderId: wholesaleOrderId,
-  );
+  Future<dynamic> returnIncomingOrder({String? wholesaleOrderId}) async =>
+      await _api.returnIncomingOrder(wholesaleOrderId: wholesaleOrderId);
   Future<GetDistributorProfileResponseModel> getUserDetails() async =>
       await _api.getUserDetails();
   Future<dynamic> updateDistributorProfile(
@@ -174,15 +169,17 @@ class ManufacturerContractImpl {
   Future<GetUserDetailsResponseModel> getManufacturerDetails(
     String phoneNo,
   ) async => await _api.getManufacturerDetails(phoneNo);
-  Future<GetDistributorKycResponseModel> getManAndDistributorKyc() async => await _api.getManAndDistributorKyc();
+  Future<GetDistributorKycResponseModel> getManAndDistributorKyc() async =>
+      await _api.getManAndDistributorKyc();
   Future<dynamic> saveLevelTwoManAndDistributorKycProgress(
-   LevelTwoDistributorKycEntityModel kycEntity,
-  ) async  => await _api.saveLevelTwoManAndDistributorKycProgress(kycEntity);
+    SecondLevelDistributorKycEntityModel kycEntity,
+  ) async => await _api.saveLevelTwoManAndDistributorKycProgress(kycEntity);
   Future<dynamic> submitLevelTwoManAndDistributorKyc(
-    LevelTwoDistributorKycEntityModel kycEntity,
+    SecondLevelDistributorKycEntityModel kycEntity,
   ) async => await _api.submitLevelTwoManAndDistributorKyc(kycEntity);
   Future<dynamic> submitLevelThreeManAndDistributorKyc(
     LevelThreeDistributorKycEntityModel kycEntity,
   ) async => await _api.submitLevelThreeManAndDistributorKyc(kycEntity);
-
+  Future<UploadImageResponseModel> uploadImage(MultipartFile file) async =>
+      await _api.uploadImage(file);
 }

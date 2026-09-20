@@ -80,7 +80,13 @@ class _AddProductScreenState extends State<AddProductScreen> {
               '';
           sku.text =
               model.getSingleProductResponseModel?.data?.product?.sku ?? '';
-          manufacturerName.text = model.getSingleProductResponseModel?.data?.product?.manufacturerName??'';
+          manufacturerName.text =
+              model
+                  .getSingleProductResponseModel
+                  ?.data
+                  ?.product
+                  ?.manufacturerName ??
+              '';
           packSize.text =
               model.getSingleProductResponseModel?.data?.product?.packSize
                   .toString() ??
@@ -1477,7 +1483,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                         pricePerUnit: int.parse(
                                           priceUnit.text.trim(),
                                         ),
-                                        manufacturerName:manufacturerName.text.trim(),
+                                        manufacturerName: manufacturerName.text
+                                            .trim(),
                                         stock: int.parse(stock.text.trim()),
                                         batchNumber: batchNo.text.trim(),
                                         serialNumber: serialNo.text.trim(),

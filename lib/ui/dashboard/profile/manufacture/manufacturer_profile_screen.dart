@@ -22,8 +22,9 @@ class ManufacturerProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<ManufacturerViewModel>.reactive(
       viewModelBuilder: () => locator<ManufacturerViewModel>(),
-      onViewModelReady: (model) {
-        model.getUserDetails(context);
+      onViewModelReady: (model) async {
+        await model.getUserDetails(context);
+        model.getManAndDistributorKyc(context);
       },
       disposeViewModel: false,
       builder: (_, ManufacturerViewModel model, _) {
@@ -155,7 +156,6 @@ class ManufacturerProfileScreen extends StatelessWidget {
                   profileContainer(
                     icon: AppImage.profile,
                     text: 'Profile Information',
-                    // isactive: model.returnBool(),
                     topLeft: 12,
                     topRight: 12,
                     onTap: () => navigate.navigateTo(
@@ -165,7 +165,30 @@ class ManufacturerProfileScreen extends StatelessWidget {
                   SizedBox(height: 1.0.h),
                   profileContainer(
                     icon: AppImage.key,
-                    isactive: false,
+                    isactive:
+                        model.getDistributorKycResponseModel?.data?.kycStatus
+                                    ?.toLowerCase() ==
+                                'not_submitted' ||
+                            model
+                                    .getDistributorKycResponseModel
+                                    ?.data
+                                    ?.kycStatus
+                                    ?.toLowerCase() ==
+                                'under_review' ||
+                            model
+                                    .getDistributorKycResponseModel
+                                    ?.data
+                                    ?.kycStatus
+                                    ?.toLowerCase() ==
+                                'rejected'||
+                            model
+                                    .getDistributorKycResponseModel
+                                    ?.data
+                                    ?.kycStatus
+                                    ?.toLowerCase() ==
+                                'draft'
+                        ? true
+                        : false,
                     bottomLeft: 12,
                     bottomRight: 12,
                     text: 'KYC',

@@ -15,6 +15,7 @@ class AppColors {
   static const transparent = Colors.transparent;
   static const red = Colors.red;
   static const red_bar = Color(0xFFE21E48);
+  static const red_bar_faded = Color(0xFFFFE6E6);
   static const chim_blue = Color(0xFF49A4BD);
   static const inactive = Color(0xFFB9DCEA);
   static const greyed_blue = Color(0xFFC0D8FB);

@@ -1,23 +1,23 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import 'business_details.dart';
-import 'company_documents.dart';
-import 'role_documents.dart';
+import 'distributor.dart';
+import 'importer.dart';
+import 'manufacturer.dart';
 
 part 'level2.g.dart';
 
 @JsonSerializable()
 class Level2 {
-  BusinessDetails? businessDetails;
-  CompanyDocuments? companyDocuments;
   List<String>? businessTypes;
-  RoleDocuments? roleDocuments;
+  Distributor? distributor;
+  Manufacturer? manufacturer;
+  Importer? importer;
 
   Level2({
-    this.businessDetails,
-    this.companyDocuments,
     this.businessTypes,
-    this.roleDocuments,
+    this.distributor,
+    this.manufacturer,
+    this.importer,
   });
 
   factory Level2.fromJson(Map<String, dynamic> json) {

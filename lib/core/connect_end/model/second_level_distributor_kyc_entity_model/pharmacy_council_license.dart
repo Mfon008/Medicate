@@ -1,3 +1,8 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'pharmacy_council_license.g.dart';
+
+@JsonSerializable()
 class PharmacyCouncilLicense {
   String? url;
   String? mimeType;
@@ -16,22 +21,8 @@ class PharmacyCouncilLicense {
   });
 
   factory PharmacyCouncilLicense.fromJson(Map<String, dynamic> json) {
-    return PharmacyCouncilLicense(
-      url: json['url'] as String?,
-      mimeType: json['mimeType'] as String?,
-      size: json['size'] as int?,
-      format: json['format'] as String?,
-      width: json['width'] as int?,
-      height: json['height'] as int?,
-    );
+    return _$PharmacyCouncilLicenseFromJson(json);
   }
 
-  Map<String, dynamic> toJson() => {
-    'url': url,
-    'mimeType': mimeType,
-    'size': size,
-    'format': format,
-    'width': width,
-    'height': height,
-  };
+  Map<String, dynamic> toJson() => _$PharmacyCouncilLicenseToJson(this);
 }

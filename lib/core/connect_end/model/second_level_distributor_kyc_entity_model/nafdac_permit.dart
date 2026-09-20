@@ -1,3 +1,8 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'nafdac_permit.g.dart';
+
+@JsonSerializable()
 class NafdacPermit {
   String? url;
   String? mimeType;
@@ -15,21 +20,9 @@ class NafdacPermit {
     this.height,
   });
 
-  factory NafdacPermit.fromJson(Map<String, dynamic> json) => NafdacPermit(
-    url: json['url'] as String?,
-    mimeType: json['mimeType'] as String?,
-    size: json['size'] as int?,
-    format: json['format'] as String?,
-    width: json['width'] as int?,
-    height: json['height'] as int?,
-  );
+  factory NafdacPermit.fromJson(Map<String, dynamic> json) {
+    return _$NafdacPermitFromJson(json);
+  }
 
-  Map<String, dynamic> toJson() => {
-    'url': url,
-    'mimeType': mimeType,
-    'size': size,
-    'format': format,
-    'width': width,
-    'height': height,
-  };
+  Map<String, dynamic> toJson() => _$NafdacPermitToJson(this);
 }
