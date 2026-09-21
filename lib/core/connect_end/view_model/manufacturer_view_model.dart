@@ -4822,116 +4822,134 @@ class ManufacturerViewModel extends BaseViewModel {
                             suffixWidget: Builder(
                               builder: (context) {
                                 return GestureDetector(
-                                  onTap: isEdit ? (){}: () async {
-                                    final RenderBox button =
-                                        context.findRenderObject() as RenderBox;
+                                  onTap: isEdit
+                                      ? () {}
+                                      : () async {
+                                          final RenderBox button =
+                                              context.findRenderObject()
+                                                  as RenderBox;
 
-                                    final RenderBox overlay =
-                                        Overlay.of(
-                                              context,
-                                            ).context.findRenderObject()
-                                            as RenderBox;
+                                          final RenderBox overlay =
+                                              Overlay.of(
+                                                    context,
+                                                  ).context.findRenderObject()
+                                                  as RenderBox;
 
-                                    final Offset buttonPosition = button
-                                        .localToGlobal(
-                                          Offset.zero,
-                                          ancestor: overlay,
-                                        );
+                                          final Offset buttonPosition = button
+                                              .localToGlobal(
+                                                Offset.zero,
+                                                ancestor: overlay,
+                                              );
 
-                                    final Size buttonSize = button.size;
+                                          final Size buttonSize = button.size;
 
-                                    final selectedState =
-                                        await showMenu<String>(
-                                          context: context,
+                                          final selectedState =
+                                              await showMenu<String>(
+                                                context: context,
 
-                                          position: RelativeRect.fromLTRB(
-                                            buttonPosition.dx,
-                                            buttonPosition.dy +
-                                                buttonSize.height +
-                                                5.h,
-                                            overlay.size.width -
-                                                buttonPosition.dx -
-                                                buttonSize.width,
-                                            0,
-                                          ),
+                                                position: RelativeRect.fromLTRB(
+                                                  buttonPosition.dx,
+                                                  buttonPosition.dy +
+                                                      buttonSize.height +
+                                                      5.h,
+                                                  overlay.size.width -
+                                                      buttonPosition.dx -
+                                                      buttonSize.width,
+                                                  0,
+                                                ),
 
-                                          constraints: BoxConstraints(
-                                            minWidth: 200.w,
-                                            maxWidth: 250.w,
-                                            minHeight: 150.h,
-                                            maxHeight: 450.h,
-                                          ),
+                                                constraints: BoxConstraints(
+                                                  minWidth: 200.w,
+                                                  maxWidth: 250.w,
+                                                  minHeight: 150.h,
+                                                  maxHeight: 450.h,
+                                                ),
 
-                                          color: AppColors.white,
+                                                color: AppColors.white,
 
-                                          elevation: 4,
+                                                elevation: 4,
 
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                              10.r,
-                                            ),
-                                          ),
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                        10.r,
+                                                      ),
+                                                ),
 
-                                          items: stateLgaFormat
-                                              .map<PopupMenuEntry<String>>((s) {
-                                                final String state =
-                                                    s['state']?.toString() ??
-                                                    '';
+                                                items: stateLgaFormat
+                                                    .map<
+                                                      PopupMenuEntry<String>
+                                                    >((s) {
+                                                      final String state =
+                                                          s['state']
+                                                              ?.toString() ??
+                                                          '';
 
-                                                return PopupMenuItem<String>(
-                                                  value: state,
-                                                  height: 38.h,
-                                                  padding: EdgeInsets.symmetric(
-                                                    horizontal: 14.w,
-                                                  ),
-                                                  child: TextView(
-                                                    text: state,
-                                                    textStyle: TextStyle(
-                                                      fontFamily: 'GoogleSans',
-                                                      fontSize: 13.70.sp,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      color: AppColors.black,
-                                                    ),
-                                                  ),
+                                                      return PopupMenuItem<
+                                                        String
+                                                      >(
+                                                        value: state,
+                                                        height: 38.h,
+                                                        padding:
+                                                            EdgeInsets.symmetric(
+                                                              horizontal: 14.w,
+                                                            ),
+                                                        child: TextView(
+                                                          text: state,
+                                                          textStyle: TextStyle(
+                                                            fontFamily:
+                                                                'GoogleSans',
+                                                            fontSize: 13.70.sp,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                            color:
+                                                                AppColors.black,
+                                                          ),
+                                                        ),
+                                                      );
+                                                    })
+                                                    .toList(),
+                                              );
+
+                                          if (selectedState != null) {
+                                            stateController.text =
+                                                selectedState;
+                                            final selectedStateLga =
+                                                stateLgaFormat.firstWhere(
+                                                  (state) =>
+                                                      state['state']
+                                                          .toString()
+                                                          .trim()
+                                                          .toLowerCase() ==
+                                                      stateController.text
+                                                          .trim()
+                                                          .toLowerCase(),
+                                                  orElse: () =>
+                                                      <String, dynamic>{
+                                                        'state': '',
+                                                        'lgas': <String>[],
+                                                      },
                                                 );
-                                              })
-                                              .toList(),
-                                        );
 
-                                    if (selectedState != null) {
-                                      stateController.text = selectedState;
-                                      final selectedStateLga = stateLgaFormat
-                                          .firstWhere(
-                                            (state) =>
-                                                state['state']
-                                                    .toString()
-                                                    .trim()
-                                                    .toLowerCase() ==
-                                                stateController.text
-                                                    .trim()
-                                                    .toLowerCase(),
-                                            orElse: () => <String, dynamic>{
-                                              'state': '',
-                                              'lgas': <String>[],
-                                            },
-                                          );
+                                            final selectedLgas =
+                                                List<String>.from(
+                                                  selectedStateLga['lgas'] ??
+                                                      <String>[],
+                                                );
 
-                                      final selectedLgas = List<String>.from(
-                                        selectedStateLga['lgas'] ?? <String>[],
-                                      );
+                                            lgaList = List<String>.from(
+                                              selectedLgas,
+                                            );
+                                            lgaListCopy = List<String>.from(
+                                              selectedLgas,
+                                            );
 
-                                      lgaList = List<String>.from(selectedLgas);
-                                      lgaListCopy = List<String>.from(
-                                        selectedLgas,
-                                      );
-
-                                      // Optional: reset previously selected LGAs
-                                      lgaAddedList.clear();
-                                    }
-                                    setModalState(() {});
-                                    notifyListeners();
-                                  },
+                                            // Optional: reset previously selected LGAs
+                                            lgaAddedList.clear();
+                                          }
+                                          setModalState(() {});
+                                          notifyListeners();
+                                        },
 
                                   child: Padding(
                                     padding: EdgeInsets.symmetric(
@@ -4939,7 +4957,9 @@ class ManufacturerViewModel extends BaseViewModel {
                                     ),
                                     child: Icon(
                                       Icons.keyboard_arrow_down,
-                                      color: isEdit ?AppColors.greygreyer: AppColors.grey1,
+                                      color: isEdit
+                                          ? AppColors.greygreyer
+                                          : AppColors.grey1,
                                     ),
                                   ),
                                 );
@@ -5082,7 +5102,7 @@ class ManufacturerViewModel extends BaseViewModel {
                                 child: ButtonWidget(
                                   border: 100.r,
                                   buttonColor: AppColors.primary,
-                                  buttonText: !isEdit? 'Add':'Edit',
+                                  buttonText: !isEdit ? 'Add' : 'Save Changes',
                                   color: AppColors.white,
                                   buttonBorderColor: AppColors.transparent,
                                   onPressed: () async {
@@ -5109,8 +5129,7 @@ class ManufacturerViewModel extends BaseViewModel {
                                             lgaAddedList,
                                           ),
                                         };
-                                      } 
-                                      else {
+                                      } else {
                                         // In case the state was changed during editing
                                         listOfAddedLocation.add({
                                           state: List<String>.from(
@@ -5120,11 +5139,9 @@ class ManufacturerViewModel extends BaseViewModel {
                                       }
                                     } else {
                                       // ADD NEW STATE
-                                        listOfAddedLocation.add({
-                                          state: List<String>.from(
-                                            lgaAddedList,
-                                          ),
-                                        });
+                                      listOfAddedLocation.add({
+                                        state: List<String>.from(lgaAddedList),
+                                      });
                                       // }
                                     }
                                     await Future.delayed(Duration(seconds: 1));
@@ -5143,6 +5160,1043 @@ class ManufacturerViewModel extends BaseViewModel {
                   ),
                 ],
               ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void viewKycLevelDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return ViewModelBuilder<ManufacturerViewModel>.reactive(
+              viewModelBuilder: () => locator<ManufacturerViewModel>(),
+              onViewModelReady: (model) {
+                WidgetsBinding.instance.addPostFrameCallback((_) async {
+                  model.getManAndDistributorKyc(context);
+                });
+              },
+              disposeViewModel: false,
+              builder: (_, ManufacturerViewModel model, _) {
+                return Container(
+                  color: AppColors.transparent,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Align(
+                        alignment: Alignment.topCenter,
+                        child: TextButton.icon(
+                          onPressed: () => Navigator.pop(context),
+                          icon: Icon(
+                            Icons.close,
+                            color: Colors.white,
+                            size: 18,
+                          ),
+                          label: Text(
+                            "Close",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          style: TextButton.styleFrom(
+                            backgroundColor: AppColors.primary,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 10.w,
+                              vertical: 4.w,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 6.10.h),
+                      Dialog(
+                        insetPadding: EdgeInsets.all(16.20.w),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        backgroundColor: AppColors.white,
+                        child: Padding(
+                          padding: EdgeInsets.all(21.4.w),
+                          child: SizedBox(
+                            height: 500.h,
+                            child: SingleChildScrollView(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  TextView(
+                                    text: 'What each level unlocks',
+                                    textStyle: TextStyle(
+                                      fontSize: 15.86.sp,
+                                      fontWeight: FontWeight.w500,
+                                      color: AppColors.reminder1,
+                                      fontFamily: 'DMSans',
+                                    ),
+                                  ),
+                                  SizedBox(height: 4.2.h),
+                                  Divider(color: AppColors.infoGrey1),
+                                  SizedBox(height: 10.2.h),
+
+                                  Container(
+                                    width: double.infinity,
+                                    margin: EdgeInsets.only(bottom: 14.w),
+                                    padding: EdgeInsets.all(16.w),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(12),
+                                      color: AppColors.grey,
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                TextView(
+                                                  text: 'Level 1',
+                                                  textStyle: TextStyle(
+                                                    fontSize: 14.46.sp,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: AppColors.reminder1,
+                                                    fontFamily: 'DMSans',
+                                                  ),
+                                                ),
+                                                Container(
+                                                  padding: EdgeInsets.symmetric(
+                                                    vertical: 2.4.w,
+                                                    horizontal: 8.w,
+                                                  ),
+                                                  decoration: BoxDecoration(
+                                                    color: AppColors.app_green,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          12,
+                                                        ),
+                                                  ),
+                                                  child: TextView(
+                                                    text: 'Unlocked',
+                                                    textStyle: TextStyle(
+                                                      fontSize: 14.46.sp,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      color: AppColors.white,
+                                                      fontFamily: 'DMSans',
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            SizedBox(height: 2.h),
+                                            TextView(
+                                              text: 'Account Created',
+                                              textStyle: TextStyle(
+                                                fontSize: 13.86.sp,
+                                                fontWeight: FontWeight.w400,
+                                                color: AppColors.infoGrey,
+                                                fontFamily: 'DMSans',
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(height: 16.90.h),
+
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Icon(
+                                              Icons.check_circle_outline,
+                                              size: 16.sp,
+                                              color: AppColors.app_green,
+                                            ),
+                                            SizedBox(width: 10.w),
+                                            TextView(
+                                              text:
+                                                  'Access the distributor portal',
+                                              textStyle: TextStyle(
+                                                fontSize: 14.86.sp,
+                                                fontWeight: FontWeight.w400,
+                                                color: AppColors.reminder1,
+                                                fontFamily: 'DMSans',
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(height: 10.h),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Icon(
+                                              Icons.check_circle_outline,
+                                              size: 16.sp,
+                                              color: AppColors.app_green,
+                                            ),
+                                            SizedBox(width: 10.w),
+                                            TextView(
+                                              text: 'Complete company profile',
+                                              textStyle: TextStyle(
+                                                fontSize: 14.86.sp,
+                                                fontWeight: FontWeight.w400,
+                                                color: AppColors.reminder1,
+                                                fontFamily: 'DMSans',
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(height: 10.h),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            model
+                                                        .getDistributorKycResponseModel
+                                                        ?.data
+                                                        ?.kycLevels?[1]
+                                                        .status
+                                                        ?.toLowerCase() !=
+                                                    'approved'
+                                                ? SvgPicture.asset(
+                                                    AppImage.locked_padlock,
+                                                  )
+                                                : Icon(
+                                                    Icons.check_circle_outline,
+                                                    size: 16.sp,
+                                                    color: AppColors.app_green,
+                                                  ),
+                                            SizedBox(width: 10.w),
+                                            TextView(
+                                              text: 'Upload products',
+                                              textStyle: TextStyle(
+                                                fontSize: 14.86.sp,
+                                                fontWeight: FontWeight.w400,
+                                                color:
+                                                    model
+                                                            .getDistributorKycResponseModel
+                                                            ?.data
+                                                            ?.kycLevels?[1]
+                                                            .status
+                                                            ?.toLowerCase() !=
+                                                        'approved'
+                                                    ? AppColors.infoGrey
+                                                    : AppColors.reminder1,
+                                                fontFamily: 'DMSans',
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(height: 10.h),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            model
+                                                        .getDistributorKycResponseModel
+                                                        ?.data
+                                                        ?.kycLevels?[1]
+                                                        .status
+                                                        ?.toLowerCase() !=
+                                                    'approved'
+                                                ? SvgPicture.asset(
+                                                    AppImage.locked_padlock,
+                                                  )
+                                                : Icon(
+                                                    Icons.check_circle_outline,
+                                                    size: 16.sp,
+                                                    color: AppColors.app_green,
+                                                  ),
+                                            SizedBox(width: 10.w),
+                                            TextView(
+                                              text: 'Publish products',
+                                              textStyle: TextStyle(
+                                                fontSize: 14.86.sp,
+                                                fontWeight: FontWeight.w400,
+                                                color:
+                                                    model
+                                                            .getDistributorKycResponseModel
+                                                            ?.data
+                                                            ?.kycLevels?[1]
+                                                            .status
+                                                            ?.toLowerCase() !=
+                                                        'approved'
+                                                    ? AppColors.infoGrey
+                                                    : AppColors.reminder1,
+                                                fontFamily: 'DMSans',
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(height: 10.h),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            model
+                                                        .getDistributorKycResponseModel
+                                                        ?.data
+                                                        ?.kycLevels?[1]
+                                                        .status
+                                                        ?.toLowerCase() !=
+                                                    'approved'
+                                                ? SvgPicture.asset(
+                                                    AppImage.locked_padlock,
+                                                  )
+                                                : Icon(
+                                                    Icons.check_circle_outline,
+                                                    size: 16.sp,
+                                                    color: AppColors.app_green,
+                                                  ),
+                                            SizedBox(width: 10.w),
+                                            TextView(
+                                              text: 'Receive Orders',
+                                              textStyle: TextStyle(
+                                                fontSize: 14.86.sp,
+                                                fontWeight: FontWeight.w400,
+                                                color:
+                                                    model
+                                                            .getDistributorKycResponseModel
+                                                            ?.data
+                                                            ?.kycLevels?[1]
+                                                            .status
+                                                            ?.toLowerCase() !=
+                                                        'approved'
+                                                    ? AppColors.infoGrey
+                                                    : AppColors.reminder1,
+                                                fontFamily: 'DMSans',
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(height: 10.h),
+                                      ],
+                                    ),
+                                  ),
+
+                                  Container(
+                                    width: double.infinity,
+                                    margin: EdgeInsets.only(bottom: 14.w),
+                                    padding: EdgeInsets.all(16.w),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(12),
+                                      color: AppColors.grey,
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                TextView(
+                                                  text: 'Level 2',
+                                                  textStyle: TextStyle(
+                                                    fontSize: 14.46.sp,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: AppColors.reminder1,
+                                                    fontFamily: 'DMSans',
+                                                  ),
+                                                ),
+                                                model
+                                                            .getDistributorKycResponseModel
+                                                            ?.data
+                                                            ?.kycLevels?[1]
+                                                            .status
+                                                            ?.toLowerCase() !=
+                                                        'approved'
+                                                    ? TextView(
+                                                        text: 'Locked',
+                                                        textStyle: TextStyle(
+                                                          fontSize: 14.46.sp,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          color: AppColors
+                                                              .infoGrey,
+                                                          fontFamily: 'DMSans',
+                                                        ),
+                                                      )
+                                                    : Container(
+                                                        padding:
+                                                            EdgeInsets.symmetric(
+                                                              vertical: 2.4.w,
+                                                              horizontal: 8.w,
+                                                            ),
+                                                        decoration: BoxDecoration(
+                                                          color: AppColors
+                                                              .app_green,
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                12,
+                                                              ),
+                                                        ),
+                                                        child: TextView(
+                                                          text: 'Unlocked',
+                                                          textStyle: TextStyle(
+                                                            fontSize: 14.46.sp,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                            color:
+                                                                AppColors.white,
+                                                            fontFamily:
+                                                                'DMSans',
+                                                          ),
+                                                        ),
+                                                      ),
+                                              ],
+                                            ),
+                                            SizedBox(height: 2.h),
+                                            SizedBox(
+                                              width: 260.w,
+                                              child: TextView(
+                                                text:
+                                                    'Business Verification & Regulatory Compliance',
+                                                maxLines: 2,
+                                                textStyle: TextStyle(
+                                                  fontSize: 13.86.sp,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: AppColors.infoGrey,
+                                                  fontFamily: 'DMSans',
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(height: 16.90.h),
+
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            model
+                                                        .getDistributorKycResponseModel
+                                                        ?.data
+                                                        ?.kycLevels?[1]
+                                                        .status
+                                                        ?.toLowerCase() !=
+                                                    'approved'
+                                                ? SvgPicture.asset(
+                                                    AppImage.locked_padlock,
+                                                  )
+                                                : Icon(
+                                                    Icons.check_circle_outline,
+                                                    size: 16.sp,
+                                                    color: AppColors.app_green,
+                                                  ),
+                                            SizedBox(width: 10.w),
+                                            TextView(
+                                              text: 'Complete company profile',
+                                              textStyle: TextStyle(
+                                                fontSize: 14.86.sp,
+                                                fontWeight: FontWeight.w400,
+                                                color:
+                                                    model
+                                                            .getDistributorKycResponseModel
+                                                            ?.data
+                                                            ?.kycLevels?[1]
+                                                            .status
+                                                            ?.toLowerCase() !=
+                                                        'approved'
+                                                    ? AppColors.infoGrey
+                                                    : AppColors.reminder1,
+                                                fontFamily: 'DMSans',
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(height: 10.h),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            model
+                                                        .getDistributorKycResponseModel
+                                                        ?.data
+                                                        ?.kycLevels?[1]
+                                                        .status
+                                                        ?.toLowerCase() !=
+                                                    'approved'
+                                                ? SvgPicture.asset(
+                                                    AppImage.locked_padlock,
+                                                  )
+                                                : Icon(
+                                                    Icons.check_circle_outline,
+                                                    size: 16.sp,
+                                                    color: AppColors.app_green,
+                                                  ),
+                                            SizedBox(width: 10.w),
+                                            TextView(
+                                              text:
+                                                  'Create and upload products',
+                                              textStyle: TextStyle(
+                                                fontSize: 14.86.sp,
+                                                fontWeight: FontWeight.w400,
+                                                color:
+                                                    model
+                                                            .getDistributorKycResponseModel
+                                                            ?.data
+                                                            ?.kycLevels?[1]
+                                                            .status
+                                                            ?.toLowerCase() !=
+                                                        'approved'
+                                                    ? AppColors.infoGrey
+                                                    : AppColors.reminder1,
+                                                fontFamily: 'DMSans',
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(height: 10.h),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            model
+                                                        .getDistributorKycResponseModel
+                                                        ?.data
+                                                        ?.kycLevels?[1]
+                                                        .status
+                                                        ?.toLowerCase() !=
+                                                    'approved'
+                                                ? SvgPicture.asset(
+                                                    AppImage.locked_padlock,
+                                                  )
+                                                : Icon(
+                                                    Icons.check_circle_outline,
+                                                    size: 16.sp,
+                                                    color: AppColors.app_green,
+                                                  ),
+                                            SizedBox(width: 10.w),
+                                            TextView(
+                                              text: 'View product uploads',
+                                              textStyle: TextStyle(
+                                                fontSize: 14.86.sp,
+                                                fontWeight: FontWeight.w400,
+                                                color:
+                                                    model
+                                                            .getDistributorKycResponseModel
+                                                            ?.data
+                                                            ?.kycLevels?[1]
+                                                            .status
+                                                            ?.toLowerCase() !=
+                                                        'approved'
+                                                    ? AppColors.infoGrey
+                                                    : AppColors.reminder1,
+                                                fontFamily: 'DMSans',
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(height: 10.h),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            model
+                                                        .getDistributorKycResponseModel
+                                                        ?.data
+                                                        ?.kycLevels?[1]
+                                                        .status
+                                                        ?.toLowerCase() !=
+                                                    'approved'
+                                                ? SvgPicture.asset(
+                                                    AppImage.locked_padlock,
+                                                  )
+                                                : Icon(
+                                                    Icons.check_circle_outline,
+                                                    size: 16.sp,
+                                                    color: AppColors.app_green,
+                                                  ),
+                                            SizedBox(width: 10.w),
+                                            TextView(
+                                              text: 'Save draft products',
+                                              textStyle: TextStyle(
+                                                fontSize: 14.86.sp,
+                                                fontWeight: FontWeight.w400,
+                                                color:
+                                                    model
+                                                            .getDistributorKycResponseModel
+                                                            ?.data
+                                                            ?.kycLevels?[1]
+                                                            .status
+                                                            ?.toLowerCase() !=
+                                                        'approved'
+                                                    ? AppColors.infoGrey
+                                                    : AppColors.reminder1,
+                                                fontFamily: 'DMSans',
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(height: 10.h),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            model
+                                                        .getDistributorKycResponseModel
+                                                        ?.data
+                                                        ?.kycLevels?[1]
+                                                        .status
+                                                        ?.toLowerCase() !=
+                                                    'approved'
+                                                ? SvgPicture.asset(
+                                                    AppImage.locked_padlock,
+                                                  )
+                                                : Icon(
+                                                    Icons.check_circle_outline,
+                                                    size: 16.sp,
+                                                    color: AppColors.app_green,
+                                                  ),
+                                            SizedBox(width: 10.w),
+                                            TextView(
+                                              text:
+                                                  'Publish products to the\nmarketplace',
+                                              textStyle: TextStyle(
+                                                fontSize: 14.86.sp,
+                                                fontWeight: FontWeight.w400,
+                                                color:
+                                                    model
+                                                            .getDistributorKycResponseModel
+                                                            ?.data
+                                                            ?.kycLevels?[1]
+                                                            .status
+                                                            ?.toLowerCase() !=
+                                                        'approved'
+                                                    ? AppColors.infoGrey
+                                                    : AppColors.reminder1,
+                                                fontFamily: 'DMSans',
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(height: 10.h),
+                                      ],
+                                    ),
+                                  ),
+
+                                  Container(
+                                    width: double.infinity,
+                                    margin: EdgeInsets.only(bottom: 14.w),
+                                    padding: EdgeInsets.all(16.w),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(12),
+                                      color: AppColors.grey,
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                TextView(
+                                                  text: 'Level 3',
+                                                  textStyle: TextStyle(
+                                                    fontSize: 14.46.sp,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: AppColors.reminder1,
+                                                    fontFamily: 'DMSans',
+                                                  ),
+                                                ),
+                                                model
+                                                            .getDistributorKycResponseModel
+                                                            ?.data
+                                                            ?.kycLevels?[2]
+                                                            .status
+                                                            ?.toLowerCase() !=
+                                                        'approved'
+                                                    ? TextView(
+                                                        text: 'Locked',
+                                                        textStyle: TextStyle(
+                                                          fontSize: 14.86.sp,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          color: AppColors
+                                                              .infoGrey,
+                                                          fontFamily: 'DMSans',
+                                                        ),
+                                                      )
+                                                    : Container(
+                                                        padding:
+                                                            EdgeInsets.symmetric(
+                                                              vertical: 2.4.w,
+                                                              horizontal: 8.w,
+                                                            ),
+                                                        decoration: BoxDecoration(
+                                                          color: AppColors
+                                                              .app_green,
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                12,
+                                                              ),
+                                                        ),
+                                                        child: TextView(
+                                                          text: 'Unlocked',
+                                                          textStyle: TextStyle(
+                                                            fontSize: 14.86.sp,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                            color:
+                                                                AppColors.white,
+                                                            fontFamily:
+                                                                'DMSans',
+                                                          ),
+                                                        ),
+                                                      ),
+                                              ],
+                                            ),
+                                            SizedBox(height: 2.h),
+                                            SizedBox(
+                                              width: 200.w,
+                                              child: TextView(
+                                                text:
+                                                    'Commercial Activation — Verified Supplier',
+                                                maxLines: 2,
+                                                textStyle: TextStyle(
+                                                  fontSize: 13.86.sp,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: AppColors.infoGrey,
+                                                  fontFamily: 'DMSans',
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+
+                                        SizedBox(height: 16.90.h),
+
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            model
+                                                        .getDistributorKycResponseModel
+                                                        ?.data
+                                                        ?.kycLevels?[2]
+                                                        .status
+                                                        ?.toLowerCase() !=
+                                                    'approved'
+                                                ? SvgPicture.asset(
+                                                    AppImage.locked_padlock,
+                                                  )
+                                                : Icon(
+                                                    Icons.check_circle_outline,
+                                                    size: 16.sp,
+                                                    color: AppColors.app_green,
+                                                  ),
+                                            SizedBox(width: 10.w),
+                                            TextView(
+                                              text: 'Upload products',
+                                              textStyle: TextStyle(
+                                                fontSize: 14.86.sp,
+                                                fontWeight: FontWeight.w400,
+                                                color:
+                                                    model
+                                                            .getDistributorKycResponseModel
+                                                            ?.data
+                                                            ?.kycLevels?[2]
+                                                            .status
+                                                            ?.toLowerCase() !=
+                                                        'approved'
+                                                    ? AppColors.infoGrey
+                                                    : AppColors.reminder1,
+                                                fontFamily: 'DMSans',
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(height: 10.h),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            model
+                                                        .getDistributorKycResponseModel
+                                                        ?.data
+                                                        ?.kycLevels?[2]
+                                                        .status
+                                                        ?.toLowerCase() !=
+                                                    'approved'
+                                                ? SvgPicture.asset(
+                                                    AppImage.locked_padlock,
+                                                  )
+                                                : Icon(
+                                                    Icons.check_circle_outline,
+                                                    size: 16.sp,
+                                                    color: AppColors.app_green,
+                                                  ),
+                                            SizedBox(width: 10.w),
+                                            TextView(
+                                              text: 'Submit products',
+                                              textStyle: TextStyle(
+                                                fontSize: 14.86.sp,
+                                                fontWeight: FontWeight.w400,
+                                                color:
+                                                    model
+                                                            .getDistributorKycResponseModel
+                                                            ?.data
+                                                            ?.kycLevels?[2]
+                                                            .status
+                                                            ?.toLowerCase() !=
+                                                        'approved'
+                                                    ? AppColors.infoGrey
+                                                    : AppColors.reminder1,
+                                                fontFamily: 'DMSans',
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(height: 10.h),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            model
+                                                        .getDistributorKycResponseModel
+                                                        ?.data
+                                                        ?.kycLevels?[2]
+                                                        .status
+                                                        ?.toLowerCase() !=
+                                                    'approved'
+                                                ? SvgPicture.asset(
+                                                    AppImage.locked_padlock,
+                                                  )
+                                                : Icon(
+                                                    Icons.check_circle_outline,
+                                                    size: 16.sp,
+                                                    color: AppColors.app_green,
+                                                  ),
+                                            SizedBox(width: 10.w),
+                                            TextView(
+                                              text: 'Receive orders',
+                                              textStyle: TextStyle(
+                                                fontSize: 14.86.sp,
+                                                fontWeight: FontWeight.w400,
+                                                color:
+                                                    model
+                                                            .getDistributorKycResponseModel
+                                                            ?.data
+                                                            ?.kycLevels?[2]
+                                                            .status
+                                                            ?.toLowerCase() !=
+                                                        'approved'
+                                                    ? AppColors.infoGrey
+                                                    : AppColors.reminder1,
+                                                fontFamily: 'DMSans',
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(height: 10.h),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            model
+                                                        .getDistributorKycResponseModel
+                                                        ?.data
+                                                        ?.kycLevels?[2]
+                                                        .status
+                                                        ?.toLowerCase() !=
+                                                    'approved'
+                                                ? SvgPicture.asset(
+                                                    AppImage.locked_padlock,
+                                                  )
+                                                : Icon(
+                                                    Icons.check_circle_outline,
+                                                    size: 16.sp,
+                                                    color: AppColors.app_green,
+                                                  ),
+                                            SizedBox(width: 10.w),
+                                            TextView(
+                                              text: 'Manage orders',
+                                              textStyle: TextStyle(
+                                                fontSize: 14.86.sp,
+                                                fontWeight: FontWeight.w400,
+                                                color:
+                                                    model
+                                                            .getDistributorKycResponseModel
+                                                            ?.data
+                                                            ?.kycLevels?[2]
+                                                            .status
+                                                            ?.toLowerCase() !=
+                                                        'approved'
+                                                    ? AppColors.infoGrey
+                                                    : AppColors.reminder1,
+                                                fontFamily: 'DMSans',
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(height: 10.h),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            model
+                                                        .getDistributorKycResponseModel
+                                                        ?.data
+                                                        ?.kycLevels?[2]
+                                                        .status
+                                                        ?.toLowerCase() !=
+                                                    'approved'
+                                                ? SvgPicture.asset(
+                                                    AppImage.locked_padlock,
+                                                  )
+                                                : Icon(
+                                                    Icons.check_circle_outline,
+                                                    size: 16.sp,
+                                                    color: AppColors.app_green,
+                                                  ),
+                                            SizedBox(width: 10.w),
+                                            TextView(
+                                              text: 'Fulfilment',
+                                              textStyle: TextStyle(
+                                                fontSize: 14.86.sp,
+                                                fontWeight: FontWeight.w400,
+                                                color:
+                                                    model
+                                                            .getDistributorKycResponseModel
+                                                            ?.data
+                                                            ?.kycLevels?[2]
+                                                            .status
+                                                            ?.toLowerCase() !=
+                                                        'approved'
+                                                    ? AppColors.infoGrey
+                                                    : AppColors.reminder1,
+                                                fontFamily: 'DMSans',
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(height: 10.h),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            model
+                                                        .getDistributorKycResponseModel
+                                                        ?.data
+                                                        ?.kycLevels?[2]
+                                                        .status
+                                                        ?.toLowerCase() !=
+                                                    'approved'
+                                                ? SvgPicture.asset(
+                                                    AppImage.locked_padlock,
+                                                  )
+                                                : Icon(
+                                                    Icons.check_circle_outline,
+                                                    size: 16.sp,
+                                                    color: AppColors.app_green,
+                                                  ),
+                                            SizedBox(width: 10.w),
+                                            TextView(
+                                              text: 'Wallet',
+                                              textStyle: TextStyle(
+                                                fontSize: 14.86.sp,
+                                                fontWeight: FontWeight.w400,
+                                                color:
+                                                    model
+                                                            .getDistributorKycResponseModel
+                                                            ?.data
+                                                            ?.kycLevels?[2]
+                                                            .status
+                                                            ?.toLowerCase() !=
+                                                        'approved'
+                                                    ? AppColors.infoGrey
+                                                    : AppColors.reminder1,
+                                                fontFamily: 'DMSans',
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(height: 10.h),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            model
+                                                        .getDistributorKycResponseModel
+                                                        ?.data
+                                                        ?.kycLevels?[2]
+                                                        .status
+                                                        ?.toLowerCase() !=
+                                                    'approved'
+                                                ? SvgPicture.asset(
+                                                    AppImage.locked_padlock,
+                                                  )
+                                                : Icon(
+                                                    Icons.check_circle_outline,
+                                                    size: 16.sp,
+                                                    color: AppColors.app_green,
+                                                  ),
+                                            SizedBox(width: 10.w),
+                                            TextView(
+                                              text: 'Reports',
+                                              textStyle: TextStyle(
+                                                fontSize: 14.86.sp,
+                                                fontWeight: FontWeight.w400,
+                                                color:
+                                                    model
+                                                            .getDistributorKycResponseModel
+                                                            ?.data
+                                                            ?.kycLevels?[2]
+                                                            .status
+                                                            ?.toLowerCase() !=
+                                                        'approved'
+                                                    ? AppColors.infoGrey
+                                                    : AppColors.reminder1,
+                                                fontFamily: 'DMSans',
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(height: 10.h),
+                                      ],
+                                    ),
+                                  ),
+
+                                  SizedBox(height: 30.h),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
             );
           },
         );

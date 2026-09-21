@@ -572,133 +572,134 @@ class _PharmacyWholesaleScreenState extends State<PharmacyWholesaleScreen> {
                                   SizedBox(height: 6.h),
                                   Divider(color: AppColors.infoGrey1),
                                   SizedBox(height: 10.h),
-                                  if (m.volumePricing!.isNotEmpty)
-                                    Container(
-                                      width: double.infinity,
-                                      padding: EdgeInsets.all(10.w),
-                                      decoration: BoxDecoration(
-                                        color: AppColors.grey,
-                                        borderRadius: BorderRadius.circular(
-                                          8.0.r,
-                                        ),
-                                        border: Border.all(
-                                          color: const Color.fromARGB(
-                                            255,
-                                            236,
-                                            237,
-                                            237,
-                                          ),
-                                        ),
-                                      ),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          TextView(
-                                            text: 'Volume Pricing',
-                                            textStyle: TextStyle(
-                                              fontFamily: 'DMSans',
-                                              fontSize: 14.20.sp,
-                                              fontWeight: FontWeight.w400,
-                                              color: AppColors.black,
-                                            ),
-                                          ),
-                                          SizedBox(height: 10.h),
+                                  // if (m.volumePricing!.isNotEmpty)
+                                  //   Container(
+                                  //     width: double.infinity,
+                                  //     padding: EdgeInsets.all(10.w),
+                                  //     decoration: BoxDecoration(
+                                  //       color: AppColors.grey,
+                                  //       borderRadius: BorderRadius.circular(
+                                  //         8.0.r,
+                                  //       ),
+                                  //       border: Border.all(
+                                  //         color: const Color.fromARGB(
+                                  //           255,
+                                  //           236,
+                                  //           237,
+                                  //           237,
+                                  //         ),
+                                  //       ),
+                                  //     ),
+                                  //     child: Column(
+                                  //       crossAxisAlignment:
+                                  //           CrossAxisAlignment.start,
+                                  //       children: [
+                                  //         TextView(
+                                  //           text: 'Volume Pricing',
+                                  //           textStyle: TextStyle(
+                                  //             fontFamily: 'DMSans',
+                                  //             fontSize: 14.20.sp,
+                                  //             fontWeight: FontWeight.w400,
+                                  //             color: AppColors.black,
+                                  //           ),
+                                  //         ),
+                                  //         SizedBox(height: 10.h),
 
-                                          SingleChildScrollView(
-                                            scrollDirection: Axis.horizontal,
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                ...m.volumePricing!.map(
-                                                  (vol) => Container(
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                          vertical: 6.60.w,
-                                                          horizontal: 8.w,
-                                                        ),
-                                                    margin: EdgeInsets.only(
-                                                      right: 10.w,
-                                                    ),
-                                                    decoration: BoxDecoration(
-                                                      color: AppColors.appWhite,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                            20.r,
-                                                          ),
-                                                      border: Border.all(
-                                                        color:
-                                                            const Color.fromARGB(
-                                                              255,
-                                                              236,
-                                                              237,
-                                                              237,
-                                                            ),
-                                                      ),
-                                                    ),
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
+                                  //         SingleChildScrollView(
+                                  //           scrollDirection: Axis.horizontal,
+                                  //           child: Row(
+                                  //             mainAxisAlignment:
+                                  //                 MainAxisAlignment
+                                  //                     .spaceBetween,
+                                  //             children: [
+                                  //               ...m.volumePricing!.map(
+                                  //                 (vol) => Container(
+                                  //                   padding:
+                                  //                       EdgeInsets.symmetric(
+                                  //                         vertical: 6.60.w,
+                                  //                         horizontal: 8.w,
+                                  //                       ),
+                                  //                   margin: EdgeInsets.only(
+                                  //                     right: 10.w,
+                                  //                   ),
+                                  //                   decoration: BoxDecoration(
+                                  //                     color: AppColors.appWhite,
+                                  //                     borderRadius:
+                                  //                         BorderRadius.circular(
+                                  //                           20.r,
+                                  //                         ),
+                                  //                     border: Border.all(
+                                  //                       color:
+                                  //                           const Color.fromARGB(
+                                  //                             255,
+                                  //                             236,
+                                  //                             237,
+                                  //                             237,
+                                  //                           ),
+                                  //                     ),
+                                  //                   ),
+                                  //                   child: Row(
+                                  //                     mainAxisAlignment:
+                                  //                         MainAxisAlignment
+                                  //                             .spaceBetween,
 
-                                                      mainAxisSize:
-                                                          MainAxisSize.min,
-                                                      children: [
-                                                        TextView(
-                                                          text:
-                                                              '≥ ${vol['quantity']}:',
-                                                          textStyle: TextStyle(
-                                                            fontFamily:
-                                                                'DMSans',
-                                                            fontSize: 15.60.sp,
-                                                            fontWeight:
-                                                                FontWeight.w300,
-                                                            color:
-                                                                AppColors.black,
-                                                          ),
-                                                        ),
-                                                        SizedBox(width: 10.h),
-                                                        TextView(
-                                                          text: formatNaira(
-                                                            vol['enlistedPricePerUnit'],
-                                                          ),
-                                                          textStyle: TextStyle(
-                                                            fontFamily:
-                                                                'DMSans',
-                                                            fontSize: 15.80.sp,
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                            color:
-                                                                AppColors.black,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
+                                  //                     mainAxisSize:
+                                  //                         MainAxisSize.min,
+                                  //                     children: [
+                                  //                       TextView(
+                                  //                         text:
+                                  //                             '≥ ${vol['quantity']}:',
+                                  //                         textStyle: TextStyle(
+                                  //                           fontFamily:
+                                  //                               'DMSans',
+                                  //                           fontSize: 15.60.sp,
+                                  //                           fontWeight:
+                                  //                               FontWeight.w300,
+                                  //                           color:
+                                  //                               AppColors.black,
+                                  //                         ),
+                                  //                       ),
+                                  //                       SizedBox(width: 10.h),
+                                  //                       TextView(
+                                  //                         text: formatNaira(
+                                  //                           vol['enlistedPricePerUnit'],
+                                  //                         ),
+                                  //                         textStyle: TextStyle(
+                                  //                           fontFamily:
+                                  //                               'DMSans',
+                                  //                           fontSize: 15.80.sp,
+                                  //                           fontWeight:
+                                  //                               FontWeight.w500,
+                                  //                           color:
+                                  //                               AppColors.black,
+                                  //                         ),
+                                  //                       ),
+                                  //                     ],
+                                  //                   ),
+                                  //                 ),
+                                  //               ),
+                                  //             ],
+                                  //           ),
+                                  //         ),
 
-                                          SizedBox(height: 5.10.w),
-                                        ],
-                                      ),
-                                    ),
-                                  SizedBox(
-                                    height: m.volumePricing!.isNotEmpty
-                                        ? 6.h
-                                        : 0.h,
-                                  ),
-                                  m.volumePricing!.isNotEmpty
-                                      ? Divider(color: AppColors.infoGrey1)
-                                      : SizedBox.shrink(),
-                                  SizedBox(
-                                    height: m.volumePricing!.isNotEmpty
-                                        ? 10.h
-                                        : 0.h,
-                                  ),
+                                  //         SizedBox(height: 5.10.w),
+                                  //       ],
+                                  //     ),
+                                  //   ),
+                                  // SizedBox(
+                                  //   height: m.volumePricing!.isNotEmpty
+                                  //       ? 6.h
+                                  //       : 0.h,
+                                  // ),
+                                  // m.volumePricing!.isNotEmpty
+                                  //     ? Divider(color: AppColors.infoGrey1)
+                                  //     : SizedBox.shrink(),
+                                  // SizedBox(
+                                  //   height: m.volumePricing!.isNotEmpty
+                                  //       ? 10.h
+                                  //       : 0.h,
+                                  // ),
+                                 
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [

@@ -74,16 +74,19 @@ class _DistributorKycScreenState extends State<DistributorKycScreen> {
                       children: [
                         Align(
                           alignment: Alignment.topRight,
-                          child: TextView(
-                            text: 'View Levels',
-                            textStyle: TextStyle(
-                              fontSize: 15.6.sp,
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.primary,
-                              decoration: TextDecoration.underline,
-                              decorationColor: AppColors.primary,
-                              decorationStyle: TextDecorationStyle.solid,
-                              decorationThickness: .7,
+                          child: GestureDetector(
+                            onTap: () => model.viewKycLevelDialog(context),
+                            child: TextView(
+                              text: 'View Levels',
+                              textStyle: TextStyle(
+                                fontSize: 15.6.sp,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.primary,
+                                decoration: TextDecoration.underline,
+                                decorationColor: AppColors.primary,
+                                decorationStyle: TextDecorationStyle.solid,
+                                decorationThickness: .7,
+                              ),
                             ),
                           ),
                         ),

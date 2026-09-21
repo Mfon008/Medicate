@@ -439,123 +439,125 @@ class SpecialistsProviderViewProductScreen extends StatelessWidget {
                           ],
                         ),
                       ),
-                      Container(
-                        width: double.infinity,
-                        padding: EdgeInsets.all(16.w),
-                        decoration: BoxDecoration(
-                          color: AppColors.grey,
-                          borderRadius: BorderRadius.circular(8.0.r),
-                          border: Border.all(
-                            color: const Color.fromARGB(255, 236, 237, 237),
-                          ),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            TextView(
-                              text: 'Volume Pricing',
-                              textStyle: TextStyle(
-                                fontFamily: 'GoogleSans',
-                                fontSize: 14.90.sp,
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.black,
-                              ),
-                            ),
-                            SizedBox(height: 10.h),
 
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                vertical: 6.60.w,
-                                horizontal: 12.w,
-                              ),
-                              decoration: BoxDecoration(
-                                color: AppColors.appWhite,
-                                borderRadius: BorderRadius.circular(20.r),
-                                border: Border.all(
-                                  color: const Color.fromARGB(
-                                    255,
-                                    236,
-                                    237,
-                                    237,
-                                  ),
-                                ),
-                              ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  TextView(
-                                    text: '≥ 6:',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 15.60.sp,
-                                      fontWeight: FontWeight.w300,
-                                      color: AppColors.black,
-                                    ),
-                                  ),
-                                  // SizedBox(width: 50.h),
-                                  TextView(
-                                    text: '₦17,500',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'GoogleSans',
-                                      fontSize: 15.80.sp,
-                                      fontWeight: FontWeight.w500,
-                                      color: AppColors.black,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(height: 10.w),
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                vertical: 6.60.w,
-                                horizontal: 12.w,
-                              ),
-                              decoration: BoxDecoration(
-                                color: AppColors.appWhite,
-                                borderRadius: BorderRadius.circular(20.r),
-                                border: Border.all(
-                                  color: const Color.fromARGB(
-                                    255,
-                                    236,
-                                    237,
-                                    237,
-                                  ),
-                                ),
-                              ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  TextView(
-                                    text: '≥ 20:',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 15.60.sp,
-                                      fontWeight: FontWeight.w300,
-                                      color: AppColors.black,
-                                    ),
-                                  ),
+                      // Container(
+                      //   width: double.infinity,
+                      //   padding: EdgeInsets.all(16.w),
+                      //   decoration: BoxDecoration(
+                      //     color: AppColors.grey,
+                      //     borderRadius: BorderRadius.circular(8.0.r),
+                      //     border: Border.all(
+                      //       color: const Color.fromARGB(255, 236, 237, 237),
+                      //     ),
+                      //   ),
+                      //   child: Column(
+                      //     crossAxisAlignment: CrossAxisAlignment.start,
+                      //     children: [
+                      //       TextView(
+                      //         text: 'Volume Pricing',
+                      //         textStyle: TextStyle(
+                      //           fontFamily: 'GoogleSans',
+                      //           fontSize: 14.90.sp,
+                      //           fontWeight: FontWeight.w500,
+                      //           color: AppColors.black,
+                      //         ),
+                      //       ),
+                      //       SizedBox(height: 10.h),
 
-                                  //
-                                  TextView(
-                                    text: '₦16,500',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'GoogleSans',
-                                      fontSize: 15.80.sp,
-                                      fontWeight: FontWeight.w500,
-                                      color: AppColors.black,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
+                      //       Container(
+                      //         padding: EdgeInsets.symmetric(
+                      //           vertical: 6.60.w,
+                      //           horizontal: 12.w,
+                      //         ),
+                      //         decoration: BoxDecoration(
+                      //           color: AppColors.appWhite,
+                      //           borderRadius: BorderRadius.circular(20.r),
+                      //           border: Border.all(
+                      //             color: const Color.fromARGB(
+                      //               255,
+                      //               236,
+                      //               237,
+                      //               237,
+                      //             ),
+                      //           ),
+                      //         ),
+                      //         child: Row(
+                      //           mainAxisAlignment:
+                      //               MainAxisAlignment.spaceBetween,
+                      //           children: [
+                      //             TextView(
+                      //               text: '≥ 6:',
+                      //               textStyle: TextStyle(
+                      //                 fontFamily: 'Arial',
+                      //                 fontSize: 15.60.sp,
+                      //                 fontWeight: FontWeight.w300,
+                      //                 color: AppColors.black,
+                      //               ),
+                      //             ),
+                      //             // SizedBox(width: 50.h),
+                      //             TextView(
+                      //               text: '₦17,500',
+                      //               textStyle: TextStyle(
+                      //                 fontFamily: 'GoogleSans',
+                      //                 fontSize: 15.80.sp,
+                      //                 fontWeight: FontWeight.w500,
+                      //                 color: AppColors.black,
+                      //               ),
+                      //             ),
+                      //           ],
+                      //         ),
+                      //       ),
+                      //       SizedBox(height: 10.w),
+                      //       Container(
+                      //         padding: EdgeInsets.symmetric(
+                      //           vertical: 6.60.w,
+                      //           horizontal: 12.w,
+                      //         ),
+                      //         decoration: BoxDecoration(
+                      //           color: AppColors.appWhite,
+                      //           borderRadius: BorderRadius.circular(20.r),
+                      //           border: Border.all(
+                      //             color: const Color.fromARGB(
+                      //               255,
+                      //               236,
+                      //               237,
+                      //               237,
+                      //             ),
+                      //           ),
+                      //         ),
+                      //         child: Row(
+                      //           mainAxisAlignment:
+                      //               MainAxisAlignment.spaceBetween,
+                      //           children: [
+                      //             TextView(
+                      //               text: '≥ 20:',
+                      //               textStyle: TextStyle(
+                      //                 fontFamily: 'Arial',
+                      //                 fontSize: 15.60.sp,
+                      //                 fontWeight: FontWeight.w300,
+                      //                 color: AppColors.black,
+                      //               ),
+                      //             ),
 
-                            SizedBox(height: 5.10.w),
-                          ],
-                        ),
-                      ),
+                      //             //
+                      //             TextView(
+                      //               text: '₦16,500',
+                      //               textStyle: TextStyle(
+                      //                 fontFamily: 'GoogleSans',
+                      //                 fontSize: 15.80.sp,
+                      //                 fontWeight: FontWeight.w500,
+                      //                 color: AppColors.black,
+                      //               ),
+                      //             ),
+                      //           ],
+                      //         ),
+                      //       ),
+
+                      //       SizedBox(height: 5.10.w),
+                      //     ],
+                      //   ),
+                      // ),
+                      
                       SizedBox(height: 16.h),
                       Container(
                         padding: EdgeInsets.symmetric(

@@ -623,7 +623,7 @@ class ManufacturerApi {
     try {
       final response = await _service.call(
         UrlConfig.auth_distributor_kyc_level_two_submit,
-        RequestMethod.patch,
+        RequestMethod.post,
         data: kycEntity.toJson(),
       );
       logger.d(response.data);

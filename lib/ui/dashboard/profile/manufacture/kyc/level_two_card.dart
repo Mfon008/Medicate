@@ -7,14 +7,24 @@ import 'package:flutter_svg/svg.dart';
 import 'package:medicate_app/core/app_assets/image.dart';
 import 'package:medicate_app/core/config/colors.dart';
 import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/business_details.dart';
+import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/cac_certificate.dart';
+import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/company_logo.dart';
 import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/distributor.dart';
 import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/documents.dart';
+import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/gmp_certificate.dart';
+import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/import_permit.dart';
 import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/manufacturer.dart';
+import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/nafdac_manufacturing_license.dart';
+import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/nafdac_permit.dart';
+import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/pharmaceutical_distribution_license.dart';
+import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/pharmacy_council_license.dart';
+import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/product_registration_evidence.dart';
 import 'package:medicate_app/ui/widget/text.dart';
 import 'package:stacked/stacked.dart';
 import '../../../../../core/app_assets/app_validation.dart';
 import '../../../../../core/app_assets/constant.dart';
 import '../../../../../core/connect_end/model/second_level_distributor_kyc_entity_model/importer.dart';
+import '../../../../../core/connect_end/model/second_level_distributor_kyc_entity_model/manufacturer_authorization_letter.dart';
 import '../../../../../core/connect_end/model/second_level_distributor_kyc_entity_model/second_level_distributor_kyc_entity_model.dart';
 import '../../../../../core/connect_end/view_model/manufacturer_view_model.dart';
 import '../../../../manufacturer/product/custom_switch_widget.dart';
@@ -57,9 +67,9 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
       TextEditingController(text: '');
   TextEditingController cacRegNoControllerDistributorTin =
       TextEditingController(text: '');
-  TextEditingController cacRegNoControllerManufacturer = TextEditingController(
-    text: '',
-  );
+  // TextEditingController cacRegNoControllerManufacturer = TextEditingController(
+  //   text: '',
+  // );
 
   TextEditingController cacRegNoManufacturerController = TextEditingController(
     text: '',
@@ -405,6 +415,208 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
     } else {
       cacRegNoControllerDistributorContactPersonNumber.text = '';
     }
+
+    ///
+    model
+        .secondLevelDistributorKycEntityModelCAC!
+        .distributor!
+        .documents!
+        .cacCertificate = CacCertificate.fromJson(
+      model
+          .getDistributorKycResponseModel!
+          .data!
+          .level2!
+          .distributor!
+          .documents!
+          .cacCertificate!
+          .toJson(),
+    );
+    model
+            .secondLevelDistributorKycEntityModelPharmLin!
+            .distributor!
+            .documents!
+            .pharmaceuticalDistributionLicense =
+        PharmaceuticalDistributionLicense.fromJson(
+          model
+              .getDistributorKycResponseModel!
+              .data!
+              .level2!
+              .distributor!
+              .documents!
+              .pharmaceuticalDistributionLicense!
+              .toJson(),
+        );
+    model
+        .secondLevelDistributorKycEntityModelNAF!
+        .distributor!
+        .documents!
+        .nafdacPermit = NafdacPermit.fromJson(
+      model
+          .getDistributorKycResponseModel!
+          .data!
+          .level2!
+          .distributor!
+          .documents!
+          .nafdacPermit!
+          .toJson(),
+    );
+    model
+        .secondLevelDistributorKycEntityModelPharmCouncilLin!
+        .distributor!
+        .documents!
+        .pharmacyCouncilLicense = PharmacyCouncilLicense.fromJson(
+      model
+          .getDistributorKycResponseModel!
+          .data!
+          .level2!
+          .distributor!
+          .documents!
+          .pharmacyCouncilLicense!
+          .toJson(),
+    );
+    model
+        .secondLevelDistributorKycEntityModelLogo!
+        .distributor!
+        .documents!
+        .companyLogo = CompanyLogo.fromJson(
+      model
+          .getDistributorKycResponseModel!
+          .data!
+          .level2!
+          .distributor!
+          .documents!
+          .companyLogo!
+          .toJson(),
+    );
+
+    model
+        .secondLevelDistributorKycEntityModelManCAC!
+        .manufacturer!
+        .documents!
+        .cacCertificate = CacCertificate.fromJson(
+      model
+          .getDistributorKycResponseModel!
+          .data!
+          .level2!
+          .manufacturer!
+          .documents!
+          .cacCertificate!
+          .toJson(),
+    );
+    model
+        .secondLevelDistributorKycEntityModelManGMP!
+        .manufacturer!
+        .documents!
+        .gmpCertificate = GmpCertificate.fromJson(
+      model
+          .getDistributorKycResponseModel!
+          .data!
+          .level2!
+          .manufacturer!
+          .documents!
+          .gmpCertificate!
+          .toJson(),
+    );
+    model
+        .secondLevelDistributorKycEntityModelManNAF!
+        .manufacturer!
+        .documents!
+        .nafdacManufacturingLicense = NafdacManufacturingLicense.fromJson(
+      model
+          .getDistributorKycResponseModel!
+          .data!
+          .level2!
+          .manufacturer!
+          .documents!
+          .nafdacManufacturingLicense!
+          .toJson(),
+    );
+    model
+        .secondLevelDistributorKycEntityModelManProd!
+        .manufacturer!
+        .documents!
+        .productRegistrationEvidence = ProductRegistrationEvidence.fromJson(
+      model
+          .getDistributorKycResponseModel!
+          .data!
+          .level2!
+          .manufacturer!
+          .documents!
+          .productRegistrationEvidence!
+          .toJson(),
+    );
+    model
+        .secondLevelDistributorKycEntityModelManLogo!
+        .manufacturer!
+        .documents!
+        .companyLogo = CompanyLogo.fromJson(
+      model
+          .getDistributorKycResponseModel!
+          .data!
+          .level2!
+          .manufacturer!
+          .documents!
+          .companyLogo!
+          .toJson(),
+    );
+    model
+        .secondLevelDistributorKycEntityModelImpCAC!
+        .importer!
+        .documents!
+        .cacCertificate = CacCertificate.fromJson(
+      model
+          .getDistributorKycResponseModel!
+          .data!
+          .level2!
+          .importer!
+          .documents!
+          .cacCertificate!
+          .toJson(),
+    );
+    model
+        .secondLevelDistributorKycEntityModelImpPermit!
+        .importer!
+        .documents!
+        .importPermit = ImportPermit.fromJson(
+      model
+          .getDistributorKycResponseModel!
+          .data!
+          .level2!
+          .importer!
+          .documents!
+          .importPermit!
+          .toJson(),
+    );
+    model
+            .secondLevelDistributorKycEntityModelImpManAuthLetter!
+            .importer!
+            .documents!
+            .manufacturerAuthorizationLetter =
+        ManufacturerAuthorizationLetter.fromJson(
+          model
+              .getDistributorKycResponseModel!
+              .data!
+              .level2!
+              .importer!
+              .documents!
+              .manufacturerAuthorizationLetter!
+              .toJson(),
+        );
+    model
+        .secondLevelDistributorKycEntityModelImpLogo!
+        .importer!
+        .documents!
+        .companyLogo = CompanyLogo.fromJson(
+      model
+          .getDistributorKycResponseModel!
+          .data!
+          .level2!
+          .importer!
+          .documents!
+          .companyLogo!
+          .toJson(),
+    );
+
     model.notifyListeners();
   }
 
@@ -1032,8 +1244,6 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                         fillColor:
                                                             AppColors.grey,
                                                         isFilled: true,
-                                                        validator:
-                                                            AppValidator.validateString(),
                                                         controller:
                                                             cacRegNoControllerDistributorBusinessWeb,
                                                       ),
@@ -2674,8 +2884,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                         isFilled: true,
                                                         validator:
                                                             AppValidator.validateString(),
-                                                        controller:
-                                                            cacRegNoManufacturerController,
+                                                        controller:cacRegNoManufacturerController,
                                                       ),
                                                       SizedBox(height: 20.h),
                                                       TextFormWidget(
@@ -2900,8 +3109,6 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                         fillColor:
                                                             AppColors.grey,
                                                         isFilled: true,
-                                                        validator:
-                                                            AppValidator.validateString(),
                                                         controller:
                                                             cacRegNoControllerManufacturerBusinessWeb,
                                                       ),
@@ -4433,8 +4640,6 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                         fillColor:
                                                             AppColors.grey,
                                                         isFilled: true,
-                                                        validator:
-                                                            AppValidator.validateString(),
                                                         controller:
                                                             cacRegNoControllerImporterBusinessWeb,
                                                       ),
@@ -5440,7 +5645,14 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                   ?.kycLevels?[1]
                                                   .status
                                                   ?.toLowerCase() ==
-                                              'approved'
+                                              'approved' || 
+                                      model
+                                                  .getDistributorKycResponseModel
+                                                  ?.data
+                                                  ?.kycLevels?[1]
+                                                  .status
+                                                  ?.toLowerCase() ==
+                                              'UNDER_REVIEW'.toLowerCase()
                                           ? SizedBox.shrink()
                                           : Column(
                                               children: [
@@ -5575,7 +5787,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                           : Manufacturer(
                                                               businessDetails: BusinessDetails(
                                                                 cacRegistrationNumber:
-                                                                    cacRegNoControllerManufacturer
+                                                                    cacRegNoManufacturerController
                                                                         .text
                                                                         .trim(),
                                                                 businessAddress:
@@ -5903,7 +6115,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                           manufacturer: Manufacturer(
                                                             businessDetails: BusinessDetails(
                                                               cacRegistrationNumber:
-                                                                  cacRegNoControllerManufacturer
+                                                                  cacRegNoManufacturerController
                                                                       .text
                                                                       .trim(),
                                                               businessAddress:
