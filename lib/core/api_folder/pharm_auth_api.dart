@@ -13,6 +13,7 @@ import 'package:medicate_app/core/connect_end/model/update_role_entity_model.dar
 import 'package:medicate_app/core/connect_end/model/upload_image_response_model/upload_image_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/wholesale_add_to_cart_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/wholesale_get_product_added_to_cart_response_model/wholesale_get_product_added_to_cart_response_model.dart';
+import '../connect_end/model/business_addresses_entity.dart';
 import '../connect_end/model/create_payment_wallet_entity_model.dart';
 import '../connect_end/model/create_payment_wallet_model/create_payment_wallet_model.dart';
 import '../connect_end/model/create_reminder_response_model/create_reminder_response_model.dart';
@@ -1142,6 +1143,55 @@ class PharmApi {
       );
       logger.d(response.data);
       return GetCheckoutDeliveryOptionResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> addBusinessAddresses(
+    BusinessAddressesEntity businessAddresses,
+  ) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.auth_tenants_profile_addresses,
+        RequestMethod.post,
+        data: businessAddresses.toJson(),
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> updateBusinessAddress({
+    BusinessAddressesEntity? businessAddresses,
+    String? id,
+  }) async {
+    try {
+      final response = await _service.call(
+        '${UrlConfig.auth_tenants_profile_addresses}/$id',
+        RequestMethod.patch,
+        data: businessAddresses?.toJson(),
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> deletebusinessAddress(String? id) async {
+    try {
+      final response = await _service.call(
+        '${UrlConfig.auth_tenants_profile_addresses}/$id',
+        RequestMethod.delete,
+      );
+      logger.d(response.data);
+      return response.data;
     } catch (e) {
       logger.d("response:$e");
       rethrow;

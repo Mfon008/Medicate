@@ -118,4 +118,8 @@ class UrlConfig {
       'auth/distributor/kyc/level-2/submit';
   static const String auth_distributor_kyc_level_three_submit =
       'auth/distributor/kyc/level-3/submit';
+  static const String auth_distributor_profile_addresses =
+      'auth/distributor/profile/addresses';
+  static const String auth_tenants_profile_addresses =
+      'auth/tenant/profile/addresses';
 }

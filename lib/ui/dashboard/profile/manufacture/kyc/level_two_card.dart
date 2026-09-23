@@ -118,6 +118,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
     model.businessTypes =
         model.getDistributorKycResponseModel?.data?.level2?.businessTypes ?? [];
     await Future.delayed(Duration(seconds: 1));
+
     if (model.businessTypes.contains('DISTRIBUTOR')) {
       isSwitchedDistributor = true;
     }
@@ -697,11 +698,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                       ),
                                     )
                                   : !isExpanded
-                                  ? Icon(
-                                      Icons.info_outline,
-                                      size: 18.sp,
-                                      color: AppColors.yellow,
-                                    )
+                                  ? SvgPicture.asset(AppImage.open_padlock)
                                   : SvgPicture.asset(AppImage.open_padlock),
 
                               SizedBox(width: 8.w),
@@ -735,20 +732,64 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                       fontFamily: 'DMSans',
                                     ),
                                   ),
+                                  SizedBox(height: 10.h),
+                                  !isExpanded
+                                      ? Row(
+                                          children: [
+                                            Container(
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal: 12.w,
+                                                vertical: 5.0.w,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                color: AppColors.primary,
+                                                borderRadius:
+                                                    BorderRadius.circular(22.r),
+                                              ),
+                                              child: TextView(
+                                                text: 'Continue',
+                                                textStyle: TextStyle(
+                                                  fontSize: 12.22.sp,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: AppColors.white,
+                                                  fontFamily: 'DMSans',
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(width: 10.w),
+                                            TextView(
+                                              text: 'Start Over',
+                                              textStyle: TextStyle(
+                                                fontSize: 14.22.sp,
+                                                decoration:
+                                                    TextDecoration.underline,
+                                                decorationColor:
+                                                    AppColors.primary,
+                                                fontWeight: FontWeight.w400,
+                                                color: AppColors.primary,
+                                                fontFamily: 'DMSans',
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      : SizedBox.shrink(),
                                 ],
                               ),
 
                               const Spacer(),
-
-                              AnimatedRotation(
-                                turns: isExpanded ? 0.5 : 0,
-                                duration: const Duration(milliseconds: 300),
-                                child: Icon(
-                                  Icons.keyboard_arrow_down_rounded,
-                                  size: 21.sp,
-                                  color: const Color(0xFF333333),
-                                ),
-                              ),
+                              !isExpanded
+                                  ? SizedBox.shrink()
+                                  : AnimatedRotation(
+                                      turns: isExpanded ? 0.5 : 0,
+                                      duration: const Duration(
+                                        milliseconds: 300,
+                                      ),
+                                      child: Icon(
+                                        Icons.keyboard_arrow_down_rounded,
+                                        size: 21.sp,
+                                        color: const Color(0xFF333333),
+                                      ),
+                                    ),
                             ],
                           ),
                         ),
@@ -997,6 +1038,8 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                             ' Registration Number',
                                                         rightPos: 0,
                                                         hintSize: 14,
+                                                        readOnly:
+                                                            model.isNotReadable,
                                                         borderColor: AppColors
                                                             .transparent,
                                                         borderTopLeft: 10.r,
@@ -1032,6 +1075,8 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                         borderTopRight: 10.r,
                                                         borderBottomLeft: 10.r,
                                                         borderBottomRight: 10.r,
+                                                        readOnly:
+                                                            model.isNotReadable,
                                                         labelStyle: TextStyle(
                                                           fontWeight:
                                                               FontWeight.w400,
@@ -1113,6 +1158,8 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                             '12 Oluwole Street, Ikeja, Lagos State',
                                                         rightPos: -14,
                                                         hintSize: 14,
+                                                        readOnly:
+                                                            model.isNotReadable,
                                                         alignLabelWithHint:
                                                             true,
                                                         borderColor: AppColors
@@ -1142,6 +1189,8 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                       TextFormWidget(
                                                         hint: 'Contact Person',
                                                         rightPos: -14,
+                                                        readOnly:
+                                                            model.isNotReadable,
                                                         hintSize: 14,
                                                         borderColor: AppColors
                                                             .transparent,
@@ -1170,6 +1219,8 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                         hint:
                                                             'Contact Person Phone Number',
                                                         rightPos: -14,
+                                                        readOnly:
+                                                            model.isNotReadable,
                                                         hintSize: 14,
                                                         borderColor: AppColors
                                                             .transparent,
@@ -1198,6 +1249,8 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                         hint:
                                                             'Contact Person Email',
                                                         rightPos: -14,
+                                                        readOnly:
+                                                            model.isNotReadable,
                                                         hintSize: 14,
                                                         borderColor: AppColors
                                                             .transparent,
@@ -1227,6 +1280,8 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                             'Business Website (Optional)',
                                                         isShowHint: true,
                                                         hintSize: 14,
+                                                        readOnly:
+                                                            model.isNotReadable,
                                                         borderColor: AppColors
                                                             .transparent,
                                                         borderTopLeft: 10.r,
@@ -1252,6 +1307,8 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                         hint:
                                                             'Tax Identification Number (TIN)',
                                                         rightPos: -14,
+                                                        readOnly:
+                                                            model.isNotReadable,
                                                         hintSize: 14,
                                                         borderColor: AppColors
                                                             .transparent,
@@ -2865,6 +2922,8 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                             ' Registration Number',
                                                         rightPos: 0,
                                                         hintSize: 14,
+                                                        readOnly:
+                                                            model.isNotReadable,
                                                         borderColor: AppColors
                                                             .transparent,
                                                         borderTopLeft: 10.r,
@@ -2884,12 +2943,15 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                         isFilled: true,
                                                         validator:
                                                             AppValidator.validateString(),
-                                                        controller:cacRegNoManufacturerController,
+                                                        controller:
+                                                            cacRegNoManufacturerController,
                                                       ),
                                                       SizedBox(height: 20.h),
                                                       TextFormWidget(
                                                         hint:
                                                             'GMP Certificate Number',
+                                                        readOnly:
+                                                            model.isNotReadable,
                                                         rightPos: -14,
                                                         hintSize: 14,
                                                         borderColor: AppColors
@@ -2918,6 +2980,8 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                       TextFormWidget(
                                                         hint:
                                                             'NAFDAC Manufacturing\nLicense Number',
+                                                        readOnly:
+                                                            model.isNotReadable,
                                                         rightPos: -14,
                                                         hintSize: 14,
                                                         borderColor: AppColors
@@ -2946,6 +3010,8 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                       TextFormWidget(
                                                         hint:
                                                             'Product Registration\nEvidence Number',
+                                                        readOnly:
+                                                            model.isNotReadable,
                                                         rightPos: -14,
                                                         hintSize: 14,
                                                         borderColor: AppColors
@@ -2974,6 +3040,8 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                       TextFormWidget(
                                                         hint:
                                                             'Business Address',
+                                                        readOnly:
+                                                            model.isNotReadable,
                                                         label:
                                                             '12 Oluwole Street, Ikeja, Lagos State',
                                                         rightPos: -14,
@@ -3006,6 +3074,8 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                       SizedBox(height: 20.h),
                                                       TextFormWidget(
                                                         hint: 'Contact Person',
+                                                        readOnly:
+                                                            model.isNotReadable,
                                                         rightPos: -14,
                                                         hintSize: 14,
                                                         borderColor: AppColors
@@ -3036,6 +3106,8 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                             'Contact Person Phone Number',
                                                         rightPos: -14,
                                                         hintSize: 14,
+                                                        readOnly:
+                                                            model.isNotReadable,
                                                         borderColor: AppColors
                                                             .transparent,
                                                         borderTopLeft: 10.r,
@@ -3062,6 +3134,8 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                       TextFormWidget(
                                                         hint:
                                                             'Contact Person Email',
+                                                        readOnly:
+                                                            model.isNotReadable,
                                                         rightPos: -14,
                                                         hintSize: 14,
                                                         borderColor: AppColors
@@ -3094,6 +3168,8 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                         hintSize: 14,
                                                         borderColor: AppColors
                                                             .transparent,
+                                                        readOnly:
+                                                            model.isNotReadable,
                                                         borderTopLeft: 10.r,
                                                         borderTopRight: 10.r,
                                                         borderBottomLeft: 10.r,
@@ -3117,6 +3193,8 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                         hint:
                                                             'Tax Identification Number (TIN)',
                                                         rightPos: -12,
+                                                        readOnly:
+                                                            model.isNotReadable,
                                                         hintSize: 14,
                                                         borderColor: AppColors
                                                             .transparent,
@@ -4450,6 +4528,8 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                             ' Registration Number',
                                                         rightPos: 0,
                                                         hintSize: 14,
+                                                        readOnly:
+                                                            model.isNotReadable,
                                                         borderColor: AppColors
                                                             .transparent,
                                                         borderTopLeft: 10.r,
@@ -4478,6 +4558,8 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                             'Import Permit Number',
                                                         rightPos: -14,
                                                         hintSize: 14,
+                                                        readOnly:
+                                                            model.isNotReadable,
                                                         borderColor: AppColors
                                                             .transparent,
                                                         borderTopLeft: 10.r,
@@ -4506,7 +4588,8 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                             'Business Address',
                                                         label:
                                                             '12 Oluwole Street, Ikeja, Lagos State',
-
+                                                        readOnly:
+                                                            model.isNotReadable,
                                                         alignLabelWithHint:
                                                             true,
                                                         maxline: 4,
@@ -4539,6 +4622,8 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                         hint: 'Contact Person',
                                                         rightPos: -14,
                                                         hintSize: 14,
+                                                        readOnly:
+                                                            model.isNotReadable,
                                                         borderColor: AppColors
                                                             .transparent,
                                                         borderTopLeft: 10.r,
@@ -4569,6 +4654,8 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                         hintSize: 14,
                                                         borderColor: AppColors
                                                             .transparent,
+                                                        readOnly:
+                                                            model.isNotReadable,
                                                         borderTopLeft: 10.r,
                                                         borderTopRight: 10.r,
                                                         borderBottomLeft: 10.r,
@@ -4595,6 +4682,8 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                             'Contact Person Email',
                                                         rightPos: -14,
                                                         hintSize: 14,
+                                                        readOnly:
+                                                            model.isNotReadable,
                                                         borderColor: AppColors
                                                             .transparent,
                                                         borderTopLeft: 10.r,
@@ -4622,6 +4711,8 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                         hint:
                                                             'Business Website (Optional)',
                                                         isShowHint: true,
+                                                        readOnly:
+                                                            model.isNotReadable,
                                                         hintSize: 14,
                                                         borderColor: AppColors
                                                             .transparent,
@@ -4648,6 +4739,8 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                         hint:
                                                             'Tax Identification Number (TIN)',
                                                         rightPos: -12,
+                                                        readOnly:
+                                                            model.isNotReadable,
                                                         hintSize: 14,
                                                         borderColor: AppColors
                                                             .transparent,
@@ -5640,19 +5733,19 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                       ),
 
                                       model
-                                                  .getDistributorKycResponseModel
-                                                  ?.data
-                                                  ?.kycLevels?[1]
-                                                  .status
-                                                  ?.toLowerCase() ==
-                                              'approved' || 
-                                      model
-                                                  .getDistributorKycResponseModel
-                                                  ?.data
-                                                  ?.kycLevels?[1]
-                                                  .status
-                                                  ?.toLowerCase() ==
-                                              'UNDER_REVIEW'.toLowerCase()
+                                                      .getDistributorKycResponseModel
+                                                      ?.data
+                                                      ?.kycLevels?[1]
+                                                      .status
+                                                      ?.toLowerCase() ==
+                                                  'approved' ||
+                                              model
+                                                      .getDistributorKycResponseModel
+                                                      ?.data
+                                                      ?.kycLevels?[1]
+                                                      .status
+                                                      ?.toLowerCase() ==
+                                                  'UNDER_REVIEW'.toLowerCase()
                                           ? SizedBox.shrink()
                                           : Column(
                                               children: [
@@ -6007,319 +6100,319 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                         kycEntity: SecondLevelDistributorKycEntityModel(
                                                           businessTypes: model
                                                               .businessTypes,
-                                                          distributor: Distributor(
-                                                            businessDetails: BusinessDetails(
-                                                              cacRegistrationNumber:
-                                                                  cacRegNoControllerDistributor
-                                                                      .text
-                                                                      .trim(),
-                                                              businessAddress:
-                                                                  cacRegNoControllerDistributorBusinessAddress
-                                                                      .text
-                                                                      .trim(),
-                                                              contactPersonName:
-                                                                  cacRegNoControllerDistributorContactPerson
-                                                                      .text
-                                                                      .trim(),
-                                                              contactPersonEmail:
-                                                                  cacRegNoControllerDistributorContactPersonEmail
-                                                                      .text
-                                                                      .trim(),
-                                                              contactPersonPhoneNumber:
-                                                                  cacRegNoControllerDistributorContactPersonNumber
-                                                                          .text !=
-                                                                      ''
-                                                                  ? model.returnAddingPhoneNoStructureWith234Kyc(
-                                                                      cacRegNoControllerDistributorContactPersonNumber
-                                                                          .text
-                                                                          .trim(),
-                                                                    )
-                                                                  : '',
-                                                              businessWebsite:
-                                                                  cacRegNoControllerDistributorBusinessWeb
-                                                                      .text
-                                                                      .trim(),
-                                                              taxIdentificationNumber:
-                                                                  cacRegNoControllerDistributorTin
-                                                                      .text
-                                                                      .trim(),
-                                                              pharmaceuticalDistributionLicenseNumber:
-                                                                  cacRegNoControllerDistributorLincense
-                                                                      .text
-                                                                      .trim(),
-                                                              pharmacyCouncilLicenseNumber:
-                                                                  cacRegNoControllerDistributorCouncilLincense
-                                                                      .text
-                                                                      .trim(),
-                                                              nafdacPermitNumber:
-                                                                  cacRegNoControllerDistributorNafPermit
-                                                                      .text
-                                                                      .trim(),
-                                                              productRegistrationEvidenceNumber:
-                                                                  null,
-                                                              importPermitNumber:
-                                                                  null,
-                                                              nafdacManufacturingLicenseNumber:
-                                                                  null,
-                                                              gmpCertificateNumber:
-                                                                  null,
-                                                            ),
-                                                            documents: Documents(
-                                                              cacCertificate:
-                                                                  model.secondLevelDistributorKycEntityModelCAC ==
-                                                                      null
-                                                                  ? null
-                                                                  : model
-                                                                        .secondLevelDistributorKycEntityModelCAC!
-                                                                        .distributor!
-                                                                        .documents!
-                                                                        .cacCertificate!,
-                                                              pharmaceuticalDistributionLicense:
-                                                                  model.secondLevelDistributorKycEntityModelPharmLin ==
-                                                                      null
-                                                                  ? null
-                                                                  : model
-                                                                        .secondLevelDistributorKycEntityModelPharmLin!
-                                                                        .distributor!
-                                                                        .documents!
-                                                                        .pharmaceuticalDistributionLicense!,
-                                                              nafdacPermit:
-                                                                  model.secondLevelDistributorKycEntityModelNAF ==
-                                                                      null
-                                                                  ? null
-                                                                  : model
-                                                                        .secondLevelDistributorKycEntityModelNAF!
-                                                                        .distributor!
-                                                                        .documents!
-                                                                        .nafdacPermit!,
-                                                              pharmacyCouncilLicense:
-                                                                  model.secondLevelDistributorKycEntityModelPharmCouncilLin ==
-                                                                      null
-                                                                  ? null
-                                                                  : model
-                                                                        .secondLevelDistributorKycEntityModelPharmCouncilLin!
-                                                                        .distributor!
-                                                                        .documents!
-                                                                        .pharmacyCouncilLicense!,
-                                                              companyLogo:
-                                                                  model.secondLevelDistributorKycEntityModelLogo ==
-                                                                      null
-                                                                  ? null
-                                                                  : model
-                                                                        .secondLevelDistributorKycEntityModelLogo!
-                                                                        .distributor!
-                                                                        .documents!
-                                                                        .companyLogo!,
-                                                            ),
-                                                          ),
-                                                          manufacturer: Manufacturer(
-                                                            businessDetails: BusinessDetails(
-                                                              cacRegistrationNumber:
-                                                                  cacRegNoManufacturerController
-                                                                      .text
-                                                                      .trim(),
-                                                              businessAddress:
-                                                                  cacRegNoControllerManufacturerBusinessAddress
-                                                                      .text
-                                                                      .trim(),
-                                                              contactPersonName:
-                                                                  cacRegNoControllerManufacturerContactPerson
-                                                                      .text
-                                                                      .trim(),
-                                                              contactPersonEmail:
-                                                                  cacRegNoControllerManufacturerContactPersonEmail
-                                                                      .text
-                                                                      .trim(),
-                                                              contactPersonPhoneNumber:
-                                                                  cacRegNoControllerManufacturerContactPersonNumber
-                                                                          .text !=
-                                                                      ''
-                                                                  ? model.returnAddingPhoneNoStructureWith234Kyc(
-                                                                      cacRegNoControllerManufacturerContactPersonNumber
-                                                                          .text
-                                                                          .trim(),
-                                                                    )
-                                                                  : '',
-                                                              businessWebsite:
-                                                                  cacRegNoControllerManufacturerBusinessWeb
-                                                                      .text
-                                                                      .trim(),
-                                                              taxIdentificationNumber:
-                                                                  cacRegNoControllerManufacturerTin
-                                                                      .text
-                                                                      .trim(),
-                                                              gmpCertificateNumber:
-                                                                  cacRegNoControllerManufacturerCertificateNum
-                                                                      .text
-                                                                      .trim(),
-                                                              nafdacManufacturingLicenseNumber:
-                                                                  cacRegNoControllerManufacturerLincenseNumber
-                                                                      .text
-                                                                      .trim(),
-                                                              productRegistrationEvidenceNumber:
-                                                                  cacRegNoControllerManufacturerProdNumber
-                                                                      .text
-                                                                      .trim(),
-                                                            ),
-                                                            documents: Documents(
-                                                              cacCertificate:
-                                                                  model.secondLevelDistributorKycEntityModelManCAC ==
-                                                                      null
-                                                                  ? null
-                                                                  : model
-                                                                        .secondLevelDistributorKycEntityModelManCAC!
-                                                                        .manufacturer!
-                                                                        .documents!
-                                                                        .cacCertificate!,
-                                                              gmpCertificate:
-                                                                  model.secondLevelDistributorKycEntityModelManGMP ==
-                                                                      null
-                                                                  ? null
-                                                                  : model
-                                                                        .secondLevelDistributorKycEntityModelManGMP!
-                                                                        .manufacturer!
-                                                                        .documents!
-                                                                        .gmpCertificate!,
-                                                              nafdacManufacturingLicense:
-                                                                  model.secondLevelDistributorKycEntityModelManNAF ==
-                                                                      null
-                                                                  ? null
-                                                                  : model
-                                                                        .secondLevelDistributorKycEntityModelManNAF!
-                                                                        .manufacturer!
-                                                                        .documents!
-                                                                        .nafdacManufacturingLicense!,
-                                                              productRegistrationEvidence:
-                                                                  model.secondLevelDistributorKycEntityModelManProd ==
-                                                                      null
-                                                                  ? null
-                                                                  : model
-                                                                        .secondLevelDistributorKycEntityModelManProd!
-                                                                        .manufacturer!
-                                                                        .documents!
-                                                                        .productRegistrationEvidence!,
-                                                              companyLogo:
-                                                                  model.secondLevelDistributorKycEntityModelManLogo ==
-                                                                      null
-                                                                  ? null
-                                                                  : model
-                                                                        .secondLevelDistributorKycEntityModelManLogo!
-                                                                        .manufacturer!
-                                                                        .documents!
-                                                                        .companyLogo!,
-                                                              pharmaceuticalDistributionLicense:
-                                                                  null,
-                                                              pharmacyCouncilLicense:
-                                                                  null,
-                                                              importPermit:
-                                                                  null,
-                                                              nafdacPermit:
-                                                                  null,
-                                                            ),
-                                                          ),
-                                                          importer: Importer(
-                                                            businessDetails: BusinessDetails(
-                                                              cacRegistrationNumber:
-                                                                  cacRegNoImporterController
-                                                                      .text
-                                                                      .trim(),
-                                                              businessAddress:
-                                                                  cacRegNoControllerImporterBusinessAddress
-                                                                      .text
-                                                                      .trim(),
-                                                              contactPersonName:
-                                                                  cacRegNoControllerImporterContactPerson
-                                                                      .text
-                                                                      .trim(),
-                                                              contactPersonEmail:
-                                                                  cacRegNoControllerImporterContactPersonEmail
-                                                                      .text
-                                                                      .trim(),
-                                                              contactPersonPhoneNumber:
-                                                                  cacRegNoControllerImporterContactPersonNumber
-                                                                          .text !=
-                                                                      ''
-                                                                  ? model.returnAddingPhoneNoStructureWith234Kyc(
-                                                                      cacRegNoControllerImporterContactPersonNumber
-                                                                          .text
-                                                                          .trim(),
-                                                                    )
-                                                                  : '',
-                                                              businessWebsite:
-                                                                  cacRegNoControllerImporterBusinessWeb
-                                                                      .text
-                                                                      .trim(),
-                                                              taxIdentificationNumber:
-                                                                  cacRegNoControllerImporterTin
-                                                                      .text
-                                                                      .trim(),
-                                                              importPermitNumber:
-                                                                  cacRegNoControllerImporterCertificateNum
-                                                                      .text
-                                                                      .trim(),
+                                                          distributor:
+                                                              !isSwitchedDistributor
+                                                              ? null
+                                                              : Distributor(
+                                                                  businessDetails: BusinessDetails(
+                                                                    cacRegistrationNumber:
+                                                                        cacRegNoControllerDistributor
+                                                                            .text
+                                                                            .trim(),
+                                                                    businessAddress:
+                                                                        cacRegNoControllerDistributorBusinessAddress
+                                                                            .text
+                                                                            .trim(),
+                                                                    contactPersonName:
+                                                                        cacRegNoControllerDistributorContactPerson
+                                                                            .text
+                                                                            .trim(),
+                                                                    contactPersonEmail:
+                                                                        cacRegNoControllerDistributorContactPersonEmail
+                                                                            .text
+                                                                            .trim(),
+                                                                    contactPersonPhoneNumber:
+                                                                        cacRegNoControllerDistributorContactPersonNumber.text !=
+                                                                            ''
+                                                                        ? model.returnAddingPhoneNoStructureWith234Kyc(
+                                                                            cacRegNoControllerDistributorContactPersonNumber.text.trim(),
+                                                                          )
+                                                                        : '',
+                                                                    businessWebsite:
+                                                                        cacRegNoControllerDistributorBusinessWeb
+                                                                            .text
+                                                                            .trim(),
+                                                                    taxIdentificationNumber:
+                                                                        cacRegNoControllerDistributorTin
+                                                                            .text
+                                                                            .trim(),
+                                                                    pharmaceuticalDistributionLicenseNumber:
+                                                                        cacRegNoControllerDistributorLincense
+                                                                            .text
+                                                                            .trim(),
+                                                                    pharmacyCouncilLicenseNumber:
+                                                                        cacRegNoControllerDistributorCouncilLincense
+                                                                            .text
+                                                                            .trim(),
+                                                                    nafdacPermitNumber:
+                                                                        cacRegNoControllerDistributorNafPermit
+                                                                            .text
+                                                                            .trim(),
+                                                                    productRegistrationEvidenceNumber:
+                                                                        null,
+                                                                    importPermitNumber:
+                                                                        null,
+                                                                    nafdacManufacturingLicenseNumber:
+                                                                        null,
+                                                                    gmpCertificateNumber:
+                                                                        null,
+                                                                  ),
+                                                                  documents: Documents(
+                                                                    cacCertificate:
+                                                                        model.secondLevelDistributorKycEntityModelCAC ==
+                                                                            null
+                                                                        ? null
+                                                                        : model
+                                                                              .secondLevelDistributorKycEntityModelCAC!
+                                                                              .distributor!
+                                                                              .documents!
+                                                                              .cacCertificate!,
+                                                                    pharmaceuticalDistributionLicense:
+                                                                        model.secondLevelDistributorKycEntityModelPharmLin ==
+                                                                            null
+                                                                        ? null
+                                                                        : model
+                                                                              .secondLevelDistributorKycEntityModelPharmLin!
+                                                                              .distributor!
+                                                                              .documents!
+                                                                              .pharmaceuticalDistributionLicense!,
+                                                                    nafdacPermit:
+                                                                        model.secondLevelDistributorKycEntityModelNAF ==
+                                                                            null
+                                                                        ? null
+                                                                        : model
+                                                                              .secondLevelDistributorKycEntityModelNAF!
+                                                                              .distributor!
+                                                                              .documents!
+                                                                              .nafdacPermit!,
+                                                                    pharmacyCouncilLicense:
+                                                                        model.secondLevelDistributorKycEntityModelPharmCouncilLin ==
+                                                                            null
+                                                                        ? null
+                                                                        : model
+                                                                              .secondLevelDistributorKycEntityModelPharmCouncilLin!
+                                                                              .distributor!
+                                                                              .documents!
+                                                                              .pharmacyCouncilLicense!,
+                                                                    companyLogo:
+                                                                        model.secondLevelDistributorKycEntityModelLogo ==
+                                                                            null
+                                                                        ? null
+                                                                        : model
+                                                                              .secondLevelDistributorKycEntityModelLogo!
+                                                                              .distributor!
+                                                                              .documents!
+                                                                              .companyLogo!,
+                                                                  ),
+                                                                ),
+                                                          manufacturer:
+                                                              !isSwitchedManufaturer
+                                                              ? null
+                                                              : Manufacturer(
+                                                                  businessDetails: BusinessDetails(
+                                                                    cacRegistrationNumber:
+                                                                        cacRegNoManufacturerController
+                                                                            .text
+                                                                            .trim(),
+                                                                    businessAddress:
+                                                                        cacRegNoControllerManufacturerBusinessAddress
+                                                                            .text
+                                                                            .trim(),
+                                                                    contactPersonName:
+                                                                        cacRegNoControllerManufacturerContactPerson
+                                                                            .text
+                                                                            .trim(),
+                                                                    contactPersonEmail:
+                                                                        cacRegNoControllerManufacturerContactPersonEmail
+                                                                            .text
+                                                                            .trim(),
+                                                                    contactPersonPhoneNumber:
+                                                                        cacRegNoControllerManufacturerContactPersonNumber.text !=
+                                                                            ''
+                                                                        ? model.returnAddingPhoneNoStructureWith234Kyc(
+                                                                            cacRegNoControllerManufacturerContactPersonNumber.text.trim(),
+                                                                          )
+                                                                        : '',
+                                                                    businessWebsite:
+                                                                        cacRegNoControllerManufacturerBusinessWeb
+                                                                            .text
+                                                                            .trim(),
+                                                                    taxIdentificationNumber:
+                                                                        cacRegNoControllerManufacturerTin
+                                                                            .text
+                                                                            .trim(),
+                                                                    gmpCertificateNumber:
+                                                                        cacRegNoControllerManufacturerCertificateNum
+                                                                            .text
+                                                                            .trim(),
+                                                                    nafdacManufacturingLicenseNumber:
+                                                                        cacRegNoControllerManufacturerLincenseNumber
+                                                                            .text
+                                                                            .trim(),
+                                                                    productRegistrationEvidenceNumber:
+                                                                        cacRegNoControllerManufacturerProdNumber
+                                                                            .text
+                                                                            .trim(),
+                                                                  ),
+                                                                  documents: Documents(
+                                                                    cacCertificate:
+                                                                        model.secondLevelDistributorKycEntityModelManCAC ==
+                                                                            null
+                                                                        ? null
+                                                                        : model
+                                                                              .secondLevelDistributorKycEntityModelManCAC!
+                                                                              .manufacturer!
+                                                                              .documents!
+                                                                              .cacCertificate!,
+                                                                    gmpCertificate:
+                                                                        model.secondLevelDistributorKycEntityModelManGMP ==
+                                                                            null
+                                                                        ? null
+                                                                        : model
+                                                                              .secondLevelDistributorKycEntityModelManGMP!
+                                                                              .manufacturer!
+                                                                              .documents!
+                                                                              .gmpCertificate!,
+                                                                    nafdacManufacturingLicense:
+                                                                        model.secondLevelDistributorKycEntityModelManNAF ==
+                                                                            null
+                                                                        ? null
+                                                                        : model
+                                                                              .secondLevelDistributorKycEntityModelManNAF!
+                                                                              .manufacturer!
+                                                                              .documents!
+                                                                              .nafdacManufacturingLicense!,
+                                                                    productRegistrationEvidence:
+                                                                        model.secondLevelDistributorKycEntityModelManProd ==
+                                                                            null
+                                                                        ? null
+                                                                        : model
+                                                                              .secondLevelDistributorKycEntityModelManProd!
+                                                                              .manufacturer!
+                                                                              .documents!
+                                                                              .productRegistrationEvidence!,
+                                                                    companyLogo:
+                                                                        model.secondLevelDistributorKycEntityModelManLogo ==
+                                                                            null
+                                                                        ? null
+                                                                        : model
+                                                                              .secondLevelDistributorKycEntityModelManLogo!
+                                                                              .manufacturer!
+                                                                              .documents!
+                                                                              .companyLogo!,
+                                                                    pharmaceuticalDistributionLicense:
+                                                                        null,
+                                                                    pharmacyCouncilLicense:
+                                                                        null,
+                                                                    importPermit:
+                                                                        null,
+                                                                    nafdacPermit:
+                                                                        null,
+                                                                  ),
+                                                                ),
+                                                          importer:
+                                                              !isSwitchedImporter
+                                                              ? null
+                                                              : Importer(
+                                                                  businessDetails: BusinessDetails(
+                                                                    cacRegistrationNumber:
+                                                                        cacRegNoImporterController
+                                                                            .text
+                                                                            .trim(),
+                                                                    businessAddress:
+                                                                        cacRegNoControllerImporterBusinessAddress
+                                                                            .text
+                                                                            .trim(),
+                                                                    contactPersonName:
+                                                                        cacRegNoControllerImporterContactPerson
+                                                                            .text
+                                                                            .trim(),
+                                                                    contactPersonEmail:
+                                                                        cacRegNoControllerImporterContactPersonEmail
+                                                                            .text
+                                                                            .trim(),
+                                                                    contactPersonPhoneNumber:
+                                                                        cacRegNoControllerImporterContactPersonNumber.text !=
+                                                                            ''
+                                                                        ? model.returnAddingPhoneNoStructureWith234Kyc(
+                                                                            cacRegNoControllerImporterContactPersonNumber.text.trim(),
+                                                                          )
+                                                                        : '',
+                                                                    businessWebsite:
+                                                                        cacRegNoControllerImporterBusinessWeb
+                                                                            .text
+                                                                            .trim(),
+                                                                    taxIdentificationNumber:
+                                                                        cacRegNoControllerImporterTin
+                                                                            .text
+                                                                            .trim(),
+                                                                    importPermitNumber:
+                                                                        cacRegNoControllerImporterCertificateNum
+                                                                            .text
+                                                                            .trim(),
 
-                                                              pharmaceuticalDistributionLicenseNumber:
-                                                                  null,
-                                                              pharmacyCouncilLicenseNumber:
-                                                                  null,
-                                                              productRegistrationEvidenceNumber:
-                                                                  null,
-                                                              nafdacPermitNumber:
-                                                                  null,
-                                                              gmpCertificateNumber:
-                                                                  null,
-                                                              nafdacManufacturingLicenseNumber:
-                                                                  null,
-                                                            ),
-                                                            documents: Documents(
-                                                              cacCertificate:
-                                                                  model.secondLevelDistributorKycEntityModelImpCAC ==
-                                                                      null
-                                                                  ? null
-                                                                  : model
-                                                                        .secondLevelDistributorKycEntityModelImpCAC!
-                                                                        .importer!
-                                                                        .documents!
-                                                                        .cacCertificate!,
-                                                              importPermit:
-                                                                  model.secondLevelDistributorKycEntityModelImpPermit ==
-                                                                      null
-                                                                  ? null
-                                                                  : model
-                                                                        .secondLevelDistributorKycEntityModelImpPermit!
-                                                                        .importer!
-                                                                        .documents!
-                                                                        .importPermit!,
-                                                              manufacturerAuthorizationLetter:
-                                                                  model.secondLevelDistributorKycEntityModelImpManAuthLetter ==
-                                                                      null
-                                                                  ? null
-                                                                  : model
-                                                                        .secondLevelDistributorKycEntityModelImpManAuthLetter!
-                                                                        .importer!
-                                                                        .documents!
-                                                                        .manufacturerAuthorizationLetter!,
-                                                              companyLogo:
-                                                                  model.secondLevelDistributorKycEntityModelImpLogo ==
-                                                                      null
-                                                                  ? null
-                                                                  : model
-                                                                        .secondLevelDistributorKycEntityModelImpLogo!
-                                                                        .importer!
-                                                                        .documents!
-                                                                        .companyLogo!,
-                                                              pharmaceuticalDistributionLicense:
-                                                                  null,
-                                                              pharmacyCouncilLicense:
-                                                                  null,
-                                                              productRegistrationEvidence:
-                                                                  null,
-                                                              nafdacPermit:
-                                                                  null,
-                                                              gmpCertificate:
-                                                                  null,
-                                                            ),
-                                                          ),
+                                                                    pharmaceuticalDistributionLicenseNumber:
+                                                                        null,
+                                                                    pharmacyCouncilLicenseNumber:
+                                                                        null,
+                                                                    productRegistrationEvidenceNumber:
+                                                                        null,
+                                                                    nafdacPermitNumber:
+                                                                        null,
+                                                                    gmpCertificateNumber:
+                                                                        null,
+                                                                    nafdacManufacturingLicenseNumber:
+                                                                        null,
+                                                                  ),
+                                                                  documents: Documents(
+                                                                    cacCertificate:
+                                                                        model.secondLevelDistributorKycEntityModelImpCAC ==
+                                                                            null
+                                                                        ? null
+                                                                        : model
+                                                                              .secondLevelDistributorKycEntityModelImpCAC!
+                                                                              .importer!
+                                                                              .documents!
+                                                                              .cacCertificate!,
+                                                                    importPermit:
+                                                                        model.secondLevelDistributorKycEntityModelImpPermit ==
+                                                                            null
+                                                                        ? null
+                                                                        : model
+                                                                              .secondLevelDistributorKycEntityModelImpPermit!
+                                                                              .importer!
+                                                                              .documents!
+                                                                              .importPermit!,
+                                                                    manufacturerAuthorizationLetter:
+                                                                        model.secondLevelDistributorKycEntityModelImpManAuthLetter ==
+                                                                            null
+                                                                        ? null
+                                                                        : model
+                                                                              .secondLevelDistributorKycEntityModelImpManAuthLetter!
+                                                                              .importer!
+                                                                              .documents!
+                                                                              .manufacturerAuthorizationLetter!,
+                                                                    companyLogo:
+                                                                        model.secondLevelDistributorKycEntityModelImpLogo ==
+                                                                            null
+                                                                        ? null
+                                                                        : model
+                                                                              .secondLevelDistributorKycEntityModelImpLogo!
+                                                                              .importer!
+                                                                              .documents!
+                                                                              .companyLogo!,
+                                                                    pharmaceuticalDistributionLicense:
+                                                                        null,
+                                                                    pharmacyCouncilLicense:
+                                                                        null,
+                                                                    productRegistrationEvidence:
+                                                                        null,
+                                                                    nafdacPermit:
+                                                                        null,
+                                                                    gmpCertificate:
+                                                                        null,
+                                                                  ),
+                                                                ),
                                                         ),
                                                       );
                                                     }

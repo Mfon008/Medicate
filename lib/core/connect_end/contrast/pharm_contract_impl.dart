@@ -3,6 +3,7 @@ import 'package:injectable/injectable.dart';
 import 'package:medicate_app/core/api_folder/pharm_auth_api.dart';
 import 'package:medicate_app/core/connect_end/model/get_created_user_response_model/get_created_user_response_model.dart';
 import '../../core_folder/app/app.locator.dart';
+import '../model/business_addresses_entity.dart';
 import '../model/checkout_delivery_option_entity_model.dart';
 import '../model/create_payment_wallet_entity_model.dart';
 import '../model/create_payment_wallet_model/create_payment_wallet_model.dart';
@@ -298,4 +299,17 @@ class PharmContractsImpl {
   Future<GetCheckoutDeliveryOptionResponseModel> checkoutDeliveryOption(
     CheckoutDeliveryOptionEntityModel checkoutDeliveryOption,
   ) async => await _api.checkoutDeliveryOption(checkoutDeliveryOption);
+
+  Future<dynamic> addBusinessAddresses(
+    BusinessAddressesEntity businessAddresses,
+  ) async => await _api.addBusinessAddresses(businessAddresses);
+  Future<dynamic> updateBusinessAddress({
+    BusinessAddressesEntity? businessAddresses,
+    String? id,
+  }) async => await _api.updateBusinessAddress(
+    businessAddresses: businessAddresses,
+    id: id,
+  );
+  Future<dynamic> deleteBusinessAddress(String id) async =>
+      await _api.deletebusinessAddress(id);
 }

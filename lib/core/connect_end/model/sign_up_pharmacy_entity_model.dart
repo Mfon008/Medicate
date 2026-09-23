@@ -4,6 +4,8 @@ class SignUpPharmacyEntityModel {
   String? businessAddress;
   String? email;
   String? phone;
+  String? state;
+  String? lga;
 
   SignUpPharmacyEntityModel({
     this.name,
@@ -11,6 +13,8 @@ class SignUpPharmacyEntityModel {
     this.businessAddress,
     this.email,
     this.phone,
+    this.state,
+    this.lga,
   });
 
   factory SignUpPharmacyEntityModel.fromJson(Map<String, dynamic> json) {
@@ -20,6 +24,8 @@ class SignUpPharmacyEntityModel {
       businessAddress: json['businessAddress'] as String?,
       email: json['email'] as String?,
       phone: json['phone'] as String?,
+      state: json['state'] as String?,
+      lga: json['lga'] as String?,
     );
   }
 
@@ -29,5 +35,7 @@ class SignUpPharmacyEntityModel {
     'businessAddress': businessAddress,
     'email': email,
     'phone': phone,
+    'state': state,
+    'lga': lga,
   };
 }

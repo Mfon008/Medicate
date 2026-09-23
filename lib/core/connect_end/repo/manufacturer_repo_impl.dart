@@ -12,6 +12,7 @@ import '../model/distributor_wholesale_category_model/distributor_wholesale_cate
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
 import '../model/get_all_product_list_response_model/get_all_product_list_response_model.dart';
 import '../model/get_distributor_kyc_response_model/get_distributor_kyc_response_model.dart';
+import '../model/get_distributor_profile_response_model/business_addresses.dart';
 import '../model/get_distributor_profile_response_model/get_distributor_profile_response_model.dart';
 import '../model/get_incoming_order_ddetail_response_model/get_incoming_order_ddetail_response_model.dart';
 import '../model/get_single_product_response_model/get_single_product_response_model.dart';
@@ -337,6 +338,29 @@ class ManufacturerRepoImpl {
 
   Future<UploadImageResponseModel> uploadImage(MultipartFile file) async {
     final response = await _contract.uploadImage(file);
+    return response;
+  }
+
+  Future<dynamic> addBusinessAddresses(
+    BusinessAddresses businessAddresses,
+  ) async {
+    final response = await _contract.addBusinessAddresses(businessAddresses);
+    return response;
+  }
+
+  Future<dynamic> updateBusinessAddress({
+    BusinessAddresses? businessAddresses,
+    String? id,
+  }) async {
+    final response = await _contract.updateBusinessAddress(
+      businessAddresses: businessAddresses,
+      id: id,
+    );
+    return response;
+  }
+
+  Future<dynamic> deleteBusinessAddress(String id) async {
+    final response = await _contract.deleteBusinessAddress(id);
     return response;
   }
 }

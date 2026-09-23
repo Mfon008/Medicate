@@ -95,8 +95,13 @@ class ManufacturerProfileScreen extends StatelessWidget {
                                   radius: 60.0, // Adjust the size as needed
                                   backgroundImage: NetworkImage(
                                     SharedPreferencesService
-                                        .instance
-                                        .usersData['profile']['profilePicture']['url'],
+                                            .instance
+                                            .usersData['profile']['profilePicture']['url'] ??
+                                        model
+                                            .getDistributorDetailsResponseModel!
+                                            .data!
+                                            .logo
+                                            ?.url!,
                                   ),
                                 ),
                         ),
@@ -105,7 +110,24 @@ class ManufacturerProfileScreen extends StatelessWidget {
                     child: GestureDetector(
                       onTap: () => model.pickImage(context),
                       child: TextView(
-                        text: 'Change Photo',
+                        text:
+                            SharedPreferencesService.instance.usersData ==
+                                    null ||
+                                SharedPreferencesService
+                                        .instance
+                                        .usersData['user'] ==
+                                    null ||
+                                SharedPreferencesService
+                                        .instance
+                                        .usersData['user']['profilePicture'] ==
+                                    null ||
+                                model
+                                        .getDistributorDetailsResponseModel!
+                                        .data!
+                                        .logo ==
+                                    null
+                            ? 'Upload Photo'
+                            : 'Change Photo',
                         textStyle: TextStyle(
                           fontFamily: 'Arial',
                           fontSize: 14.2.sp,
@@ -180,7 +202,7 @@ class ManufacturerProfileScreen extends StatelessWidget {
                                     ?.data
                                     ?.kycStatus
                                     ?.toLowerCase() ==
-                                'rejected'||
+                                'rejected' ||
                             model
                                     .getDistributorKycResponseModel
                                     ?.data

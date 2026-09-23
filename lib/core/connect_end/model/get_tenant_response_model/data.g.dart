@@ -23,6 +23,9 @@ Data _$DataFromJson(Map<String, dynamic> json) => Data(
   bankDetails: (json['bankDetails'] as List<dynamic>?)
       ?.map((e) => BankDetail.fromJson(e as Map<String, dynamic>))
       .toList(),
+  businessAddresses: (json['businessAddresses'] as List<dynamic>?)
+      ?.map((e) => BusinessAddresses.fromJson(e as Map<String, dynamic>))
+      .toList(),
   meansOfIdType: json['meansOfIdType'] as String?,
   logo: json['logo'] == null
       ? null
@@ -61,6 +64,7 @@ Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
   'owner': instance.owner,
   'licenseNumber': instance.licenseNumber,
   'businessAddress': instance.businessAddress,
+  'businessAddresses': instance.businessAddresses,
   'email': instance.email,
   'meansOfIdType': instance.meansOfIdType,
   'kycDocuments': instance.kycDocuments,

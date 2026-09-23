@@ -594,7 +594,6 @@ class _HealthCareHospitalAndClinicSignUpScreenState
                       ),
                     ],
                   ),
-                  SizedBox(height: 20.h),
 
                   SizedBox(height: 16.h),
                   Row(

@@ -54,6 +54,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
   TextEditingController moq = TextEditingController();
   TextEditingController priceUnit = TextEditingController();
   TextEditingController stock = TextEditingController();
+  TextEditingController enterLink = TextEditingController();
+  TextEditingController suggestedPriceDescription = TextEditingController();
+  TextEditingController additionalDescription = TextEditingController();
   TextEditingController batchNo = TextEditingController();
   TextEditingController manufacturerName = TextEditingController();
   TextEditingController serialNo = TextEditingController();
@@ -547,6 +550,111 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       fillColor: AppColors.dashboard,
                       isFilled: true,
                       controller: stock,
+                      validator: AppValidator.validateString(),
+                      keyboardType: TextInputType.number,
+                      onChange: (p0) {},
+                    ),
+                    SizedBox(height: 20.h),
+                    TextFormWidget(
+                      hint: 'Suggested Retail Price (SRP)',
+                      label: 'Enter suggested retail price description',
+                      maxline: 4,
+                      alignLabelWithHint: true,
+                      borderColor: AppColors.transparent,
+                      borderTopLeft: 10.r,
+                      borderTopRight: 10.r,
+                      borderBottomLeft: 10.r,
+                      borderBottomRight: 10.r,
+                      hintSize: isTablet(context) ? 16.82.sp : 16.0.sp,
+                      labelStyle: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontFamily: 'DMSans',
+                        fontSize: 15.4.sp,
+                        color: AppColors.infoGrey,
+                      ),
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontFamily: 'DMSans',
+                        fontSize: 16.sp,
+                        color: AppColors.reminder1,
+                      ),
+                      fillColor: AppColors.grey,
+                      isFilled: true,
+                      controller: suggestedPriceDescription,
+                      validator: AppValidator.validateString(),
+                    ),
+                    SizedBox(height: 20.h),
+                    TextView(
+                      text: 'Additional Resource Infromation',
+                      textStyle: TextStyle(
+                        fontFamily: 'DMSans',
+                        fontSize: 16.52.sp,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.reminder,
+                        letterSpacing: -0.12,
+                      ),
+                    ),
+                    SizedBox(height: 10.h),
+
+                    Divider(
+                      color: AppColors.infoGrey,
+                      height: 1.h,
+                      thickness: 0.2,
+                    ),
+                    SizedBox(height: 10.h),
+                    TextFormWidget(
+                      hint: 'Description',
+                      label: 'Enter product description',
+                      maxline: 4,
+                      alignLabelWithHint: true,
+                      borderColor: AppColors.transparent,
+                      borderTopLeft: 10.r,
+                      borderTopRight: 10.r,
+                      borderBottomLeft: 10.r,
+                      borderBottomRight: 10.r,
+                      hintSize: isTablet(context) ? 16.82.sp : 16.0.sp,
+                      labelStyle: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontFamily: 'DMSans',
+                        fontSize: 15.4.sp,
+                        color: AppColors.infoGrey,
+                      ),
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontFamily: 'DMSans',
+                        fontSize: 16.sp,
+                        color: AppColors.reminder1,
+                      ),
+                      fillColor: AppColors.grey,
+                      isFilled: true,
+                      controller: additionalDescription,
+                      validator: AppValidator.validateString(),
+                    ),
+                    SizedBox(height: 20.h),
+                    TextFormWidget(
+                      hint: 'Drop a Link / Url',
+                      label: 'Enter Link',
+                      borderColor: AppColors.transparent,
+                      borderTopLeft: 10.r,
+                      borderTopRight: 10.r,
+                      borderBottomLeft: 10.r,
+                      borderBottomRight: 10.r,
+                      hintSize: isTablet(context) ? 16.82.sp : 16.0.sp,
+                      labelStyle: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontFamily: 'DMSans',
+                        fontSize: 15.4.sp,
+                        color: AppColors.infoGrey,
+                      ),
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontFamily: 'DMSans',
+                        fontSize: 16.sp,
+                        color: AppColors.reminder1,
+                      ),
+                      fillColor: AppColors.dashboard,
+                      isFilled: true,
+                      controller: enterLink,
                       validator: AppValidator.validateString(),
                       keyboardType: TextInputType.number,
                       onChange: (p0) {},

@@ -379,6 +379,118 @@ class _ManufacturerProfileInfoScreenState
                           },
                         ),
                         SizedBox(height: 20.h),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            TextView(
+                              text: 'Addresses',
+                              textStyle: TextStyle(
+                                fontSize: 15.86.sp,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.reminder1,
+                                fontFamily: 'DMSans',
+                              ),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                model.stateController.clear();
+                                model.lgaController.clear();
+                                model.businessAddController.clear();
+                                model.countryController.clear();
+                                model.showBusinessAreaLGAAndStateCountryDialog(
+                                  context,
+                                );
+                              },
+                              icon: Icon(
+                                Icons.add,
+                                color: AppColors.reminder1,
+                                size: 22.sp,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Divider(color: AppColors.f1),
+
+                        ...model.listOfAddedAddress.asMap().entries.map((
+                          entry,
+                        ) {
+                          final index = entry.key;
+                          final o = entry.value;
+
+                          return Container(
+                            width: double.infinity,
+                            margin: EdgeInsets.only(bottom: 12.w),
+                            padding: EdgeInsets.all(16.w),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              color: AppColors.grey,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                TextView(
+                                  text: o['businessAddress'],
+                                  textStyle: TextStyle(
+                                    fontSize: 13.86.sp,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.reminder1,
+                                    fontFamily: 'DMSans',
+                                  ),
+                                ),
+                                SizedBox(height: 5.2.h),
+                                TextView(
+                                  text:
+                                      '${o['lga']}, ${o['state']} State, ${o['country']}',
+                                  textStyle: TextStyle(
+                                    fontSize: 12.86.sp,
+                                    fontWeight: FontWeight.w400,
+                                    color: AppColors.infoGrey,
+                                    fontFamily: 'DMSans',
+                                  ),
+                                ),
+
+                                SizedBox(height: 10.h),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        model.stateController.text =
+                                            o.keys.first;
+                                        model
+                                            .showBusinessAreaLGAAndStateCountryDialog(
+                                              context,
+                                              isEdit: true,
+                                              editIndex: index,
+                                            );
+                                        model.notifyListeners();
+                                      },
+                                      child: SvgPicture.asset(
+                                        AppImage.round_edit,
+                                        height: 22.h,
+                                        width: 22.h,
+                                      ),
+                                    ),
+                                    SizedBox(width: 10.h),
+                                    GestureDetector(
+                                      onTap: () {
+                                        model.listOfAddedAddress.remove(o);
+                                        setState(() {});
+                                        model.notifyListeners();
+                                      },
+                                      child: SvgPicture.asset(
+                                        AppImage.delete,
+                                        height: 20.h,
+                                        width: 20.h,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          );
+                        }),
+
                         TextFormWidget(
                           hint: 'Business address',
                           hintSize: 14,

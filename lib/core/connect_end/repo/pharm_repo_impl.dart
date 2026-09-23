@@ -5,6 +5,7 @@ import 'package:injectable/injectable.dart';
 import '../../core_folder/app/app.locator.dart';
 import '../../core_folder/manager/shared_preference.dart';
 import '../contrast/pharm_contract_impl.dart';
+import '../model/business_addresses_entity.dart';
 import '../model/checkout_delivery_option_entity_model.dart';
 import '../model/create_payment_wallet_entity_model.dart';
 import '../model/create_payment_wallet_model/create_payment_wallet_model.dart';
@@ -560,6 +561,29 @@ class PharmRepoImpl {
     final response = await _contract.checkoutDeliveryOption(
       checkoutDeliveryOption,
     );
+    return response;
+  }
+
+  Future<dynamic> addBusinessAddresses(
+    BusinessAddressesEntity businessAddresses,
+  ) async {
+    final response = await _contract.addBusinessAddresses(businessAddresses);
+    return response;
+  }
+
+  Future<dynamic> updateBusinessAddress({
+    BusinessAddressesEntity? businessAddresses,
+    String? id,
+  }) async {
+    final response = await _contract.updateBusinessAddress(
+      businessAddresses: businessAddresses,
+      id: id,
+    );
+    return response;
+  }
+
+  Future<dynamic> deleteBusinessAddress(String id) async {
+    final response = await _contract.deleteBusinessAddress(id);
     return response;
   }
 

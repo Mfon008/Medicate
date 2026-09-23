@@ -11,6 +11,7 @@ import 'package:medicate_app/main.dart';
 import 'package:stacked/stacked.dart';
 import '../../../../core/app_assets/app_validation.dart';
 import '../../../../core/app_assets/image.dart';
+import '../../../../core/app_assets/state_lga_format.dart';
 import '../../../../core/config/colors.dart';
 import '../../../../core/core_folder/manager/shared_preference.dart';
 import '../../../widget/button.dart';
@@ -496,7 +497,7 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                                 borderTopRight: 10.r,
                                 borderBottomLeft: 10.r,
                                 borderBottomRight: 10.r,
-                                // readOnly: true,
+                                readOnly: true,
                                 labelStyle: TextStyle(
                                   fontWeight: FontWeight.w400,
                                   fontFamily: 'Arial',
@@ -507,19 +508,149 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                                 isFilled: true,
                                 controller: model.stateController,
                                 validator: AppValidator.validateString(),
-                                // suffixWidget: GestureDetector(
-                                //   onTap: () =>
-                                //       model.modalBottomSheetMenuState(context),
-                                //   child: Padding(
-                                //     padding: EdgeInsets.all(14.20.w),
-                                //     child: SvgPicture.asset(
-                                //       AppImage.arrow_down,
-                                //     ),
-                                //   ),
-                                // ),
-                                // onChange: (p0) {
-                                //   setState(() {});
-                                // },
+                                suffixWidget: Builder(
+                                  builder: (context) {
+                                    return GestureDetector(
+                                      onTap: () async {
+                                        final RenderBox button =
+                                            context.findRenderObject()
+                                                as RenderBox;
+
+                                        final RenderBox overlay =
+                                            Overlay.of(
+                                                  context,
+                                                ).context.findRenderObject()
+                                                as RenderBox;
+
+                                        final Offset buttonPosition = button
+                                            .localToGlobal(
+                                              Offset.zero,
+                                              ancestor: overlay,
+                                            );
+
+                                        final Size buttonSize = button.size;
+
+                                        final selectedState =
+                                            await showMenu<String>(
+                                              context: context,
+
+                                              position: RelativeRect.fromLTRB(
+                                                buttonPosition.dx,
+                                                buttonPosition.dy +
+                                                    buttonSize.height +
+                                                    5.h,
+                                                overlay.size.width -
+                                                    buttonPosition.dx -
+                                                    buttonSize.width,
+                                                0,
+                                              ),
+
+                                              constraints: BoxConstraints(
+                                                minWidth: 200.w,
+                                                maxWidth: 250.w,
+                                                minHeight: 150.h,
+                                                maxHeight: 450.h,
+                                              ),
+
+                                              color: AppColors.white,
+
+                                              elevation: 4,
+
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10.r),
+                                              ),
+
+                                              items: stateLgaFormat
+                                                  .map<PopupMenuEntry<String>>((
+                                                    s,
+                                                  ) {
+                                                    final String state =
+                                                        s['state']
+                                                            ?.toString() ??
+                                                        '';
+
+                                                    return PopupMenuItem<
+                                                      String
+                                                    >(
+                                                      value: state,
+                                                      height: 38.h,
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                            horizontal: 14.w,
+                                                          ),
+                                                      child: TextView(
+                                                        text: state,
+                                                        textStyle: TextStyle(
+                                                          fontFamily:
+                                                              'GoogleSans',
+                                                          fontSize: 13.70.sp,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          color:
+                                                              AppColors.black,
+                                                        ),
+                                                      ),
+                                                    );
+                                                  })
+                                                  .toList(),
+                                            );
+
+                                        if (selectedState != null) {
+                                          model.stateController.text =
+                                              selectedState;
+                                          final selectedStateLga =
+                                              stateLgaFormat.firstWhere(
+                                                (state) =>
+                                                    state['state']
+                                                        .toString()
+                                                        .trim()
+                                                        .toLowerCase() ==
+                                                    model.stateController.text
+                                                        .trim()
+                                                        .toLowerCase(),
+                                                orElse: () => <String, dynamic>{
+                                                  'state': '',
+                                                  'lgas': <String>[],
+                                                },
+                                              );
+
+                                          final selectedLgas =
+                                              List<String>.from(
+                                                selectedStateLga['lgas'] ??
+                                                    <String>[],
+                                              );
+
+                                          model.lgaList = List<String>.from(
+                                            selectedLgas,
+                                          );
+                                          model.lgaListCopy = List<String>.from(
+                                            selectedLgas,
+                                          );
+
+                                          // Optional: reset previously selected LGAs
+                                          model.lgaAddedList.clear();
+                                        }
+                                        setState(() {});
+                                        model.notifyListeners();
+                                      },
+
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 8.w,
+                                        ),
+                                        child: Icon(
+                                          Icons.keyboard_arrow_down,
+                                          color: AppColors.grey1,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+
+                                onChange: (p0) {
+                                  setState(() {});
+                                },
                               ),
                             ),
                             SizedBox(width: 12.w),
@@ -533,7 +664,7 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                                 borderTopRight: 10.r,
                                 borderBottomLeft: 10.r,
                                 borderBottomRight: 10.r,
-                                // readOnly: true,
+                                readOnly: true,
                                 labelStyle: TextStyle(
                                   fontWeight: FontWeight.w400,
                                   fontFamily: 'Arial',
@@ -544,19 +675,131 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                                 isFilled: true,
                                 controller: model.lgaController,
                                 validator: AppValidator.validateString(),
-                                // suffixWidget: GestureDetector(
-                                //   onTap: () =>
-                                //       model.modalBottomSheetMenuLga(context),
-                                //   child: Padding(
-                                //     padding: EdgeInsets.all(14.20.w),
-                                //     child: SvgPicture.asset(
-                                //       AppImage.arrow_down,
-                                //     ),
-                                //   ),
-                                // ),
-                                // onChange: (p0) {
-                                //   setState(() {});
-                                // },
+                                suffixWidget: Builder(
+                                  builder: (context) {
+                                    return GestureDetector(
+                                      onTap: () async {
+                                        final RenderBox button =
+                                            context.findRenderObject()
+                                                as RenderBox;
+
+                                        final RenderBox overlay =
+                                            Overlay.of(
+                                                  context,
+                                                ).context.findRenderObject()
+                                                as RenderBox;
+
+                                        final Offset buttonPosition = button
+                                            .localToGlobal(
+                                              Offset.zero,
+                                              ancestor: overlay,
+                                            );
+
+                                        final Size buttonSize = button.size;
+
+                                        final selectedState = stateLgaFormat
+                                            .firstWhere(
+                                              (state) =>
+                                                  state['state']
+                                                      .toString()
+                                                      .trim()
+                                                      .toLowerCase() ==
+                                                  model.stateController.text
+                                                      .trim()
+                                                      .toLowerCase(),
+                                              orElse: () => <String, dynamic>{
+                                                'state': '',
+                                                'lgas': <String>[],
+                                              },
+                                            );
+
+                                        final List<dynamic> lgas =
+                                            selectedState['lgas'] ?? [];
+
+                                        if (lgas.isEmpty) {
+                                          return;
+                                        }
+
+                                        final selectedLga =
+                                            await showMenu<String>(
+                                              context: context,
+
+                                              position: RelativeRect.fromLTRB(
+                                                buttonPosition.dx,
+                                                buttonPosition.dy +
+                                                    buttonSize.height +
+                                                    5.h,
+                                                overlay.size.width -
+                                                    buttonPosition.dx -
+                                                    buttonSize.width,
+                                                0,
+                                              ),
+
+                                              constraints: BoxConstraints(
+                                                minWidth: 200.w,
+                                                maxWidth: 250.w,
+                                                minHeight: 110.h,
+                                                maxHeight: 420.h,
+                                              ),
+
+                                              color: AppColors.white,
+
+                                              elevation: 4,
+
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10.r),
+                                              ),
+
+                                              items: lgas
+                                                  .map<PopupMenuEntry<String>>((
+                                                    lga,
+                                                  ) {
+                                                    return PopupMenuItem<
+                                                      String
+                                                    >(
+                                                      value: lga.toString(),
+                                                      height: 38.h,
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                            horizontal: 14.w,
+                                                          ),
+                                                      child: TextView(
+                                                        text: lga.toString(),
+                                                        textStyle: TextStyle(
+                                                          fontFamily:
+                                                              'GoogleSans',
+                                                          fontSize: 13.70.sp,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          color:
+                                                              AppColors.black,
+                                                        ),
+                                                      ),
+                                                    );
+                                                  })
+                                                  .toList(),
+                                            );
+
+                                        if (selectedLga != null) {
+                                          model.lgaController.text =
+                                              selectedLga;
+                                          model.notifyListeners();
+                                        }
+                                      },
+
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 8.w,
+                                        ),
+                                        child: Icon(
+                                          Icons.keyboard_arrow_down,
+                                          color: AppColors.grey1,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
                               ),
                             ),
                           ],
@@ -597,6 +840,135 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                             },
                           );
                         }),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            TextView(
+                              text: 'Addresses',
+                              textStyle: TextStyle(
+                                fontSize: 15.86.sp,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.reminder1,
+                                fontFamily: 'DMSans',
+                              ),
+                            ),
+                            IconButton(
+                              onPressed: model.getTetantResponseModel!.data!.businessAddresses!.length<3? () async {
+                                model.stateBusController.clear();
+                                model.lgaBusController.clear();
+                                model.businessAddController.clear();
+                                model.countryBusController.clear();
+                                final result = await model
+                                    .showBusinessAreaLGAAndStateCountryDialog(
+                                      context,
+                                    );
+                                if (result == true) {
+                                  model.getTenant(context);
+                                }
+                              }:(){},
+                              icon: Icon(
+                                Icons.add,
+                                color: AppColors.reminder1,
+                                size: 22.sp,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Divider(color: AppColors.f1),
+                        if (model.getTetantResponseModel != null &&
+                            model
+                                .getTetantResponseModel!
+                                .data!
+                                .businessAddresses!
+                                .isNotEmpty)
+                          ...model
+                              .getTetantResponseModel!
+                              .data!
+                              .businessAddresses!
+                              .asMap()
+                              .entries
+                              .map((entry) {
+                                final index = entry.key;
+                                final o = entry.value;
+
+                                return Container(
+                                  width: double.infinity,
+                                  margin: EdgeInsets.only(bottom: 12.w),
+                                  padding: EdgeInsets.all(16.w),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12),
+                                    color: AppColors.grey,
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      TextView(
+                                        text: o.businessAddress ?? '',
+                                        textStyle: TextStyle(
+                                          fontSize: 13.86.sp,
+                                          fontWeight: FontWeight.w600,
+                                          color: AppColors.reminder1,
+                                          fontFamily: 'DMSans',
+                                        ),
+                                      ),
+                                      SizedBox(height: 5.2.h),
+                                      TextView(
+                                        text:
+                                            '${o.lga}, ${o.state} State, ${o.country}',
+                                        textStyle: TextStyle(
+                                          fontSize: 12.86.sp,
+                                          fontWeight: FontWeight.w400,
+                                          color: AppColors.infoGrey,
+                                          fontFamily: 'DMSans',
+                                        ),
+                                      ),
+
+                                      SizedBox(height: 10.h),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          GestureDetector(
+                                            onTap: () async {
+                                              final result = await model
+                                                  .showBusinessAreaLGAAndStateCountryDialog(
+                                                    context,
+                                                    isEdit: true,
+                                                    editIndex: index,
+                                                    businessAddresses: o,
+                                                  );
+                                              if (result == true) {
+                                                model.getTenant(context);
+                                              }
+                                              model.notifyListeners();
+                                            },
+                                            child: SvgPicture.asset(
+                                              AppImage.round_edit,
+                                              height: 22.h,
+                                              width: 22.h,
+                                            ),
+                                          ),
+                                          SizedBox(width: 10.h),
+                                          GestureDetector(
+                                            onTap: () async {
+                                              model.deleteBusinessAddress(
+                                                o.id!,
+                                              );
+                                              model.notifyListeners();
+                                            },
+                                            child: SvgPicture.asset(
+                                              AppImage.delete,
+                                              height: 20.h,
+                                              width: 20.h,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }),
 
                         SizedBox(height: 30.h),
                         TextView(

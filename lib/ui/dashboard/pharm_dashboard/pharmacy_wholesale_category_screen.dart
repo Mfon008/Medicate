@@ -1,34 +1,38 @@
-// ignore_for_file: must_be_immutable, deprecated_member_use
+// ignore_for_file: must_be_immutable
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
-import 'package:medicate_app/core/app_assets/app_validation.dart';
 import 'package:stacked/stacked.dart';
-import '../../../../core/app_assets/image.dart';
-import '../../../../core/config/colors.dart';
-import '../../../../core/core_folder/app/app.router.dart';
-import '../../../../main.dart';
+
+import '../../../core/app_assets/app_validation.dart';
 import '../../../core/app_assets/constant.dart';
+import '../../../core/app_assets/image.dart';
+import '../../../core/config/colors.dart';
 import '../../../core/connect_end/model/wholesale_add_to_cart_entity_model.dart';
 import '../../../core/connect_end/view_model/pharm_auth_view_model.dart';
-import '../../widget/auto_scroll_text.dart';
+import '../../../core/core_folder/app/app.router.dart';
+import '../../../main.dart';
+import '../../widget/button.dart';
 import '../../widget/text.dart';
 import '../../widget/text_form_widget.dart';
 
-class PharmacyWholesaleScreen extends StatefulWidget {
-  const PharmacyWholesaleScreen({super.key});
+class PharmacyWholesaleCategoryScreen extends StatefulWidget {
+  PharmacyWholesaleCategoryScreen({super.key, this.id});
+  String? id;
 
   @override
-  State<PharmacyWholesaleScreen> createState() =>
-      _PharmacyWholesaleScreenState();
+  State<PharmacyWholesaleCategoryScreen> createState() =>
+      _PharmacyWholesaleCategoryScreenState();
 }
 
-class _PharmacyWholesaleScreenState extends State<PharmacyWholesaleScreen> {
-  int currentPage = 0;
+class _PharmacyWholesaleCategoryScreenState
+    extends State<PharmacyWholesaleCategoryScreen> {
   String? editingQuantityProductId;
+  int currentPage = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -36,230 +40,38 @@ class _PharmacyWholesaleScreenState extends State<PharmacyWholesaleScreen> {
         MediaQuery.of(context).size.shortestSide >= 600;
     return ViewModelBuilder<PharmViewModel>.reactive(
       viewModelBuilder: () => PharmViewModel(),
-      onViewModelReady: (model) async {
-        await model.getListedMarketPlace(context);
-        await model.getWholesaleProductAddedToCart(context);
-        model.getWholesaleCategoryList(context);
-      },
+      onViewModelReady: (model) async {},
       disposeViewModel: false,
       onDispose: (viewModel) {},
       builder: (_, PharmViewModel model, _) {
         return Scaffold(
           backgroundColor: AppColors.dashboard,
           appBar: AppBar(
-            backgroundColor: AppColors.white,
-            automaticallyImplyLeading: false,
-            toolbarHeight: 80.0,
-            title: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 1.0.w),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: AppColors.inactive.withValues(alpha: .1),
-                      border: Border.all(
-                        color: AppColors.inactive.withValues(alpha: .4),
-                      ),
-                    ),
-                    child: IconButton(
-                      icon: SvgPicture.asset(
-                        AppImage.burger,
-                        color: AppColors.primary,
-                        height: isTablet(context) ? 32.h : 12.h,
-                        width: isTablet(context) ? 32.w : 12.w,
-                      ),
-                      onPressed: () => navigate.navigateTo(
-                        Routes.pharmMoreScreen,
-                      ), // makes ripple effect round
-                    ),
-                  ),
-                  SvgPicture.asset(
-                    AppImage.applogoSvg,
-                    height: 28.h,
-                    width: 28.w,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(right: 2.4.w),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: AppColors.inactive.withOpacity(.1),
-                          border: Border.all(
-                            color: AppColors.inactive.withOpacity(.4),
-                          ),
-                        ),
-                        child: Stack(
-                          children: [
-                            IconButton(
-                              icon: SvgPicture.asset(
-                                AppImage.cart,
-                                height: isTablet(context) ? 40.h : 20.h,
-                                width: isTablet(context) ? 40.w : 20.w,
-                                color: AppColors.primary,
-                              ),
-                              onPressed: () => navigate.navigateTo(
-                                Routes.pharmacyAddToCartScreen,
-                              ),
-                              splashRadius: 28,
-                            ),
-                            model.wholesaleGetProductAddedToCartResponseModel !=
-                                        null &&
-                                    model
-                                            .wholesaleGetProductAddedToCartResponseModel
-                                            ?.data
-                                            ?.cart
-                                            ?.itemCount !=
-                                        0
-                                ? Positioned(
-                                    right: 2,
-                                    child: Container(
-                                      padding: EdgeInsets.all(4.0.w),
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: AppColors.appRed,
-                                      ),
-                                      child: TextView(
-                                        text:
-                                            '${model.wholesaleGetProductAddedToCartResponseModel?.data?.cart?.itemCount}',
-                                        textStyle: TextStyle(
-                                          fontFamily: 'DMSans',
-                                          fontSize: 11.0.sp,
-                                          fontWeight: FontWeight.w400,
-                                          color: AppColors.white,
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                : SizedBox.shrink(),
-                          ],
-                        ),
-                      ),
-                      SizedBox(width: 10.w),
-                      Container(
-                        margin: EdgeInsets.only(right: 2.4.w),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: AppColors.inactive.withOpacity(.1),
-                          border: Border.all(
-                            color: AppColors.inactive.withOpacity(.4),
-                          ),
-                        ),
-                        child: IconButton(
-                          icon: SvgPicture.asset(
-                            AppImage.bell,
-                            height: isTablet(context) ? 40.h : 20.h,
-                            width: isTablet(context) ? 40.w : 20.w,
-                            color: AppColors.primary,
-                          ),
-                          onPressed: () {},
-                          // navigate.navigateTo(Routes.emptyNotification),
-                          splashRadius: 28,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+            backgroundColor: AppColors.appWhite,
+            surfaceTintColor: Colors.transparent, // removes Material3 tint
+            elevation: 0,
+            leading: Padding(
+              padding: EdgeInsets.all(14.w),
+              child: GlobalNavigator(),
+            ),
+            title: TextView(
+              text: 'Antibiotics Category',
+              textStyle: TextStyle(
+                fontFamily: 'GoogleSans',
+                fontSize: 17.2.sp,
+                fontWeight: FontWeight.w700,
+                color: AppColors.black,
               ),
             ),
+            centerTitle: true,
           ),
           body: SingleChildScrollView(
             padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 24.w),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                TextView(
-                  text: 'Marketplace',
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 18.20.sp,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.black,
-                  ),
-                ),
-                SizedBox(height: 10.h),
-                TextView(
-                  text:
-                      'Order directly from partnered manufacturers and distributors. Tiered pricing, MOQ discounts, and scheduled or instant delivery.',
-                  textStyle: TextStyle(
-                    fontFamily: 'GoogleSans',
-                    fontSize: 14.20.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.black,
-                  ),
-                ),
                 SizedBox(height: 20.h),
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    vertical: 10.w,
-                    horizontal: 12.w,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.appWhite,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Row(
-                    children: [
-                      SvgPicture.asset(AppImage.add_locator),
 
-                      SizedBox(width: 10.w),
-
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            AutoScrollingText(
-                              text:
-                                  model
-                                      .mapLocationAddressSelected['businessAddress'] ??
-                                  '12 Oluwole Street',
-                              textStyle: TextStyle(
-                                fontFamily: 'DMSans',
-                                fontSize: 14.20.sp,
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.black,
-                              ),
-                            ),
-
-                            SizedBox(height: 3.h),
-
-                            AutoScrollingText(
-                              text:
-                                  '${model.mapLocationAddressSelected['lga'] ?? 'Ikeja'}, ${model.mapLocationAddressSelected['state'] ?? 'Lagos State'}, ${model.mapLocationAddressSelected['country'] ?? 'Nigeria, West Africa'}',
-                              textStyle: TextStyle(
-                                fontFamily: 'DMSans',
-                                fontSize: 13.20.sp,
-                                fontWeight: FontWeight.w400,
-                                color: AppColors.infoGrey,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      SizedBox(width: 10.w),
-
-                      GestureDetector(
-                        onTap: () => model.selectLocation(context),
-                        child: TextView(
-                          text: 'Switch Address',
-                          textStyle: TextStyle(
-                            decoration: TextDecoration.underline,
-                            decorationColor: AppColors.primary,
-                            fontFamily: 'DMSans',
-                            fontSize: 13.20.sp,
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.primary,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 10.h),
                 Row(
                   children: [
                     Expanded(
@@ -301,19 +113,6 @@ class _PharmacyWholesaleScreenState extends State<PharmacyWholesaleScreen> {
                           });
                           model.searchProduct = value;
                         },
-                      ),
-                    ),
-                    SizedBox(width: 22.40.w),
-                    GestureDetector(
-                      onTap: () => model.modalBottomSheetMenuHealthCareRadio(
-                        context,
-                        model: model,
-                      ),
-                      child: SvgPicture.asset(
-                        AppImage.filter,
-                        color: AppColors.grey1,
-                        height: 15.20.h,
-                        width: 15.20.w,
                       ),
                     ),
                   ],

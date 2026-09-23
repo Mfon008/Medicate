@@ -14,6 +14,7 @@ import 'package:medicate_app/core/connect_end/model/update_distributor_profile_e
 
 import '../connect_end/model/create_distributor_product_entity_model/create_distributor_product_entity_model.dart';
 import '../connect_end/model/forgot_password_response_model/forgot_password_response_model.dart';
+import '../connect_end/model/get_distributor_profile_response_model/business_addresses.dart';
 import '../connect_end/model/level_three_distributor_kyc_entity_model.dart';
 import '../connect_end/model/list_incoming_orders_response_model/list_incoming_orders_response_model.dart';
 import '../connect_end/model/login_entity_model.dart';
@@ -660,6 +661,55 @@ class ManufacturerApi {
       );
       logger.d(response.data);
       return UploadImageResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> addBusinessAddresses(
+    BusinessAddresses businessAddresses,
+  ) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.auth_distributor_profile_addresses,
+        RequestMethod.post,
+        data: businessAddresses.toJson(),
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> updateBusinessAddress({
+    BusinessAddresses? businessAddresses,
+    String? id,
+  }) async {
+    try {
+      final response = await _service.call(
+        '${UrlConfig.auth_distributor_profile_addresses}/$id',
+        RequestMethod.patch,
+        data: businessAddresses?.toJson(),
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> deletebusinessAddress(String? id) async {
+    try {
+      final response = await _service.call(
+        '${UrlConfig.auth_distributor_profile_addresses}/$id',
+        RequestMethod.delete,
+      );
+      logger.d(response.data);
+      return response.data;
     } catch (e) {
       logger.d("response:$e");
       rethrow;

@@ -34,7 +34,6 @@ class BusinessDetails {
     this.gmpCertificateNumber,
     this.nafdacManufacturingLicenseNumber,
     this.productRegistrationEvidenceNumber,
-
   });
 
   factory BusinessDetails.fromJson(Map<String, dynamic> json) {

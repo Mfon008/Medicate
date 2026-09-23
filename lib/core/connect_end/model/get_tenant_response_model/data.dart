@@ -2,8 +2,8 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:medicate_app/core/connect_end/model/get_tenant_response_model/bank_detail.dart';
 import 'package:medicate_app/core/connect_end/model/get_tenant_response_model/educational_experience/educational_experience.dart';
 import 'package:medicate_app/core/connect_end/model/get_tenant_response_model/means_of_id.dart';
-
 import 'authorized_rep_info/authorized_rep_info.dart';
+import 'business_addresses.dart';
 import 'kyc_document.dart';
 import 'logo.dart';
 
@@ -23,6 +23,7 @@ class Data {
   List<BankDetail>? bankDetails;
   Logo? logo;
   List<String>? servicesOffered;
+  List<BusinessAddresses>? businessAddresses;
   String? bio;
   String? country;
   String? lga;
@@ -48,6 +49,7 @@ class Data {
     this.owner,
     this.licenseNumber,
     this.businessAddress,
+    this.businessAddresses,
     this.businessEmail,
     this.email,
     this.healthcareFacilityName,

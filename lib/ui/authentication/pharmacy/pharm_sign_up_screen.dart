@@ -9,6 +9,7 @@ import 'package:medicate_app/ui/widget/button.dart';
 import 'package:stacked/stacked.dart';
 import '../../../core/app_assets/app_validation.dart';
 import '../../../core/app_assets/image.dart';
+import '../../../core/app_assets/state_lga_format.dart';
 import '../../../core/config/colors.dart';
 import '../../../core/connect_end/view_model/pharm_auth_view_model.dart';
 import '../../../core/core_folder/app/app.router.dart';
@@ -27,6 +28,8 @@ class _PharmacySignUpScreenState extends State<PharmacySignUpScreen> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   TextEditingController phoneController = TextEditingController();
+  TextEditingController lgaController = TextEditingController();
+  TextEditingController stateController = TextEditingController();
   TextEditingController nameController = TextEditingController();
   TextEditingController licenseNoController = TextEditingController();
   TextEditingController businessAddressController = TextEditingController();
@@ -288,6 +291,291 @@ class _PharmacySignUpScreenState extends State<PharmacySignUpScreen> {
                     validator: AppValidator.validateString(),
                   ),
                   SizedBox(height: 16.h),
+
+                  SizedBox(height: 16.h),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: TextFormWidget(
+                          hint: 'State',
+                          label: 'Select State',
+                          hintColor: AppColors.reminder,
+                          hintSize: Platform.isAndroid ? 16.sp : 15.46.sp,
+                          borderColor: AppColors.transparent,
+                          borderTopLeft: 10.r,
+                          borderTopRight: 10.r,
+                          borderBottomLeft: 10.r,
+                          borderBottomRight: 10.r,
+                          readOnly: true,
+                          fillColor: AppColors.grey,
+                          isFilled: true,
+                          controller: stateController,
+                          suffixWidget: Builder(
+                            builder: (context) {
+                              return GestureDetector(
+                                onTap: () async {
+                                  final RenderBox button =
+                                      context.findRenderObject() as RenderBox;
+
+                                  final RenderBox overlay =
+                                      Overlay.of(
+                                            context,
+                                          ).context.findRenderObject()
+                                          as RenderBox;
+
+                                  final Offset buttonPosition = button
+                                      .localToGlobal(
+                                        Offset.zero,
+                                        ancestor: overlay,
+                                      );
+
+                                  final Size buttonSize = button.size;
+
+                                  final selectedState = await showMenu<String>(
+                                    context: context,
+
+                                    position: RelativeRect.fromLTRB(
+                                      buttonPosition.dx,
+                                      buttonPosition.dy +
+                                          buttonSize.height +
+                                          5.h,
+                                      overlay.size.width -
+                                          buttonPosition.dx -
+                                          buttonSize.width,
+                                      0,
+                                    ),
+
+                                    constraints: BoxConstraints(
+                                      minWidth: 200.w,
+                                      maxWidth: 250.w,
+                                      minHeight: 150.h,
+                                      maxHeight: 450.h,
+                                    ),
+
+                                    color: AppColors.white,
+
+                                    elevation: 4,
+
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10.r),
+                                    ),
+
+                                    items: stateLgaFormat
+                                        .map<PopupMenuEntry<String>>((s) {
+                                          final String state =
+                                              s['state']?.toString() ?? '';
+
+                                          return PopupMenuItem<String>(
+                                            value: state,
+                                            height: 38.h,
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 14.w,
+                                            ),
+                                            child: TextView(
+                                              text: state,
+                                              textStyle: TextStyle(
+                                                fontFamily: 'GoogleSans',
+                                                fontSize: 13.70.sp,
+                                                fontWeight: FontWeight.w500,
+                                                color: AppColors.black,
+                                              ),
+                                            ),
+                                          );
+                                        })
+                                        .toList(),
+                                  );
+
+                                  if (selectedState != null) {
+                                    stateController.text = selectedState;
+
+                                    // Reset LGA whenever state changes
+                                    lgaController.clear();
+                                    setState(() {});
+
+                                    model.notifyListeners();
+                                  }
+                                },
+
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 8.w,
+                                  ),
+                                  child: Icon(
+                                    Icons.keyboard_arrow_down,
+                                    color: AppColors.grey1,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+
+                          validator: AppValidator.validateString(),
+
+                          style: TextStyle(
+                            fontSize: 16.20.sp,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'DMSans',
+                          ),
+
+                          labelStyle: TextStyle(
+                            fontSize: 15.20.sp,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'DMSans',
+                            color: AppColors.faintedGrey,
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 14.20.w),
+                      Expanded(
+                        child: TextFormWidget(
+                          hint: 'LGA',
+                          label: '-Select-',
+                          hintColor: AppColors.reminder,
+                          hintSize: Platform.isAndroid ? 16.sp : 15.46.sp,
+                          borderColor: AppColors.transparent,
+                          borderTopLeft: 10.r,
+                          borderTopRight: 10.r,
+                          borderBottomLeft: 10.r,
+                          borderBottomRight: 10.r,
+                          fillColor: AppColors.grey,
+                          isFilled: true,
+                          readOnly: true,
+                          controller: lgaController,
+                          suffixWidget: Builder(
+                            builder: (context) {
+                              return GestureDetector(
+                                onTap: () async {
+                                  final RenderBox button =
+                                      context.findRenderObject() as RenderBox;
+
+                                  final RenderBox overlay =
+                                      Overlay.of(
+                                            context,
+                                          ).context.findRenderObject()
+                                          as RenderBox;
+
+                                  final Offset buttonPosition = button
+                                      .localToGlobal(
+                                        Offset.zero,
+                                        ancestor: overlay,
+                                      );
+
+                                  final Size buttonSize = button.size;
+
+                                  final selectedState = stateLgaFormat
+                                      .firstWhere(
+                                        (state) =>
+                                            state['state']
+                                                .toString()
+                                                .trim()
+                                                .toLowerCase() ==
+                                            stateController.text
+                                                .trim()
+                                                .toLowerCase(),
+                                        orElse: () => <String, dynamic>{
+                                          'state': '',
+                                          'lgas': <String>[],
+                                        },
+                                      );
+
+                                  final List<dynamic> lgas =
+                                      selectedState['lgas'] ?? [];
+
+                                  if (lgas.isEmpty) {
+                                    return;
+                                  }
+
+                                  final selectedLga = await showMenu<String>(
+                                    context: context,
+
+                                    position: RelativeRect.fromLTRB(
+                                      buttonPosition.dx,
+                                      buttonPosition.dy +
+                                          buttonSize.height +
+                                          5.h,
+                                      overlay.size.width -
+                                          buttonPosition.dx -
+                                          buttonSize.width,
+                                      0,
+                                    ),
+
+                                    constraints: BoxConstraints(
+                                      minWidth: 200.w,
+                                      maxWidth: 250.w,
+                                      minHeight: 110.h,
+                                      maxHeight: 420.h,
+                                    ),
+
+                                    color: AppColors.white,
+
+                                    elevation: 4,
+
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10.r),
+                                    ),
+
+                                    items: lgas.map<PopupMenuEntry<String>>((
+                                      lga,
+                                    ) {
+                                      return PopupMenuItem<String>(
+                                        value: lga.toString(),
+                                        height: 38.h,
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 14.w,
+                                        ),
+                                        child: TextView(
+                                          text: lga.toString(),
+                                          textStyle: TextStyle(
+                                            fontFamily: 'GoogleSans',
+                                            fontSize: 13.70.sp,
+                                            fontWeight: FontWeight.w500,
+                                            color: AppColors.black,
+                                          ),
+                                        ),
+                                      );
+                                    }).toList(),
+                                  );
+
+                                  if (selectedLga != null) {
+                                    lgaController.text = selectedLga;
+                                    setState(() {});
+                                    model.notifyListeners();
+                                  }
+                                },
+
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 8.w,
+                                  ),
+                                  child: Icon(
+                                    Icons.keyboard_arrow_down,
+                                    color: AppColors.grey1,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                          validator: AppValidator.validateString(),
+                          style: TextStyle(
+                            fontSize: 16.20.sp,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'DMSans',
+                          ),
+
+                          labelStyle: TextStyle(
+                            fontSize: 15.20.sp,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'DMSans',
+                            color: AppColors.faintedGrey,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  SizedBox(height: 16.h),
+
                   TextFormWidget(
                     hint: 'Email Address',
                     borderColor: AppColors.transparent,
@@ -406,6 +694,8 @@ class _PharmacySignUpScreenState extends State<PharmacySignUpScreen> {
                                       .text
                                       .trim(),
                                   email: emailAddressController.text.trim(),
+                                  state: stateController.text.trim(),
+                                  lga: lgaController.text.trim(),
                                 ),
                               );
                             }

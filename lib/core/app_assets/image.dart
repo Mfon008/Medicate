@@ -8,10 +8,12 @@ class AppImage {
   static const String flutterwave = 'assets/images/flutterwave.png';
   static const String paystack = 'assets/images/paystack.png';
   static const String applogoSvg = 'assets/svgs/medicate.svg';
+  static const String open_link = 'assets/svgs/open_link.svg';
   static const String info = 'assets/svgs/info.svg';
   static const String order_notes = 'assets/svgs/order_notes.svg';
   static const String opay = 'assets/svgs/opay.svg';
   static const String locator = 'assets/svgs/locator.svg';
+  static const String add_locator = 'assets/svgs/add_locator.svg';
   static const String order_summary = 'assets/svgs/order_summary.svg';
   static const String search = 'assets/svgs/search.svg';
   static const String time = 'assets/svgs/time.svg';

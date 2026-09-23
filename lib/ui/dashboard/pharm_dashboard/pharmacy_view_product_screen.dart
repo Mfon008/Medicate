@@ -595,6 +595,79 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                 ],
                               ),
                             ),
+                            Container(
+                              width: double.infinity,
+                              padding: EdgeInsets.all(14.w),
+                              decoration: BoxDecoration(
+                                color: AppColors.grey,
+                                borderRadius: BorderRadius.circular(8.0.r),
+                                border: Border.all(color: AppColors.infoGrey1),
+                              ),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      TextView(
+                                        text: 'Suggested Retail Price (SRP)',
+                                        textStyle: TextStyle(
+                                          fontFamily: 'DMSans',
+                                          fontSize: 14.90.sp,
+                                          fontWeight: FontWeight.w500,
+                                          color: AppColors.black,
+                                        ),
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          model.isSeeMore = !model.isSeeMore;
+                                          model.notifyListeners();
+                                        },
+                                        child: TextView(
+                                          text: 'See more',
+                                          textStyle: TextStyle(
+                                            fontFamily: 'DMSans',
+                                            decoration:
+                                                TextDecoration.underline,
+                                            decorationColor: AppColors.reminder,
+                                            fontSize: 14.90.sp,
+                                            fontWeight: FontWeight.w500,
+                                            color: AppColors.reminder,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 10.h),
+                                  model.isSeeMore
+                                      ? SizedBox(
+                                          height: 70.h,
+                                          child: TextView(
+                                            text:
+                                                'Recommended retail benchmark for pharmacies and healthcare facilities is ₦24,100 per carton (~₦241 per carton). Reselling at this suggested price offers an estimated 23% gross margin (+₦5,600 per carton) based on current B2B wholesale pricing.',
+                                            maxLines: 4,
+                                            textOverflow: TextOverflow.ellipsis,
+                                            textStyle: TextStyle(
+                                              fontFamily: 'DMSans',
+                                              fontSize: 14.90.sp,
+                                              fontWeight: FontWeight.w500,
+                                              color: AppColors.black,
+                                            ),
+                                          ),
+                                        )
+                                      : TextView(
+                                          text:
+                                              'Recommended retail benchmark for pharmacies and healthcare facilities is ₦24,100 per carton (~₦241 per carton). Reselling at this suggested price offers an estimated 23% gross margin (+₦5,600 per carton) based on current B2B wholesale pricing.',
+                                          textStyle: TextStyle(
+                                            fontFamily: 'DMSans',
+                                            fontSize: 14.90.sp,
+                                            fontWeight: FontWeight.w500,
+                                            color: AppColors.black,
+                                          ),
+                                        ),
+                                ],
+                              ),
+                            ),
                             // model.getSingleMarketProductResponseModel != null &&
                             //         model
                             //             .getSingleMarketProductResponseModel!
@@ -939,6 +1012,65 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                           ],
                                         ),
                                         SizedBox(height: 12.h),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: 16.h),
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                vertical: 6.2.w,
+                                horizontal: 5.68.w,
+                              ),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10.r),
+                                border: Border.all(color: AppColors.infoGrey1),
+                              ),
+                              child: Column(
+                                children: [
+                                  Container(
+                                    width: double.infinity,
+                                    padding: EdgeInsets.all(14.w),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.grey,
+                                      borderRadius: BorderRadius.circular(
+                                        8.0.r,
+                                      ),
+                                    ),
+                                    child: TextView(
+                                      text: 'Product description',
+                                      textStyle: TextStyle(
+                                        fontFamily: 'GoogleSans',
+                                        fontSize: 14.90.sp,
+                                        fontWeight: FontWeight.w500,
+                                        color: AppColors.black,
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 5.68.w,
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Divider(color: AppColors.infoGrey1),
+                                        SizedBox(height: 5.10.h),
+                                        TextView(
+                                          text:
+                                              'Broad-spectrum antibiotic capsules. Effective against a wide range of gram-positive and gram-negative bacterial infections.',
+                                          textAlign: TextAlign.start,
+                                          textStyle: TextStyle(
+                                            fontFamily: 'DMSans',
+                                            fontSize: 12.90.sp,
+                                            fontWeight: FontWeight.w300,
+                                            color: AppColors.infoGrey,
+                                          ),
+                                        ),
+                                        SizedBox(height: 2.h),
                                       ],
                                     ),
                                   ),

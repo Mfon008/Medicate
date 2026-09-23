@@ -557,7 +557,6 @@ class SpecialistsProviderViewProductScreen extends StatelessWidget {
                       //     ],
                       //   ),
                       // ),
-                      
                       SizedBox(height: 16.h),
                       Container(
                         padding: EdgeInsets.symmetric(

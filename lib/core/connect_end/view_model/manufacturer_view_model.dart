@@ -42,6 +42,7 @@ import '../model/create_distributor_product_entity_model/create_distributor_prod
 import '../model/distributor_wholesale_category_model/category.dart';
 import '../model/get_all_product_list_response_model/get_all_product_list_response_model.dart';
 import '../model/get_distributor_kyc_response_model/get_distributor_kyc_response_model.dart';
+import '../model/get_distributor_profile_response_model/business_addresses.dart';
 import '../model/get_distributor_profile_response_model/get_distributor_profile_response_model.dart';
 import '../model/get_incoming_order_ddetail_response_model/get_incoming_order_ddetail_response_model.dart';
 import '../model/get_single_product_response_model/get_single_product_response_model.dart';
@@ -3870,6 +3871,25 @@ class ManufacturerViewModel extends BaseViewModel {
         repositoryImply.getManAndDistributorKyc(),
         throwException: true,
       );
+      if (_getDistributorKycResponseModel?.statusCode == 200 ||
+          _getDistributorKycResponseModel?.statusCode == 201) {
+        if (_getDistributorKycResponseModel?.data?.kycLevels?[1].status
+                    ?.toLowerCase() ==
+                'approved' ||
+            _getDistributorKycResponseModel?.data?.kycLevels?[1].status
+                    ?.toLowerCase() ==
+                'UNDER_REVIEW'.toLowerCase()) {
+          isNotReadable = true;
+        }
+        if (_getDistributorKycResponseModel?.data?.kycLevels?[2].status
+                    ?.toLowerCase() ==
+                'approved' ||
+            _getDistributorKycResponseModel?.data?.kycLevels?[2].status
+                    ?.toLowerCase() ==
+                'UNDER_REVIEW'.toLowerCase()) {
+          isNotReadable2 = true;
+        }
+      }
       _isLoading = false;
     } catch (e) {
       _isLoading = false;
@@ -3890,6 +3910,7 @@ class ManufacturerViewModel extends BaseViewModel {
       );
       if (v['statusCode'] == 200 || v['statusCode'] == 201) {
         await AppUtils.snackbar(context, message: v['message']);
+        getManAndDistributorKyc(context);
       }
       _isLoading = false;
     } catch (e) {
@@ -3912,6 +3933,7 @@ class ManufacturerViewModel extends BaseViewModel {
       );
       if (v['statusCode'] == 200 || v['statusCode'] == 201) {
         await AppUtils.snackbar(context, message: v['message']);
+        getManAndDistributorKyc(context);
       }
       _isLoading = false;
     } catch (e) {
@@ -3934,6 +3956,7 @@ class ManufacturerViewModel extends BaseViewModel {
       );
       if (v['statusCode'] == 200 || v['statusCode'] == 201) {
         await AppUtils.snackbar(context, message: v['message']);
+        getManAndDistributorKyc(context);
       }
       _isLoading = false;
     } catch (e) {
@@ -4018,10 +4041,77 @@ class ManufacturerViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  Future<void> addBusinessAddresses({
+    context,
+    BusinessAddresses? businessAddresses,
+  }) async {
+    try {
+      _isLoading = true;
+      var v = await runBusyFuture(
+        repositoryImply.addBusinessAddresses(businessAddresses!),
+        throwException: true,
+      );
+      if (v['statusCode'] == 200 || v['statusCode'] == 201) {
+        getUserDetails(context);
+      }
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> updateBusinessAddress({
+    context,
+    BusinessAddresses? businessAddress,
+    String? id,
+  }) async {
+    try {
+      _isLoading = true;
+      var v = await runBusyFuture(
+        repositoryImply.updateBusinessAddress(
+          businessAddresses: businessAddress!,
+          id: id,
+        ),
+        throwException: true,
+      );
+      if (v['statusCode'] == 200 || v['statusCode'] == 201) {
+        getUserDetails(context);
+      }
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> deleteBusinessAddress(String id) async {
+    try {
+      _isLoading = true;
+      var v = await runBusyFuture(
+        repositoryImply.deleteBusinessAddress(id),
+        throwException: true,
+      );
+      if (v['statusCode'] == 200 || v['statusCode'] == 201) {
+        getUserDetails(context);
+      }
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+    }
+    notifyListeners();
+  }
+
   List<String> lgaList = [];
   List<String> lgaListCopy = [];
   List<String> lgaAddedList = [];
   List<Map<String, dynamic>> listOfAddedLocation = [];
+  List<Map<String, dynamic>> listOfAddedAddress = [];
   Map<String, dynamic>? selectedLocation;
 
   SecondLevelDistributorKycEntityModel?
@@ -4534,6 +4624,8 @@ class ManufacturerViewModel extends BaseViewModel {
   SecondLevelDistributorKycEntityModel?
   get secondLevelDistributorKycEntityModelImpLogo =>
       _secondLevelDistributorKycEntityModelImpLogo;
+  bool isNotReadable = false;
+  bool isNotReadable2 = false;
 
   void pickImageImporterKycCAC(BuildContext context) {
     try {
@@ -4713,6 +4805,11 @@ class ManufacturerViewModel extends BaseViewModel {
   }
 
   TextEditingController stateController = TextEditingController();
+  TextEditingController lgaController = TextEditingController();
+  TextEditingController countryController = TextEditingController();
+  TextEditingController businessAddController = TextEditingController();
+
+  bool isSeeMore = false;
 
   void showLGAAndStateDialog(
     BuildContext context, {
@@ -5167,6 +5264,613 @@ class ManufacturerViewModel extends BaseViewModel {
     );
   }
 
+  void showBusinessAreaLGAAndStateCountryDialog(
+    BuildContext context, {
+    bool isEdit = false,
+    int? editIndex,
+  }) {
+    if (isEdit && editIndex != null) {
+      final address = listOfAddedAddress[editIndex];
+
+      businessAddController.text = address['businessAddress']?.toString() ?? '';
+
+      countryController.text = address['country']?.toString() ?? '';
+
+      stateController.text = address['state']?.toString() ?? '';
+
+      lgaController.text = address['lga']?.toString() ?? '';
+    }
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return Container(
+              color: AppColors.transparent,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: TextButton.icon(
+                      onPressed: () => Navigator.pop(context),
+                      icon: Icon(Icons.close, color: Colors.white, size: 18),
+                      label: Text(
+                        "Close",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      style: TextButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 10.w,
+                          vertical: 4.w,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 6.10.h),
+                  Dialog(
+                    insetPadding: EdgeInsets.all(16.20.w),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    backgroundColor: AppColors.white,
+                    child: Padding(
+                      padding: EdgeInsets.all(21.4.w),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          TextView(
+                            text: !isEdit ? 'Add Address' : 'Edit Address',
+                            textStyle: TextStyle(
+                              fontSize: 15.86.sp,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.reminder1,
+                              fontFamily: 'DMSans',
+                            ),
+                          ),
+                          SizedBox(height: 16.2.h),
+                          TextFormWidget(
+                            hint: 'Business address',
+                            hintSize: 14,
+                            borderColor: AppColors.transparent,
+                            borderTopLeft: 10.r,
+                            borderTopRight: 10.r,
+                            borderBottomLeft: 10.r,
+                            borderBottomRight: 10.r,
+                            labelStyle: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontFamily: 'Arial',
+                              fontSize: 14.2.sp,
+                              color: AppColors.infoGrey,
+                            ),
+                            fillColor: AppColors.grey,
+                            isFilled: true,
+                            controller: businessAddController,
+                            validator: AppValidator.validateString(),
+                            onChange: (p0) {},
+                          ),
+                          SizedBox(height: 20.h),
+                          TextFormWidget(
+                            hint: 'Country',
+                            hintSize: 14,
+                            borderColor: AppColors.transparent,
+                            borderTopLeft: 10.r,
+                            borderTopRight: 10.r,
+                            borderBottomLeft: 10.r,
+                            borderBottomRight: 10.r,
+                            label: '--Select--',
+                            readOnly: true,
+                            labelStyle: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontFamily: 'Arial',
+                              fontSize: 14.2.sp,
+                              color: AppColors.infoGrey,
+                            ),
+                            fillColor: AppColors.grey,
+                            isFilled: true,
+                            controller: countryController,
+                            validator: AppValidator.validateString(),
+                            suffixWidget: Builder(
+                              builder: (context) {
+                                return GestureDetector(
+                                  onTap: () async {
+                                    final RenderBox button =
+                                        context.findRenderObject() as RenderBox;
+
+                                    final RenderBox overlay =
+                                        Overlay.of(
+                                              context,
+                                            ).context.findRenderObject()
+                                            as RenderBox;
+
+                                    final Offset buttonPosition = button
+                                        .localToGlobal(
+                                          Offset.zero,
+                                          ancestor: overlay,
+                                        );
+
+                                    final Size buttonSize = button.size;
+
+                                    final selectedState =
+                                        await showMenu<String>(
+                                          context: context,
+
+                                          position: RelativeRect.fromLTRB(
+                                            buttonPosition.dx,
+                                            buttonPosition.dy +
+                                                buttonSize.height +
+                                                5.h,
+                                            overlay.size.width -
+                                                buttonPosition.dx -
+                                                buttonSize.width,
+                                            0,
+                                          ),
+
+                                          constraints: BoxConstraints(
+                                            minWidth: 200.w,
+                                            maxWidth: 250.w,
+                                            minHeight: 60.h,
+                                            maxHeight: 450.h,
+                                          ),
+
+                                          color: AppColors.white,
+
+                                          elevation: 4,
+
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              10.r,
+                                            ),
+                                          ),
+
+                                          items: ['Nigeria']
+                                              .map<PopupMenuEntry<String>>((s) {
+                                                final String country = s;
+
+                                                return PopupMenuItem<String>(
+                                                  value: country,
+                                                  height: 38.h,
+                                                  padding: EdgeInsets.symmetric(
+                                                    horizontal: 14.w,
+                                                  ),
+                                                  child: TextView(
+                                                    text: country,
+                                                    textStyle: TextStyle(
+                                                      fontFamily: 'GoogleSans',
+                                                      fontSize: 13.70.sp,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      color: AppColors.black,
+                                                    ),
+                                                  ),
+                                                );
+                                              })
+                                              .toList(),
+                                        );
+
+                                    if (selectedState != null) {
+                                      countryController.text = selectedState;
+
+                                      // Reset LGA whenever state changes
+                                      lgaController.clear();
+                                      notifyListeners();
+                                    }
+                                  },
+
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 8.w,
+                                    ),
+                                    child: Icon(
+                                      Icons.keyboard_arrow_down,
+                                      color: AppColors.grey1,
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+
+                          SizedBox(height: 16.2.h),
+                          TextFormWidget(
+                            hint: 'State',
+                            label: '--Select--',
+                            rightPos: -14,
+                            hintSize: 14,
+                            borderColor: AppColors.transparent,
+                            borderTopLeft: 10.r,
+                            borderTopRight: 10.r,
+                            borderBottomLeft: 10.r,
+                            borderBottomRight: 10.r,
+                            labelStyle: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontFamily: 'Arial',
+                              fontSize: 14.2.sp,
+                              color: AppColors.infoGrey,
+                            ),
+                            fillColor: AppColors.grey,
+                            isFilled: true,
+                            readOnly: true,
+                            controller: stateController,
+                            suffixWidget: Builder(
+                              builder: (context) {
+                                return GestureDetector(
+                                  onTap: isEdit
+                                      ? () {}
+                                      : () async {
+                                          final RenderBox button =
+                                              context.findRenderObject()
+                                                  as RenderBox;
+
+                                          final RenderBox overlay =
+                                              Overlay.of(
+                                                    context,
+                                                  ).context.findRenderObject()
+                                                  as RenderBox;
+
+                                          final Offset buttonPosition = button
+                                              .localToGlobal(
+                                                Offset.zero,
+                                                ancestor: overlay,
+                                              );
+
+                                          final Size buttonSize = button.size;
+
+                                          final selectedState =
+                                              await showMenu<String>(
+                                                context: context,
+
+                                                position: RelativeRect.fromLTRB(
+                                                  buttonPosition.dx,
+                                                  buttonPosition.dy +
+                                                      buttonSize.height +
+                                                      5.h,
+                                                  overlay.size.width -
+                                                      buttonPosition.dx -
+                                                      buttonSize.width,
+                                                  0,
+                                                ),
+
+                                                constraints: BoxConstraints(
+                                                  minWidth: 200.w,
+                                                  maxWidth: 250.w,
+                                                  minHeight: 150.h,
+                                                  maxHeight: 450.h,
+                                                ),
+
+                                                color: AppColors.white,
+
+                                                elevation: 4,
+
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                        10.r,
+                                                      ),
+                                                ),
+
+                                                items: stateLgaFormat
+                                                    .map<
+                                                      PopupMenuEntry<String>
+                                                    >((s) {
+                                                      final String state =
+                                                          s['state']
+                                                              ?.toString() ??
+                                                          '';
+
+                                                      return PopupMenuItem<
+                                                        String
+                                                      >(
+                                                        value: state,
+                                                        height: 38.h,
+                                                        padding:
+                                                            EdgeInsets.symmetric(
+                                                              horizontal: 14.w,
+                                                            ),
+                                                        child: TextView(
+                                                          text: state,
+                                                          textStyle: TextStyle(
+                                                            fontFamily:
+                                                                'GoogleSans',
+                                                            fontSize: 13.70.sp,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                            color:
+                                                                AppColors.black,
+                                                          ),
+                                                        ),
+                                                      );
+                                                    })
+                                                    .toList(),
+                                              );
+
+                                          if (selectedState != null) {
+                                            stateController.text =
+                                                selectedState;
+                                            final selectedStateLga =
+                                                stateLgaFormat.firstWhere(
+                                                  (state) =>
+                                                      state['state']
+                                                          .toString()
+                                                          .trim()
+                                                          .toLowerCase() ==
+                                                      stateController.text
+                                                          .trim()
+                                                          .toLowerCase(),
+                                                  orElse: () =>
+                                                      <String, dynamic>{
+                                                        'state': '',
+                                                        'lgas': <String>[],
+                                                      },
+                                                );
+
+                                            final selectedLgas =
+                                                List<String>.from(
+                                                  selectedStateLga['lgas'] ??
+                                                      <String>[],
+                                                );
+
+                                            lgaList = List<String>.from(
+                                              selectedLgas,
+                                            );
+                                            lgaListCopy = List<String>.from(
+                                              selectedLgas,
+                                            );
+
+                                            // Optional: reset previously selected LGAs
+                                            lgaAddedList.clear();
+                                          }
+                                          setModalState(() {});
+                                          notifyListeners();
+                                        },
+
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 8.w,
+                                    ),
+                                    child: Icon(
+                                      Icons.keyboard_arrow_down,
+                                      color: isEdit
+                                          ? AppColors.greygreyer
+                                          : AppColors.grey1,
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+
+                            validator: AppValidator.validateString(),
+                          ),
+
+                          SizedBox(height: 12.30.h),
+                          TextFormWidget(
+                            hint: 'LGA',
+                            label: '-Select-',
+                            hintColor: AppColors.reminder,
+                            hintSize: Platform.isAndroid ? 14.sp : 12.sp,
+                            borderColor: AppColors.transparent,
+                            borderTopLeft: 10.r,
+                            borderTopRight: 10.r,
+                            borderBottomLeft: 10.r,
+                            borderBottomRight: 10.r,
+                            fillColor: AppColors.grey,
+                            isFilled: true,
+                            readOnly: true,
+                            controller: lgaController,
+                            suffixWidget: Builder(
+                              builder: (context) {
+                                return GestureDetector(
+                                  onTap: () async {
+                                    final RenderBox button =
+                                        context.findRenderObject() as RenderBox;
+
+                                    final RenderBox overlay =
+                                        Overlay.of(
+                                              context,
+                                            ).context.findRenderObject()
+                                            as RenderBox;
+
+                                    final Offset buttonPosition = button
+                                        .localToGlobal(
+                                          Offset.zero,
+                                          ancestor: overlay,
+                                        );
+
+                                    final Size buttonSize = button.size;
+
+                                    final selectedState = stateLgaFormat
+                                        .firstWhere(
+                                          (state) =>
+                                              state['state']
+                                                  .toString()
+                                                  .trim()
+                                                  .toLowerCase() ==
+                                              stateController.text
+                                                  .trim()
+                                                  .toLowerCase(),
+                                          orElse: () => <String, dynamic>{
+                                            'state': '',
+                                            'lgas': <String>[],
+                                          },
+                                        );
+
+                                    final List<dynamic> lgas =
+                                        selectedState['lgas'] ?? [];
+
+                                    if (lgas.isEmpty) {
+                                      return;
+                                    }
+
+                                    final selectedLga = await showMenu<String>(
+                                      context: context,
+
+                                      position: RelativeRect.fromLTRB(
+                                        buttonPosition.dx,
+                                        buttonPosition.dy +
+                                            buttonSize.height +
+                                            5.h,
+                                        overlay.size.width -
+                                            buttonPosition.dx -
+                                            buttonSize.width,
+                                        0,
+                                      ),
+
+                                      constraints: BoxConstraints(
+                                        minWidth: 200.w,
+                                        maxWidth: 250.w,
+                                        minHeight: 110.h,
+                                        maxHeight: 420.h,
+                                      ),
+
+                                      color: AppColors.white,
+
+                                      elevation: 4,
+
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(
+                                          10.r,
+                                        ),
+                                      ),
+
+                                      items: lgas.map<PopupMenuEntry<String>>((
+                                        lga,
+                                      ) {
+                                        return PopupMenuItem<String>(
+                                          value: lga.toString(),
+                                          height: 38.h,
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 14.w,
+                                          ),
+                                          child: TextView(
+                                            text: lga.toString(),
+                                            textStyle: TextStyle(
+                                              fontFamily: 'GoogleSans',
+                                              fontSize: 13.70.sp,
+                                              fontWeight: FontWeight.w500,
+                                              color: AppColors.black,
+                                            ),
+                                          ),
+                                        );
+                                      }).toList(),
+                                    );
+
+                                    if (selectedLga != null) {
+                                      lgaController.text = selectedLga;
+                                      notifyListeners();
+                                    }
+                                  },
+
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 8.w,
+                                    ),
+                                    child: Icon(
+                                      Icons.keyboard_arrow_down,
+                                      color: AppColors.grey1,
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                            validator: AppValidator.validateString(),
+                            style: TextStyle(
+                              fontSize: 16.20.sp,
+                              fontWeight: FontWeight.w400,
+                              fontFamily: 'DMSans',
+                            ),
+
+                            labelStyle: TextStyle(
+                              fontSize: 15.20.sp,
+                              fontWeight: FontWeight.w400,
+                              fontFamily: 'DMSans',
+                              color: AppColors.faintedGrey,
+                            ),
+                          ),
+                          SizedBox(height: 30.h),
+                          Row(
+                            children: [
+                              Expanded(
+                                flex: 2,
+                                child: ButtonWidget(
+                                  border: 100.r,
+                                  buttonColor: AppColors.grey,
+                                  buttonText: 'Cancel',
+                                  color: AppColors.reminder1,
+                                  buttonBorderColor: AppColors.transparent,
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                    notifyListeners();
+                                  },
+                                ),
+                              ),
+                              SizedBox(width: 20.w),
+                              Expanded(
+                                flex: 3,
+                                child: ButtonWidget(
+                                  border: 100.r,
+                                  buttonColor: AppColors.primary,
+                                  buttonText: !isEdit ? 'Add' : 'Save Changes',
+                                  color: AppColors.white,
+                                  buttonBorderColor: AppColors.transparent,
+                                  onPressed: () async {
+                                    if (isEdit) {
+                                      if (editIndex != null &&
+                                          editIndex >= 0 &&
+                                          editIndex <
+                                              listOfAddedAddress.length) {
+                                        listOfAddedAddress[editIndex] = {
+                                          'state': stateController.text.trim(),
+                                          'lga': lgaController.text.trim(),
+                                          'country': countryController.text
+                                              .trim(),
+                                          'businessAddress':
+                                              businessAddController.text.trim(),
+                                        };
+                                      }
+                                    } else {
+                                      // ADD NEW STATE
+                                      if (listOfAddedAddress.length < 3) {
+                                        listOfAddedAddress.add({
+                                          'state': stateController.text.trim(),
+                                          'lga': lgaController.text.trim(),
+                                          'country': countryController.text
+                                              .trim(),
+                                          'businessAddress':
+                                              businessAddController.text.trim(),
+                                        });
+                                      }
+                                    }
+                                    // }
+                                    await Future.delayed(Duration(seconds: 1));
+                                    lgaListCopy.clear();
+                                    setModalState(() {});
+                                    Navigator.pop(context);
+                                    notifyListeners();
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
   void viewKycLevelDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -5362,37 +6066,16 @@ class ManufacturerViewModel extends BaseViewModel {
                                           mainAxisAlignment:
                                               MainAxisAlignment.start,
                                           children: [
-                                            model
-                                                        .getDistributorKycResponseModel
-                                                        ?.data
-                                                        ?.kycLevels?[1]
-                                                        .status
-                                                        ?.toLowerCase() !=
-                                                    'approved'
-                                                ? SvgPicture.asset(
-                                                    AppImage.locked_padlock,
-                                                  )
-                                                : Icon(
-                                                    Icons.check_circle_outline,
-                                                    size: 16.sp,
-                                                    color: AppColors.app_green,
-                                                  ),
+                                            SvgPicture.asset(
+                                              AppImage.locked_padlock,
+                                            ),
                                             SizedBox(width: 10.w),
                                             TextView(
                                               text: 'Upload products',
                                               textStyle: TextStyle(
                                                 fontSize: 14.86.sp,
                                                 fontWeight: FontWeight.w400,
-                                                color:
-                                                    model
-                                                            .getDistributorKycResponseModel
-                                                            ?.data
-                                                            ?.kycLevels?[1]
-                                                            .status
-                                                            ?.toLowerCase() !=
-                                                        'approved'
-                                                    ? AppColors.infoGrey
-                                                    : AppColors.reminder1,
+                                                color: AppColors.infoGrey,
                                                 fontFamily: 'DMSans',
                                               ),
                                             ),
@@ -5403,37 +6086,16 @@ class ManufacturerViewModel extends BaseViewModel {
                                           mainAxisAlignment:
                                               MainAxisAlignment.start,
                                           children: [
-                                            model
-                                                        .getDistributorKycResponseModel
-                                                        ?.data
-                                                        ?.kycLevels?[1]
-                                                        .status
-                                                        ?.toLowerCase() !=
-                                                    'approved'
-                                                ? SvgPicture.asset(
-                                                    AppImage.locked_padlock,
-                                                  )
-                                                : Icon(
-                                                    Icons.check_circle_outline,
-                                                    size: 16.sp,
-                                                    color: AppColors.app_green,
-                                                  ),
+                                            SvgPicture.asset(
+                                              AppImage.locked_padlock,
+                                            ),
                                             SizedBox(width: 10.w),
                                             TextView(
                                               text: 'Publish products',
                                               textStyle: TextStyle(
                                                 fontSize: 14.86.sp,
                                                 fontWeight: FontWeight.w400,
-                                                color:
-                                                    model
-                                                            .getDistributorKycResponseModel
-                                                            ?.data
-                                                            ?.kycLevels?[1]
-                                                            .status
-                                                            ?.toLowerCase() !=
-                                                        'approved'
-                                                    ? AppColors.infoGrey
-                                                    : AppColors.reminder1,
+                                                color: AppColors.infoGrey,
                                                 fontFamily: 'DMSans',
                                               ),
                                             ),
@@ -5444,37 +6106,16 @@ class ManufacturerViewModel extends BaseViewModel {
                                           mainAxisAlignment:
                                               MainAxisAlignment.start,
                                           children: [
-                                            model
-                                                        .getDistributorKycResponseModel
-                                                        ?.data
-                                                        ?.kycLevels?[1]
-                                                        .status
-                                                        ?.toLowerCase() !=
-                                                    'approved'
-                                                ? SvgPicture.asset(
-                                                    AppImage.locked_padlock,
-                                                  )
-                                                : Icon(
-                                                    Icons.check_circle_outline,
-                                                    size: 16.sp,
-                                                    color: AppColors.app_green,
-                                                  ),
+                                            SvgPicture.asset(
+                                              AppImage.locked_padlock,
+                                            ),
                                             SizedBox(width: 10.w),
                                             TextView(
                                               text: 'Receive Orders',
                                               textStyle: TextStyle(
                                                 fontSize: 14.86.sp,
                                                 fontWeight: FontWeight.w400,
-                                                color:
-                                                    model
-                                                            .getDistributorKycResponseModel
-                                                            ?.data
-                                                            ?.kycLevels?[1]
-                                                            .status
-                                                            ?.toLowerCase() !=
-                                                        'approved'
-                                                    ? AppColors.infoGrey
-                                                    : AppColors.reminder1,
+                                                color: AppColors.infoGrey,
                                                 fontFamily: 'DMSans',
                                               ),
                                             ),
@@ -5754,21 +6395,9 @@ class ManufacturerViewModel extends BaseViewModel {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            model
-                                                        .getDistributorKycResponseModel
-                                                        ?.data
-                                                        ?.kycLevels?[1]
-                                                        .status
-                                                        ?.toLowerCase() !=
-                                                    'approved'
-                                                ? SvgPicture.asset(
-                                                    AppImage.locked_padlock,
-                                                  )
-                                                : Icon(
-                                                    Icons.check_circle_outline,
-                                                    size: 16.sp,
-                                                    color: AppColors.app_green,
-                                                  ),
+                                            SvgPicture.asset(
+                                              AppImage.locked_padlock,
+                                            ),
                                             SizedBox(width: 10.w),
                                             TextView(
                                               text:
@@ -5776,16 +6405,7 @@ class ManufacturerViewModel extends BaseViewModel {
                                               textStyle: TextStyle(
                                                 fontSize: 14.86.sp,
                                                 fontWeight: FontWeight.w400,
-                                                color:
-                                                    model
-                                                            .getDistributorKycResponseModel
-                                                            ?.data
-                                                            ?.kycLevels?[1]
-                                                            .status
-                                                            ?.toLowerCase() !=
-                                                        'approved'
-                                                    ? AppColors.infoGrey
-                                                    : AppColors.reminder1,
+                                                color: AppColors.infoGrey,
                                                 fontFamily: 'DMSans',
                                               ),
                                             ),

@@ -19,6 +19,7 @@ Data _$DataFromJson(Map<String, dynamic> json) => Data(
       ? null
       : Logo.fromJson(json['logo'] as Map<String, dynamic>),
   lga: json['lga'] as String?,
+  businessAddresses: json['businessAddresses'] as List<BusinessAddresses>?,
   phone: json['phone'] as String?,
   kycStatus: json['kycStatus'] as String?,
   isProfileComplete: json['isProfileComplete'] as bool?,
@@ -48,6 +49,7 @@ Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
   'country': instance.country,
   'state': instance.state,
   'lga': instance.lga,
+  'businessAddresses': instance.businessAddresses,
   'phone': instance.phone,
   'kycStatus': instance.kycStatus,
   'isProfileComplete': instance.isProfileComplete,

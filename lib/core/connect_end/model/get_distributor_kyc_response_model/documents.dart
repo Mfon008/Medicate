@@ -19,7 +19,7 @@ class Documents {
   PharmaceuticalDistributionLicense? pharmaceuticalDistributionLicense;
   NafdacPermit? nafdacPermit;
   PharmacyCouncilLicense? pharmacyCouncilLicense;
-  CompanyLogo? companyLogo; 
+  CompanyLogo? companyLogo;
   GmpCertificate? gmpCertificate;
   ImportPermit? importPermit;
   NafdacManufacturingLicense? nafdacManufacturingLicense;

@@ -9,6 +9,7 @@ import '../model/distributor_wholesale_category_model/distributor_wholesale_cate
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
 import '../model/get_all_product_list_response_model/get_all_product_list_response_model.dart';
 import '../model/get_distributor_kyc_response_model/get_distributor_kyc_response_model.dart';
+import '../model/get_distributor_profile_response_model/business_addresses.dart';
 import '../model/get_incoming_order_ddetail_response_model/get_incoming_order_ddetail_response_model.dart';
 import '../model/get_single_product_response_model/get_single_product_response_model.dart';
 import '../model/get_user_details_response_model/get_user_details_response_model.dart';
@@ -182,4 +183,16 @@ class ManufacturerContractImpl {
   ) async => await _api.submitLevelThreeManAndDistributorKyc(kycEntity);
   Future<UploadImageResponseModel> uploadImage(MultipartFile file) async =>
       await _api.uploadImage(file);
+  Future<dynamic> addBusinessAddresses(
+    BusinessAddresses businessAddresses,
+  ) async => await _api.addBusinessAddresses(businessAddresses);
+  Future<dynamic> updateBusinessAddress({
+    BusinessAddresses? businessAddresses,
+    String? id,
+  }) async => await _api.updateBusinessAddress(
+    businessAddresses: businessAddresses,
+    id: id,
+  );
+  Future<dynamic> deleteBusinessAddress(String id) async =>
+      await _api.deletebusinessAddress(id);
 }

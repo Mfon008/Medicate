@@ -577,7 +577,6 @@ class _SpecialistsProviderWholesaleState
                             //     ],
                             //   ),
                             // ),
-                            
                             SizedBox(height: 6.h),
                             Divider(color: AppColors.infoGrey1),
                             SizedBox(height: 10.h),
