@@ -853,19 +853,28 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                               ),
                             ),
                             IconButton(
-                              onPressed: model.getTetantResponseModel!.data!.businessAddresses!.length<3? () async {
-                                model.stateBusController.clear();
-                                model.lgaBusController.clear();
-                                model.businessAddController.clear();
-                                model.countryBusController.clear();
-                                final result = await model
-                                    .showBusinessAreaLGAAndStateCountryDialog(
-                                      context,
-                                    );
-                                if (result == true) {
-                                  model.getTenant(context);
-                                }
-                              }:(){},
+                              onPressed:model
+                                          .getTetantResponseModel!=null&&
+                                  model
+                                          .getTetantResponseModel!
+                                          .data!
+                                          .businessAddresses!
+                                          .length <
+                                      3
+                                  ? () async {
+                                      model.stateBusController.clear();
+                                      model.lgaBusController.clear();
+                                      model.businessAddController.clear();
+                                      model.countryBusController.clear();
+                                      final result = await model
+                                          .showBusinessAreaLGAAndStateCountryDialog(
+                                            context,
+                                          );
+                                      if (result == true) {
+                                        model.getTenant(context);
+                                      }
+                                    }
+                                  : () {},
                               icon: Icon(
                                 Icons.add,
                                 color: AppColors.reminder1,
@@ -952,9 +961,20 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                                           SizedBox(width: 10.h),
                                           GestureDetector(
                                             onTap: () async {
-                                              model.deleteBusinessAddress(
-                                                o.id!,
-                                              );
+                                              bool? delete = await model
+                                                  .showRemoveBusinessAddressDialog(
+                                                    context: context,
+                                                    businessAddressId: o.id,
+                                                  );
+                                              if (delete == true) {
+                                                await Future.delayed(
+                                                  Duration(seconds: 1),
+                                                );
+                                                model.getTenant(
+                                                  context,
+                                                ); // refresh roles after modal closes
+                                              } else {}
+
                                               model.notifyListeners();
                                             },
                                             child: SvgPicture.asset(

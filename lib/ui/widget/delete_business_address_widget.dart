@@ -11,23 +11,23 @@ import '../../core/app_assets/image.dart';
 import '../../core/config/colors.dart';
 import '../../core/connect_end/view_model/pharm_auth_view_model.dart';
 
-class DeleteRoleModalWidget extends StatelessWidget {
-  const DeleteRoleModalWidget({
+class DeleteBusinessAddressWidgetModalWidget extends StatelessWidget {
+  const DeleteBusinessAddressWidgetModalWidget({
     super.key,
-    this.roleId,
+    this.businessAddressId,
     required this.onFailed,
     required this.onSuccess,
     required this.parentContext,
   });
 
-  final String? roleId;
+  final String? businessAddressId;
   final VoidCallback onSuccess;
   final VoidCallback onFailed;
   final BuildContext parentContext;
 
-  void deleteRole(modelPharm) async {
-    await modelPharm.deleteRole(parentContext, roleId: roleId);
-    if (modelPharm.vdelete != null && modelPharm.vdelete['statusCode'] == 200) {
+  void deleteBusinessAddress(modelPharm) async {
+    await modelPharm.deleteBusinessAddress(parentContext, businessAddressId: businessAddressId);
+    if (modelPharm.vdelete != null && modelPharm.vdelete['statusCode'] == 200||modelPharm.vdelete['statusCode'] == 201) {
       onSuccess();
     } else {
       await AppUtils.snackbar(
@@ -104,7 +104,7 @@ class DeleteRoleModalWidget extends StatelessWidget {
                       ),
                       SizedBox(height: 12.h),
                       TextView(
-                        text: 'Delete Role',
+                        text: 'Delete Address',
                         textStyle: TextStyle(
                           fontFamily: 'GoogleSans',
                           color: AppColors.black,
@@ -114,7 +114,7 @@ class DeleteRoleModalWidget extends StatelessWidget {
                       ),
                       SizedBox(height: 12.h),
                       TextView(
-                        text: 'Are you sure you want to delete this role?',
+                        text: 'Are you sure you want to delete this business address?',
                         textAlign: TextAlign.center,
                         textStyle: TextStyle(
                           fontFamily: 'Arial',
@@ -160,7 +160,7 @@ class DeleteRoleModalWidget extends StatelessWidget {
                           // Continue Button
                           Expanded(
                             child: ElevatedButton(
-                              onPressed: () => deleteRole(model),
+                              onPressed: () => deleteBusinessAddress(model),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.primary,
                                 shape: RoundedRectangleBorder(

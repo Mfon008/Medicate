@@ -50,6 +50,7 @@ import '../../../ui/widget/add_role_modal_widget.dart';
 import '../../../ui/widget/add_user_modal_widget.dart';
 import '../../../ui/widget/auto_scroll_text.dart';
 import '../../../ui/widget/button.dart';
+import '../../../ui/widget/delete_business_address_widget.dart';
 import '../../../ui/widget/delete_role_modal_widget.dart';
 import '../../../ui/widget/text.dart';
 import '../../../ui/widget/text_form_dose_widget.dart';
@@ -2450,20 +2451,21 @@ class PharmViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Future<void> deleteBusinessAddress(String id) async {
+  Future<void> deleteBusinessAddress(context,{String? businessAddressId}) async {
     try {
       _isLoading = true;
-      var v = await runBusyFuture(
-        repositoryImply.deleteBusinessAddress(id),
+     vdelete =  await runBusyFuture(
+        repositoryImply.deleteBusinessAddress(businessAddressId!),
         throwException: true,
       );
-      if (v['statusCode'] == 200 || v['statusCode'] == 201) {
-        getTenant(context);
-      }
+      // if (v['statusCode'] == 200 || v['statusCode'] == 201) {
+      //   getTenant(context);
+      // }
       _isLoading = false;
     } catch (e) {
       _isLoading = false;
       logger.d(e);
+      vdeleteErrorMessage = e.toString();
     }
     notifyListeners();
   }
@@ -20669,6 +20671,25 @@ class PharmViewModel extends BaseViewModel {
       AppUtils.snackbar(context, message: e.toString(), error: true);
     }
     notifyListeners();
+  }
+
+  Future<bool?> showRemoveBusinessAddressDialog({context, String? businessAddressId}) {
+    return showDialog<bool>(
+      context: context,
+      barrierDismissible: false, // prevent closing by tapping outside
+      builder: (BuildContext context) {
+        return DeleteBusinessAddressWidgetModalWidget(
+          businessAddressId: businessAddressId,
+          parentContext: context,
+          onSuccess: () {
+            Navigator.of(context).pop(true);
+          },
+          onFailed: () {
+            Navigator.of(context).pop(false);
+          },
+        );
+      },
+    );
   }
 
   Future<bool?> showBusinessAreaLGAAndStateCountryDialog(
