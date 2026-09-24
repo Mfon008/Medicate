@@ -21,8 +21,9 @@ import '../../widget/text.dart';
 import '../../widget/text_form_widget.dart';
 
 class PharmacyWholesaleCategoryScreen extends StatefulWidget {
-  PharmacyWholesaleCategoryScreen({super.key, this.id});
+  PharmacyWholesaleCategoryScreen({super.key, this.id, this.name});
   String? id;
+  String? name;
 
   @override
   State<PharmacyWholesaleCategoryScreen> createState() =>
@@ -40,7 +41,9 @@ class _PharmacyWholesaleCategoryScreenState
         MediaQuery.of(context).size.shortestSide >= 600;
     return ViewModelBuilder<PharmViewModel>.reactive(
       viewModelBuilder: () => PharmViewModel(),
-      onViewModelReady: (model) async {},
+      onViewModelReady: (model) async {
+        await model.getListedMarketPlaceWithCatIdCat(context, catId: widget.id);
+      },
       disposeViewModel: false,
       onDispose: (viewModel) {},
       builder: (_, PharmViewModel model, _) {
@@ -55,9 +58,9 @@ class _PharmacyWholesaleCategoryScreenState
               child: GlobalNavigator(),
             ),
             title: TextView(
-              text: 'Antibiotics Category',
+              text: '${widget.name!.capitalize()} Category',
               textStyle: TextStyle(
-                fontFamily: 'GoogleSans',
+                fontFamily: 'DMSans',
                 fontSize: 17.2.sp,
                 fontWeight: FontWeight.w700,
                 color: AppColors.black,
@@ -65,12 +68,11 @@ class _PharmacyWholesaleCategoryScreenState
             ),
             centerTitle: true,
           ),
-          body: SingleChildScrollView(
+          body: Padding(
             padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 24.w),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 20.h),
+                SizedBox(height: 12.20.h),
 
                 Row(
                   children: [
@@ -78,7 +80,7 @@ class _PharmacyWholesaleCategoryScreenState
                       child: TextFormWidget(
                         label: 'Search products, manufacturers, SKU...',
                         labelStyle: TextStyle(
-                          fontFamily: 'Arial',
+                          fontFamily: 'DMSans',
                           fontSize: 14.60.sp,
                           color: AppColors.fineGrey,
                           fontWeight: FontWeight.w400,
@@ -109,7 +111,10 @@ class _PharmacyWholesaleCategoryScreenState
                               ),
                         onChange: (value) {
                           model.debouncer.run(() {
-                            model.getListedMarketPlace(context);
+                            model.getListedMarketPlaceWithCatIdCat(
+                              context,
+                              catId: widget.id,
+                            );
                           });
                           model.searchProduct = value;
                         },
@@ -117,840 +122,901 @@ class _PharmacyWholesaleCategoryScreenState
                     ),
                   ],
                 ),
-                SizedBox(height: 16.h),
-                if (model.getListedMarketPlaceResponseModel != null &&
-                    model
-                        .getListedMarketPlaceResponseModel!
-                        .data!
-                        .products!
-                        .isNotEmpty)
-                  ...model.getListedMarketPlaceResponseModel!.data!.products!.map((
-                    m,
-                  ) {
-                    final int minimumQuantity = m.minimumOrderQuantity ?? 1;
-                    int currentQuantity =
-                        model.selectedQuantities[m.id] ?? minimumQuantity;
-                    return GestureDetector(
-                      onTap: () => navigate.navigateTo(
-                        Routes.pharmacyViewProductScreen,
-                        arguments: PharmacyViewProductScreenArguments(
-                          wholeSaleProductId: m.id,
-                        ),
-                      ),
-                      child: Container(
-                        width: double.infinity,
-                        padding: EdgeInsets.all(8.10.w),
-                        margin: EdgeInsets.only(bottom: 16.w),
-                        decoration: BoxDecoration(
-                          color: AppColors.white,
-                          borderRadius: BorderRadius.circular(12.r),
-                        ),
-                        child: Column(
-                          children: [
-                            Stack(
-                              children: [
-                                Container(
-                                  width: double.infinity,
-                                  height: 198.h,
-                                  decoration: BoxDecoration(
-                                    color: AppColors.white,
-                                    borderRadius: BorderRadius.circular(10.r),
-                                    border: Border.all(
-                                      color: const Color.fromARGB(
-                                        255,
-                                        236,
-                                        237,
-                                        237,
-                                      ),
-                                    ),
-                                  ),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(4.r),
-                                    child: CachedNetworkImage(
-                                      imageUrl: m.images?[0].url ?? '',
-                                      height: 162.h,
-                                      width: 122.w,
-                                      fit: BoxFit.contain,
-                                      placeholder: (context, url) => Center(
-                                        child: SpinKitRipple(
-                                          color: AppColors.primary,
-                                          size: 50.sp,
-                                        ),
-                                      ),
-                                      errorWidget: (context, url, error) =>
-                                          Container(),
-                                    ),
-                                  ),
+                SizedBox(height: 26.h),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 10.h),
+                        if (model.getListedMarketPlaceResponseModelCat !=
+                                null &&
+                            model
+                                .getListedMarketPlaceResponseModelCat!
+                                .data!
+                                .products!
+                                .isNotEmpty)
+                          ...model.getListedMarketPlaceResponseModelCat!.data!.products!.map((
+                            m,
+                          ) {
+                            final int minimumQuantity =
+                                m.minimumOrderQuantity ?? 1;
+                            int currentQuantity =
+                                model.selectedQuantities[m.id] ??
+                                minimumQuantity;
+                            return GestureDetector(
+                              onTap: () => navigate.navigateTo(
+                                Routes.pharmacyViewProductScreen,
+                                arguments: PharmacyViewProductScreenArguments(
+                                  wholeSaleProductId: m.id,
                                 ),
-
-                                // Positioned(
-                                //   top: 17.20,
-                                //   left: 16.20,
-                                //   child:
-                                //       (m.manufacturerName == null ||
-                                //           m.manufacturerName!.trim().isEmpty)
-                                //       ? SizedBox.shrink()
-                                //       : Container(
-                                //           padding: EdgeInsets.symmetric(
-                                //             vertical: 4.60.w,
-                                //             horizontal: 6.8.w,
-                                //           ),
-                                //           decoration: BoxDecoration(
-                                //             color: AppColors.appWhite,
-                                //             borderRadius: BorderRadius.circular(
-                                //               20.r,
-                                //             ),
-                                //           ),
-                                //           child: Row(
-                                //             mainAxisAlignment:
-                                //                 MainAxisAlignment.spaceBetween,
-                                //             children: [
-                                //               TextView(
-                                //                 text: 'Manufacturer: ',
-                                //                 textStyle: TextStyle(
-                                //                   fontFamily: 'DMSans',
-                                //                   fontSize: 13.20.sp,
-                                //                   fontWeight: FontWeight.w400,
-                                //                   color: AppColors.black,
-                                //                 ),
-                                //               ),
-                                //               // SizedBox(width: 50.h),
-                                //               TextView(
-                                //                 text: m.manufacturerName ?? '',
-                                //                 textStyle: TextStyle(
-                                //                   fontFamily: 'DMSans',
-                                //                   fontSize: 13.30.sp,
-                                //                   fontWeight: FontWeight.w500,
-                                //                   color: AppColors.black,
-                                //                 ),
-                                //               ),
-                                //             ],
-                                //           ),
-                                //         ),
-                                // ),
-                                Positioned(
-                                  left: 1,
-                                  bottom: 1,
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 8.80.w,
-                                      vertical: 6.w,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey.shade200,
-                                      borderRadius: BorderRadius.only(
-                                        topRight: Radius.circular(6.r),
-                                        bottomLeft: Radius.circular(4.r),
-                                      ),
-                                    ),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: List.generate(
-                                        m.images!.length,
-                                        (index) => AnimatedContainer(
-                                          duration: const Duration(
-                                            milliseconds: 300,
-                                          ),
-                                          margin: EdgeInsets.symmetric(
-                                            horizontal: 3.2.w,
-                                          ),
-                                          width: 10,
-                                          height: 10,
+                              ),
+                              child: Container(
+                                width: double.infinity,
+                                padding: EdgeInsets.all(8.10.w),
+                                margin: EdgeInsets.only(bottom: 16.w),
+                                decoration: BoxDecoration(
+                                  color: AppColors.white,
+                                  borderRadius: BorderRadius.circular(12.r),
+                                ),
+                                child: Column(
+                                  children: [
+                                    Stack(
+                                      children: [
+                                        Container(
+                                          width: double.infinity,
+                                          height: 198.h,
                                           decoration: BoxDecoration(
-                                            color: currentPage == index
-                                                ? AppColors.primary
-                                                : AppColors.infoGrey,
-                                            shape: BoxShape.circle,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 10.h),
-                            Padding(
-                              padding: EdgeInsets.all(12.w),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  //(Carton of ${m.packSize} packs)
-                                  TextView(
-                                    text: m.productName?.capitalize() ?? '',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'DMSans',
-                                      fontSize: 17.20.sp,
-                                      fontWeight: FontWeight.w500,
-                                      color: AppColors.reminder,
-                                      letterSpacing: -0.21,
-                                    ),
-                                  ),
-                                  SizedBox(height: 6.h),
-                                  Divider(color: AppColors.infoGrey1),
-                                  SizedBox(height: 6.h),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      TextView(
-                                        text: 'Pack Size:',
-                                        textStyle: TextStyle(
-                                          fontFamily: 'DMSans',
-                                          fontSize: 14.20.sp,
-                                          fontWeight: FontWeight.w500,
-                                          color: AppColors.infoGrey,
-                                        ),
-                                      ),
-                                      TextView(
-                                        text: '${m.packSize} / carton',
-                                        textStyle: TextStyle(
-                                          fontFamily: 'DMSans',
-                                          fontSize: 14.20.sp,
-                                          fontWeight: FontWeight.w500,
-                                          color: AppColors.reminder,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 10.h),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      TextView(
-                                        text: 'Available Stock:',
-                                        textStyle: TextStyle(
-                                          fontFamily: 'Arial',
-                                          fontSize: 14.20.sp,
-                                          fontWeight: FontWeight.w500,
-                                          color: AppColors.infoGrey,
-                                        ),
-                                      ),
-                                      TextView(
-                                        text: '${m.stock} units',
-                                        textStyle: TextStyle(
-                                          fontFamily: 'DMSans',
-                                          fontSize: 14.20.sp,
-                                          fontWeight: FontWeight.w500,
-                                          color: AppColors.app_green,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 10.h),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      TextView(
-                                        text: 'MOQ:',
-                                        textStyle: TextStyle(
-                                          fontFamily: 'DMSans',
-                                          fontSize: 14.20.sp,
-                                          fontWeight: FontWeight.w500,
-                                          color: AppColors.infoGrey,
-                                        ),
-                                      ),
-                                      TextView(
-                                        text: m.minimumOrderQuantity! > 1
-                                            ? '${m.minimumOrderQuantity} cartons'
-                                            : '${m.minimumOrderQuantity} carton',
-                                        textStyle: TextStyle(
-                                          fontFamily: 'DMSans',
-                                          fontSize: 14.20.sp,
-                                          fontWeight: FontWeight.w500,
-                                          color: AppColors.reminder,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 10.h),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      TextView(
-                                        text: 'NAFDAC Reg No:',
-                                        textStyle: TextStyle(
-                                          fontFamily: 'DMSans',
-                                          fontSize: 14.20.sp,
-                                          fontWeight: FontWeight.w500,
-                                          color: AppColors.infoGrey,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 160.w,
-                                        child: TextView(
-                                          text:
-                                              m
-                                                  .nafdacVerification
-                                                  ?.registrationNumber ??
-                                              '',
-                                          maxLines: 1,
-                                          textOverflow: TextOverflow.ellipsis,
-                                          textAlign: TextAlign.right,
-                                          textStyle: TextStyle(
-                                            fontFamily: 'DMSans',
-                                            fontSize: 15.20.sp,
-                                            fontWeight: FontWeight.w500,
-                                            color: AppColors.reminder,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 10.h),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      TextView(
-                                        text: 'Expiry Date:',
-                                        textStyle: TextStyle(
-                                          fontFamily: 'DMSans',
-                                          fontSize: 14.20.sp,
-                                          fontWeight: FontWeight.w500,
-                                          color: AppColors.infoGrey,
-                                        ),
-                                      ),
-                                      TextView(
-                                        text: DateFormat(
-                                          'MM/yyyy',
-                                        ).format(m.expiryDate!),
-                                        textStyle: TextStyle(
-                                          fontFamily: 'DMSans',
-                                          fontSize: 15.20.sp,
-                                          fontWeight: FontWeight.w500,
-                                          color: AppColors.reminder,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 10.h),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      TextView(
-                                        text: 'Manufacturer:',
-                                        textStyle: TextStyle(
-                                          fontFamily: 'DMSans',
-                                          fontSize: 14.20.sp,
-                                          fontWeight: FontWeight.w500,
-                                          color: AppColors.infoGrey,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 170.w,
-                                        child: TextView(
-                                          text: m.manufacturerName ?? '',
-                                          maxLines: 1,
-                                          textOverflow: TextOverflow.ellipsis,
-                                          textStyle: TextStyle(
-                                            fontFamily: 'DMSans',
-                                            fontSize: 15.20.sp,
-                                            fontWeight: FontWeight.w500,
-                                            color: AppColors.reminder,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 6.h),
-                                  Divider(color: AppColors.infoGrey1),
-                                  SizedBox(height: 10.h),
-                                  // if (m.volumePricing!.isNotEmpty)
-                                  //   Container(
-                                  //     width: double.infinity,
-                                  //     padding: EdgeInsets.all(10.w),
-                                  //     decoration: BoxDecoration(
-                                  //       color: AppColors.grey,
-                                  //       borderRadius: BorderRadius.circular(
-                                  //         8.0.r,
-                                  //       ),
-                                  //       border: Border.all(
-                                  //         color: const Color.fromARGB(
-                                  //           255,
-                                  //           236,
-                                  //           237,
-                                  //           237,
-                                  //         ),
-                                  //       ),
-                                  //     ),
-                                  //     child: Column(
-                                  //       crossAxisAlignment:
-                                  //           CrossAxisAlignment.start,
-                                  //       children: [
-                                  //         TextView(
-                                  //           text: 'Volume Pricing',
-                                  //           textStyle: TextStyle(
-                                  //             fontFamily: 'DMSans',
-                                  //             fontSize: 14.20.sp,
-                                  //             fontWeight: FontWeight.w400,
-                                  //             color: AppColors.black,
-                                  //           ),
-                                  //         ),
-                                  //         SizedBox(height: 10.h),
-
-                                  //         SingleChildScrollView(
-                                  //           scrollDirection: Axis.horizontal,
-                                  //           child: Row(
-                                  //             mainAxisAlignment:
-                                  //                 MainAxisAlignment
-                                  //                     .spaceBetween,
-                                  //             children: [
-                                  //               ...m.volumePricing!.map(
-                                  //                 (vol) => Container(
-                                  //                   padding:
-                                  //                       EdgeInsets.symmetric(
-                                  //                         vertical: 6.60.w,
-                                  //                         horizontal: 8.w,
-                                  //                       ),
-                                  //                   margin: EdgeInsets.only(
-                                  //                     right: 10.w,
-                                  //                   ),
-                                  //                   decoration: BoxDecoration(
-                                  //                     color: AppColors.appWhite,
-                                  //                     borderRadius:
-                                  //                         BorderRadius.circular(
-                                  //                           20.r,
-                                  //                         ),
-                                  //                     border: Border.all(
-                                  //                       color:
-                                  //                           const Color.fromARGB(
-                                  //                             255,
-                                  //                             236,
-                                  //                             237,
-                                  //                             237,
-                                  //                           ),
-                                  //                     ),
-                                  //                   ),
-                                  //                   child: Row(
-                                  //                     mainAxisAlignment:
-                                  //                         MainAxisAlignment
-                                  //                             .spaceBetween,
-
-                                  //                     mainAxisSize:
-                                  //                         MainAxisSize.min,
-                                  //                     children: [
-                                  //                       TextView(
-                                  //                         text:
-                                  //                             '≥ ${vol['quantity']}:',
-                                  //                         textStyle: TextStyle(
-                                  //                           fontFamily:
-                                  //                               'DMSans',
-                                  //                           fontSize: 15.60.sp,
-                                  //                           fontWeight:
-                                  //                               FontWeight.w300,
-                                  //                           color:
-                                  //                               AppColors.black,
-                                  //                         ),
-                                  //                       ),
-                                  //                       SizedBox(width: 10.h),
-                                  //                       TextView(
-                                  //                         text: formatNaira(
-                                  //                           vol['enlistedPricePerUnit'],
-                                  //                         ),
-                                  //                         textStyle: TextStyle(
-                                  //                           fontFamily:
-                                  //                               'DMSans',
-                                  //                           fontSize: 15.80.sp,
-                                  //                           fontWeight:
-                                  //                               FontWeight.w500,
-                                  //                           color:
-                                  //                               AppColors.black,
-                                  //                         ),
-                                  //                       ),
-                                  //                     ],
-                                  //                   ),
-                                  //                 ),
-                                  //               ),
-                                  //             ],
-                                  //           ),
-                                  //         ),
-
-                                  //         SizedBox(height: 5.10.w),
-                                  //       ],
-                                  //     ),
-                                  //   ),
-                                  // SizedBox(
-                                  //   height: m.volumePricing!.isNotEmpty
-                                  //       ? 6.h
-                                  //       : 0.h,
-                                  // ),
-                                  // m.volumePricing!.isNotEmpty
-                                  //     ? Divider(color: AppColors.infoGrey1)
-                                  //     : SizedBox.shrink(),
-                                  // SizedBox(
-                                  //   height: m.volumePricing!.isNotEmpty
-                                  //       ? 10.h
-                                  //       : 0.h,
-                                  // ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      TextView(
-                                        text: formatNaira(
-                                          m.displayPricePerUnit!,
-                                        ),
-                                        textStyle: TextStyle(
-                                          fontFamily: 'GoogleSans',
-                                          fontSize: 19.80.sp,
-                                          fontWeight: FontWeight.w500,
-                                          color: AppColors.black,
-                                        ),
-                                      ),
-                                      TextView(
-                                        text: '/${m.unit}(s)',
-                                        textStyle: TextStyle(
-                                          fontFamily: 'GoogleSans',
-                                          fontSize: 14.80.sp,
-                                          fontWeight: FontWeight.w500,
-                                          color: AppColors.infoGrey,
-                                        ),
-                                      ),
-                                      Spacer(),
-                                      Container(
-                                        height: 30.h,
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(
-                                            7.92.r,
-                                          ),
-                                          border: Border.all(
-                                            color: const Color.fromARGB(
-                                              255,
-                                              236,
-                                              237,
-                                              237,
+                                            color: AppColors.white,
+                                            borderRadius: BorderRadius.circular(
+                                              10.r,
                                             ),
-                                          ),
-                                        ),
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          crossAxisAlignment:
-                                              editingQuantityProductId == m.id!
-                                              ? CrossAxisAlignment.end
-                                              : CrossAxisAlignment.center,
-                                          children: [
-                                            IconButton(
-                                              onPressed:
-                                                  currentQuantity <=
-                                                      minimumQuantity
-                                                  ? null
-                                                  : () {
-                                                      model.selectedQuantities[m
-                                                              .id!] =
-                                                          currentQuantity - 1;
-                                                      model.notifyListeners();
-                                                    },
-                                              icon: Icon(
-                                                Icons.remove,
-                                                size: 14.0.sp,
-                                                color:
-                                                    currentQuantity <=
-                                                        minimumQuantity
-                                                    ? AppColors.infoGrey
-                                                    : AppColors.reminder,
+                                            border: Border.all(
+                                              color: const Color.fromARGB(
+                                                255,
+                                                236,
+                                                237,
+                                                237,
                                               ),
                                             ),
+                                          ),
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.circular(
+                                              4.r,
+                                            ),
+                                            child: CachedNetworkImage(
+                                              imageUrl: m.images?[0].url ?? '',
+                                              height: 162.h,
+                                              width: 122.w,
+                                              fit: BoxFit.contain,
+                                              placeholder: (context, url) =>
+                                                  Center(
+                                                    child: SpinKitRipple(
+                                                      color: AppColors.primary,
+                                                      size: 50.sp,
+                                                    ),
+                                                  ),
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      Container(),
+                                            ),
+                                          ),
+                                        ),
 
-                                            editingQuantityProductId == m.id!
-                                                ? SizedBox(
-                                                    width: 35.w,
-                                                    height: 25.h,
-                                                    child: Form(
-                                                      key: model
-                                                          .quantityValueFormKey,
-                                                      child: TextFormField(
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                        decoration: InputDecoration(
-                                                          isDense: true,
-                                                          contentPadding:
-                                                              EdgeInsets.zero,
-                                                          border: OutlineInputBorder(
-                                                            borderRadius:
-                                                                BorderRadius.circular(
-                                                                  5.r,
-                                                                ),
-                                                          ),
-                                                        ),
-                                                        controller: model
-                                                            .quantityValueController,
-                                                        showCursor: false,
-                                                        keyboardType:
-                                                            TextInputType
-                                                                .number,
-                                                        validator:
-                                                            AppValidator.validateIntProductQuantity(),
-                                                        onChanged: (value) {
-                                                          if (value
-                                                              .isNotEmpty) {
-                                                            final quantity =
-                                                                int.tryParse(
-                                                                  value,
-                                                                );
+                                        // Positioned(
+                                        //   top: 17.20,
+                                        //   left: 16.20,
+                                        //   child:
+                                        //       (m.manufacturerName == null ||
+                                        //           m.manufacturerName!.trim().isEmpty)
+                                        //       ? SizedBox.shrink()
+                                        //       : Container(
+                                        //           padding: EdgeInsets.symmetric(
+                                        //             vertical: 4.60.w,
+                                        //             horizontal: 6.8.w,
+                                        //           ),
+                                        //           decoration: BoxDecoration(
+                                        //             color: AppColors.appWhite,
+                                        //             borderRadius: BorderRadius.circular(
+                                        //               20.r,
+                                        //             ),
+                                        //           ),
+                                        //           child: Row(
+                                        //             mainAxisAlignment:
+                                        //                 MainAxisAlignment.spaceBetween,
+                                        //             children: [
+                                        //               TextView(
+                                        //                 text: 'Manufacturer: ',
+                                        //                 textStyle: TextStyle(
+                                        //                   fontFamily: 'DMSans',
+                                        //                   fontSize: 13.20.sp,
+                                        //                   fontWeight: FontWeight.w400,
+                                        //                   color: AppColors.black,
+                                        //                 ),
+                                        //               ),
+                                        //               // SizedBox(width: 50.h),
+                                        //               TextView(
+                                        //                 text: m.manufacturerName ?? '',
+                                        //                 textStyle: TextStyle(
+                                        //                   fontFamily: 'DMSans',
+                                        //                   fontSize: 13.30.sp,
+                                        //                   fontWeight: FontWeight.w500,
+                                        //                   color: AppColors.black,
+                                        //                 ),
+                                        //               ),
+                                        //             ],
+                                        //           ),
+                                        //         ),
+                                        // ),
+                                        Positioned(
+                                          left: 1,
+                                          bottom: 1,
+                                          child: Container(
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 8.80.w,
+                                              vertical: 6.w,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: Colors.grey.shade200,
+                                              borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(6.r),
+                                                bottomLeft: Radius.circular(
+                                                  4.r,
+                                                ),
+                                              ),
+                                            ),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: List.generate(
+                                                m.images!.length,
+                                                (index) => AnimatedContainer(
+                                                  duration: const Duration(
+                                                    milliseconds: 300,
+                                                  ),
+                                                  margin: EdgeInsets.symmetric(
+                                                    horizontal: 3.2.w,
+                                                  ),
+                                                  width: 10,
+                                                  height: 10,
+                                                  decoration: BoxDecoration(
+                                                    color: currentPage == index
+                                                        ? AppColors.primary
+                                                        : AppColors.infoGrey,
+                                                    shape: BoxShape.circle,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: 10.h),
+                                    Padding(
+                                      padding: EdgeInsets.all(12.w),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          //(Carton of ${m.packSize} packs)
+                                          TextView(
+                                            text:
+                                                m.productName?.capitalize() ??
+                                                '',
+                                            textStyle: TextStyle(
+                                              fontFamily: 'DMSans',
+                                              fontSize: 17.20.sp,
+                                              fontWeight: FontWeight.w500,
+                                              color: AppColors.reminder,
+                                              letterSpacing: -0.21,
+                                            ),
+                                          ),
+                                          SizedBox(height: 6.h),
+                                          Divider(color: AppColors.infoGrey1),
+                                          SizedBox(height: 6.h),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              TextView(
+                                                text: 'Pack Size:',
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'DMSans',
+                                                  fontSize: 14.20.sp,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: AppColors.infoGrey,
+                                                ),
+                                              ),
+                                              TextView(
+                                                text: '${m.packSize} / carton',
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'DMSans',
+                                                  fontSize: 14.20.sp,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: AppColors.reminder,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(height: 10.h),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              TextView(
+                                                text: 'Available Stock:',
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'Arial',
+                                                  fontSize: 14.20.sp,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: AppColors.infoGrey,
+                                                ),
+                                              ),
+                                              TextView(
+                                                text: '${m.stock} units',
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'DMSans',
+                                                  fontSize: 14.20.sp,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: AppColors.app_green,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(height: 10.h),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              TextView(
+                                                text: 'MOQ:',
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'DMSans',
+                                                  fontSize: 14.20.sp,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: AppColors.infoGrey,
+                                                ),
+                                              ),
+                                              TextView(
+                                                text:
+                                                    m.minimumOrderQuantity! > 1
+                                                    ? '${m.minimumOrderQuantity} cartons'
+                                                    : '${m.minimumOrderQuantity} carton',
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'DMSans',
+                                                  fontSize: 14.20.sp,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: AppColors.reminder,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(height: 10.h),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              TextView(
+                                                text: 'NAFDAC Reg No:',
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'DMSans',
+                                                  fontSize: 14.20.sp,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: AppColors.infoGrey,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: 160.w,
+                                                child: TextView(
+                                                  text:
+                                                      m
+                                                          .nafdacVerification
+                                                          ?.registrationNumber ??
+                                                      '',
+                                                  maxLines: 1,
+                                                  textOverflow:
+                                                      TextOverflow.ellipsis,
+                                                  textAlign: TextAlign.right,
+                                                  textStyle: TextStyle(
+                                                    fontFamily: 'DMSans',
+                                                    fontSize: 15.20.sp,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: AppColors.reminder,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(height: 10.h),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              TextView(
+                                                text: 'Expiry Date:',
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'DMSans',
+                                                  fontSize: 14.20.sp,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: AppColors.infoGrey,
+                                                ),
+                                              ),
+                                              TextView(
+                                                text: DateFormat(
+                                                  'MM/yyyy',
+                                                ).format(m.expiryDate!),
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'DMSans',
+                                                  fontSize: 15.20.sp,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: AppColors.reminder,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(height: 10.h),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              TextView(
+                                                text: 'Manufacturer:',
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'DMSans',
+                                                  fontSize: 14.20.sp,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: AppColors.infoGrey,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: 170.w,
+                                                child: TextView(
+                                                  text:
+                                                      m.manufacturerName ?? '',
+                                                  maxLines: 1,
+                                                  textOverflow:
+                                                      TextOverflow.ellipsis,
+                                                  textStyle: TextStyle(
+                                                    fontFamily: 'DMSans',
+                                                    fontSize: 15.20.sp,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: AppColors.reminder,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(height: 6.h),
+                                          Divider(color: AppColors.infoGrey1),
+                                          SizedBox(height: 10.h),
+                                          // if (m.volumePricing!.isNotEmpty)
+                                          //   Container(
+                                          //     width: double.infinity,
+                                          //     padding: EdgeInsets.all(10.w),
+                                          //     decoration: BoxDecoration(
+                                          //       color: AppColors.grey,
+                                          //       borderRadius: BorderRadius.circular(
+                                          //         8.0.r,
+                                          //       ),
+                                          //       border: Border.all(
+                                          //         color: const Color.fromARGB(
+                                          //           255,
+                                          //           236,
+                                          //           237,
+                                          //           237,
+                                          //         ),
+                                          //       ),
+                                          //     ),
+                                          //     child: Column(
+                                          //       crossAxisAlignment:
+                                          //           CrossAxisAlignment.start,
+                                          //       children: [
+                                          //         TextView(
+                                          //           text: 'Volume Pricing',
+                                          //           textStyle: TextStyle(
+                                          //             fontFamily: 'DMSans',
+                                          //             fontSize: 14.20.sp,
+                                          //             fontWeight: FontWeight.w400,
+                                          //             color: AppColors.black,
+                                          //           ),
+                                          //         ),
+                                          //         SizedBox(height: 10.h),
 
-                                                            if (quantity ==
-                                                                null) {
-                                                              return;
-                                                            }
+                                          //         SingleChildScrollView(
+                                          //           scrollDirection: Axis.horizontal,
+                                          //           child: Row(
+                                          //             mainAxisAlignment:
+                                          //                 MainAxisAlignment
+                                          //                     .spaceBetween,
+                                          //             children: [
+                                          //               ...m.volumePricing!.map(
+                                          //                 (vol) => Container(
+                                          //                   padding:
+                                          //                       EdgeInsets.symmetric(
+                                          //                         vertical: 6.60.w,
+                                          //                         horizontal: 8.w,
+                                          //                       ),
+                                          //                   margin: EdgeInsets.only(
+                                          //                     right: 10.w,
+                                          //                   ),
+                                          //                   decoration: BoxDecoration(
+                                          //                     color: AppColors.appWhite,
+                                          //                     borderRadius:
+                                          //                         BorderRadius.circular(
+                                          //                           20.r,
+                                          //                         ),
+                                          //                     border: Border.all(
+                                          //                       color:
+                                          //                           const Color.fromARGB(
+                                          //                             255,
+                                          //                             236,
+                                          //                             237,
+                                          //                             237,
+                                          //                           ),
+                                          //                     ),
+                                          //                   ),
+                                          //                   child: Row(
+                                          //                     mainAxisAlignment:
+                                          //                         MainAxisAlignment
+                                          //                             .spaceBetween,
 
-                                                            model.selectedQuantities[m
-                                                                    .id!] =
-                                                                quantity;
+                                          //                     mainAxisSize:
+                                          //                         MainAxisSize.min,
+                                          //                     children: [
+                                          //                       TextView(
+                                          //                         text:
+                                          //                             '≥ ${vol['quantity']}:',
+                                          //                         textStyle: TextStyle(
+                                          //                           fontFamily:
+                                          //                               'DMSans',
+                                          //                           fontSize: 15.60.sp,
+                                          //                           fontWeight:
+                                          //                               FontWeight.w300,
+                                          //                           color:
+                                          //                               AppColors.black,
+                                          //                         ),
+                                          //                       ),
+                                          //                       SizedBox(width: 10.h),
+                                          //                       TextView(
+                                          //                         text: formatNaira(
+                                          //                           vol['enlistedPricePerUnit'],
+                                          //                         ),
+                                          //                         textStyle: TextStyle(
+                                          //                           fontFamily:
+                                          //                               'DMSans',
+                                          //                           fontSize: 15.80.sp,
+                                          //                           fontWeight:
+                                          //                               FontWeight.w500,
+                                          //                           color:
+                                          //                               AppColors.black,
+                                          //                         ),
+                                          //                       ),
+                                          //                     ],
+                                          //                   ),
+                                          //                 ),
+                                          //               ),
+                                          //             ],
+                                          //           ),
+                                          //         ),
 
-                                                            model
-                                                                .notifyListeners();
-                                                          }
-                                                        },
+                                          //         SizedBox(height: 5.10.w),
+                                          //       ],
+                                          //     ),
+                                          //   ),
+                                          // SizedBox(
+                                          //   height: m.volumePricing!.isNotEmpty
+                                          //       ? 6.h
+                                          //       : 0.h,
+                                          // ),
+                                          // m.volumePricing!.isNotEmpty
+                                          //     ? Divider(color: AppColors.infoGrey1)
+                                          //     : SizedBox.shrink(),
+                                          // SizedBox(
+                                          //   height: m.volumePricing!.isNotEmpty
+                                          //       ? 10.h
+                                          //       : 0.h,
+                                          // ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              TextView(
+                                                text: formatNaira(
+                                                  m.displayPricePerUnit!,
+                                                ),
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'GoogleSans',
+                                                  fontSize: 19.80.sp,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: AppColors.black,
+                                                ),
+                                              ),
+                                              TextView(
+                                                text: '/${m.unit}(s)',
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'GoogleSans',
+                                                  fontSize: 14.80.sp,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: AppColors.infoGrey,
+                                                ),
+                                              ),
+                                              Spacer(),
+                                              Container(
+                                                height: 30.h,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                        7.92.r,
+                                                      ),
+                                                  border: Border.all(
+                                                    color: const Color.fromARGB(
+                                                      255,
+                                                      236,
+                                                      237,
+                                                      237,
+                                                    ),
+                                                  ),
+                                                ),
+                                                child: Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  crossAxisAlignment:
+                                                      editingQuantityProductId ==
+                                                          m.id!
+                                                      ? CrossAxisAlignment.end
+                                                      : CrossAxisAlignment
+                                                            .center,
+                                                  children: [
+                                                    IconButton(
+                                                      onPressed:
+                                                          currentQuantity <=
+                                                              minimumQuantity
+                                                          ? null
+                                                          : () {
+                                                              model.selectedQuantities[m
+                                                                      .id!] =
+                                                                  currentQuantity -
+                                                                  1;
+                                                              model
+                                                                  .notifyListeners();
+                                                            },
+                                                      icon: Icon(
+                                                        Icons.remove,
+                                                        size: 14.0.sp,
+                                                        color:
+                                                            currentQuantity <=
+                                                                minimumQuantity
+                                                            ? AppColors.infoGrey
+                                                            : AppColors
+                                                                  .reminder,
                                                       ),
                                                     ),
-                                                  )
-                                                : GestureDetector(
-                                                    onTap: () {
-                                                      setState(() {
-                                                        editingQuantityProductId =
-                                                            m.id!;
-                                                      });
 
-                                                      model
-                                                          .quantityValueController
-                                                          .text = currentQuantity
-                                                          .toString();
+                                                    editingQuantityProductId ==
+                                                            m.id!
+                                                        ? SizedBox(
+                                                            width: 35.w,
+                                                            height: 25.h,
+                                                            child: Form(
+                                                              key: model
+                                                                  .quantityValueFormKey,
+                                                              child: TextFormField(
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .center,
+                                                                decoration: InputDecoration(
+                                                                  isDense: true,
+                                                                  contentPadding:
+                                                                      EdgeInsets
+                                                                          .zero,
+                                                                  border: OutlineInputBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                          5.r,
+                                                                        ),
+                                                                  ),
+                                                                ),
+                                                                controller: model
+                                                                    .quantityValueController,
+                                                                showCursor:
+                                                                    false,
+                                                                keyboardType:
+                                                                    TextInputType
+                                                                        .number,
+                                                                validator:
+                                                                    AppValidator.validateIntProductQuantity(),
+                                                                onChanged: (value) {
+                                                                  if (value
+                                                                      .isNotEmpty) {
+                                                                    final quantity =
+                                                                        int.tryParse(
+                                                                          value,
+                                                                        );
 
-                                                      model.notifyListeners();
-                                                    },
-                                                    child: TextView(
-                                                      text: '$currentQuantity',
-                                                      textStyle: TextStyle(
-                                                        fontFamily:
-                                                            'GoogleSans',
-                                                        fontSize: 14.80.sp,
-                                                        fontWeight:
-                                                            FontWeight.w400,
+                                                                    if (quantity ==
+                                                                        null) {
+                                                                      return;
+                                                                    }
+
+                                                                    model.selectedQuantities[m
+                                                                            .id!] =
+                                                                        quantity;
+
+                                                                    model
+                                                                        .notifyListeners();
+                                                                  }
+                                                                },
+                                                              ),
+                                                            ),
+                                                          )
+                                                        : GestureDetector(
+                                                            onTap: () {
+                                                              setState(() {
+                                                                editingQuantityProductId =
+                                                                    m.id!;
+                                                              });
+
+                                                              model
+                                                                      .quantityValueController
+                                                                      .text =
+                                                                  currentQuantity
+                                                                      .toString();
+
+                                                              model
+                                                                  .notifyListeners();
+                                                            },
+                                                            child: TextView(
+                                                              text:
+                                                                  '$currentQuantity',
+                                                              textStyle: TextStyle(
+                                                                fontFamily:
+                                                                    'GoogleSans',
+                                                                fontSize:
+                                                                    14.80.sp,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400,
+                                                                color: AppColors
+                                                                    .reminder,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                    IconButton(
+                                                      onPressed: () {
+                                                        model.selectedQuantities[m
+                                                                .id!] =
+                                                            currentQuantity + 1;
+                                                        model.notifyListeners();
+                                                      },
+                                                      icon: Icon(
+                                                        Icons.add,
+                                                        size: 14.0.sp,
                                                         color:
                                                             AppColors.reminder,
                                                       ),
                                                     ),
-                                                  ),
-                                            IconButton(
-                                              onPressed: () {
-                                                model.selectedQuantities[m
-                                                        .id!] =
-                                                    currentQuantity + 1;
-                                                model.notifyListeners();
-                                              },
-                                              icon: Icon(
-                                                Icons.add,
-                                                size: 14.0.sp,
-                                                color: AppColors.reminder,
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 23.0.h),
-                                  GestureDetector(
-                                    onTap: () async {
-                                      if (editingQuantityProductId == m.id) {
-                                        final value = model
-                                            .quantityValueController
-                                            .text
-                                            .trim();
-                                        // Do nothing if the field is empty
-                                        if (value.isEmpty) {
-                                          return;
-                                        }
-                                        // Validate the field
-                                        if (!(model
-                                                .quantityValueFormKey
-                                                .currentState
-                                                ?.validate() ??
-                                            false)) {
-                                          return;
-                                        }
-                                        // Get the latest quantity from the TextFormField
-                                        currentQuantity =
-                                            int.tryParse(value) ?? 0;
+                                            ],
+                                          ),
+                                          SizedBox(height: 23.0.h),
+                                          GestureDetector(
+                                            onTap: () async {
+                                              if (editingQuantityProductId ==
+                                                  m.id) {
+                                                final value = model
+                                                    .quantityValueController
+                                                    .text
+                                                    .trim();
+                                                // Do nothing if the field is empty
+                                                if (value.isEmpty) {
+                                                  return;
+                                                }
+                                                // Validate the field
+                                                if (!(model
+                                                        .quantityValueFormKey
+                                                        .currentState
+                                                        ?.validate() ??
+                                                    false)) {
+                                                  return;
+                                                }
+                                                // Get the latest quantity from the TextFormField
+                                                currentQuantity =
+                                                    int.tryParse(value) ?? 0;
 
-                                        // Do nothing if the parsed quantity is invalid/zero
-                                        if (currentQuantity <= 0) {
-                                          return;
-                                        }
-                                      }
+                                                // Do nothing if the parsed quantity is invalid/zero
+                                                if (currentQuantity <= 0) {
+                                                  return;
+                                                }
+                                              }
 
-                                      model.addWholesaleProductToCart(
-                                        context,
-                                        wholesaleAddToCart:
-                                            WholesaleAddToCartEntityModel(
-                                              productId: m.id,
-                                              quantity: currentQuantity,
-                                            ),
-                                      );
+                                              model.addWholesaleProductToCart(
+                                                context,
+                                                wholesaleAddToCart:
+                                                    WholesaleAddToCartEntityModel(
+                                                      productId: m.id,
+                                                      quantity: currentQuantity,
+                                                    ),
+                                              );
 
-                                      model.notifyListeners();
-                                    },
-                                    child: Container(
-                                      padding: EdgeInsets.symmetric(
-                                        vertical: 8.w,
-                                        horizontal: 12.w,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: AppColors.primary,
-                                        borderRadius: BorderRadius.circular(
-                                          40.r,
-                                        ),
-                                      ),
-                                      child: model.isLoading
-                                          ? SpinKitRing(
-                                              color: AppColors.appWhite,
-                                              size: 22.0.sp,
-                                              lineWidth: 2,
-                                            )
-                                          : Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                SvgPicture.asset(
-                                                  AppImage.cart,
-                                                  height: isTablet(context)
-                                                      ? 38.40.h
-                                                      : 20.h,
-                                                  width: isTablet(context)
-                                                      ? 38.40.w
-                                                      : 20.w,
-                                                  color: AppColors.white,
-                                                ),
-                                                SizedBox(width: 10.w),
-                                                TextView(
-                                                  text: 'Add to Cart',
-                                                  textStyle: TextStyle(
-                                                    fontFamily: 'GoogleSans',
-                                                    fontSize: 16.90.sp,
-                                                    fontWeight: FontWeight.w400,
-                                                    color: AppColors.white,
-                                                  ),
-                                                ),
-                                              ],
+                                              model.notifyListeners();
+                                            },
+                                            child: Container(
+                                              padding: EdgeInsets.symmetric(
+                                                vertical: 8.w,
+                                                horizontal: 12.w,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                color: AppColors.primary,
+                                                borderRadius:
+                                                    BorderRadius.circular(40.r),
+                                              ),
+                                              child: model.isLoading
+                                                  ? SpinKitRing(
+                                                      color: AppColors.appWhite,
+                                                      size: 22.0.sp,
+                                                      lineWidth: 2,
+                                                    )
+                                                  : Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        SvgPicture.asset(
+                                                          AppImage.cart,
+                                                          height:
+                                                              isTablet(context)
+                                                              ? 38.40.h
+                                                              : 20.h,
+                                                          width:
+                                                              isTablet(context)
+                                                              ? 38.40.w
+                                                              : 20.w,
+                                                          color:
+                                                              AppColors.white,
+                                                        ),
+                                                        SizedBox(width: 10.w),
+                                                        TextView(
+                                                          text: 'Add to Cart',
+                                                          textStyle: TextStyle(
+                                                            fontFamily:
+                                                                'GoogleSans',
+                                                            fontSize: 16.90.sp,
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                            color:
+                                                                AppColors.white,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
                                             ),
+                                          ),
+                                          SizedBox(height: 8.10.h),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(height: 8.10.h),
-                                ],
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
+                            );
+                          }),
+                        Padding(
+                          padding: EdgeInsets.all(10.w),
+                          child: Divider(
+                            thickness: .14,
+                            color: AppColors.infoGrey,
+                          ),
                         ),
-                      ),
-                    );
-                  }),
-                Padding(
-                  padding: EdgeInsets.all(10.w),
-                  child: Divider(thickness: .14, color: AppColors.infoGrey),
-                ),
-                if (model.getListedMarketPlaceResponseModel != null)
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      IconButton(
-                        onPressed:
-                            model
-                                    .getListedMarketPlaceResponseModel!
-                                    .data!
-                                    .meta!
-                                    .page ==
-                                1
-                            ? () {}
-                            : () {
-                                model.page--;
-                                model.getListedMarketPlace(context);
-                              },
-                        icon: Icon(
-                          Icons.arrow_back,
-                          color:
-                              model
-                                      .getListedMarketPlaceResponseModel!
-                                      .data!
-                                      .meta!
-                                      .page ==
-                                  1
-                              ? AppColors.primary1.withOpacity(.4)
-                              : AppColors.primary1,
-                          size: 20.sp,
-                        ),
-                      ),
+                        if (model.getListedMarketPlaceResponseModelCat != null)
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              IconButton(
+                                onPressed:
+                                    model
+                                            .getListedMarketPlaceResponseModelCat!
+                                            .data!
+                                            .meta!
+                                            .page ==
+                                        1
+                                    ? () {}
+                                    : () {
+                                        model.page--;
+                                        model.getListedMarketPlaceWithCatIdCat(
+                                          context,
+                                        );
+                                      },
+                                icon: Icon(
+                                  Icons.arrow_back,
+                                  color:
+                                      model
+                                              .getListedMarketPlaceResponseModelCat!
+                                              .data!
+                                              .meta!
+                                              .page ==
+                                          1
+                                      ? AppColors.primary1.withOpacity(.4)
+                                      : AppColors.primary1,
+                                  size: 20.sp,
+                                ),
+                              ),
 
-                      model.isLoading
-                          ? SpinKitFadingCircle(
-                              size: 20.sp,
-                              color: AppColors.fineGrey,
-                            )
-                          : TextView(
-                              text:
-                                  'Page ${model.getListedMarketPlaceResponseModel!.data!.meta!.page} of ${model.getListedMarketPlaceResponseModel!.data!.meta!.totalPages}',
-                              textStyle: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 15.2.sp,
-                                fontWeight: FontWeight.w400,
-                                color: AppColors.black,
+                              model.isLoading
+                                  ? SpinKitFadingCircle(
+                                      size: 20.sp,
+                                      color: AppColors.fineGrey,
+                                    )
+                                  : TextView(
+                                      text:
+                                          'Page ${model.getListedMarketPlaceResponseModelCat!.data!.meta!.page} of ${model.getListedMarketPlaceResponseModelCat!.data!.meta!.totalPages}',
+                                      textStyle: TextStyle(
+                                        fontFamily: 'Arial',
+                                        fontSize: 15.2.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: AppColors.black,
+                                      ),
+                                    ),
+                              IconButton(
+                                onPressed:
+                                    model
+                                            .getListedMarketPlaceResponseModelCat!
+                                            .data!
+                                            .meta!
+                                            .page ==
+                                        model
+                                            .getListedMarketPlaceResponseModelCat!
+                                            .data!
+                                            .meta!
+                                            .totalPages
+                                    ? () {}
+                                    : () {
+                                        model.page++;
+                                        model.getListedMarketPlaceWithCatIdCat(
+                                          context,
+                                        );
+                                      },
+                                icon: Icon(
+                                  Icons.arrow_forward,
+                                  color:
+                                      model
+                                              .getListedMarketPlaceResponseModelCat!
+                                              .data!
+                                              .meta!
+                                              .page ==
+                                          model
+                                              .getListedMarketPlaceResponseModelCat!
+                                              .data!
+                                              .meta!
+                                              .totalPages
+                                      ? AppColors.primary1.withOpacity(.4)
+                                      : AppColors.primary1,
+                                  size: 20.sp,
+                                ),
                               ),
-                            ),
-                      IconButton(
-                        onPressed:
-                            model
-                                    .getListedMarketPlaceResponseModel!
-                                    .data!
-                                    .meta!
-                                    .page ==
-                                model
-                                    .getListedMarketPlaceResponseModel!
-                                    .data!
-                                    .meta!
-                                    .totalPages
-                            ? () {}
-                            : () {
-                                model.page++;
-                                model.getListedMarketPlace(context);
-                              },
-                        icon: Icon(
-                          Icons.arrow_forward,
-                          color:
-                              model
-                                      .getListedMarketPlaceResponseModel!
-                                      .data!
-                                      .meta!
-                                      .page ==
-                                  model
-                                      .getListedMarketPlaceResponseModel!
-                                      .data!
-                                      .meta!
-                                      .totalPages
-                              ? AppColors.primary1.withOpacity(.4)
-                              : AppColors.primary1,
-                          size: 20.sp,
-                        ),
-                      ),
-                    ],
+                            ],
+                          ),
+                        SizedBox(height: 10.h),
+                      ],
+                    ),
                   ),
-                SizedBox(height: 10.h),
+                ),
               ],
             ),
           ),

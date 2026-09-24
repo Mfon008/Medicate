@@ -40,7 +40,6 @@ import '../model/sign_up_phamary_response_model/sign_up_phamary_response_model.d
 import '../model/update_business_owner_profile_entity_model/update_business_owner_profile_entity_model.dart';
 import '../model/update_business_owner_profile_response_model/update_business_owner_profile_response_model.dart';
 import '../model/update_doses_status_model/update_doses_status_model.dart';
-import '../model/update_pharmacy_kyc_entity_model/update_pharmacy_kyc_entity_model.dart';
 import '../model/update_practitioner_profile_entity_model/update_practitioner_profile_entity_model.dart';
 import '../model/update_reminder_entity_model/update_reminder_entity_model.dart';
 import '../model/update_role_entity_model.dart';
@@ -132,9 +131,9 @@ class HealthcareContractsImpl {
 
   Future<GetPharmacyKycResponseModel> getHealthCareKyc() async =>
       await _api.getHealthCareKyc();
-  Future<dynamic> updateHealthCareKyc(
-    UpdatePharmacyKycEntityModel updateKyc,
-  ) async => await _api.updateHealthCareKyc(updateKyc);
+  // Future<dynamic> updateHealthCareKyc(
+  //   UpdatePharmacyKycEntityModel updateKyc,
+  // ) async => await _api.updateHealthCareKyc(updateKyc);
 
   Future<dynamic> addDoctor(CreateUserEntityModel createEntity) async =>
       await _api.addDoctor(createEntity);

@@ -1,9 +1,9 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'file.g.dart';
+part 'pharmacy_license.g.dart';
 
 @JsonSerializable()
-class File {
+class PharmacyLicense {
   String? url;
   String? mimeType;
   int? width;
@@ -11,7 +11,7 @@ class File {
   int? size;
   String? format;
 
-  File({
+  PharmacyLicense({
     this.url,
     this.mimeType,
     this.width,
@@ -20,7 +20,9 @@ class File {
     this.format,
   });
 
-  factory File.fromJson(Map<String, dynamic> json) => _$FileFromJson(json);
+  factory PharmacyLicense.fromJson(Map<String, dynamic> json) {
+    return _$PharmacyLicenseFromJson(json);
+  }
 
-  Map<String, dynamic> toJson() => _$FileToJson(this);
+  Map<String, dynamic> toJson() => _$PharmacyLicenseToJson(this);
 }

@@ -51,7 +51,6 @@ import '../model/get_list_of_hospital_response_model/get_list_of_hospital_respon
 import '../model/get_listed_plan_tiers_response_model/get_listed_plan_tiers_response_model.dart';
 import '../model/get_listed_plan_tiers_response_model/plan_tier.dart';
 import '../model/get_my_hmo_plan_response_model/get_my_hmo_plan_response_model.dart';
-import '../model/get_pharmacy_kyc_response_model/kyc_document.dart';
 import '../model/get_plan_detail_response_model/get_plan_detail_response_model.dart';
 import '../model/get_plan_hospital_network_response_model/get_plan_hospital_network_response_model.dart';
 import '../model/get_roles_response_model/get_roles_response_model.dart';
@@ -69,12 +68,8 @@ import '../model/sign_up_phamary_response_model/sign_up_phamary_response_model.d
 import '../model/update_hmo_kyc_entity_model/update_hmo_kyc_entity_model.dart';
 import '../model/update_hmo_plan_entity_model/update_hmo_plan_entity_model.dart';
 import '../model/update_hmo_profile_entity_model/logo.dart';
-import '../model/update_pharmacy_kyc_entity_model/document.dart';
 import '../model/update_plan_tiers_entity_model.dart';
 import '../model/update_role_entity_model.dart';
-import '../model/update_third_hmo_kyc_entity_model/application_form.dart';
-import '../model/update_third_hmo_kyc_entity_model/list_of_hospitals.dart';
-import '../model/update_third_hmo_kyc_entity_model/schedule_of_plans.dart';
 import '../model/update_third_hmo_kyc_entity_model/update_third_hmo_kyc_entity_model.dart';
 import '../model/update_user_entity_model.dart';
 import '../model/upload_image_response_model/upload_image_response_model.dart';
@@ -83,20 +78,7 @@ import '../model/verify_pharmacy_otp_model/verify_pharmacy_otp_model.dart';
 import '../model/verify_phone_entity_model.dart';
 import '../repo/hmo_repo_impl.dart';
 import 'package:medicate_app/core/connect_end/model/get_my_hmo_plan_response_model/plan.dart';
-import 'package:medicate_app/core/connect_end/model/update_pharmacy_kyc_entity_model/file.dart'
-    as ph;
-import 'package:medicate_app/core/connect_end/model/update_hmo_kyc_entity_model/logo.dart'
-    as lg;
-import 'package:medicate_app/core/connect_end/model/update_hmo_kyc_entity_model/cac_certificate.dart'
-    as cc;
-import 'package:medicate_app/core/connect_end/model/update_hmo_kyc_entity_model/hmo_accreditation.dart'
-    as ac;
-import 'package:medicate_app/core/connect_end/model/update_hmo_kyc_entity_model/tax_id_certificate.dart'
-    as tx;
-import 'package:medicate_app/core/connect_end/model/update_pharmacy_kyc_entity_model/file.dart'
-    as fl;
 
-// String startDateIso = '';
 
 class HMOViewModel extends BaseViewModel {
   final BuildContext? context;
@@ -141,7 +123,7 @@ class HMOViewModel extends BaseViewModel {
   var vdeactivate;
   String vdeleteErrorMessage = '';
   String vdeactivateErrorMessage = '';
-  List<Document> kycDocumentsList = [];
+  // List<Document> kycDocumentsList = [];
 
   List<String> hospitalType = [
     "Teaching",
@@ -349,13 +331,13 @@ class HMOViewModel extends BaseViewModel {
   String? formStatus;
   String? planStatus;
   String? assStatus;
-  KycDocument? docKycLogo;
-  KycDocument? docKycCac;
-  KycDocument? docKycLicense;
-  KycDocument? docKycTin;
-  KycDocument? docKycForm;
-  KycDocument? docKycPlan;
-  KycDocument? docKycAss;
+  // KycDocument? docKycLogo;
+  // KycDocument? docKycCac;
+  // KycDocument? docKycLicense;
+  // KycDocument? docKycTin;
+  // KycDocument? docKycForm;
+  // KycDocument? docKycPlan;
+  // KycDocument? docKycAss;
 
   int page = 1;
 
@@ -2430,7 +2412,7 @@ class HMOViewModel extends BaseViewModel {
       if (v['statusCode'] == 201) {
         AppUtils.snackbar(context, message: v['message']);
         getHMOKyc(context);
-        kycDocumentsList.clear();
+        // kycDocumentsList.clear();
       } else {
         AppUtils.snackbar(context, message: v['message'], error: true);
       }
@@ -2456,7 +2438,7 @@ class HMOViewModel extends BaseViewModel {
       if (v['statusCode'] == 201) {
         AppUtils.snackbar(context, message: v['message']);
         getHMOKyc(context);
-        kycDocumentsList.clear();
+        // kycDocumentsList.clear();
       } else {
         AppUtils.snackbar(context, message: v['message'], error: true);
       }
@@ -3602,19 +3584,19 @@ class HMOViewModel extends BaseViewModel {
           );
           _isLoadingLogo = _isLoading;
           _uploadImageResponseModelLogo = _uploadImageResponseModel;
-          kycDocumentsList.add(
-            Document(
-              documentType: 'HMO_LOGO',
-              file: ph.File(
-                width: _uploadImageResponseModelLogo!.data!.width,
-                height: _uploadImageResponseModelLogo!.data!.height,
-                format: _uploadImageResponseModelLogo!.data!.format,
-                url: _uploadImageResponseModelLogo!.data!.url!,
-                mimeType: _uploadImageResponseModelLogo!.data!.mimeType,
-                size: _uploadImageResponseModelLogo!.data!.size,
-              ),
-            ),
-          );
+          // kycDocumentsList.add(
+          //   Document(
+          //     documentType: 'HMO_LOGO',
+          //     file: ph.File(
+          //       width: _uploadImageResponseModelLogo!.data!.width,
+          //       height: _uploadImageResponseModelLogo!.data!.height,
+          //       format: _uploadImageResponseModelLogo!.data!.format,
+          //       url: _uploadImageResponseModelLogo!.data!.url!,
+          //       mimeType: _uploadImageResponseModelLogo!.data!.mimeType,
+          //       size: _uploadImageResponseModelLogo!.data!.size,
+          //     ),
+          //   ),
+          // );
           _uploadImageResponseModel = null;
           notifyListeners();
         },
@@ -3641,19 +3623,19 @@ class HMOViewModel extends BaseViewModel {
           );
           _isLoadingCAC = _isLoading;
           _uploadImageResponseModelCAC = _uploadImageResponseModel;
-          kycDocumentsList.add(
-            Document(
-              documentType: 'CAC_REGISTRATION_CERTIFICATE',
-              file: ph.File(
-                width: _uploadImageResponseModelCAC!.data!.width,
-                height: _uploadImageResponseModelCAC!.data!.height,
-                format: _uploadImageResponseModelCAC!.data!.format,
-                url: _uploadImageResponseModelCAC!.data!.url!,
-                mimeType: _uploadImageResponseModelCAC!.data!.mimeType,
-                size: _uploadImageResponseModelCAC!.data!.size,
-              ),
-            ),
-          );
+          // kycDocumentsList.add(
+          //   Document(
+          //     documentType: 'CAC_REGISTRATION_CERTIFICATE',
+          //     file: ph.File(
+          //       width: _uploadImageResponseModelCAC!.data!.width,
+          //       height: _uploadImageResponseModelCAC!.data!.height,
+          //       format: _uploadImageResponseModelCAC!.data!.format,
+          //       url: _uploadImageResponseModelCAC!.data!.url!,
+          //       mimeType: _uploadImageResponseModelCAC!.data!.mimeType,
+          //       size: _uploadImageResponseModelCAC!.data!.size,
+          //     ),
+          //   ),
+          // );
           _uploadImageResponseModel = null;
           notifyListeners();
         },
@@ -3681,19 +3663,19 @@ class HMOViewModel extends BaseViewModel {
           _isLoadingTIN = _isLoading;
           _uploadImageResponseModelTIN = _uploadImageResponseModel;
           _uploadImageResponseModel = null;
-          kycDocumentsList.add(
-            Document(
-              documentType: 'TAX_IDENTIFICATION_NUMBER',
-              file: ph.File(
-                width: _uploadImageResponseModelTIN!.data!.width,
-                height: _uploadImageResponseModelTIN!.data!.height,
-                format: _uploadImageResponseModelTIN!.data!.format,
-                url: _uploadImageResponseModelTIN!.data!.url!,
-                mimeType: _uploadImageResponseModelTIN!.data!.mimeType,
-                size: _uploadImageResponseModelTIN!.data!.size,
-              ),
-            ),
-          );
+          // kycDocumentsList.add(
+          //   Document(
+          //     documentType: 'TAX_IDENTIFICATION_NUMBER',
+          //     file: ph.File(
+          //       width: _uploadImageResponseModelTIN!.data!.width,
+          //       height: _uploadImageResponseModelTIN!.data!.height,
+          //       format: _uploadImageResponseModelTIN!.data!.format,
+          //       url: _uploadImageResponseModelTIN!.data!.url!,
+          //       mimeType: _uploadImageResponseModelTIN!.data!.mimeType,
+          //       size: _uploadImageResponseModelTIN!.data!.size,
+          //     ),
+          //   ),
+          // );
           notifyListeners();
         },
       );
@@ -3720,19 +3702,19 @@ class HMOViewModel extends BaseViewModel {
           _isLoadingLicense = _isLoading;
           _uploadImageResponseModelNHISLicense = _uploadImageResponseModel;
 
-          kycDocumentsList.add(
-            Document(
-              documentType: 'NHIS_LICENSE',
-              file: ph.File(
-                width: _uploadImageResponseModelNHISLicense!.data!.width,
-                height: _uploadImageResponseModelNHISLicense!.data!.height,
-                format: _uploadImageResponseModelNHISLicense!.data!.format,
-                url: _uploadImageResponseModelNHISLicense!.data!.url!,
-                mimeType: _uploadImageResponseModelNHISLicense!.data!.mimeType,
-                size: _uploadImageResponseModelNHISLicense!.data!.size,
-              ),
-            ),
-          );
+          // kycDocumentsList.add(
+          //   Document(
+          //     documentType: 'NHIS_LICENSE',
+          //     file: ph.File(
+          //       width: _uploadImageResponseModelNHISLicense!.data!.width,
+          //       height: _uploadImageResponseModelNHISLicense!.data!.height,
+          //       format: _uploadImageResponseModelNHISLicense!.data!.format,
+          //       url: _uploadImageResponseModelNHISLicense!.data!.url!,
+          //       mimeType: _uploadImageResponseModelNHISLicense!.data!.mimeType,
+          //       size: _uploadImageResponseModelNHISLicense!.data!.size,
+          //     ),
+          //   ),
+          // );
           _uploadImageResponseModel = null;
           notifyListeners();
         },
@@ -3759,19 +3741,19 @@ class HMOViewModel extends BaseViewModel {
           );
           _isLoadingAppForm = _isLoading;
           _uploadImageResponseModelAppForm = _uploadImageResponseModel;
-          kycDocumentsList.add(
-            Document(
-              documentType: 'APPLICATION_FORM',
-              file: ph.File(
-                width: _uploadImageResponseModelAppForm!.data!.width,
-                height: _uploadImageResponseModelAppForm!.data!.height,
-                format: _uploadImageResponseModelAppForm!.data!.format,
-                url: _uploadImageResponseModelAppForm!.data!.url!,
-                mimeType: _uploadImageResponseModelAppForm!.data!.mimeType,
-                size: _uploadImageResponseModelAppForm!.data!.size,
-              ),
-            ),
-          );
+          // kycDocumentsList.add(
+          //   Document(
+          //     documentType: 'APPLICATION_FORM',
+          //     file: ph.File(
+          //       width: _uploadImageResponseModelAppForm!.data!.width,
+          //       height: _uploadImageResponseModelAppForm!.data!.height,
+          //       format: _uploadImageResponseModelAppForm!.data!.format,
+          //       url: _uploadImageResponseModelAppForm!.data!.url!,
+          //       mimeType: _uploadImageResponseModelAppForm!.data!.mimeType,
+          //       size: _uploadImageResponseModelAppForm!.data!.size,
+          //     ),
+          //   ),
+          // );
           _uploadImageResponseModel = null;
           notifyListeners();
         },
@@ -3799,19 +3781,19 @@ class HMOViewModel extends BaseViewModel {
           _isLoadingPlan = _isLoading;
           _uploadImageResponseModelPlan = _uploadImageResponseModel;
           _uploadImageResponseModel = null;
-          kycDocumentsList.add(
-            Document(
-              documentType: 'AVAILABLE_PLAN',
-              file: ph.File(
-                width: _uploadImageResponseModelPlan!.data!.width,
-                height: _uploadImageResponseModelPlan!.data!.height,
-                format: _uploadImageResponseModelPlan!.data!.format,
-                url: _uploadImageResponseModelPlan!.data!.url!,
-                mimeType: _uploadImageResponseModelPlan!.data!.mimeType,
-                size: _uploadImageResponseModelPlan!.data!.size,
-              ),
-            ),
-          );
+          // kycDocumentsList.add(
+          //   Document(
+          //     documentType: 'AVAILABLE_PLAN',
+          //     file: ph.File(
+          //       width: _uploadImageResponseModelPlan!.data!.width,
+          //       height: _uploadImageResponseModelPlan!.data!.height,
+          //       format: _uploadImageResponseModelPlan!.data!.format,
+          //       url: _uploadImageResponseModelPlan!.data!.url!,
+          //       mimeType: _uploadImageResponseModelPlan!.data!.mimeType,
+          //       size: _uploadImageResponseModelPlan!.data!.size,
+          //     ),
+          //   ),
+          // );
           notifyListeners();
         },
       );
@@ -3838,19 +3820,19 @@ class HMOViewModel extends BaseViewModel {
           _isLoadingAss = _isLoading;
           _uploadImageResponseModelAss = _uploadImageResponseModel;
 
-          kycDocumentsList.add(
-            Document(
-              documentType: 'ASSOCIATED_CLINIC',
-              file: ph.File(
-                width: _uploadImageResponseModelAss!.data!.width,
-                height: _uploadImageResponseModelAss!.data!.height,
-                format: _uploadImageResponseModelAss!.data!.format,
-                url: _uploadImageResponseModelAss!.data!.url!,
-                mimeType: _uploadImageResponseModelAss!.data!.mimeType,
-                size: _uploadImageResponseModelAss!.data!.size,
-              ),
-            ),
-          );
+          // kycDocumentsList.add(
+          //   Document(
+          //     documentType: 'ASSOCIATED_CLINIC',
+          //     file: ph.File(
+          //       width: _uploadImageResponseModelAss!.data!.width,
+          //       height: _uploadImageResponseModelAss!.data!.height,
+          //       format: _uploadImageResponseModelAss!.data!.format,
+          //       url: _uploadImageResponseModelAss!.data!.url!,
+          //       mimeType: _uploadImageResponseModelAss!.data!.mimeType,
+          //       size: _uploadImageResponseModelAss!.data!.size,
+          //     ),
+          //   ),
+          // );
           _uploadImageResponseModel = null;
           notifyListeners();
         },
@@ -5066,38 +5048,38 @@ class HMOViewModel extends BaseViewModel {
                                         imageCAC != null &&
                                         imageNHISLicense != null &&
                                         imageTIN != null) {
-                                      updateHMOKyc(
-                                        contxxt,
-                                        updateKyc: UpdateHmoKycEntityModel(
-                                          logo: lg.Logo.fromJson(
-                                            fl.File.fromJson(
-                                              kycDocumentsList[0].file!
-                                                  .toJson(),
-                                            ).toJson(),
-                                          ),
-                                          cacCertificate:
-                                              cc.CacCertificate.fromJson(
-                                                fl.File.fromJson(
-                                                  kycDocumentsList[1].file!
-                                                      .toJson(),
-                                                ).toJson(),
-                                              ),
-                                          hmoAccreditation:
-                                              ac.HmoAccreditation.fromJson(
-                                                fl.File.fromJson(
-                                                  kycDocumentsList[2].file!
-                                                      .toJson(),
-                                                ).toJson(),
-                                              ),
-                                          taxIdCertificate:
-                                              tx.TaxIdCertificate.fromJson(
-                                                fl.File.fromJson(
-                                                  kycDocumentsList[3].file!
-                                                      .toJson(),
-                                                ).toJson(),
-                                              ),
-                                        ),
-                                      );
+                                      // updateHMOKyc(
+                                      //   contxxt,
+                                      //   updateKyc: UpdateHmoKycEntityModel(
+                                      //     logo: lg.Logo.fromJson(
+                                      //       fl.File.fromJson(
+                                      //         kycDocumentsList[0].file!
+                                      //             .toJson(),
+                                      //       ).toJson(),
+                                      //     ),
+                                      //     cacCertificate:
+                                      //         cc.CacCertificate.fromJson(
+                                      //           fl.File.fromJson(
+                                      //             kycDocumentsList[1].file!
+                                      //                 .toJson(),
+                                      //           ).toJson(),
+                                      //         ),
+                                      //     hmoAccreditation:
+                                      //         ac.HmoAccreditation.fromJson(
+                                      //           fl.File.fromJson(
+                                      //             kycDocumentsList[2].file!
+                                      //                 .toJson(),
+                                      //           ).toJson(),
+                                      //         ),
+                                      //     taxIdCertificate:
+                                      //         tx.TaxIdCertificate.fromJson(
+                                      //           fl.File.fromJson(
+                                      //             kycDocumentsList[3].file!
+                                      //                 .toJson(),
+                                      //           ).toJson(),
+                                      //         ),
+                                      //   ),
+                                      // );
                                     } else {
                                       AppUtils.snackbar(
                                         context,
@@ -5113,33 +5095,33 @@ class HMOViewModel extends BaseViewModel {
                                   imageCAC != null &&
                                   imageNHISLicense != null &&
                                   imageTIN != null) {
-                                updateHMOKyc(
-                                  contxxt,
-                                  updateKyc: UpdateHmoKycEntityModel(
-                                    logo: lg.Logo.fromJson(
-                                      fl.File.fromJson(
-                                        kycDocumentsList[0].file!.toJson(),
-                                      ).toJson(),
-                                    ),
-                                    cacCertificate: cc.CacCertificate.fromJson(
-                                      fl.File.fromJson(
-                                        kycDocumentsList[1].file!.toJson(),
-                                      ).toJson(),
-                                    ),
-                                    hmoAccreditation:
-                                        ac.HmoAccreditation.fromJson(
-                                          fl.File.fromJson(
-                                            kycDocumentsList[2].file!.toJson(),
-                                          ).toJson(),
-                                        ),
-                                    taxIdCertificate:
-                                        tx.TaxIdCertificate.fromJson(
-                                          fl.File.fromJson(
-                                            kycDocumentsList[3].file!.toJson(),
-                                          ).toJson(),
-                                        ),
-                                  ),
-                                );
+                                // updateHMOKyc(
+                                //   contxxt,
+                                //   updateKyc: UpdateHmoKycEntityModel(
+                                //     logo: lg.Logo.fromJson(
+                                //       fl.File.fromJson(
+                                //         kycDocumentsList[0].file!.toJson(),
+                                //       ).toJson(),
+                                //     ),
+                                //     cacCertificate: cc.CacCertificate.fromJson(
+                                //       fl.File.fromJson(
+                                //         kycDocumentsList[1].file!.toJson(),
+                                //       ).toJson(),
+                                //     ),
+                                //     hmoAccreditation:
+                                //         ac.HmoAccreditation.fromJson(
+                                //           fl.File.fromJson(
+                                //             kycDocumentsList[2].file!.toJson(),
+                                //           ).toJson(),
+                                //         ),
+                                //     taxIdCertificate:
+                                //         tx.TaxIdCertificate.fromJson(
+                                //           fl.File.fromJson(
+                                //             kycDocumentsList[3].file!.toJson(),
+                                //           ).toJson(),
+                                //         ),
+                                //   ),
+                                // );
                               } else {
                                 AppUtils.snackbar(
                                   context,
@@ -5951,44 +5933,44 @@ class HMOViewModel extends BaseViewModel {
                                           imageAppForm != null &&
                                           imageAss != null &&
                                           imagePlan != null) {
-                                        updateThirdHMOKyc(
-                                          contxxt,
-                                          updateKyc:
-                                              UpdateThirdHmoKycEntityModel(
-                                                bankName: bankNameController
-                                                    .text
-                                                    .trim(),
-                                                accountName:
-                                                    accountNameController.text,
-                                                accountNumber:
-                                                    accountNumberController
-                                                        .text,
-                                                applicationForm:
-                                                    ApplicationForm.fromJson(
-                                                      fl.File.fromJson(
-                                                        kycDocumentsList[0]
-                                                            .file!
-                                                            .toJson(),
-                                                      ).toJson(),
-                                                    ),
-                                                scheduleOfPlans:
-                                                    ScheduleOfPlans.fromJson(
-                                                      fl.File.fromJson(
-                                                        kycDocumentsList[1]
-                                                            .file!
-                                                            .toJson(),
-                                                      ).toJson(),
-                                                    ),
-                                                listOfHospitals:
-                                                    ListOfHospitals.fromJson(
-                                                      fl.File.fromJson(
-                                                        kycDocumentsList[2]
-                                                            .file!
-                                                            .toJson(),
-                                                      ).toJson(),
-                                                    ),
-                                              ),
-                                        );
+                                        // updateThirdHMOKyc(
+                                        //   contxxt,
+                                        //   updateKyc:
+                                        //       UpdateThirdHmoKycEntityModel(
+                                        //         bankName: bankNameController
+                                        //             .text
+                                        //             .trim(),
+                                        //         accountName:
+                                        //             accountNameController.text,
+                                        //         accountNumber:
+                                        //             accountNumberController
+                                        //                 .text,
+                                        //         applicationForm:
+                                        //             ApplicationForm.fromJson(
+                                        //               fl.File.fromJson(
+                                        //                 kycDocumentsList[0]
+                                        //                     .file!
+                                        //                     .toJson(),
+                                        //               ).toJson(),
+                                        //             ),
+                                        //         scheduleOfPlans:
+                                        //             ScheduleOfPlans.fromJson(
+                                        //               fl.File.fromJson(
+                                        //                 kycDocumentsList[1]
+                                        //                     .file!
+                                        //                     .toJson(),
+                                        //               ).toJson(),
+                                        //             ),
+                                        //         listOfHospitals:
+                                        //             ListOfHospitals.fromJson(
+                                        //               fl.File.fromJson(
+                                        //                 kycDocumentsList[2]
+                                        //                     .file!
+                                        //                     .toJson(),
+                                        //               ).toJson(),
+                                        //             ),
+                                        //       ),
+                                        // );
 
                                         // await updateHMO(
                                         //   contxxt,

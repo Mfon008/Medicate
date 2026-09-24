@@ -246,33 +246,54 @@ class PharmacyViewProductScreen extends StatelessWidget {
                           spacing: 10,
                           runSpacing: 10,
                           children: [
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                vertical: 2.60.w,
-                                horizontal: 12.8.w,
-                              ),
-                              decoration: BoxDecoration(
-                                color: AppColors.skyBlue,
-                                borderRadius: BorderRadius.circular(20.r),
-                                border: Border.all(
-                                  color: AppColors.cool_blue,
-                                  width: 1.2,
+                            GestureDetector(
+                              onTap: () {
+                                navigate.navigateTo(
+                                  Routes.pharmacyWholesaleCategoryScreen,
+                                  arguments:
+                                      PharmacyWholesaleCategoryScreenArguments(
+                                        id: model
+                                            .getSingleMarketProductResponseModel
+                                            ?.data
+                                            ?.product
+                                            ?.categoryId,
+                                        name: model
+                                            .getSingleMarketProductResponseModel
+                                            ?.data
+                                            ?.product
+                                            ?.category,
+                                      ),
+                                );
+                                model.notifyListeners();
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 2.60.w,
+                                  horizontal: 12.8.w,
                                 ),
-                              ),
-                              child: TextView(
-                                text:
-                                    model
-                                        .getSingleMarketProductResponseModel
-                                        ?.data
-                                        ?.product
-                                        ?.category
-                                        ?.toUpperCase() ??
-                                    '',
-                                textStyle: TextStyle(
-                                  fontFamily: 'DMSans',
-                                  fontSize: 14.20.sp,
-                                  fontWeight: FontWeight.w400,
-                                  color: AppColors.primary,
+                                decoration: BoxDecoration(
+                                  color: AppColors.skyBlue,
+                                  borderRadius: BorderRadius.circular(20.r),
+                                  border: Border.all(
+                                    color: AppColors.cool_blue,
+                                    width: 1.2,
+                                  ),
+                                ),
+                                child: TextView(
+                                  text:
+                                      model
+                                          .getSingleMarketProductResponseModel
+                                          ?.data
+                                          ?.product
+                                          ?.category
+                                          ?.toUpperCase() ??
+                                      '',
+                                  textStyle: TextStyle(
+                                    fontFamily: 'DMSans',
+                                    fontSize: 14.20.sp,
+                                    fontWeight: FontWeight.w400,
+                                    color: AppColors.primary,
+                                  ),
                                 ),
                               ),
                             ),
@@ -308,7 +329,7 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                 ? Container(
                                     padding: EdgeInsets.symmetric(
                                       vertical: 2.60.w,
-                                      horizontal: 12.8.w,
+                                      horizontal: 10.w,
                                     ),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(20.r),
@@ -330,12 +351,75 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                           text: 'Validated',
                                           textStyle: TextStyle(
                                             fontFamily: 'DMSans',
-                                            fontSize: 15.20.sp,
-                                            fontWeight: FontWeight.w500,
+                                            fontSize: 14.60.sp,
+                                            fontWeight: FontWeight.w400,
                                             color: AppColors.app_green,
                                           ),
                                         ),
                                       ],
+                                    ),
+                                  )
+                                : SizedBox.shrink(),
+
+                            model
+                                            .getSingleMarketProductResponseModel!
+                                            .data!
+                                            .product!
+                                            .additionalResourceDescription !=
+                                        '' ||
+                                    model
+                                            .getSingleMarketProductResponseModel!
+                                            .data!
+                                            .product!
+                                            .additionalResourceUrl !=
+                                        ''
+                                ? GestureDetector(
+                                    onTap: () => model.additionalResourceInfo(
+                                      context,
+                                      des: model
+                                          .getSingleMarketProductResponseModel!
+                                          .data!
+                                          .product!
+                                          .additionalResourceDescription,
+                                      desLink: model
+                                          .getSingleMarketProductResponseModel!
+                                          .data!
+                                          .product!
+                                          .additionalResourceUrl,
+                                    ),
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: 2.60.w,
+                                        horizontal: 10.8.w,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: AppColors.skyBlue,
+                                        borderRadius: BorderRadius.circular(
+                                          20.r,
+                                        ),
+                                        border: Border.all(
+                                          color: AppColors.cool_blue,
+                                          width: 1.2,
+                                        ),
+                                      ),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          SvgPicture.asset(
+                                            AppImage.additional_info,
+                                          ),
+                                          SizedBox(width: 4.2.w),
+                                          TextView(
+                                            text: 'Additional Resource Info',
+                                            textStyle: TextStyle(
+                                              fontFamily: 'DMSans',
+                                              fontSize: 14.20.sp,
+                                              fontWeight: FontWeight.w500,
+                                              color: AppColors.primary,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   )
                                 : SizedBox.shrink(),
@@ -463,24 +547,6 @@ class PharmacyViewProductScreen extends StatelessWidget {
                               ],
                             ),
                             SizedBox(height: 10.h),
-                            Divider(color: AppColors.infoGrey1),
-                            SizedBox(height: 10.h),
-                            TextView(
-                              text:
-                                  model
-                                      .getSingleMarketProductResponseModel
-                                      ?.data
-                                      ?.product
-                                      ?.description ??
-                                  '',
-                              textStyle: TextStyle(
-                                fontFamily: 'DMSans',
-                                fontSize: 15.80.sp,
-                                fontWeight: FontWeight.w400,
-                                color: AppColors.reminder,
-                              ),
-                            ),
-                            SizedBox(height: 10.h),
                             Container(
                               margin: EdgeInsets.only(bottom: 10.w),
                               padding: EdgeInsets.symmetric(
@@ -595,79 +661,106 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                 ],
                               ),
                             ),
-                            Container(
-                              width: double.infinity,
-                              padding: EdgeInsets.all(14.w),
-                              decoration: BoxDecoration(
-                                color: AppColors.grey,
-                                borderRadius: BorderRadius.circular(8.0.r),
-                                border: Border.all(color: AppColors.infoGrey1),
-                              ),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      TextView(
-                                        text: 'Suggested Retail Price (SRP)',
-                                        textStyle: TextStyle(
-                                          fontFamily: 'DMSans',
-                                          fontSize: 14.90.sp,
-                                          fontWeight: FontWeight.w500,
-                                          color: AppColors.black,
-                                        ),
+                            model
+                                        .getSingleMarketProductResponseModel!
+                                        .data!
+                                        .product
+                                        ?.suggestedRetailPrice !=
+                                    ''
+                                ? Container(
+                                    width: double.infinity,
+                                    padding: EdgeInsets.all(14.w),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.grey,
+                                      borderRadius: BorderRadius.circular(
+                                        8.0.r,
                                       ),
-                                      GestureDetector(
-                                        onTap: () {
-                                          model.isSeeMore = !model.isSeeMore;
-                                          model.notifyListeners();
-                                        },
-                                        child: TextView(
-                                          text: 'See more',
-                                          textStyle: TextStyle(
-                                            fontFamily: 'DMSans',
-                                            decoration:
-                                                TextDecoration.underline,
-                                            decorationColor: AppColors.reminder,
-                                            fontSize: 14.90.sp,
-                                            fontWeight: FontWeight.w500,
-                                            color: AppColors.reminder,
-                                          ),
-                                        ),
+                                      border: Border.all(
+                                        color: AppColors.infoGrey1,
                                       ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 10.h),
-                                  model.isSeeMore
-                                      ? SizedBox(
-                                          height: 70.h,
-                                          child: TextView(
-                                            text:
-                                                'Recommended retail benchmark for pharmacies and healthcare facilities is ₦24,100 per carton (~₦241 per carton). Reselling at this suggested price offers an estimated 23% gross margin (+₦5,600 per carton) based on current B2B wholesale pricing.',
-                                            maxLines: 4,
-                                            textOverflow: TextOverflow.ellipsis,
-                                            textStyle: TextStyle(
-                                              fontFamily: 'DMSans',
-                                              fontSize: 14.90.sp,
-                                              fontWeight: FontWeight.w500,
-                                              color: AppColors.black,
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            TextView(
+                                              text:
+                                                  'Suggested Retail Price (SRP)',
+                                              textStyle: TextStyle(
+                                                fontFamily: 'DMSans',
+                                                fontSize: 14.90.sp,
+                                                fontWeight: FontWeight.w500,
+                                                color: AppColors.black,
+                                              ),
                                             ),
-                                          ),
-                                        )
-                                      : TextView(
-                                          text:
-                                              'Recommended retail benchmark for pharmacies and healthcare facilities is ₦24,100 per carton (~₦241 per carton). Reselling at this suggested price offers an estimated 23% gross margin (+₦5,600 per carton) based on current B2B wholesale pricing.',
-                                          textStyle: TextStyle(
-                                            fontFamily: 'DMSans',
-                                            fontSize: 14.90.sp,
-                                            fontWeight: FontWeight.w500,
-                                            color: AppColors.black,
-                                          ),
+                                            GestureDetector(
+                                              onTap: () {
+                                                model.isSeeMore =
+                                                    !model.isSeeMore;
+                                                model.notifyListeners();
+                                              },
+                                              child: TextView(
+                                                text: !model.isSeeMore
+                                                    ? 'See more'
+                                                    : 'See less',
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'DMSans',
+                                                  decoration:
+                                                      TextDecoration.underline,
+                                                  decorationColor:
+                                                      AppColors.reminder,
+                                                  fontSize: 14.20.sp,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: AppColors.reminder,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                ],
-                              ),
-                            ),
+                                        SizedBox(height: 10.h),
+                                        !model.isSeeMore
+                                            ? SizedBox(
+                                                height: 70.h,
+                                                child: TextView(
+                                                  text:
+                                                      model
+                                                          .getSingleMarketProductResponseModel!
+                                                          .data!
+                                                          .product
+                                                          ?.suggestedRetailPrice ??
+                                                      '',
+                                                  maxLines: 4,
+                                                  textOverflow:
+                                                      TextOverflow.ellipsis,
+                                                  textStyle: TextStyle(
+                                                    fontFamily: 'DMSans',
+                                                    fontSize: 14.0.sp,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: AppColors.black,
+                                                  ),
+                                                ),
+                                              )
+                                            : TextView(
+                                                text:
+                                                    model
+                                                        .getSingleMarketProductResponseModel!
+                                                        .data!
+                                                        .product
+                                                        ?.suggestedRetailPrice ??
+                                                    '',
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'DMSans',
+                                                  fontSize: 14.0.sp,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: AppColors.black,
+                                                ),
+                                              ),
+                                      ],
+                                    ),
+                                  )
+                                : SizedBox.shrink(),
                             // model.getSingleMarketProductResponseModel != null &&
                             //         model
                             //             .getSingleMarketProductResponseModel!
@@ -1061,15 +1154,21 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                         SizedBox(height: 5.10.h),
                                         TextView(
                                           text:
-                                              'Broad-spectrum antibiotic capsules. Effective against a wide range of gram-positive and gram-negative bacterial infections.',
+                                              model
+                                                  .getSingleMarketProductResponseModel
+                                                  ?.data
+                                                  ?.product
+                                                  ?.description ??
+                                              '',
                                           textAlign: TextAlign.start,
                                           textStyle: TextStyle(
                                             fontFamily: 'DMSans',
-                                            fontSize: 12.90.sp,
-                                            fontWeight: FontWeight.w300,
-                                            color: AppColors.infoGrey,
+                                            fontSize: 15.40.sp,
+                                            fontWeight: FontWeight.w400,
+                                            color: AppColors.reminder,
                                           ),
                                         ),
+
                                         SizedBox(height: 2.h),
                                       ],
                                     ),

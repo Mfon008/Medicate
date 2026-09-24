@@ -26,8 +26,12 @@ class DeleteBusinessAddressWidgetModalWidget extends StatelessWidget {
   final BuildContext parentContext;
 
   void deleteBusinessAddress(modelPharm) async {
-    await modelPharm.deleteBusinessAddress(parentContext, businessAddressId: businessAddressId);
-    if (modelPharm.vdelete != null && modelPharm.vdelete['statusCode'] == 200||modelPharm.vdelete['statusCode'] == 201) {
+    await modelPharm.deleteBusinessAddress(
+      parentContext,
+      businessAddressId: businessAddressId,
+    );
+    if (modelPharm.vdelete != null && modelPharm.vdelete['statusCode'] == 200 ||
+        modelPharm.vdelete['statusCode'] == 201) {
       onSuccess();
     } else {
       await AppUtils.snackbar(
@@ -114,7 +118,8 @@ class DeleteBusinessAddressWidgetModalWidget extends StatelessWidget {
                       ),
                       SizedBox(height: 12.h),
                       TextView(
-                        text: 'Are you sure you want to delete this business address?',
+                        text:
+                            'Are you sure you want to delete this business address?',
                         textAlign: TextAlign.center,
                         textStyle: TextStyle(
                           fontFamily: 'Arial',

@@ -853,14 +853,14 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                               ),
                             ),
                             IconButton(
-                              onPressed:model
-                                          .getTetantResponseModel!=null&&
-                                  model
-                                          .getTetantResponseModel!
-                                          .data!
-                                          .businessAddresses!
-                                          .length <
-                                      3
+                              onPressed:
+                                  model.getTetantResponseModel != null &&
+                                      model
+                                              .getTetantResponseModel!
+                                              .data!
+                                              .businessAddresses!
+                                              .length <
+                                          3
                                   ? () async {
                                       model.stateBusController.clear();
                                       model.lgaBusController.clear();

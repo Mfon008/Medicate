@@ -86,8 +86,6 @@ import '../model/update_business_owner_profile_entity_model/update_business_owne
 import '../model/update_business_owner_profile_entity_model/upload_means_of_id.dart';
 import '../model/update_business_owner_profile_response_model/update_business_owner_profile_response_model.dart';
 import '../model/update_doses_status_model/update_doses_status_model.dart';
-import '../model/update_pharmacy_kyc_entity_model/document.dart';
-import '../model/update_pharmacy_kyc_entity_model/update_pharmacy_kyc_entity_model.dart';
 import '../model/update_practitioner_profile_entity_model/educational_experience.dart';
 import '../model/update_practitioner_profile_entity_model/means_of_id.dart';
 import '../model/update_practitioner_profile_entity_model/update_practitioner_profile_entity_model.dart';
@@ -100,8 +98,6 @@ import '../model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dar
 import '../model/verify_pharmacy_otp_model/verify_pharmacy_otp_model.dart';
 import '../model/verify_phone_entity_model.dart';
 import '../repo/healthcare_repo_impl.dart';
-import 'package:medicate_app/core/connect_end/model/update_pharmacy_kyc_entity_model/file.dart'
-    as ph;
 import 'package:medicate_app/core/connect_end/model/update_practitioner_profile_entity_model/means_of_id.dart'
     as md;
 import 'package:medicate_app/core/connect_end/model/update_practitioner_profile_entity_model/logo.dart'
@@ -480,7 +476,7 @@ class HealthCareViewModel extends BaseViewModel {
   String? filenameTIN;
   File? imagePharmLicense;
   String? filenamePharmLicense;
-  List<Document> kycDocumentsList = [];
+  // List<Document> kycDocumentsList = [];
   List<Staff> checkOwnerRole = [];
 
   bool _onTempPinTap = false;
@@ -18516,30 +18512,30 @@ class HealthCareViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void updateHealthCareKyc(
-    context, {
-    UpdatePharmacyKycEntityModel? updateKyc,
-  }) async {
-    try {
-      _isLoading = true;
-      var v = await runBusyFuture(
-        repositoryImply.updateHealthCareKyc(updateKyc!),
-        throwException: true,
-      );
-      if (v['statusCode'] == 200) {
-        AppUtils.snackbar(context, message: v['message']);
-        getHealthCareKyc(context);
-      } else {
-        AppUtils.snackbar(context, message: v['message'], error: true);
-      }
-      _isLoading = false;
-    } catch (e) {
-      _isLoading = false;
-      logger.d(e);
-      AppUtils.snackbar(context, message: e.toString(), error: true);
-    }
-    notifyListeners();
-  }
+  // void updateHealthCareKyc(
+  //   context, {
+  //   UpdatePharmacyKycEntityModel? updateKyc,
+  // }) async {
+  //   try {
+  //     _isLoading = true;
+  //     var v = await runBusyFuture(
+  //       repositoryImply.updateHealthCareKyc(updateKyc!),
+  //       throwException: true,
+  //     );
+  //     if (v['statusCode'] == 200) {
+  //       AppUtils.snackbar(context, message: v['message']);
+  //       getHealthCareKyc(context);
+  //     } else {
+  //       AppUtils.snackbar(context, message: v['message'], error: true);
+  //     }
+  //     _isLoading = false;
+  //   } catch (e) {
+  //     _isLoading = false;
+  //     logger.d(e);
+  //     AppUtils.snackbar(context, message: e.toString(), error: true);
+  //   }
+  //   notifyListeners();
+  // }
 
   String getKycStatus({id, cac, license, tin}) {
     if (id == 'PENDING' ||
@@ -18594,19 +18590,19 @@ class HealthCareViewModel extends BaseViewModel {
           );
           _isLoadingCAC = _isLoading;
           _uploadImageResponseModelCAC = _uploadImageResponseModel;
-          kycDocumentsList.add(
-            Document(
-              documentType: 'CAC_DOCUMENT',
-              file: ph.File(
-                width: _uploadImageResponseModelCAC!.data!.width,
-                height: _uploadImageResponseModelCAC!.data!.height,
-                format: _uploadImageResponseModelCAC!.data!.format,
-                url: _uploadImageResponseModelCAC!.data!.url!,
-                mimeType: _uploadImageResponseModelCAC!.data!.mimeType,
-                size: _uploadImageResponseModelCAC!.data!.size,
-              ),
-            ),
-          );
+          // kycDocumentsList.add(
+          //   Document(
+          //     documentType: 'CAC_DOCUMENT',
+          //     file: ph.File(
+          //       width: _uploadImageResponseModelCAC!.data!.width,
+          //       height: _uploadImageResponseModelCAC!.data!.height,
+          //       format: _uploadImageResponseModelCAC!.data!.format,
+          //       url: _uploadImageResponseModelCAC!.data!.url!,
+          //       mimeType: _uploadImageResponseModelCAC!.data!.mimeType,
+          //       size: _uploadImageResponseModelCAC!.data!.size,
+          //     ),
+          //   ),
+          // );
           _uploadImageResponseModel = null;
           notifyListeners();
         },
@@ -18634,19 +18630,19 @@ class HealthCareViewModel extends BaseViewModel {
           _isLoadingLicense = _isLoading;
           _uploadImageResponseModelPharmLicense = _uploadImageResponseModel;
 
-          kycDocumentsList.add(
-            Document(
-              documentType: 'PHARMACY_LICENSE',
-              file: ph.File(
-                width: _uploadImageResponseModelPharmLicense!.data!.width,
-                height: _uploadImageResponseModelPharmLicense!.data!.height,
-                format: _uploadImageResponseModelPharmLicense!.data!.format,
-                url: _uploadImageResponseModelPharmLicense!.data!.url!,
-                mimeType: _uploadImageResponseModelPharmLicense!.data!.mimeType,
-                size: _uploadImageResponseModelPharmLicense!.data!.size,
-              ),
-            ),
-          );
+          // kycDocumentsList.add(
+            // Document(
+            //   documentType: 'PHARMACY_LICENSE',
+            //   file: ph.File(
+            //     width: _uploadImageResponseModelPharmLicense!.data!.width,
+            //     height: _uploadImageResponseModelPharmLicense!.data!.height,
+            //     format: _uploadImageResponseModelPharmLicense!.data!.format,
+            //     url: _uploadImageResponseModelPharmLicense!.data!.url!,
+            //     mimeType: _uploadImageResponseModelPharmLicense!.data!.mimeType,
+            //     size: _uploadImageResponseModelPharmLicense!.data!.size,
+            //   ),
+            // ),
+          // );
           _uploadImageResponseModel = null;
           notifyListeners();
         },
@@ -18674,19 +18670,19 @@ class HealthCareViewModel extends BaseViewModel {
           _isLoadingTIN = _isLoading;
           _uploadImageResponseModelTIN = _uploadImageResponseModel;
           _uploadImageResponseModel = null;
-          kycDocumentsList.add(
-            Document(
-              documentType: 'TAX_IDENTIFICATION_NUMBER',
-              file: ph.File(
-                width: _uploadImageResponseModelTIN!.data!.width,
-                height: _uploadImageResponseModelTIN!.data!.height,
-                format: _uploadImageResponseModelTIN!.data!.format,
-                url: _uploadImageResponseModelTIN!.data!.url!,
-                mimeType: _uploadImageResponseModelTIN!.data!.mimeType,
-                size: _uploadImageResponseModelTIN!.data!.size,
-              ),
-            ),
-          );
+          // kycDocumentsList.add(
+          //   Document(
+          //     documentType: 'TAX_IDENTIFICATION_NUMBER',
+          //     file: ph.File(
+          //       width: _uploadImageResponseModelTIN!.data!.width,
+          //       height: _uploadImageResponseModelTIN!.data!.height,
+          //       format: _uploadImageResponseModelTIN!.data!.format,
+          //       url: _uploadImageResponseModelTIN!.data!.url!,
+          //       mimeType: _uploadImageResponseModelTIN!.data!.mimeType,
+          //       size: _uploadImageResponseModelTIN!.data!.size,
+          //     ),
+          //   ),
+          // );
           notifyListeners();
         },
       );

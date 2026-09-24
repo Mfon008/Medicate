@@ -14,6 +14,9 @@ class Product {
   String? id;
   String? productName;
   String? description;
+  String? suggestedRetailPrice;
+  String? additionalResourceDescription;
+  String? additionalResourceUrl;
   String? creationSource;
   String? manufacturerDistributorId;
   String? manufacturerDistributorName;
@@ -54,7 +57,10 @@ class Product {
     this.id,
     this.productName,
     this.description,
+    this.suggestedRetailPrice,
     this.creationSource,
+    this.additionalResourceUrl,
+    this.additionalResourceDescription,
     this.manufacturerDistributorId,
     this.manufacturerDistributorName,
     this.categoryId,

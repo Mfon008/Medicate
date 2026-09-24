@@ -1,4 +1,4 @@
-// ignore_for_file: must_be_immutable, deprecated_member_use
+// ignore_for_file: use_build_context_synchronously, must_be_immutable, deprecated_member_use
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -40,6 +40,7 @@ class _PharmacyWholesaleScreenState extends State<PharmacyWholesaleScreen> {
         await model.getListedMarketPlace(context);
         await model.getWholesaleProductAddedToCart(context);
         model.getWholesaleCategoryList(context);
+        model.getTenant(context);
       },
       disposeViewModel: false,
       onDispose: (viewModel) {},
@@ -192,73 +193,75 @@ class _PharmacyWholesaleScreenState extends State<PharmacyWholesaleScreen> {
                   ),
                 ),
                 SizedBox(height: 20.h),
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    vertical: 10.w,
-                    horizontal: 12.w,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.appWhite,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Row(
-                    children: [
-                      SvgPicture.asset(AppImage.add_locator),
+                if (model.getTetantResponseModel != null)
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      vertical: 10.w,
+                      horizontal: 12.w,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.appWhite,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      children: [
+                        SvgPicture.asset(AppImage.add_locator),
 
-                      SizedBox(width: 10.w),
+                        SizedBox(width: 10.w),
 
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            AutoScrollingText(
-                              text:
-                                  model
-                                      .mapLocationAddressSelected['businessAddress'] ??
-                                  '12 Oluwole Street',
-                              textStyle: TextStyle(
-                                fontFamily: 'DMSans',
-                                fontSize: 14.20.sp,
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.black,
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              AutoScrollingText(
+                                text:
+                                    model
+                                        .mapLocationAddressSelected
+                                        ?.businessAddress ??
+                                    '${model.getTetantResponseModel?.data?.businessAddress}',
+                                textStyle: TextStyle(
+                                  fontFamily: 'DMSans',
+                                  fontSize: 14.20.sp,
+                                  fontWeight: FontWeight.w500,
+                                  color: AppColors.black,
+                                ),
                               ),
-                            ),
 
-                            SizedBox(height: 3.h),
+                              SizedBox(height: 3.h),
 
-                            AutoScrollingText(
-                              text:
-                                  '${model.mapLocationAddressSelected['lga'] ?? 'Ikeja'}, ${model.mapLocationAddressSelected['state'] ?? 'Lagos State'}, ${model.mapLocationAddressSelected['country'] ?? 'Nigeria, West Africa'}',
-                              textStyle: TextStyle(
-                                fontFamily: 'DMSans',
-                                fontSize: 13.20.sp,
-                                fontWeight: FontWeight.w400,
-                                color: AppColors.infoGrey,
+                              AutoScrollingText(
+                                text:
+                                    '${model.mapLocationAddressSelected?.lga ?? '${model.getTetantResponseModel?.data?.lga}'}, ${model.mapLocationAddressSelected?.state ?? model.getTetantResponseModel?.data?.state}, ${model.mapLocationAddressSelected?.country ?? '${model.getTetantResponseModel?.data?.country}'}',
+                                textStyle: TextStyle(
+                                  fontFamily: 'DMSans',
+                                  fontSize: 13.20.sp,
+                                  fontWeight: FontWeight.w400,
+                                  color: AppColors.infoGrey,
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      SizedBox(width: 10.w),
-
-                      GestureDetector(
-                        onTap: () => model.selectLocation(context),
-                        child: TextView(
-                          text: 'Switch Address',
-                          textStyle: TextStyle(
-                            decoration: TextDecoration.underline,
-                            decorationColor: AppColors.primary,
-                            fontFamily: 'DMSans',
-                            fontSize: 13.20.sp,
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.primary,
+                            ],
                           ),
                         ),
-                      ),
-                    ],
+
+                        SizedBox(width: 10.w),
+
+                        GestureDetector(
+                          onTap: () => model.selectLocation(context),
+                          child: TextView(
+                            text: 'Switch Address',
+                            textStyle: TextStyle(
+                              decoration: TextDecoration.underline,
+                              decorationColor: AppColors.primary,
+                              fontFamily: 'DMSans',
+                              fontSize: 13.20.sp,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.primary,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
                 SizedBox(height: 10.h),
                 Row(
                   children: [

@@ -37,7 +37,6 @@ import '../connect_end/model/set_pin_pharm_response_model/set_pin_pharm_response
 import '../connect_end/model/sign_up_phamary_response_model/sign_up_phamary_response_model.dart';
 import '../connect_end/model/update_business_owner_profile_entity_model/update_business_owner_profile_entity_model.dart';
 import '../connect_end/model/update_doses_status_model/update_doses_status_model.dart';
-import '../connect_end/model/update_pharmacy_kyc_entity_model/update_pharmacy_kyc_entity_model.dart';
 import '../connect_end/model/update_practitioner_profile_entity_model/update_practitioner_profile_entity_model.dart';
 import '../connect_end/model/update_reminder_entity_model/update_reminder_entity_model.dart';
 import '../connect_end/model/update_role_entity_model.dart';
@@ -448,22 +447,22 @@ class HealthcareApi {
     }
   }
 
-  Future<dynamic> updateHealthCareKyc(
-    UpdatePharmacyKycEntityModel updateKyc,
-  ) async {
-    try {
-      final response = await _service.call(
-        UrlConfig.update_pharm_kyc,
-        RequestMethod.patch,
-        data: updateKyc.toJson(),
-      );
-      logger.d(response.data);
-      return response.data;
-    } catch (e) {
-      logger.d("response:$e");
-      rethrow;
-    }
-  }
+  // Future<dynamic> updateHealthCareKyc(
+  //   UpdatePharmacyKycEntityModel updateKyc,
+  // ) async {
+  //   try {
+  //     final response = await _service.call(
+  //       UrlConfig.update_pharm_kyc,
+  //       RequestMethod.patch,
+  //       data: updateKyc.toJson(),
+  //     );
+  //     logger.d(response.data);
+  //     return response.data;
+  //   } catch (e) {
+  //     logger.d("response:$e");
+  //     rethrow;
+  //   }
+  // }
 
   Future<dynamic> addDoctor(CreateUserEntityModel createEntity) async {
     try {

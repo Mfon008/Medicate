@@ -8,7 +8,7 @@ part of 'business_addresses.dart';
 
 BusinessAddresses _$BusinessAddressesFromJson(Map<String, dynamic> json) =>
     BusinessAddresses(
-      id: json['id'],
+      id: json['id'] as String?,
       businessAddress: json['businessAddress'] as String?,
       country: json['country'] as String?,
       state: json['state'] as String?,

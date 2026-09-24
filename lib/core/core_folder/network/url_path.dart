@@ -56,8 +56,10 @@ class UrlConfig {
   static const String initiate_payment = 'payment/initiate';
   static const String state = 'countries/states/q';
   static const String get_kyc = 'auth/get-kyc';
+  static const String get_pharmacy_kyc = 'auth/pharmacy/kyc/status';
   static const String get_hmo_kyc = 'auth/hmo/kyc/status';
-  static const String update_pharm_kyc = 'auth/upload-kyc';
+  static const String update_pharm_kyc_save = 'auth/pharmacy/kyc/level-2/save';
+  static const String update_pharm_kyc = 'auth/pharmacy/kyc/level-2/submit';
   static const String update_hmo_kyc_two = 'auth/hmo/kyc/level-2/submit';
   static const String update_third_hmo_kyc_two = 'auth/hmo/kyc/level-3/submit';
   static const String listed_plan_types_hmo =

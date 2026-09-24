@@ -52,22 +52,15 @@ Documents _$DocumentsFromJson(Map<String, dynamic> json) => Documents(
 );
 
 Map<String, dynamic> _$DocumentsToJson(Documents instance) => <String, dynamic>{
-  if (instance.cacCertificate != null)
-    'cacCertificate': instance.cacCertificate,
-  if (instance.pharmaceuticalDistributionLicense != null)
-    'pharmaceuticalDistributionLicense':
-        instance.pharmaceuticalDistributionLicense,
-  if (instance.nafdacPermit != null) 'nafdacPermit': instance.nafdacPermit,
-  if (instance.pharmacyCouncilLicense != null)
-    'pharmacyCouncilLicense': instance.pharmacyCouncilLicense,
-  if (instance.companyLogo != null) 'companyLogo': instance.companyLogo,
-  if (instance.gmpCertificate != null)
-    'gmpCertificate': instance.gmpCertificate,
-  if (instance.nafdacManufacturingLicense != null)
-    'nafdacManufacturingLicense': instance.nafdacManufacturingLicense,
-  if (instance.importPermit != null) 'importPermit': instance.importPermit,
-  if (instance.manufacturerAuthorizationLetter != null)
-    'manufacturerAuthorizationLetter': instance.manufacturerAuthorizationLetter,
-  if (instance.productRegistrationEvidence != null)
-    'productRegistrationEvidence': instance.productRegistrationEvidence,
+  'cacCertificate': instance.cacCertificate,
+  'pharmaceuticalDistributionLicense':
+      instance.pharmaceuticalDistributionLicense,
+  'nafdacPermit': instance.nafdacPermit,
+  'pharmacyCouncilLicense': instance.pharmacyCouncilLicense,
+  'companyLogo': instance.companyLogo,
+  'gmpCertificate': instance.gmpCertificate,
+  'nafdacManufacturingLicense': instance.nafdacManufacturingLicense,
+  'importPermit': instance.importPermit,
+  'manufacturerAuthorizationLetter': instance.manufacturerAuthorizationLetter,
+  'productRegistrationEvidence': instance.productRegistrationEvidence,
 };

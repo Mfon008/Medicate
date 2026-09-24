@@ -24,11 +24,13 @@ class PharmacyProfileScreen extends StatelessWidget {
       onViewModelReady: (model) {
         WidgetsBinding.instance.addPostFrameCallback((_) async {
           await model.getTenant(context);
+          await model.getPharmacyKyc(context);
           model.getUserDetails(
             context: context,
             phoneNo:
                 SharedPreferencesService.instance.usersData['user']['phone'],
           );
+
         });
       },
       disposeViewModel: false,
@@ -99,7 +101,20 @@ class PharmacyProfileScreen extends StatelessWidget {
                     child: GestureDetector(
                       onTap: () => model.pickImage(context),
                       child: TextView(
-                        text: 'Change Photo',
+                        text:
+                            SharedPreferencesService.instance.usersData ==
+                                    null ||
+                                SharedPreferencesService
+                                        .instance
+                                        .usersData['user'] ==
+                                    null ||
+                                SharedPreferencesService
+                                        .instance
+                                        .usersData['user']['profilePicture'] ==
+                                    null ||
+                                model.getTetantResponseModel!.data!.logo == null
+                            ? 'Upload Photo'
+                            : 'Change Photo',
                         textStyle: TextStyle(
                           fontFamily: 'Arial',
                           fontSize: 14.2.sp,
@@ -150,23 +165,13 @@ class PharmacyProfileScreen extends StatelessWidget {
                   SizedBox(height: 1.0.h),
                   profileContainer(
                     icon: AppImage.key,
-                    isactive: model.getKycStatusBool(
-                      cac: model
-                          .getTetantResponseModel
-                          ?.data
-                          ?.kycDocuments?[0]
-                          .status,
-                      license: model
-                          .getTetantResponseModel
-                          ?.data
-                          ?.kycDocuments?[1]
-                          .status,
-                      tin: model
-                          .getTetantResponseModel
-                          ?.data
-                          ?.kycDocuments?[2]
-                          .status,
-                    ),
+                    isactive:
+                        model.getPharmacyKycResponseModel != null &&
+                            model.getPharmacyKycResponseModel!.data!.kycStatus!
+                                    .toLowerCase() ==
+                                'APPROVED'.toLowerCase()
+                        ? false
+                        : true,
                     text: 'KYC',
                     onTap: () => navigate.navigateTo(Routes.kycScreen),
                   ),

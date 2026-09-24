@@ -30,7 +30,9 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<PharmViewModel>.reactive(
       viewModelBuilder: () => PharmViewModel(),
-      onViewModelReady: (model) {},
+      onViewModelReady: (model) {
+        model.getTenant(context);
+      },
       disposeViewModel: false,
       onDispose: (viewModel) {},
       builder: (_, PharmViewModel model, _) {
@@ -582,95 +584,109 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                           ],
                         ),
                         SizedBox(height: 6.0.h),
-                        ...model.mapLocationAddress!.map(
-                          (e) => GestureDetector(
-                            onTap: () {
-                              model.mapLocationAddressSelected = e;
-                              model.notifyListeners();
-                            },
-                            child: Container(
-                              width: double.infinity,
-                              margin: EdgeInsets.only(top: 14.w),
-                              padding: EdgeInsets.symmetric(
-                                vertical: 10.w,
-                                horizontal: 12.w,
-                              ),
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: model.mapLocationAddressSelected == e
-                                      ? AppColors.primary
-                                      : AppColors.infoGrey1,
-                                ),
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Row(
-                                children: [
-                                  model.mapLocationAddressSelected == e
-                                      ? Container(
-                                          padding: EdgeInsets.all(2.6.w),
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            border: Border.all(
-                                              color: AppColors.primary,
-                                              width: 2,
-                                            ),
-                                          ),
-                                          child: Container(
-                                            padding: EdgeInsets.all(3.2.w),
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              color: AppColors.primary,
-                                            ),
-                                          ),
-                                        )
-                                      : Container(
-                                          padding: EdgeInsets.all(6.w),
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            border: Border.all(
-                                              color: AppColors.infoGrey1,
-                                              width: 2,
-                                            ),
-                                          ),
-                                        ),
-
-                                  SizedBox(width: 10.w),
-
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                        if (model.getTetantResponseModel != null &&
+                            model
+                                .getTetantResponseModel!
+                                .data!
+                                .businessAddresses!
+                                .isNotEmpty)
+                          ...model
+                              .getTetantResponseModel!
+                              .data!
+                              .businessAddresses!
+                              .map(
+                                (e) => GestureDetector(
+                                  onTap: () {
+                                    model.mapLocationAddressSelected = e;
+                                    model.notifyListeners();
+                                  },
+                                  child: Container(
+                                    width: double.infinity,
+                                    margin: EdgeInsets.only(top: 14.w),
+                                    padding: EdgeInsets.symmetric(
+                                      vertical: 10.w,
+                                      horizontal: 12.w,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color:
+                                            model.mapLocationAddressSelected ==
+                                                e
+                                            ? AppColors.primary
+                                            : AppColors.infoGrey1,
+                                      ),
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Row(
                                       children: [
-                                        AutoScrollingText(
-                                          text: e['businessAddress'] ?? '',
-                                          textStyle: TextStyle(
-                                            fontFamily: 'DMSans',
-                                            fontSize: 14.20.sp,
-                                            fontWeight: FontWeight.w500,
-                                            color: AppColors.black,
-                                          ),
-                                        ),
+                                        model.mapLocationAddressSelected == e
+                                            ? Container(
+                                                padding: EdgeInsets.all(2.6.w),
+                                                decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  border: Border.all(
+                                                    color: AppColors.primary,
+                                                    width: 2,
+                                                  ),
+                                                ),
+                                                child: Container(
+                                                  padding: EdgeInsets.all(
+                                                    3.2.w,
+                                                  ),
+                                                  decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    color: AppColors.primary,
+                                                  ),
+                                                ),
+                                              )
+                                            : Container(
+                                                padding: EdgeInsets.all(6.w),
+                                                decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  border: Border.all(
+                                                    color: AppColors.infoGrey1,
+                                                    width: 2,
+                                                  ),
+                                                ),
+                                              ),
 
-                                        SizedBox(height: 3.h),
+                                        SizedBox(width: 10.w),
 
-                                        AutoScrollingText(
-                                          text:
-                                              '${e['lga']}, ${e['state']}, ${e['country']}',
-                                          textStyle: TextStyle(
-                                            fontFamily: 'DMSans',
-                                            fontSize: 13.20.sp,
-                                            fontWeight: FontWeight.w400,
-                                            color: AppColors.infoGrey,
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              AutoScrollingText(
+                                                text: e.businessAddress ?? '',
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'DMSans',
+                                                  fontSize: 14.20.sp,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: AppColors.black,
+                                                ),
+                                              ),
+
+                                              SizedBox(height: 3.h),
+
+                                              AutoScrollingText(
+                                                text:
+                                                    '${e.lga}, ${e.state}, ${e.country}',
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'DMSans',
+                                                  fontSize: 13.20.sp,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: AppColors.infoGrey,
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
                                       ],
                                     ),
                                   ),
-                                ],
+                                ),
                               ),
-                            ),
-                          ),
-                        ),
 
                         // TextFormWidget(
                         //   hint: 'State',

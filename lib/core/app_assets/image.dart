@@ -158,6 +158,7 @@ class AppImage {
   static const String terms = 'assets/svgs/terms.svg';
   static const String wallet = 'assets/svgs/wallet.svg';
   static const String image_icon = 'assets/svgs/image_icon.svg';
+  static const String additional_info = 'assets/svgs/additional_info.svg';
   static const String wallet_card = 'assets/svgs/wallet_card.svg';
   static const String chat_support = 'assets/svgs/chat_support.svg';
   static const String profile_image = 'assets/svgs/profile_image.svg';

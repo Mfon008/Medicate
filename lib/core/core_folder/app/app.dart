@@ -83,6 +83,7 @@ import '../../../ui/dashboard/pharm_dashboard/pharmacy_add_to_cart_screen.dart';
 import '../../../ui/dashboard/pharm_dashboard/pharmacy_order_screen.dart';
 import '../../../ui/dashboard/pharm_dashboard/pharmacy_view_product_screen.dart';
 import '../../../ui/dashboard/pharm_dashboard/pharmacy_whole_sale_checkout.dart';
+import '../../../ui/dashboard/pharm_dashboard/pharmacy_wholesale_category_screen.dart';
 import '../../../ui/dashboard/pharm_dashboard/pharmacy_wholesale_screen.dart';
 import '../../../ui/dashboard/profile/hmo/hmo_create_tiers_plan_management_screen.dart';
 import '../../../ui/dashboard/profile/hmo/hmo_plan_tiers_management_screen.dart';
@@ -316,6 +317,7 @@ import '../network/support_network_service.dart';
     MaterialRoute(page: ManufacturerProfileInfoScreen),
     MaterialRoute(page: ManufacturerSettingScreen),
     MaterialRoute(page: DistributorKycScreen),
+    MaterialRoute(page: PharmacyWholesaleCategoryScreen),
     CustomRoute(
       page: NotificationScreen,
       transitionsBuilder: TransitionsBuilders.slideLeft,

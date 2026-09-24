@@ -47,8 +47,8 @@ import '../model/set_pin_entity_model.dart';
 import '../model/set_pin_pharm_response_model/set_pin_pharm_response_model.dart';
 import '../model/sign_up_phamary_response_model/sign_up_phamary_response_model.dart';
 import '../model/sign_up_pharmacy_entity_model.dart';
+import '../model/submit_level_two_kyc_entity_model/submit_level_two_kyc_entity_model.dart';
 import '../model/update_doses_status_model/update_doses_status_model.dart';
-import '../model/update_pharmacy_kyc_entity_model/update_pharmacy_kyc_entity_model.dart';
 import '../model/update_pharmacy_profile_entity_model/update_pharmacy_profile_entity_model.dart';
 import '../model/update_reminder_entity_model/update_reminder_entity_model.dart';
 import '../model/update_role_entity_model.dart';
@@ -109,8 +109,11 @@ class PharmContractsImpl {
   Future<GetPharmacyKycResponseModel> getPharmacyKyc() async =>
       await _api.getPharmacyKyc();
   Future<dynamic> updatePharmacyKyc(
-    UpdatePharmacyKycEntityModel updateKyc,
+    SubmitLevelTwoKycEntityModel updateKyc,
   ) async => await _api.updatePharmacyKyc(updateKyc);
+  Future<dynamic> saveLevelTwoPharmacyKyc(
+    SubmitLevelTwoKycEntityModel levelTwoKyc,
+  ) async  => await _api.saveLevelTwoPharmacyKyc(levelTwoKyc);
   Future<dynamic> updatePharmacy(
     UpdatePharmacyProfileEntityModel? updatePharmacy,
   ) async => await _api.updatePharmacy(updatePharmacy);

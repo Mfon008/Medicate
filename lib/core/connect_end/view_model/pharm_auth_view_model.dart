@@ -5,6 +5,9 @@ import 'package:medicate_app/core/app_assets/constant.dart';
 import 'package:medicate_app/core/connect_end/model/create_tenant_reminder_entity_model/patient_details.dart';
 import 'package:medicate_app/core/connect_end/model/get_reminder_for_tenant_response_model/get_reminder_for_tenant_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/place_order_accelerate_entity_model/delivery_details.dart';
+import 'package:medicate_app/core/connect_end/model/submit_level_two_kyc_entity_model/cac_certificate.dart';
+import 'package:medicate_app/core/connect_end/model/submit_level_two_kyc_entity_model/pharmacy_license.dart';
+import 'package:medicate_app/core/connect_end/model/submit_level_two_kyc_entity_model/tax_identification_number_document.dart';
 import 'package:medicate_app/core/connect_end/model/upload_image_reminder_response_model/data.dart'
     as phImg;
 import 'package:medicate_app/core/connect_end/model/get_reminder_by_id/daily_dose_time.dart'
@@ -16,8 +19,6 @@ import 'package:medicate_app/core/connect_end/model/get_reminder_by_id/data.dart
     as getReminderId;
 import 'package:medicate_app/core/connect_end/model/create_user_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/roles_entity_model.dart';
-import 'package:medicate_app/core/connect_end/model/update_pharmacy_kyc_entity_model/file.dart'
-    as ph;
 import 'package:medicate_app/core/connect_end/model/place_order_wallet_entity_model/delivery_details.dart'
     as del;
 import 'dart:async';
@@ -31,7 +32,6 @@ import 'package:medicate_app/core/connect_end/model/get_pharmacy_kyc_response_mo
 import 'package:medicate_app/core/connect_end/model/get_state_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/set_pin_pharm_response_model/set_pin_pharm_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/sign_up_phamary_response_model/sign_up_phamary_response_model.dart';
-import 'package:medicate_app/core/connect_end/model/update_pharmacy_kyc_entity_model/update_pharmacy_kyc_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/update_pharmacy_profile_entity_model/logo.dart';
 import 'package:medicate_app/core/connect_end/model/update_pharmacy_profile_entity_model/update_pharmacy_profile_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/upload_image_response_model/upload_image_response_model.dart';
@@ -52,6 +52,7 @@ import '../../../ui/widget/auto_scroll_text.dart';
 import '../../../ui/widget/button.dart';
 import '../../../ui/widget/delete_business_address_widget.dart';
 import '../../../ui/widget/delete_role_modal_widget.dart';
+import '../../../ui/widget/kyc_url_view.dart';
 import '../../../ui/widget/text.dart';
 import '../../../ui/widget/text_form_dose_widget.dart';
 import '../../../ui/widget/text_form_widget.dart';
@@ -113,8 +114,9 @@ import '../model/resend_otp_response_model/resend_otp_response_model.dart';
 import '../model/reset_password_entity_model.dart';
 import '../model/set_pin_entity_model.dart';
 import '../model/sign_up_pharmacy_entity_model.dart';
+import '../model/submit_level_two_kyc_entity_model/means_of_id_document.dart';
+import '../model/submit_level_two_kyc_entity_model/submit_level_two_kyc_entity_model.dart';
 import '../model/update_doses_status_model/update_doses_status_model.dart';
-import '../model/update_pharmacy_kyc_entity_model/document.dart';
 import '../model/update_reminder_entity_model/update_reminder_entity_model.dart';
 import '../model/update_role_entity_model.dart';
 import '../model/update_user_entity_model.dart';
@@ -143,6 +145,9 @@ import 'package:medicate_app/core/connect_end/model/list_market_product_response
     as p;
 import 'package:medicate_app/core/connect_end/model/get_tenant_response_model/business_addresses.dart'
     as gT;
+
+// import 'package:medicate_app/core/connect_end/model/submit_level_two_kyc_entity_model/submit_level_two_kyc_entity_model.dart'
+//     as phmKyc;
 
 class PharmViewModel extends BaseViewModel {
   final BuildContext? context;
@@ -213,6 +218,9 @@ class PharmViewModel extends BaseViewModel {
   ListMarketProductResponseModel? _getListedMarketPlaceResponseModel;
   ListMarketProductResponseModel? get getListedMarketPlaceResponseModel =>
       _getListedMarketPlaceResponseModel;
+  ListMarketProductResponseModel? _getListedMarketPlaceResponseModelCat;
+  ListMarketProductResponseModel? get getListedMarketPlaceResponseModelCat =>
+      _getListedMarketPlaceResponseModelCat;
   GetSingleMarketProductResponseModel? _getSingleMarketProductResponseModel;
   GetSingleMarketProductResponseModel?
   get getSingleMarketProductResponseModel =>
@@ -467,6 +475,9 @@ class PharmViewModel extends BaseViewModel {
 
   int? _getTotalTimesForReminder;
   final Map<String, int> selectedQuantities = {};
+  gT.BusinessAddresses? mapLocationAddressSelected;
+
+  bool isSeeMore = false;
 
   List<List<String>> periodLabels = [];
   List<List<String>> periodLabelsUpdate = [];
@@ -586,7 +597,7 @@ class PharmViewModel extends BaseViewModel {
   String? filenameTIN;
   File? imagePharmLicense;
   String? filenamePharmLicense;
-  List<Document> kycDocumentsList = [];
+  // List<Document> kycDocumentsList = [];
   int v = 1;
   int page = 1;
 
@@ -651,16 +662,55 @@ class PharmViewModel extends BaseViewModel {
   List meansId = [
     'NIN',
     'Driver’s License',
-    'International Passport ',
+    'International Passport',
     'National ID',
     'Citizenship Card',
     'Biometric Residence Permit (BRP)',
-    'State ID Card ',
+    'State ID Card',
     'Green Card/Resident Card',
     'Voter ID Card',
     'Asylum Seeker ID',
     'Alien ID Card',
   ];
+
+  selectedMeanIdText(text) {
+    if (text == 'NIN') {
+      return 'NIN';
+    }
+    if (text == 'Driver’s License') {
+      return 'DRIVERS_LICENSE';
+    }
+    if (text == 'International Passport') {
+      return 'INTERNATIONAL_PASSPORT';
+    }
+    if (text == 'National ID') {
+      return 'NATIONAL_ID';
+    }
+    if (text == 'Citizenship Card') {
+      return 'CITIZENSHIP_CARD';
+    }
+    if (text == 'Biometric Residence Permit (BRP)') {
+      return 'BIOMETRIC_RESIDENCE_PERMIT';
+    }
+    if (text == 'State ID Card') {
+      return 'STATE_ID_CARD';
+    }
+    if (text == 'Green Card/Resident Card') {
+      return 'GREEN_CARD';
+    }
+    if (text == 'Voter ID Card') {
+      return 'VOTERS_CARD';
+    }
+    if (text == 'Asylum Seeker ID') {
+      return ' ASYLUM_SEEKER_ID';
+    }
+    if (text == 'Alien ID Card') {
+      return 'ALIEN_ID_CARD';
+    }
+    else{
+      return text;
+    }
+  }
 
   var vdelete;
   var vdeactivate;
@@ -680,6 +730,19 @@ class PharmViewModel extends BaseViewModel {
   int? returnNoDays;
   DateTime? pickedDatedStart;
   String? pickedDatedStartString;
+
+  SubmitLevelTwoKycEntityModel _submitLevelTwoKycEntityModelMeansOfId = SubmitLevelTwoKycEntityModel();
+  SubmitLevelTwoKycEntityModel? get submitLevelTwoKycEntityModelMeansOfId =>
+      _submitLevelTwoKycEntityModelMeansOfId;
+  SubmitLevelTwoKycEntityModel _submitLevelTwoKycEntityModelCAC = SubmitLevelTwoKycEntityModel();
+  SubmitLevelTwoKycEntityModel? get submitLevelTwoKycEntityModelCAC =>
+      _submitLevelTwoKycEntityModelCAC;
+  SubmitLevelTwoKycEntityModel _submitLevelTwoKycEntityModelLin = SubmitLevelTwoKycEntityModel();
+  SubmitLevelTwoKycEntityModel? get submitLevelTwoKycEntityModelLin =>
+      _submitLevelTwoKycEntityModelLin;
+  SubmitLevelTwoKycEntityModel _submitLevelTwoKycEntityModelTIN = SubmitLevelTwoKycEntityModel();
+  SubmitLevelTwoKycEntityModel? get submitLevelTwoKycEntityModelTIN =>
+      _submitLevelTwoKycEntityModelTIN;
 
   orderStatusColorConfirmed(bool? completed) {
     if (completed == true) {
@@ -2451,16 +2514,16 @@ class PharmViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Future<void> deleteBusinessAddress(context,{String? businessAddressId}) async {
+  Future<void> deleteBusinessAddress(
+    context, {
+    String? businessAddressId,
+  }) async {
     try {
       _isLoading = true;
-     vdelete =  await runBusyFuture(
+      vdelete = await runBusyFuture(
         repositoryImply.deleteBusinessAddress(businessAddressId!),
         throwException: true,
       );
-      // if (v['statusCode'] == 200 || v['statusCode'] == 201) {
-      //   getTenant(context);
-      // }
       _isLoading = false;
     } catch (e) {
       _isLoading = false;
@@ -2677,7 +2740,7 @@ class PharmViewModel extends BaseViewModel {
 
   void updatePharmacyKyc(
     context, {
-    UpdatePharmacyKycEntityModel? updateKyc,
+    SubmitLevelTwoKycEntityModel? updateKyc,
   }) async {
     try {
       _isLoading = true;
@@ -2686,6 +2749,31 @@ class PharmViewModel extends BaseViewModel {
         throwException: true,
       );
       if (v['statusCode'] == 200) {
+        AppUtils.snackbar(context, message: v['message']);
+        getPharmacyKyc(context);
+      } else {
+        AppUtils.snackbar(context, message: v['message'],error: true);
+      }
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  void saveLevelPharmacyKyc(
+    context, {
+    SubmitLevelTwoKycEntityModel? updateKyc,
+  }) async {
+    try {
+      _isLoading = true;
+      var v = await runBusyFuture(
+        repositoryImply.saveLevelTwoPharmacyKyc(updateKyc!),
+        throwException: true,
+      );
+      if (v['statusCode'] == 200 || v['statusCode'] == 201) {
         AppUtils.snackbar(context, message: v['message']);
         getPharmacyKyc(context);
       } else {
@@ -3678,7 +3766,7 @@ class PharmViewModel extends BaseViewModel {
       ),
     ],
     child: Padding(
-      padding: EdgeInsets.all(14.20.w),
+      padding: EdgeInsets.only(top: 16.w, bottom: 16.w),
       child: SvgPicture.asset(AppImage.arrow_down, height: 10.h, width: 10.w),
     ),
   );
@@ -3721,17 +3809,14 @@ class PharmViewModel extends BaseViewModel {
           );
           _isLoadingMeansId = _isLoading;
           _uploadImageResponseModelMeansID = _uploadImageResponseModel;
-          kycDocumentsList.add(
-            Document(
-              documentType: 'MEANS_OF_IDENTIFICATION%${meansIdController.text}',
-              file: ph.File(
-                width: _uploadImageResponseModelMeansID!.data!.width,
-                height: _uploadImageResponseModelMeansID!.data!.height,
-                format: _uploadImageResponseModelMeansID!.data!.format,
-                url: _uploadImageResponseModelMeansID!.data!.url!,
-                mimeType: _uploadImageResponseModelMeansID!.data!.mimeType,
-                size: _uploadImageResponseModelMeansID!.data!.size,
-              ),
+          _submitLevelTwoKycEntityModelMeansOfId = SubmitLevelTwoKycEntityModel(
+            meansOfIdDocument: MeansOfIdDocument(
+              width: _uploadImageResponseModelMeansID!.data!.width,
+              height: _uploadImageResponseModelMeansID!.data!.height,
+              format: _uploadImageResponseModelMeansID!.data!.format,
+              url: _uploadImageResponseModelMeansID!.data!.url!,
+              mimeType: _uploadImageResponseModelMeansID!.data!.mimeType,
+              size: _uploadImageResponseModelMeansID!.data!.size,
             ),
           );
           _uploadImageResponseModel = null;
@@ -3760,17 +3845,14 @@ class PharmViewModel extends BaseViewModel {
           );
           _isLoadingCAC = _isLoading;
           _uploadImageResponseModelCAC = _uploadImageResponseModel;
-          kycDocumentsList.add(
-            Document(
-              documentType: 'CAC_DOCUMENT',
-              file: ph.File(
-                width: _uploadImageResponseModelCAC!.data!.width,
-                height: _uploadImageResponseModelCAC!.data!.height,
-                format: _uploadImageResponseModelCAC!.data!.format,
-                url: _uploadImageResponseModelCAC!.data!.url!,
-                mimeType: _uploadImageResponseModelCAC!.data!.mimeType,
-                size: _uploadImageResponseModelCAC!.data!.size,
-              ),
+          _submitLevelTwoKycEntityModelCAC = SubmitLevelTwoKycEntityModel(
+            cacCertificate: CacCertificate(
+              width: _uploadImageResponseModelCAC!.data!.width,
+              height: _uploadImageResponseModelCAC!.data!.height,
+              format: _uploadImageResponseModelCAC!.data!.format,
+              url: _uploadImageResponseModelCAC!.data!.url!,
+              mimeType: _uploadImageResponseModelCAC!.data!.mimeType,
+              size: _uploadImageResponseModelCAC!.data!.size,
             ),
           );
           _uploadImageResponseModel = null;
@@ -3799,18 +3881,14 @@ class PharmViewModel extends BaseViewModel {
           );
           _isLoadingLicense = _isLoading;
           _uploadImageResponseModelPharmLicense = _uploadImageResponseModel;
-
-          kycDocumentsList.add(
-            Document(
-              documentType: 'PHARMACY_LICENSE',
-              file: ph.File(
-                width: _uploadImageResponseModelPharmLicense!.data!.width,
-                height: _uploadImageResponseModelPharmLicense!.data!.height,
-                format: _uploadImageResponseModelPharmLicense!.data!.format,
-                url: _uploadImageResponseModelPharmLicense!.data!.url!,
-                mimeType: _uploadImageResponseModelPharmLicense!.data!.mimeType,
-                size: _uploadImageResponseModelPharmLicense!.data!.size,
-              ),
+          _submitLevelTwoKycEntityModelLin = SubmitLevelTwoKycEntityModel(
+            pharmacyLicense: PharmacyLicense(
+              width: _uploadImageResponseModelPharmLicense!.data!.width,
+              height: _uploadImageResponseModelPharmLicense!.data!.height,
+              format: _uploadImageResponseModelPharmLicense!.data!.format,
+              url: _uploadImageResponseModelPharmLicense!.data!.url!,
+              mimeType: _uploadImageResponseModelPharmLicense!.data!.mimeType,
+              size: _uploadImageResponseModelPharmLicense!.data!.size,
             ),
           );
           _uploadImageResponseModel = null;
@@ -3839,20 +3917,17 @@ class PharmViewModel extends BaseViewModel {
           );
           _isLoadingTIN = _isLoading;
           _uploadImageResponseModelTIN = _uploadImageResponseModel;
-          _uploadImageResponseModel = null;
-          kycDocumentsList.add(
-            Document(
-              documentType: 'TAX_IDENTIFICATION_NUMBER',
-              file: ph.File(
-                width: _uploadImageResponseModelTIN!.data!.width,
-                height: _uploadImageResponseModelTIN!.data!.height,
-                format: _uploadImageResponseModelTIN!.data!.format,
-                url: _uploadImageResponseModelTIN!.data!.url!,
-                mimeType: _uploadImageResponseModelTIN!.data!.mimeType,
-                size: _uploadImageResponseModelTIN!.data!.size,
-              ),
+          _submitLevelTwoKycEntityModelTIN = SubmitLevelTwoKycEntityModel(
+            taxIdentificationNumberDocument: TaxIdentificationNumberDocument(
+              width: _uploadImageResponseModelTIN!.data!.width,
+              height: _uploadImageResponseModelTIN!.data!.height,
+              format: _uploadImageResponseModelTIN!.data!.format,
+              url: _uploadImageResponseModelTIN!.data!.url!,
+              mimeType: _uploadImageResponseModelTIN!.data!.mimeType,
+              size: _uploadImageResponseModelTIN!.data!.size,
             ),
           );
+          _uploadImageResponseModel = null;
           notifyListeners();
         },
       );
@@ -3877,36 +3952,62 @@ class PharmViewModel extends BaseViewModel {
     return 'Kindly upload and submit KYC for\nverification to obtain full access to\nplatform features.';
   }
 
-  Color getKycStatusColor({id, cac, license, tin}) {
-    if (id == 'PENDING' ||
-        cac == 'PENDING' ||
-        license == 'PENDING' ||
-        tin == 'PENDING') {
+  String kycStatusText(status) {
+    if (status.toLowerCase() == 'UNDER_REVIEW'.toLowerCase()) {
+      return 'Your KYC is submitted and under '
+          'review. We’ll notify you once it’s '
+          'verified.';
+    }
+    if (status.toLowerCase() == 'NOT_SUBMITTED'.toLowerCase()) {
+      return 'Kindly upload and submit KYC for '
+          'verification to obtain some access '
+          'to platform features.';
+    }
+    if (status.toLowerCase() == 'REJECTED'.toLowerCase()) {
+      return 'Your KYC couldn’t be verified. '
+          'Please review your details and '
+          'resubmit the required documents.';
+    }
+    if (status.toLowerCase() == 'APPROVED'.toLowerCase()) {
+      return 'Your KYC has been successfully '
+          'verified. You can now access '
+          'some services.';
+    }
+    return 'Kindly upload and submit KYC for '
+        'verification to obtain some access '
+        'to platform features.';
+  }
+
+  Color kycStatusColor(status) {
+    if (status.toLowerCase() == 'UNDER_REVIEW'.toLowerCase()) {
       return AppColors.fadedyellow;
     }
-    if (id == 'APPROVED' &&
-        cac == 'APPROVED' &&
-        license == 'APPROVED' &&
-        tin == 'APPROVED') {
+    if (status.toLowerCase() == 'NOT_SUBMITTED'.toLowerCase()) {
+      return AppColors.fadedyellow;
+    }
+    if (status.toLowerCase() == 'REJECTED'.toLowerCase()) {
+      return AppColors.red_bar_faded;
+    }
+    if (status.toLowerCase() == 'APPROVED'.toLowerCase()) {
       return AppColors.app_green_light;
     }
     return AppColors.fadedyellow;
   }
 
-  bool getKycStatusBool({id, cac, license, tin}) {
-    if (id == 'PENDING' ||
-        cac == 'PENDING' ||
-        license == 'PENDING' ||
-        tin == 'PENDING') {
-      return true;
+  Color kycStatusColorIcon(status) {
+    if (status.toLowerCase() == 'UNDER_REVIEW'.toLowerCase()) {
+      return AppColors.yellow;
     }
-    if (id == 'APPROVED' &&
-        cac == 'APPROVED' &&
-        license == 'APPROVED' &&
-        tin == 'APPROVED') {
-      return true;
+    if (status.toLowerCase() == 'NOT_SUBMITTED'.toLowerCase()) {
+      return AppColors.yellow;
     }
-    return false;
+    if (status.toLowerCase() == 'REJECTED'.toLowerCase()) {
+      return AppColors.red_bar;
+    }
+    if (status.toLowerCase() == 'APPROVED'.toLowerCase()) {
+      return AppColors.app_green;
+    }
+    return AppColors.yellow;
   }
 
   void pickDrugImage(BuildContext context) {
@@ -18866,25 +18967,6 @@ class PharmViewModel extends BaseViewModel {
     );
   }
 
-  List<Map<String, String>>? mapLocationAddress = [
-    {
-      'businessAddress': '12 Oluwole Street',
-      'country': 'Nigeria, West Africa Nigeria, West Africa',
-      'state': 'Lagos State',
-      'lga': 'Ope',
-    },
-    {
-      'businessAddress': '10 Oluwole Street',
-      'country': 'Nigeria, West Africa',
-      'state': 'Lagos State',
-      'lga': 'Ikeja',
-    },
-  ];
-
-  Map<String, String> mapLocationAddressSelected = {};
-
-  bool isSeeMore = false;
-
   void selectLocation(context) {
     showDialog(
       context: context,
@@ -18892,7 +18974,9 @@ class PharmViewModel extends BaseViewModel {
       builder: (BuildContext context) {
         return ViewModelBuilder<PharmViewModel>.reactive(
           viewModelBuilder: () => PharmViewModel(),
-          onViewModelReady: (model) async {},
+          onViewModelReady: (model) async {
+            model.getTenant(context);
+          },
           disposeViewModel: false,
           onDispose: (viewModel) {},
           builder: (_, PharmViewModel model, _) {
@@ -18948,79 +19032,92 @@ class PharmViewModel extends BaseViewModel {
                           SizedBox(height: 8.0.h),
                           Divider(color: AppColors.infoGrey1),
                           SizedBox(height: 10.h),
-                          ...mapLocationAddress!.map(
-                            (e) => GestureDetector(
-                              onTap: () {
-                                mapLocationAddressSelected = e;
-                                notifyListeners();
-                                model.notifyListeners();
-                              },
-                              child: Container(
-                                width: double.infinity,
-                                margin: EdgeInsets.only(bottom: 14.w),
-                                padding: EdgeInsets.symmetric(
-                                  vertical: 8.w,
-                                  horizontal: 10.w,
-                                ),
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: mapLocationAddressSelected == e
-                                        ? AppColors.primary
-                                        : AppColors.infoGrey1,
-                                  ),
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: Row(
-                                  children: [
-                                    mapLocationAddressSelected == e
-                                        ? SvgPicture.asset(AppImage.add_locator)
-                                        : Container(
-                                            padding: EdgeInsets.all(4.w),
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              border: Border.all(
-                                                color: AppColors.infoGrey1,
-                                              ),
-                                            ),
-                                          ),
-
-                                    SizedBox(width: 10.w),
-
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                          if (model.getTetantResponseModel != null &&
+                              model
+                                  .getTetantResponseModel!
+                                  .data!
+                                  .businessAddresses!
+                                  .isNotEmpty)
+                            ...model
+                                .getTetantResponseModel!
+                                .data!
+                                .businessAddresses!
+                                .map(
+                                  (e) => GestureDetector(
+                                    onTap: () {
+                                      mapLocationAddressSelected = e;
+                                      notifyListeners();
+                                      model.notifyListeners();
+                                    },
+                                    child: Container(
+                                      width: double.infinity,
+                                      margin: EdgeInsets.only(bottom: 14.w),
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: 8.w,
+                                        horizontal: 10.w,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: mapLocationAddressSelected == e
+                                              ? AppColors.primary
+                                              : AppColors.infoGrey1,
+                                        ),
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: Row(
                                         children: [
-                                          AutoScrollingText(
-                                            text: e['businessAddress'] ?? '',
-                                            textStyle: TextStyle(
-                                              fontFamily: 'DMSans',
-                                              fontSize: 14.20.sp,
-                                              fontWeight: FontWeight.w500,
-                                              color: AppColors.black,
-                                            ),
-                                          ),
+                                          mapLocationAddressSelected == e
+                                              ? SvgPicture.asset(
+                                                  AppImage.add_locator,
+                                                )
+                                              : Container(
+                                                  padding: EdgeInsets.all(4.w),
+                                                  decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    border: Border.all(
+                                                      color:
+                                                          AppColors.infoGrey1,
+                                                    ),
+                                                  ),
+                                                ),
 
-                                          SizedBox(height: 3.h),
+                                          SizedBox(width: 10.w),
 
-                                          AutoScrollingText(
-                                            text:
-                                                '${e['lga']}, ${e['state']}, ${e['country']}',
-                                            textStyle: TextStyle(
-                                              fontFamily: 'DMSans',
-                                              fontSize: 13.20.sp,
-                                              fontWeight: FontWeight.w400,
-                                              color: AppColors.infoGrey,
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                AutoScrollingText(
+                                                  text: e.businessAddress ?? '',
+                                                  textStyle: TextStyle(
+                                                    fontFamily: 'DMSans',
+                                                    fontSize: 14.20.sp,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: AppColors.black,
+                                                  ),
+                                                ),
+
+                                                SizedBox(height: 3.h),
+
+                                                AutoScrollingText(
+                                                  text:
+                                                      '${e.lga}, ${e.state}, ${e.country}',
+                                                  textStyle: TextStyle(
+                                                    fontFamily: 'DMSans',
+                                                    fontSize: 13.20.sp,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: AppColors.infoGrey,
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ),
                                         ],
                                       ),
                                     ),
-                                  ],
+                                  ),
                                 ),
-                              ),
-                            ),
-                          ),
                           SizedBox(height: 20.h),
 
                           // 🔹 Save button
@@ -19061,7 +19158,7 @@ class PharmViewModel extends BaseViewModel {
     );
   }
 
-  void additionalResourceInfo(context) {
+  void additionalResourceInfo(context, {String? des, String? desLink}) {
     showDialog(
       context: context,
       barrierDismissible: false, // prevent closing by tapping outside
@@ -19125,8 +19222,7 @@ class PharmViewModel extends BaseViewModel {
                           Divider(color: AppColors.infoGrey1),
                           SizedBox(height: 10.h),
                           TextView(
-                            text:
-                                'Broad-spectrum antibiotic capsules. Effective against a wide range of gram-positive and gram-negative bacterial infections. click the link below to see more',
+                            text: des ?? '',
                             textStyle: TextStyle(
                               fontFamily: 'DMSans',
                               color: AppColors.black,
@@ -19140,9 +19236,13 @@ class PharmViewModel extends BaseViewModel {
                           SizedBox(
                             width: double.infinity,
                             child: ElevatedButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
+                              onPressed: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) =>
+                                      WebViewScreen(imageUrl: desLink ?? ''),
+                                ),
+                              ),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.primary,
                                 padding: EdgeInsets.symmetric(vertical: 16),
@@ -20290,6 +20390,30 @@ class PharmViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  Future<void> getListedMarketPlaceWithCatIdCat(
+    context, {
+    String? catId,
+  }) async {
+    try {
+      _isLoading = true;
+      _getListedMarketPlaceResponseModelCat = await runBusyFuture(
+        repositoryImply.getListedMarketPlaceProductWithCatId(
+          page: page.toString(),
+          search: searchProduct,
+          catId: catId,
+          sortPrice: sortPrice,
+        ),
+        throwException: true,
+      );
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
   Future<void> getSingleMarketPlaceProduct(context, {String? productId}) async {
     try {
       _isLoading = true;
@@ -20673,7 +20797,10 @@ class PharmViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Future<bool?> showRemoveBusinessAddressDialog({context, String? businessAddressId}) {
+  Future<bool?> showRemoveBusinessAddressDialog({
+    context,
+    String? businessAddressId,
+  }) {
     return showDialog<bool>(
       context: context,
       barrierDismissible: false, // prevent closing by tapping outside

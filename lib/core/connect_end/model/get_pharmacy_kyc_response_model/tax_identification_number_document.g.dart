@@ -1,12 +1,14 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'file.dart';
+part of 'tax_identification_number_document.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-File _$FileFromJson(Map<String, dynamic> json) => File(
+TaxIdentificationNumberDocument _$TaxIdentificationNumberDocumentFromJson(
+  Map<String, dynamic> json,
+) => TaxIdentificationNumberDocument(
   url: json['url'] as String?,
   mimeType: json['mimeType'] as String?,
   width: (json['width'] as num?)?.toInt(),
@@ -15,7 +17,9 @@ File _$FileFromJson(Map<String, dynamic> json) => File(
   format: json['format'] as String?,
 );
 
-Map<String, dynamic> _$FileToJson(File instance) => <String, dynamic>{
+Map<String, dynamic> _$TaxIdentificationNumberDocumentToJson(
+  TaxIdentificationNumberDocument instance,
+) => <String, dynamic>{
   'url': instance.url,
   'mimeType': instance.mimeType,
   'width': instance.width,

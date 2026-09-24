@@ -13,6 +13,9 @@ Data _$DataFromJson(Map<String, dynamic> json) => Data(
   owner: json['owner'] as String?,
   licenseNumber: json['licenseNumber'] as String?,
   businessAddress: json['businessAddress'] as String?,
+  businessAddresses: (json['businessAddresses'] as List<dynamic>?)
+      ?.map((e) => BusinessAddresses.fromJson(e as Map<String, dynamic>))
+      .toList(),
   businessEmail: json['businessEmail'] as String?,
   email: json['email'] as String?,
   healthcareFacilityName: json['healthcareFacilityName'] as String?,
@@ -22,9 +25,6 @@ Data _$DataFromJson(Map<String, dynamic> json) => Data(
   bio: json['bio'] as String?,
   bankDetails: (json['bankDetails'] as List<dynamic>?)
       ?.map((e) => BankDetail.fromJson(e as Map<String, dynamic>))
-      .toList(),
-  businessAddresses: (json['businessAddresses'] as List<dynamic>?)
-      ?.map((e) => BusinessAddresses.fromJson(e as Map<String, dynamic>))
       .toList(),
   meansOfIdType: json['meansOfIdType'] as String?,
   logo: json['logo'] == null
@@ -64,13 +64,13 @@ Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
   'owner': instance.owner,
   'licenseNumber': instance.licenseNumber,
   'businessAddress': instance.businessAddress,
-  'businessAddresses': instance.businessAddresses,
   'email': instance.email,
   'meansOfIdType': instance.meansOfIdType,
   'kycDocuments': instance.kycDocuments,
   'bankDetails': instance.bankDetails,
   'logo': instance.logo,
   'servicesOffered': instance.servicesOffered,
+  'businessAddresses': instance.businessAddresses,
   'bio': instance.bio,
   'country': instance.country,
   'lga': instance.lga,

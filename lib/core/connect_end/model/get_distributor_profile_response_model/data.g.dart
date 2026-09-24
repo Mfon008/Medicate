@@ -13,13 +13,15 @@ Data _$DataFromJson(Map<String, dynamic> json) => Data(
   registrationNumber: json['registrationNumber'] as String?,
   email: json['email'] as String?,
   businessAddress: json['businessAddress'] as String?,
+  businessAddresses: (json['businessAddresses'] as List<dynamic>?)
+      ?.map((e) => BusinessAddresses.fromJson(e as Map<String, dynamic>))
+      .toList(),
   country: json['country'] as String?,
   state: json['state'] as String?,
   logo: json['logo'] == null
       ? null
       : Logo.fromJson(json['logo'] as Map<String, dynamic>),
   lga: json['lga'] as String?,
-  businessAddresses: json['businessAddresses'] as List<BusinessAddresses>?,
   phone: json['phone'] as String?,
   kycStatus: json['kycStatus'] as String?,
   isProfileComplete: json['isProfileComplete'] as bool?,

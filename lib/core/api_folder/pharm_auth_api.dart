@@ -8,7 +8,7 @@ import 'package:medicate_app/core/connect_end/model/place_order_wallet_response_
 import 'package:medicate_app/core/connect_end/model/quote_instant_delivery_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/quote_instant_delivery_response_model/quote_instant_delivery_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/roles_entity_model.dart';
-import 'package:medicate_app/core/connect_end/model/update_pharmacy_kyc_entity_model/update_pharmacy_kyc_entity_model.dart';
+import 'package:medicate_app/core/connect_end/model/submit_level_two_kyc_entity_model/submit_level_two_kyc_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/update_role_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/upload_image_response_model/upload_image_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/wholesale_add_to_cart_entity_model.dart';
@@ -312,7 +312,7 @@ class PharmApi {
   Future<GetPharmacyKycResponseModel> getPharmacyKyc() async {
     try {
       final response = await _service.call(
-        UrlConfig.get_kyc,
+        UrlConfig.get_pharmacy_kyc,
         RequestMethod.get,
       );
       logger.d(response.data);
@@ -324,13 +324,29 @@ class PharmApi {
   }
 
   Future<dynamic> updatePharmacyKyc(
-    UpdatePharmacyKycEntityModel updateKyc,
+    SubmitLevelTwoKycEntityModel levelTwoKyc,
   ) async {
     try {
       final response = await _service.call(
         UrlConfig.update_pharm_kyc,
+        RequestMethod.post,
+        data: levelTwoKyc.toJson(),
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+  Future<dynamic> saveLevelTwoPharmacyKyc(
+    SubmitLevelTwoKycEntityModel levelTwoKyc,
+  ) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.update_pharm_kyc_save,
         RequestMethod.patch,
-        data: updateKyc.toJson(),
+        data: levelTwoKyc.toJson(),
       );
       logger.d(response.data);
       return response.data;
