@@ -18631,17 +18631,17 @@ class HealthCareViewModel extends BaseViewModel {
           _uploadImageResponseModelPharmLicense = _uploadImageResponseModel;
 
           // kycDocumentsList.add(
-            // Document(
-            //   documentType: 'PHARMACY_LICENSE',
-            //   file: ph.File(
-            //     width: _uploadImageResponseModelPharmLicense!.data!.width,
-            //     height: _uploadImageResponseModelPharmLicense!.data!.height,
-            //     format: _uploadImageResponseModelPharmLicense!.data!.format,
-            //     url: _uploadImageResponseModelPharmLicense!.data!.url!,
-            //     mimeType: _uploadImageResponseModelPharmLicense!.data!.mimeType,
-            //     size: _uploadImageResponseModelPharmLicense!.data!.size,
-            //   ),
-            // ),
+          // Document(
+          //   documentType: 'PHARMACY_LICENSE',
+          //   file: ph.File(
+          //     width: _uploadImageResponseModelPharmLicense!.data!.width,
+          //     height: _uploadImageResponseModelPharmLicense!.data!.height,
+          //     format: _uploadImageResponseModelPharmLicense!.data!.format,
+          //     url: _uploadImageResponseModelPharmLicense!.data!.url!,
+          //     mimeType: _uploadImageResponseModelPharmLicense!.data!.mimeType,
+          //     size: _uploadImageResponseModelPharmLicense!.data!.size,
+          //   ),
+          // ),
           // );
           _uploadImageResponseModel = null;
           notifyListeners();

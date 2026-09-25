@@ -669,6 +669,8 @@ class _ManufacturerSignUpScreenState extends State<ManufacturerSignUpScreen> {
                                   businessAddress: businessAddressController
                                       .text
                                       .trim(),
+                                  state: stateController.text.trim(),
+                                  lga: lgaController.text.trim(),
                                 ),
                               );
                             }

@@ -3,12 +3,16 @@ class ManufacturerSignupEntityModel {
   String? distributorManufacturerName;
   String? registrationNumber;
   String? businessAddress;
+  String? state;
+  String? lga;
 
   ManufacturerSignupEntityModel({
     this.phone,
     this.distributorManufacturerName,
     this.registrationNumber,
     this.businessAddress,
+    this.lga,
+    this.state,
   });
 
   factory ManufacturerSignupEntityModel.fromJson(Map<String, dynamic> json) {
@@ -18,6 +22,8 @@ class ManufacturerSignupEntityModel {
           json['distributorManufacturerName'] as String?,
       registrationNumber: json['registrationNumber'] as String?,
       businessAddress: json['businessAddress'] as String?,
+      state: json['state'] as String?,
+      lga: json['lga'] as String?,
     );
   }
 
@@ -26,5 +32,7 @@ class ManufacturerSignupEntityModel {
     'distributorManufacturerName': distributorManufacturerName,
     'registrationNumber': registrationNumber,
     'businessAddress': businessAddress,
+    'state': state,
+    'lga': lga,
   };
 }

@@ -960,8 +960,8 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                                                   model.isLoading &&
                                                       model.profileUpdate == o
                                                   ? SizedBox(
-                                                    height: 20.h,
-                                                    width: 20.w,
+                                                      height: 20.h,
+                                                      width: 20.w,
                                                       child: SpinKitRing(
                                                         color:
                                                             AppColors.primary,

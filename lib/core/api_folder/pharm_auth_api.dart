@@ -1250,7 +1250,7 @@ class PharmApi {
       final response = await _service.call(
         '${UrlConfig.wholesale_orders}/$id/invoice?disposition=inline',
         RequestMethod.get,
-        options: Options(responseType: ResponseType.bytes)
+        options: Options(responseType: ResponseType.bytes),
       );
       logger.d(response.data);
       return Uint8List.fromList(List<int>.from(response.data));

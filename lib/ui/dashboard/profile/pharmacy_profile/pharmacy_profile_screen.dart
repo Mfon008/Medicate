@@ -30,7 +30,6 @@ class PharmacyProfileScreen extends StatelessWidget {
             phoneNo:
                 SharedPreferencesService.instance.usersData['user']['phone'],
           );
-
         });
       },
       disposeViewModel: false,

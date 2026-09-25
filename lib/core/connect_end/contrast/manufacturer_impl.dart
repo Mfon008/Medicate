@@ -4,12 +4,12 @@ import 'package:medicate_app/core/connect_end/model/manufacturer_signup_entity_m
 
 import '../../api_folder/manufacturer_api.dart';
 import '../../core_folder/app/app.locator.dart';
+import '../model/business_addresses_entity.dart';
 import '../model/create_distributor_product_entity_model/create_distributor_product_entity_model.dart';
 import '../model/distributor_wholesale_category_model/distributor_wholesale_category_model.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
 import '../model/get_all_product_list_response_model/get_all_product_list_response_model.dart';
 import '../model/get_distributor_kyc_response_model/get_distributor_kyc_response_model.dart';
-import '../model/get_distributor_profile_response_model/business_addresses.dart';
 import '../model/get_incoming_order_ddetail_response_model/get_incoming_order_ddetail_response_model.dart';
 import '../model/get_single_product_response_model/get_single_product_response_model.dart';
 import '../model/get_user_details_response_model/get_user_details_response_model.dart';
@@ -184,10 +184,10 @@ class ManufacturerContractImpl {
   Future<UploadImageResponseModel> uploadImage(MultipartFile file) async =>
       await _api.uploadImage(file);
   Future<dynamic> addBusinessAddresses(
-    BusinessAddresses businessAddresses,
+    BusinessAddressesEntity businessAddresses,
   ) async => await _api.addBusinessAddresses(businessAddresses);
   Future<dynamic> updateBusinessAddress({
-    BusinessAddresses? businessAddresses,
+    BusinessAddressesEntity? businessAddresses,
     String? id,
   }) async => await _api.updateBusinessAddress(
     businessAddresses: businessAddresses,
@@ -195,4 +195,6 @@ class ManufacturerContractImpl {
   );
   Future<dynamic> deleteBusinessAddress(String id) async =>
       await _api.deletebusinessAddress(id);
+  Future<dynamic> updatePrimaryBusinessAddress(String id) async =>
+      await _api.updatePrimaryBusinessAddress(id);
 }

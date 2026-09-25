@@ -7,12 +7,12 @@ import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc
 import '../../core_folder/app/app.locator.dart';
 import '../../core_folder/manager/shared_preference.dart';
 import '../contrast/manufacturer_impl.dart';
+import '../model/business_addresses_entity.dart';
 import '../model/create_distributor_product_entity_model/create_distributor_product_entity_model.dart';
 import '../model/distributor_wholesale_category_model/distributor_wholesale_category_model.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
 import '../model/get_all_product_list_response_model/get_all_product_list_response_model.dart';
 import '../model/get_distributor_kyc_response_model/get_distributor_kyc_response_model.dart';
-import '../model/get_distributor_profile_response_model/business_addresses.dart';
 import '../model/get_distributor_profile_response_model/get_distributor_profile_response_model.dart';
 import '../model/get_incoming_order_ddetail_response_model/get_incoming_order_ddetail_response_model.dart';
 import '../model/get_single_product_response_model/get_single_product_response_model.dart';
@@ -342,14 +342,14 @@ class ManufacturerRepoImpl {
   }
 
   Future<dynamic> addBusinessAddresses(
-    BusinessAddresses businessAddresses,
+    BusinessAddressesEntity businessAddresses,
   ) async {
     final response = await _contract.addBusinessAddresses(businessAddresses);
     return response;
   }
 
   Future<dynamic> updateBusinessAddress({
-    BusinessAddresses? businessAddresses,
+    BusinessAddressesEntity? businessAddresses,
     String? id,
   }) async {
     final response = await _contract.updateBusinessAddress(
@@ -361,6 +361,11 @@ class ManufacturerRepoImpl {
 
   Future<dynamic> deleteBusinessAddress(String id) async {
     final response = await _contract.deleteBusinessAddress(id);
+    return response;
+  }
+
+  Future<dynamic> updatePrimaryBusinessAddress(String id) async {
+    final response = await _contract.updatePrimaryBusinessAddress(id);
     return response;
   }
 }

@@ -15,10 +15,14 @@ Distributor _$DistributorFromJson(Map<String, dynamic> json) => Distributor(
   documents: json['documents'] == null
       ? null
       : Documents.fromJson(json['documents'] as Map<String, dynamic>),
+  coverageAreas: (json['coverageAreas'] as List<dynamic>?)
+      ?.map((e) => CoverageAreas.fromJson(e as Map<String, dynamic>))
+      .toList(),
 );
 
 Map<String, dynamic> _$DistributorToJson(Distributor instance) =>
     <String, dynamic>{
       'businessDetails': instance.businessDetails,
       'documents': instance.documents,
+      'coverageAreas': instance.coverageAreas,
     };

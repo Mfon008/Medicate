@@ -1892,11 +1892,12 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                           lineWidth: 4,
                                                         )
                                                       : SvgPicture.asset(
-                                                    AppImage.share,
-                                                    height: 20.h,
-                                                    width: 20.w,
-                                                    color: AppColors.primary,
-                                                  ),
+                                                          AppImage.share,
+                                                          height: 20.h,
+                                                          width: 20.w,
+                                                          color:
+                                                              AppColors.primary,
+                                                        ),
                                                 ),
                                               ),
                                             ),
@@ -2045,8 +2046,7 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                 ),
                                                 child: GestureDetector(
                                                   onTap: () {
-                                                    
-                                                 model.shareInvoice(
+                                                    model.shareInvoice(
                                                       context,
                                                       wholeSaleOrderId: model
                                                           .getWholesaleOrderResponseModel!
@@ -2063,30 +2063,37 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                           size: 30.sp,
                                                           lineWidth: 4,
                                                         )
-                                                      :Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.center,
-                                                    children: [
-                                                      SvgPicture.asset(
-                                                        AppImage.share,
-                                                        height: 18.20.h,
-                                                        width: 18.20.w,
-                                                        color: AppColors.primary,
-                                                      ),
-                                                      SizedBox(width: 10.w),
-                                                      TextView(
-                                                        text: 'Share',
-                                                        textStyle: TextStyle(
-                                                          fontFamily: 'DMSans',
-                                                          fontSize: 15.52.sp,
-                                                          fontWeight:
-                                                              FontWeight.w400,
-                                                          color:
-                                                              AppColors.primary,
+                                                      : Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            SvgPicture.asset(
+                                                              AppImage.share,
+                                                              height: 18.20.h,
+                                                              width: 18.20.w,
+                                                              color: AppColors
+                                                                  .primary,
+                                                            ),
+                                                            SizedBox(
+                                                              width: 10.w,
+                                                            ),
+                                                            TextView(
+                                                              text: 'Share',
+                                                              textStyle: TextStyle(
+                                                                fontFamily:
+                                                                    'DMSans',
+                                                                fontSize:
+                                                                    15.52.sp,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400,
+                                                                color: AppColors
+                                                                    .primary,
+                                                              ),
+                                                            ),
+                                                          ],
                                                         ),
-                                                      ),
-                                                    ],
-                                                  ),
                                                 ),
                                               ),
                                             ),

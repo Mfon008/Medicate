@@ -96,7 +96,7 @@ class _DistributorKycScreenState extends State<DistributorKycScreen> {
                           children: [
                             TextView(
                               text:
-                                  'Level ${model.getDistributorKycResponseModel?.data?.currentLevel} of 3',
+                                  'Level ${model.getDistributorKycResponseModel?.data?.currentLevel ?? ''} of 3',
                               textStyle: TextStyle(
                                 fontSize: 15.06.sp,
                                 fontWeight: FontWeight.w500,
@@ -105,7 +105,7 @@ class _DistributorKycScreenState extends State<DistributorKycScreen> {
                             ),
                             TextView(
                               text:
-                                  '${model.getDistributorKycResponseModel?.data?.completionPercentage}% Complete',
+                                  '${model.getDistributorKycResponseModel?.data?.completionPercentage ?? ''}% Complete',
                               textStyle: TextStyle(
                                 fontSize: 14.90.sp,
                                 fontWeight: FontWeight.w500,

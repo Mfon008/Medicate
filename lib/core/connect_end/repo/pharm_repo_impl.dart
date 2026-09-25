@@ -601,7 +601,7 @@ class PharmRepoImpl {
     return response;
   }
 
- Future<Uint8List> downloadInvoice(String? id) async {
+  Future<Uint8List> downloadInvoice(String? id) async {
     final response = await _contract.downloadInvoice(id);
     return response;
   }

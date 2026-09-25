@@ -211,8 +211,9 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                               color: AppColors.black,
                             ),
                           ),
-                          model.isLoading || model
-                                        .wholesaleGetProductAddedToCartResponseModel==null
+                          model.isLoading ||
+                                  model.wholesaleGetProductAddedToCartResponseModel ==
+                                      null
                               ? SpinKitRing(
                                   color: AppColors.primary,
                                   lineWidth: 2,
@@ -276,8 +277,9 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                               color: AppColors.black,
                             ),
                           ),
-                          model.isLoading || model
-                                            .wholesaleGetProductAddedToCartResponseModel==null
+                          model.isLoading ||
+                                  model.wholesaleGetProductAddedToCartResponseModel ==
+                                      null
                               ? SpinKitRing(
                                   color: AppColors.primary,
                                   lineWidth: 2,
@@ -341,12 +343,14 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                           model.delivery = Delivery.instance;
                           model.dateTimeController.clear();
                           await Future.delayed(Duration(microseconds: 10));
-                          if (model
-                                  .getCheckoutDeliveryOptionResponseModel!=null &&model
-                              .getCheckoutDeliveryOptionResponseModel!
-                              .data!
-                              .methods!
-                              .isNotEmpty && model
+                          if (model.getCheckoutDeliveryOptionResponseModel !=
+                                  null &&
+                              model
+                                  .getCheckoutDeliveryOptionResponseModel!
+                                  .data!
+                                  .methods!
+                                  .isNotEmpty &&
+                              model
                                       .getCheckoutDeliveryOptionResponseModel!
                                       .data!
                                       .methods![0]
@@ -432,8 +436,9 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                       GestureDetector(
                         onTap: () async {
                           model.delivery = Delivery.schedule;
-                          if (model
-                                  .getCheckoutDeliveryOptionResponseModel!=null&&model
+                          if (model.getCheckoutDeliveryOptionResponseModel !=
+                                  null &&
+                              model
                                   .getCheckoutDeliveryOptionResponseModel!
                                   .data!
                                   .methods!
@@ -606,8 +611,8 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                                         .data!
                                         .methods![0]
                                         .deliveryFee!;
-                                  }
-                                  else if (model.delivery == Delivery.schedule &&
+                                  } else if (model.delivery ==
+                                          Delivery.schedule &&
                                       model
                                               .getCheckoutDeliveryOptionResponseModel!
                                               .data!
@@ -623,9 +628,9 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                                     model.deliveryFeeAmount = 0;
                                   }
                                   model.notifyListeners();
-                                }else {
-                                    model.deliveryFeeAmount = 0;
-                                  }
+                                } else {
+                                  model.deliveryFeeAmount = 0;
+                                }
                                 // if (model.delivery == Delivery.instance) {
                                 //   model.quoteInstantDelivery(
                                 //     context: context,
@@ -742,7 +747,7 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                               ),
                             ),
                           ),
-                          model.delivery == Delivery.schedule
+                        model.delivery == Delivery.schedule
                             ? Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -852,7 +857,9 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                                                   (time) => GestureDetector(
                                                     onTap: () async {
                                                       model.time = time;
-                                                      print('model.timemo::${model.time?.name}');
+                                                      print(
+                                                        'model.timemo::${model.time?.name}',
+                                                      );
                                                       model.notifyListeners();
                                                     },
                                                     child: Container(
@@ -902,7 +909,8 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                                                       ),
                                                     ),
                                                   ),
-                                                ),],
+                                                ),
+                                            ],
                                           ),
                                         ),
 
@@ -1222,50 +1230,51 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                       ),
                       SizedBox(height: 30.h),
                       Center(
-                              child: GestureDetector(
-                                onTap: () {
-                                  if (formKey.currentState!.validate()) {
-                                    model.paymentMethodFlowWholesale(
-                                      context,
-                                      amount:model
-                                            .wholesaleGetProductAddedToCartResponseModel!
-                                            .data!
-                                            .cart!
-                                            .subtotal! +
-                                        model.deliveryFeeAmount);
-                                    model.notifyListeners();
-                                  }
-                                },
-                                child: Container(
-                                  width: double.infinity,
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: 8.w,
-                                    horizontal: 12.w,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.primary,
-                                    borderRadius: BorderRadius.circular(40.r),
-                                  ),
-                                  child: Center(
-                                    child: model.isLoadingWallet
-                                        ? SpinKitFadingCircle(
-                                            color: AppColors.appWhite,
-                                            size: 40.sp,
-                                          )
-                                        : TextView(
-                                            text: 'Place Order',
-                                            textStyle: TextStyle(
-                                              fontFamily: 'DMSans',
-                                              fontSize: 16.20.sp,
-                                              fontWeight: FontWeight.w400,
-                                              color: AppColors.white,
-                                            ),
-                                          ),
-                                  ),
-                                ),
-                              ),
-                            )
-                          
+                        child: GestureDetector(
+                          onTap: () {
+                            if (formKey.currentState!.validate()) {
+                              model.paymentMethodFlowWholesale(
+                                context,
+                                amount:
+                                    model
+                                        .wholesaleGetProductAddedToCartResponseModel!
+                                        .data!
+                                        .cart!
+                                        .subtotal! +
+                                    model.deliveryFeeAmount,
+                              );
+                              model.notifyListeners();
+                            }
+                          },
+                          child: Container(
+                            width: double.infinity,
+                            padding: EdgeInsets.symmetric(
+                              vertical: 8.w,
+                              horizontal: 12.w,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColors.primary,
+                              borderRadius: BorderRadius.circular(40.r),
+                            ),
+                            child: Center(
+                              child: model.isLoadingWallet
+                                  ? SpinKitFadingCircle(
+                                      color: AppColors.appWhite,
+                                      size: 40.sp,
+                                    )
+                                  : TextView(
+                                      text: 'Place Order',
+                                      textStyle: TextStyle(
+                                        fontFamily: 'DMSans',
+                                        fontSize: 16.20.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: AppColors.white,
+                                      ),
+                                    ),
+                            ),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),

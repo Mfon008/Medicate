@@ -418,205 +418,247 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
     }
 
     ///
-    model
-        .secondLevelDistributorKycEntityModelCAC!
-        .distributor!
-        .documents!
-        .cacCertificate = CacCertificate.fromJson(
-      model
-          .getDistributorKycResponseModel!
-          .data!
-          .level2!
-          .distributor!
-          .documents!
-          .cacCertificate!
-          .toJson(),
-    );
-    model
-            .secondLevelDistributorKycEntityModelPharmLin!
-            .distributor!
-            .documents!
-            .pharmaceuticalDistributionLicense =
-        PharmaceuticalDistributionLicense.fromJson(
-          model
-              .getDistributorKycResponseModel!
-              .data!
-              .level2!
-              .distributor!
-              .documents!
-              .pharmaceuticalDistributionLicense!
-              .toJson(),
+    if (model.getDistributorKycResponseModel != null &&
+        model.getDistributorKycResponseModel!.data!.level2 != null) {
+      final level2 = model.getDistributorKycResponseModel!.data!.level2;
+      if (level2?.distributor?.documents?.cacCertificate != null) {
+        model
+            .secondLevelDistributorKycEntityModelCAC
+            ?.distributor
+            ?.documents
+            ?.cacCertificate = CacCertificate.fromJson(
+          level2?.distributor?.documents?.cacCertificate?.toJson() ?? {},
         );
-    model
-        .secondLevelDistributorKycEntityModelNAF!
-        .distributor!
-        .documents!
-        .nafdacPermit = NafdacPermit.fromJson(
-      model
-          .getDistributorKycResponseModel!
-          .data!
-          .level2!
-          .distributor!
-          .documents!
-          .nafdacPermit!
-          .toJson(),
-    );
-    model
-        .secondLevelDistributorKycEntityModelPharmCouncilLin!
-        .distributor!
-        .documents!
-        .pharmacyCouncilLicense = PharmacyCouncilLicense.fromJson(
-      model
-          .getDistributorKycResponseModel!
-          .data!
-          .level2!
-          .distributor!
-          .documents!
-          .pharmacyCouncilLicense!
-          .toJson(),
-    );
-    model
-        .secondLevelDistributorKycEntityModelLogo!
-        .distributor!
-        .documents!
-        .companyLogo = CompanyLogo.fromJson(
-      model
-          .getDistributorKycResponseModel!
-          .data!
-          .level2!
-          .distributor!
-          .documents!
-          .companyLogo!
-          .toJson(),
-    );
+      }
+      if (level2?.distributor?.documents?.pharmaceuticalDistributionLicense !=
+          null) {
+        model
+                .secondLevelDistributorKycEntityModelPharmLin
+                ?.distributor
+                ?.documents
+                ?.pharmaceuticalDistributionLicense =
+            PharmaceuticalDistributionLicense.fromJson(
+              model
+                      .getDistributorKycResponseModel
+                      ?.data
+                      ?.level2
+                      ?.distributor
+                      ?.documents
+                      ?.pharmaceuticalDistributionLicense
+                      ?.toJson() ??
+                  {},
+            );
+      }
+      if (level2?.distributor?.documents?.nafdacPermit != null) {
+        model
+            .secondLevelDistributorKycEntityModelNAF
+            ?.distributor
+            ?.documents
+            ?.nafdacPermit = NafdacPermit.fromJson(
+          model
+                  .getDistributorKycResponseModel!
+                  .data
+                  ?.level2
+                  ?.distributor
+                  ?.documents
+                  ?.nafdacPermit
+                  ?.toJson() ??
+              {},
+        );
+      }
+      if (level2?.distributor?.documents?.pharmacyCouncilLicense != null) {
+        model
+            .secondLevelDistributorKycEntityModelPharmCouncilLin
+            ?.distributor
+            ?.documents
+            ?.pharmacyCouncilLicense = PharmacyCouncilLicense.fromJson(
+          model
+                  .getDistributorKycResponseModel
+                  ?.data
+                  ?.level2
+                  ?.distributor
+                  ?.documents
+                  ?.pharmacyCouncilLicense
+                  ?.toJson() ??
+              {},
+        );
+      }
+      if (level2?.distributor?.documents?.companyLogo != null) {
+        model
+            .secondLevelDistributorKycEntityModelLogo
+            ?.distributor
+            ?.documents
+            ?.companyLogo = CompanyLogo.fromJson(
+          model
+                  .getDistributorKycResponseModel
+                  ?.data
+                  ?.level2
+                  ?.distributor
+                  ?.documents
+                  ?.companyLogo
+                  ?.toJson() ??
+              {},
+        );
+      }
 
-    model
-        .secondLevelDistributorKycEntityModelManCAC!
-        .manufacturer!
-        .documents!
-        .cacCertificate = CacCertificate.fromJson(
-      model
-          .getDistributorKycResponseModel!
-          .data!
-          .level2!
-          .manufacturer!
-          .documents!
-          .cacCertificate!
-          .toJson(),
-    );
-    model
-        .secondLevelDistributorKycEntityModelManGMP!
-        .manufacturer!
-        .documents!
-        .gmpCertificate = GmpCertificate.fromJson(
-      model
-          .getDistributorKycResponseModel!
-          .data!
-          .level2!
-          .manufacturer!
-          .documents!
-          .gmpCertificate!
-          .toJson(),
-    );
-    model
-        .secondLevelDistributorKycEntityModelManNAF!
-        .manufacturer!
-        .documents!
-        .nafdacManufacturingLicense = NafdacManufacturingLicense.fromJson(
-      model
-          .getDistributorKycResponseModel!
-          .data!
-          .level2!
-          .manufacturer!
-          .documents!
-          .nafdacManufacturingLicense!
-          .toJson(),
-    );
-    model
-        .secondLevelDistributorKycEntityModelManProd!
-        .manufacturer!
-        .documents!
-        .productRegistrationEvidence = ProductRegistrationEvidence.fromJson(
-      model
-          .getDistributorKycResponseModel!
-          .data!
-          .level2!
-          .manufacturer!
-          .documents!
-          .productRegistrationEvidence!
-          .toJson(),
-    );
-    model
-        .secondLevelDistributorKycEntityModelManLogo!
-        .manufacturer!
-        .documents!
-        .companyLogo = CompanyLogo.fromJson(
-      model
-          .getDistributorKycResponseModel!
-          .data!
-          .level2!
-          .manufacturer!
-          .documents!
-          .companyLogo!
-          .toJson(),
-    );
-    model
-        .secondLevelDistributorKycEntityModelImpCAC!
-        .importer!
-        .documents!
-        .cacCertificate = CacCertificate.fromJson(
-      model
-          .getDistributorKycResponseModel!
-          .data!
-          .level2!
-          .importer!
-          .documents!
-          .cacCertificate!
-          .toJson(),
-    );
-    model
-        .secondLevelDistributorKycEntityModelImpPermit!
-        .importer!
-        .documents!
-        .importPermit = ImportPermit.fromJson(
-      model
-          .getDistributorKycResponseModel!
-          .data!
-          .level2!
-          .importer!
-          .documents!
-          .importPermit!
-          .toJson(),
-    );
-    model
-            .secondLevelDistributorKycEntityModelImpManAuthLetter!
-            .importer!
-            .documents!
-            .manufacturerAuthorizationLetter =
-        ManufacturerAuthorizationLetter.fromJson(
+      if (level2?.manufacturer?.documents?.cacCertificate != null) {
+        model
+            .secondLevelDistributorKycEntityModelManCAC
+            ?.manufacturer
+            ?.documents
+            ?.cacCertificate = CacCertificate.fromJson(
           model
-              .getDistributorKycResponseModel!
-              .data!
-              .level2!
-              .importer!
-              .documents!
-              .manufacturerAuthorizationLetter!
-              .toJson(),
+                  .getDistributorKycResponseModel
+                  ?.data
+                  ?.level2
+                  ?.manufacturer
+                  ?.documents
+                  ?.cacCertificate
+                  ?.toJson() ??
+              {},
         );
-    model
-        .secondLevelDistributorKycEntityModelImpLogo!
-        .importer!
-        .documents!
-        .companyLogo = CompanyLogo.fromJson(
-      model
-          .getDistributorKycResponseModel!
-          .data!
-          .level2!
-          .importer!
-          .documents!
-          .companyLogo!
-          .toJson(),
-    );
+      }
+      if (level2?.manufacturer?.documents?.gmpCertificate != null) {
+        model
+            .secondLevelDistributorKycEntityModelManGMP
+            ?.manufacturer
+            ?.documents
+            ?.gmpCertificate = GmpCertificate.fromJson(
+          model
+                  .getDistributorKycResponseModel
+                  ?.data
+                  ?.level2
+                  ?.manufacturer
+                  ?.documents
+                  ?.gmpCertificate
+                  ?.toJson() ??
+              {},
+        );
+      }
+      if (level2?.manufacturer?.documents?.nafdacManufacturingLicense != null) {
+        model
+            .secondLevelDistributorKycEntityModelManNAF
+            ?.manufacturer
+            ?.documents
+            ?.nafdacManufacturingLicense = NafdacManufacturingLicense.fromJson(
+          model
+                  .getDistributorKycResponseModel
+                  ?.data
+                  ?.level2
+                  ?.manufacturer
+                  ?.documents
+                  ?.nafdacManufacturingLicense
+                  ?.toJson() ??
+              {},
+        );
+      }
+      if (level2?.manufacturer?.documents?.productRegistrationEvidence !=
+          null) {
+        model
+                .secondLevelDistributorKycEntityModelManProd
+                ?.manufacturer
+                ?.documents
+                ?.productRegistrationEvidence =
+            ProductRegistrationEvidence.fromJson(
+              model
+                      .getDistributorKycResponseModel
+                      ?.data
+                      ?.level2
+                      ?.manufacturer
+                      ?.documents
+                      ?.productRegistrationEvidence
+                      ?.toJson() ??
+                  {},
+            );
+      }
+      if (level2?.manufacturer?.documents?.companyLogo != null) {
+        model
+            .secondLevelDistributorKycEntityModelManLogo
+            ?.manufacturer
+            ?.documents
+            ?.companyLogo = CompanyLogo.fromJson(
+          model
+                  .getDistributorKycResponseModel
+                  ?.data
+                  ?.level2
+                  ?.manufacturer
+                  ?.documents
+                  ?.companyLogo
+                  ?.toJson() ??
+              {},
+        );
+      }
+      if (level2?.importer?.documents?.cacCertificate != null) {
+        model
+            .secondLevelDistributorKycEntityModelImpCAC
+            ?.importer
+            ?.documents
+            ?.cacCertificate = CacCertificate.fromJson(
+          model
+                  .getDistributorKycResponseModel
+                  ?.data
+                  ?.level2
+                  ?.importer
+                  ?.documents
+                  ?.cacCertificate
+                  ?.toJson() ??
+              {},
+        );
+      }
+      if (level2?.importer?.documents?.importPermit != null) {
+        model
+            .secondLevelDistributorKycEntityModelImpPermit
+            ?.importer
+            ?.documents
+            ?.importPermit = ImportPermit.fromJson(
+          model
+                  .getDistributorKycResponseModel
+                  ?.data
+                  ?.level2
+                  ?.importer
+                  ?.documents
+                  ?.importPermit
+                  ?.toJson() ??
+              {},
+        );
+      }
+      if (level2?.importer?.documents?.manufacturerAuthorizationLetter !=
+          null) {
+        model
+                .secondLevelDistributorKycEntityModelImpManAuthLetter
+                ?.importer
+                ?.documents
+                ?.manufacturerAuthorizationLetter =
+            ManufacturerAuthorizationLetter.fromJson(
+              model
+                      .getDistributorKycResponseModel
+                      ?.data
+                      ?.level2
+                      ?.importer
+                      ?.documents
+                      ?.manufacturerAuthorizationLetter
+                      ?.toJson() ??
+                  {},
+            );
+      }
+      if (level2?.importer?.documents?.companyLogo != null) {
+        model
+            .secondLevelDistributorKycEntityModelImpLogo
+            ?.importer
+            ?.documents
+            ?.companyLogo = CompanyLogo.fromJson(
+          model
+                  .getDistributorKycResponseModel
+                  ?.data
+                  ?.level2
+                  ?.importer
+                  ?.documents
+                  ?.companyLogo
+                  ?.toJson() ??
+              {},
+        );
+      }
+    }
 
     model.notifyListeners();
   }
@@ -2541,7 +2583,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                 ),
                                                                 child: TextView(
                                                                   text:
-                                                                      '${model.listOfAddedLocation.length}',
+                                                                      '${model.getDistributorKycResponseModel!.data!.level2!.distributor!.coverageAreas!.length}',
                                                                   textStyle: TextStyle(
                                                                     fontSize:
                                                                         12.6.sp,
@@ -2581,229 +2623,240 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                       Divider(
                                                         color: AppColors.f1,
                                                       ),
-
-                                                      ...model.listOfAddedLocation.map(
-                                                        (o) => Container(
-                                                          width:
-                                                              double.infinity,
-                                                          margin:
-                                                              EdgeInsets.only(
-                                                                bottom: 12.w,
-                                                              ),
-                                                          padding:
-                                                              EdgeInsets.all(
-                                                                16.w,
-                                                              ),
-                                                          decoration: BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius.circular(
-                                                                  12,
+                                                      if (model.getDistributorKycResponseModel !=
+                                                              null &&
+                                                          model
+                                                                  .getDistributorKycResponseModel!
+                                                                  .data!
+                                                                  .level2 !=
+                                                              null &&
+                                                          model
+                                                              .getDistributorKycResponseModel!
+                                                              .data!
+                                                              .level2!
+                                                              .distributor!
+                                                              .coverageAreas!
+                                                              .isNotEmpty)
+                                                        ...model.getDistributorKycResponseModel!.data!.level2!.distributor!.coverageAreas!.map(
+                                                          (o) => Container(
+                                                            width:
+                                                                double.infinity,
+                                                            margin:
+                                                                EdgeInsets.only(
+                                                                  bottom: 12.w,
                                                                 ),
-                                                            color:
-                                                                AppColors.grey,
-                                                          ),
-                                                          child: Column(
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                            children: [
-                                                              TextView(
-                                                                text: o
-                                                                    .keys
-                                                                    .first,
-                                                                textStyle: TextStyle(
-                                                                  fontSize:
-                                                                      13.86.sp,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w600,
-                                                                  color: AppColors
-                                                                      .reminder1,
-                                                                  fontFamily:
-                                                                      'DMSans',
+                                                            padding:
+                                                                EdgeInsets.all(
+                                                                  16.w,
                                                                 ),
-                                                              ),
-                                                              SizedBox(
-                                                                height: 7.2.h,
-                                                              ),
-
-                                                              AnimatedSize(
-                                                                duration:
-                                                                    const Duration(
-                                                                      milliseconds:
-                                                                          300,
-                                                                    ),
-                                                                curve: Curves
-                                                                    .easeInOut,
-                                                                child:
-                                                                    model.selectedLocation ==
-                                                                        o
-                                                                    ? Wrap(
-                                                                        children: [
-                                                                          ...o.values.first.map(
-                                                                            (
-                                                                              e,
-                                                                            ) => TextView(
-                                                                              text: '$e, ',
-                                                                              textStyle: TextStyle(
-                                                                                fontSize: 13.86.sp,
-                                                                                fontWeight: FontWeight.w200,
-                                                                                color: AppColors.infoGrey,
-                                                                                fontFamily: 'DMSans',
-                                                                              ),
-                                                                            ),
-                                                                          ),
-                                                                        ],
-                                                                      )
-                                                                    : Text(
-                                                                        o
-                                                                            .values
-                                                                            .first
-                                                                            .map(
-                                                                              (
-                                                                                e,
-                                                                              ) => '$e,',
-                                                                            )
-                                                                            .join(
-                                                                              ' ',
-                                                                            ),
-                                                                        maxLines:
-                                                                            1,
-                                                                        overflow:
-                                                                            TextOverflow.ellipsis,
-                                                                        style: TextStyle(
-                                                                          fontSize:
-                                                                              13.86.sp,
-                                                                          fontWeight:
-                                                                              FontWeight.w200,
-                                                                          color:
-                                                                              AppColors.infoGrey,
-                                                                          fontFamily:
-                                                                              'DMSans',
-                                                                        ),
+                                                            decoration:
+                                                                BoxDecoration(
+                                                                  borderRadius:
+                                                                      BorderRadius.circular(
+                                                                        12,
                                                                       ),
-                                                              ),
-                                                              SizedBox(
-                                                                height: 10.h,
-                                                              ),
-                                                              GestureDetector(
-                                                                onTap: () {
-                                                                  if (model
-                                                                          .selectedLocation ==
-                                                                      o) {
-                                                                    model.selectedLocation =
-                                                                        null;
-                                                                  } else {
-                                                                    model.selectedLocation =
-                                                                        o;
-                                                                  }
-                                                                  model
-                                                                      .notifyListeners();
-                                                                },
-                                                                child: TextView(
+                                                                  color:
+                                                                      AppColors
+                                                                          .grey,
+                                                                ),
+                                                            child: Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                TextView(
                                                                   text:
-                                                                      model.selectedLocation ==
-                                                                          o
-                                                                      ? 'Hide'
-                                                                      : 'See all',
+                                                                      o.state?.capitalize() ??
+                                                                      '',
                                                                   textStyle: TextStyle(
-                                                                    decoration:
-                                                                        TextDecoration
-                                                                            .underline,
-                                                                    decorationColor:
-                                                                        model.selectedLocation ==
-                                                                            o
-                                                                        ? AppColors
-                                                                              .primary
-                                                                        : AppColors
-                                                                              .reminder1,
                                                                     fontSize:
-                                                                        12.86
+                                                                        13.86
                                                                             .sp,
                                                                     fontWeight:
                                                                         FontWeight
-                                                                            .w500,
-                                                                    color:
-                                                                        model.selectedLocation ==
-                                                                            o
-                                                                        ? AppColors
-                                                                              .primary
-                                                                        : AppColors
-                                                                              .reminder1,
+                                                                            .w600,
+                                                                    color: AppColors
+                                                                        .reminder1,
                                                                     fontFamily:
                                                                         'DMSans',
                                                                   ),
                                                                 ),
-                                                              ),
-                                                              SizedBox(
-                                                                height: 10.h,
-                                                              ),
-                                                              Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .end,
-                                                                children: [
-                                                                  GestureDetector(
-                                                                    onTap: () {
-                                                                      model
-                                                                          .stateController
-                                                                          .text = o
-                                                                          .keys
-                                                                          .first;
-                                                                      model.showLGAAndStateDialog(
-                                                                        context,
-                                                                        isEdit:
-                                                                            true,
-                                                                        editState: o
-                                                                            .keys
-                                                                            .first,
-                                                                        editLgas: o
-                                                                            .values
-                                                                            .first,
-                                                                      );
-                                                                      model
-                                                                          .notifyListeners();
-                                                                    },
-                                                                    child: SvgPicture.asset(
-                                                                      AppImage
-                                                                          .round_edit,
-                                                                      height:
-                                                                          22.h,
-                                                                      width:
-                                                                          22.h,
+                                                                SizedBox(
+                                                                  height: 7.2.h,
+                                                                ),
+
+                                                                AnimatedSize(
+                                                                  duration:
+                                                                      const Duration(
+                                                                        milliseconds:
+                                                                            300,
+                                                                      ),
+                                                                  curve: Curves
+                                                                      .easeInOut,
+                                                                  child:
+                                                                      model.coverageAreas ==
+                                                                          o
+                                                                      ? Wrap(
+                                                                          children: [
+                                                                            ...o.lgas!.map(
+                                                                              (
+                                                                                e,
+                                                                              ) => TextView(
+                                                                                text: '$e, ',
+                                                                                textStyle: TextStyle(
+                                                                                  fontSize: 13.86.sp,
+                                                                                  fontWeight: FontWeight.w200,
+                                                                                  color: AppColors.infoGrey,
+                                                                                  fontFamily: 'DMSans',
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ],
+                                                                        )
+                                                                      : Text(
+                                                                          o.lgas!
+                                                                              .map(
+                                                                                (
+                                                                                  e,
+                                                                                ) => '$e,',
+                                                                              )
+                                                                              .join(
+                                                                                ' ',
+                                                                              ),
+                                                                          maxLines:
+                                                                              1,
+                                                                          overflow:
+                                                                              TextOverflow.ellipsis,
+                                                                          style: TextStyle(
+                                                                            fontSize:
+                                                                                13.86.sp,
+                                                                            fontWeight:
+                                                                                FontWeight.w200,
+                                                                            color:
+                                                                                AppColors.infoGrey,
+                                                                            fontFamily:
+                                                                                'DMSans',
+                                                                          ),
+                                                                        ),
+                                                                ),
+                                                                SizedBox(
+                                                                  height: 10.h,
+                                                                ),
+                                                                GestureDetector(
+                                                                  onTap: () {
+                                                                    if (model
+                                                                            .coverageAreas ==
+                                                                        o) {
+                                                                      model.coverageAreas =
+                                                                          null;
+                                                                    } else {
+                                                                      model.coverageAreas =
+                                                                          o;
+                                                                    }
+                                                                    model
+                                                                        .notifyListeners();
+                                                                  },
+                                                                  child: TextView(
+                                                                    text:
+                                                                        model.coverageAreas ==
+                                                                            o
+                                                                        ? 'Hide'
+                                                                        : 'See all',
+                                                                    textStyle: TextStyle(
+                                                                      decoration:
+                                                                          TextDecoration
+                                                                              .underline,
+                                                                      decorationColor:
+                                                                          model.coverageAreas ==
+                                                                              o
+                                                                          ? AppColors.primary
+                                                                          : AppColors.reminder1,
+                                                                      fontSize:
+                                                                          12.86
+                                                                              .sp,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500,
+                                                                      color:
+                                                                          model.coverageAreas ==
+                                                                              o
+                                                                          ? AppColors.primary
+                                                                          : AppColors.reminder1,
+                                                                      fontFamily:
+                                                                          'DMSans',
                                                                     ),
                                                                   ),
-                                                                  SizedBox(
-                                                                    width: 10.h,
-                                                                  ),
-                                                                  GestureDetector(
-                                                                    onTap: () {
-                                                                      model
-                                                                          .listOfAddedLocation
-                                                                          .remove(
-                                                                            o,
-                                                                          );
-                                                                      setState(
-                                                                        () {},
-                                                                      );
-                                                                      model
-                                                                          .notifyListeners();
-                                                                    },
-                                                                    child: SvgPicture.asset(
-                                                                      AppImage
-                                                                          .delete,
-                                                                      height:
-                                                                          20.h,
-                                                                      width:
-                                                                          20.h,
+                                                                ),
+                                                                SizedBox(
+                                                                  height: 10.h,
+                                                                ),
+                                                                Row(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .end,
+                                                                  children: [
+                                                                    GestureDetector(
+                                                                      onTap: () {
+                                                                        model.stateController.text =
+                                                                            o.state ??
+                                                                            '';
+                                                                        model.showLGAAndStateDialog(
+                                                                          context,
+                                                                          isEdit:
+                                                                              true,
+                                                                          editState:
+                                                                              o.state,
+                                                                          editLgas:
+                                                                              o.lgas,
+                                                                        );
+                                                                        model
+                                                                            .notifyListeners();
+                                                                      },
+                                                                      child: SvgPicture.asset(
+                                                                        AppImage
+                                                                            .round_edit,
+                                                                        height:
+                                                                            22.h,
+                                                                        width:
+                                                                            22.h,
+                                                                      ),
                                                                     ),
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            ],
+                                                                    SizedBox(
+                                                                      width:
+                                                                          10.h,
+                                                                    ),
+                                                                    GestureDetector(
+                                                                      onTap: () {
+                                                                        model
+                                                                            .getDistributorKycResponseModel!
+                                                                            .data!
+                                                                            .level2!
+                                                                            .distributor!
+                                                                            .coverageAreas!
+                                                                            .remove(
+                                                                              o,
+                                                                            );
+                                                                        setState(
+                                                                          () {},
+                                                                        );
+                                                                        model
+                                                                            .notifyListeners();
+                                                                      },
+                                                                      child: SvgPicture.asset(
+                                                                        AppImage
+                                                                            .delete,
+                                                                        height:
+                                                                            20.h,
+                                                                        width:
+                                                                            20.h,
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ],
+                                                            ),
                                                           ),
                                                         ),
-                                                      ),
                                                     ],
                                                   )
                                                 : SizedBox.shrink(),

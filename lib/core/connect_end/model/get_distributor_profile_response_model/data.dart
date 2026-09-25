@@ -1,6 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:medicate_app/core/connect_end/model/get_distributor_profile_response_model/business_addresses.dart';
 import 'package:medicate_app/core/connect_end/model/get_distributor_profile_response_model/logo.dart';
+
+import 'business_addresses.dart';
 
 part 'data.g.dart';
 

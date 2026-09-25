@@ -1,7 +1,6 @@
 // ignore_for_file: strict_top_level_inference, use_build_context_synchronously, prefer_typing_uninitialized_variables, deprecated_member_use, unnecessary_null_comparison, library_prefixes
-import 'dart:convert';
+
 import 'dart:io';
-import 'dart:math';
 import 'package:flutter/services.dart';
 import 'package:medicate_app/core/app_assets/constant.dart';
 import 'package:medicate_app/core/connect_end/model/create_tenant_reminder_entity_model/patient_details.dart';
@@ -286,7 +285,6 @@ class PharmViewModel extends BaseViewModel {
   TextEditingController lgaBusController = TextEditingController();
   TextEditingController countryBusController = TextEditingController();
 
-  // List<BusinessAddresses> listOfAddedAddress = [];
   List<String> lgaList = [];
   List<String> lgaListCopy = [];
   List<String> lgaAddedList = [];
@@ -2577,7 +2575,6 @@ class PharmViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  // var random = Random();
   Future<void> downloadInvoice(
     BuildContext context, {
     String? wholeSaleOrderId,
@@ -2639,6 +2636,7 @@ class PharmViewModel extends BaseViewModel {
       notifyListeners();
     }
   }
+
   Future<void> shareInvoice(
     BuildContext context, {
     String? wholeSaleOrderId,
@@ -2680,7 +2678,6 @@ class PharmViewModel extends BaseViewModel {
         );
         await Future.delayed(Duration(microseconds: 20));
         sharePdfFile(file.path);
-        
       }
     } catch (e, stackTrace) {
       logger.e('Invoice download failed', error: e, stackTrace: stackTrace);
@@ -2705,18 +2702,18 @@ class PharmViewModel extends BaseViewModel {
   }
 
   Future<void> sharePdfFile(String filePath) async {
-  // Check if file exists
-  if (await File(filePath).exists()) {
-    await Share.shareXFiles(
-      [XFile(filePath)],
-      text: 'Order Invoice file',
-      subject: 'Shared PDF',
-    );
-  } else {
-    // Handle file not found
-    print('File not found');
+    // Check if file exists
+    if (await File(filePath).exists()) {
+      await Share.shareXFiles(
+        [XFile(filePath)],
+        text: 'Order Invoice file',
+        subject: 'Shared PDF',
+      );
+    } else {
+      // Handle file not found
+      print('File not found');
+    }
   }
-}
 
   // Future<void> shareInvoice(context, {String? wholeSaleOrderId}) async {
   //   try {

@@ -115,7 +115,7 @@ class PharmContractsImpl {
   ) async => await _api.updatePharmacyKyc(updateKyc);
   Future<dynamic> saveLevelTwoPharmacyKyc(
     SubmitLevelTwoKycEntityModel levelTwoKyc,
-  ) async  => await _api.saveLevelTwoPharmacyKyc(levelTwoKyc);
+  ) async => await _api.saveLevelTwoPharmacyKyc(levelTwoKyc);
   Future<dynamic> updatePharmacy(
     UpdatePharmacyProfileEntityModel? updatePharmacy,
   ) async => await _api.updatePharmacy(updatePharmacy);
@@ -305,7 +305,8 @@ class PharmContractsImpl {
     CheckoutDeliveryOptionEntityModel checkoutDeliveryOption,
   ) async => await _api.checkoutDeliveryOption(checkoutDeliveryOption);
 
-  Future<dynamic> updatePrimaryBusinessAddress(String id) async  => await _api.updatePrimaryBusinessAddress(id);
+  Future<dynamic> updatePrimaryBusinessAddress(String id) async =>
+      await _api.updatePrimaryBusinessAddress(id);
   Future<dynamic> addBusinessAddresses(
     BusinessAddressesEntity businessAddresses,
   ) async => await _api.addBusinessAddresses(businessAddresses);

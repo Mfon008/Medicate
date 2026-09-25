@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:stacked/stacked.dart';
@@ -34,7 +33,7 @@ class KycScreen extends StatelessWidget {
         ),
         centerTitle: true,
       ),
-      body:  SingleChildScrollView(
+      body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(vertical: 30.w, horizontal: 20.h),
         child: ViewModelBuilder<PharmViewModel>.reactive(
           viewModelBuilder: () => PharmViewModel(),
@@ -61,12 +60,12 @@ class KycScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                       Row(
+                        Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             TextView(
                               text:
-                                  'Level ${model.getPharmacyKycResponseModel?.data?.currentLevel??''} of 3',
+                                  'Level ${model.getPharmacyKycResponseModel?.data?.currentLevel ?? ''} of 3',
                               textStyle: TextStyle(
                                 fontSize: 15.06.sp,
                                 fontWeight: FontWeight.w500,
@@ -75,7 +74,7 @@ class KycScreen extends StatelessWidget {
                             ),
                             TextView(
                               text:
-                                  '${model.getPharmacyKycResponseModel?.data?.completionPercentage??''}% Complete',
+                                  '${model.getPharmacyKycResponseModel?.data?.completionPercentage ?? ''}% Complete',
                               textStyle: TextStyle(
                                 fontSize: 14.90.sp,
                                 fontWeight: FontWeight.w500,
@@ -120,6 +119,7 @@ class KycScreen extends StatelessWidget {
             );
           },
         ),
-      ));
+      ),
+    );
   }
 }

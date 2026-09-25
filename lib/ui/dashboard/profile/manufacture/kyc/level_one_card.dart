@@ -246,63 +246,78 @@ class _LevelOneCardState extends State<LevelOneCard> {
                                 ),
 
                                 SizedBox(height: 13.6.h),
-
-                                InfoItem(
-                                  title: 'Business Address',
-                                  value:
-                                      widget
-                                          .model
-                                          ?.getDistributorKycResponseModel
-                                          ?.data
-                                          ?.level1
-                                          ?.businessAddress ??
-                                      '--',
+                                TextView(
+                                  text: 'Addresses',
+                                  textStyle: TextStyle(
+                                    fontSize: 15.86.sp,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.reminder1,
+                                    fontFamily: 'DMSans',
+                                  ),
                                 ),
 
-                                SizedBox(height: 13.6.h),
+                                Divider(color: AppColors.f1),
+                                if (widget.model!.getDistributorKycResponseModel !=
+                                        null &&
+                                    widget
+                                        .model!
+                                        .getDistributorKycResponseModel!
+                                        .data!
+                                        .level1!
+                                        .businessAddresses!
+                                        .isNotEmpty)
+                                  ...widget
+                                      .model!
+                                      .getDistributorKycResponseModel!
+                                      .data!
+                                      .level1!
+                                      .businessAddresses!
+                                      .asMap()
+                                      .entries
+                                      .map((entry) {
+                                        // final index = entry.key;
+                                        final o = entry.value;
 
-                                InfoItem(
-                                  title: 'Country',
-                                  value:
-                                      widget
-                                          .model
-                                          ?.getDistributorKycResponseModel
-                                          ?.data
-                                          ?.level1
-                                          ?.country ??
-                                      '--',
-                                ),
+                                        return Container(
+                                          width: double.infinity,
+                                          margin: EdgeInsets.only(bottom: 12.w),
+                                          padding: EdgeInsets.all(16.w),
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(
+                                              12,
+                                            ),
+                                            color: AppColors.grey,
+                                          ),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              TextView(
+                                                text: o.businessAddress ?? '',
+                                                textStyle: TextStyle(
+                                                  fontSize: 13.86.sp,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: AppColors.reminder1,
+                                                  fontFamily: 'DMSans',
+                                                ),
+                                              ),
+                                              SizedBox(height: 5.2.h),
+                                              TextView(
+                                                text:
+                                                    '${o.lga}, ${o.state} State, ${o.country}',
+                                                textStyle: TextStyle(
+                                                  fontSize: 12.86.sp,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: AppColors.infoGrey,
+                                                  fontFamily: 'DMSans',
+                                                ),
+                                              ),
 
-                                SizedBox(height: 13.6.h),
-
-                                InfoItem(
-                                  title: 'State',
-                                  value:
-                                      widget
-                                          .model
-                                          ?.getDistributorKycResponseModel
-                                          ?.data
-                                          ?.level1
-                                          ?.state ??
-                                      '--',
-                                ),
-
-                                SizedBox(height: 13.6.h),
-
-                                InfoItem(
-                                  title: 'LGA',
-                                  value:
-                                      widget
-                                          .model
-                                          ?.getDistributorKycResponseModel
-                                          ?.data
-                                          ?.level1
-                                          ?.lga ??
-                                      '--',
-                                ),
-
-                                SizedBox(height: 22.h),
-                              ],
+                                              SizedBox(height: 10.h),
+                                            ],
+                                          ),
+                                        );
+                                      }),                              ],
                             ),
                           ),
                         ],

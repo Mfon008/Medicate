@@ -79,7 +79,6 @@ import '../model/verify_phone_entity_model.dart';
 import '../repo/hmo_repo_impl.dart';
 import 'package:medicate_app/core/connect_end/model/get_my_hmo_plan_response_model/plan.dart';
 
-
 class HMOViewModel extends BaseViewModel {
   final BuildContext? context;
   final logger = getLogger('HMOViewModel');
