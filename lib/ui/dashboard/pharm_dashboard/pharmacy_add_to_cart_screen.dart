@@ -439,8 +439,9 @@ class PharmacyAddToCartScreen extends StatelessWidget {
                                                                                     );
 
                                                                                     if (quantity ==
-                                                                                        null)
+                                                                                        null) {
                                                                                       return;
+                                                                                    }
 
                                                                                     model.selectedQuantities[e.product!.id!] = quantity;
                                                                                     model.updateWholesaleProductToCart(

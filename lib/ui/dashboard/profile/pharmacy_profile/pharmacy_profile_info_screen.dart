@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -897,7 +899,7 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                               .asMap()
                               .entries
                               .map((entry) {
-                                final index = entry.key;
+                                // final index = entry.key;
                                 final o = entry.value;
 
                                 return Container(
@@ -912,6 +914,80 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
+                                      o.isPrimary!
+                                          ? Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Container(
+                                                  width: 14.w,
+                                                  height: 14.w,
+                                                  margin: EdgeInsets.only(
+                                                    top: 1.h,
+                                                  ),
+                                                  decoration: BoxDecoration(
+                                                    color: AppColors.app_green,
+                                                    shape: BoxShape.circle,
+                                                  ),
+                                                  child: Icon(
+                                                    Icons.check,
+                                                    size: 9.sp,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                                SizedBox(width: 4.w),
+                                                TextView(
+                                                  text: 'Primary',
+                                                  textStyle: TextStyle(
+                                                    fontSize: 13.86.sp,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: AppColors.reminder,
+                                                    fontFamily: 'DMSans',
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                          : GestureDetector(
+                                              onTap: () {
+                                                model.profileUpdate = o;
+                                                model
+                                                    .updatePrimaryBusinessAddress(
+                                                      context: context,
+                                                      id: o.id,
+                                                    );
+                                                model.notifyListeners();
+                                              },
+                                              child:
+                                                  model.isLoading &&
+                                                      model.profileUpdate == o
+                                                  ? SizedBox(
+                                                    height: 20.h,
+                                                    width: 20.w,
+                                                      child: SpinKitRing(
+                                                        color:
+                                                            AppColors.primary,
+                                                        lineWidth: 2,
+                                                      ),
+                                                    )
+                                                  : TextView(
+                                                      text: 'Make Primary',
+                                                      textStyle: TextStyle(
+                                                        fontSize: 14.96.sp,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color:
+                                                            AppColors.primary,
+                                                        decorationColor:
+                                                            AppColors.primary,
+                                                        decoration:
+                                                            TextDecoration
+                                                                .underline,
+                                                        decorationThickness:
+                                                            1.42,
+                                                        fontFamily: 'DMSans',
+                                                      ),
+                                                    ),
+                                            ),
+                                      SizedBox(height: 6.2.h),
                                       TextView(
                                         text: o.businessAddress ?? '',
                                         textStyle: TextStyle(
@@ -934,57 +1010,57 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                                       ),
 
                                       SizedBox(height: 10.h),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          GestureDetector(
-                                            onTap: () async {
-                                              final result = await model
-                                                  .showBusinessAreaLGAAndStateCountryDialog(
-                                                    context,
-                                                    isEdit: true,
-                                                    editIndex: index,
-                                                    businessAddresses: o,
-                                                  );
-                                              if (result == true) {
-                                                model.getTenant(context);
-                                              }
-                                              model.notifyListeners();
-                                            },
-                                            child: SvgPicture.asset(
-                                              AppImage.round_edit,
-                                              height: 22.h,
-                                              width: 22.h,
-                                            ),
-                                          ),
-                                          SizedBox(width: 10.h),
-                                          GestureDetector(
-                                            onTap: () async {
-                                              bool? delete = await model
-                                                  .showRemoveBusinessAddressDialog(
-                                                    context: context,
-                                                    businessAddressId: o.id,
-                                                  );
-                                              if (delete == true) {
-                                                await Future.delayed(
-                                                  Duration(seconds: 1),
-                                                );
-                                                model.getTenant(
-                                                  context,
-                                                ); // refresh roles after modal closes
-                                              } else {}
+                                      // Row(
+                                      //   mainAxisAlignment:
+                                      //       MainAxisAlignment.end,
+                                      //   children: [
+                                      //     GestureDetector(
+                                      //       onTap: () async {
+                                      //         final result = await model
+                                      //             .showBusinessAreaLGAAndStateCountryDialog(
+                                      //               context,
+                                      //               isEdit: true,
+                                      //               editIndex: index,
+                                      //               businessAddresses: o,
+                                      //             );
+                                      //         if (result == true) {
+                                      //           model.getTenant(context);
+                                      //         }
+                                      //         model.notifyListeners();
+                                      //       },
+                                      //       child: SvgPicture.asset(
+                                      //         AppImage.round_edit,
+                                      //         height: 22.h,
+                                      //         width: 22.h,
+                                      //       ),
+                                      //     ),
+                                      //     SizedBox(width: 10.h),
+                                      //     GestureDetector(
+                                      //       onTap: () async {
+                                      //         bool? delete = await model
+                                      //             .showRemoveBusinessAddressDialog(
+                                      //               context: context,
+                                      //               businessAddressId: o.id,
+                                      //             );
+                                      //         if (delete == true) {
+                                      //           await Future.delayed(
+                                      //             Duration(seconds: 1),
+                                      //           );
+                                      //           model.getTenant(
+                                      //             context,
+                                      //           ); // refresh roles after modal closes
+                                      //         } else {}
 
-                                              model.notifyListeners();
-                                            },
-                                            child: SvgPicture.asset(
-                                              AppImage.delete,
-                                              height: 20.h,
-                                              width: 20.h,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
+                                      //         model.notifyListeners();
+                                      //       },
+                                      //       child: SvgPicture.asset(
+                                      //         AppImage.delete,
+                                      //         height: 20.h,
+                                      //         width: 20.h,
+                                      //       ),
+                                      //     ),
+                                      //   ],
+                                      // ),
                                     ],
                                   ),
                                 );

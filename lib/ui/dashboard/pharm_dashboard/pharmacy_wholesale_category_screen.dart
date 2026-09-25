@@ -952,7 +952,7 @@ class _PharmacyWholesaleCategoryScreenState
                                               .meta!
                                               .page ==
                                           1
-                                      ? AppColors.primary1.withOpacity(.4)
+                                      ? AppColors.primary1.withValues(alpha: .4)
                                       : AppColors.primary1,
                                   size: 20.sp,
                                 ),
@@ -1005,7 +1005,7 @@ class _PharmacyWholesaleCategoryScreenState
                                               .data!
                                               .meta!
                                               .totalPages
-                                      ? AppColors.primary1.withOpacity(.4)
+                                      ? AppColors.primary1.withValues(alpha: .4)
                                       : AppColors.primary1,
                                   size: 20.sp,
                                 ),

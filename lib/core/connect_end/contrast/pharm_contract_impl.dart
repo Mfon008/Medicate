@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:medicate_app/core/api_folder/pharm_auth_api.dart';
@@ -316,4 +318,8 @@ class PharmContractsImpl {
   );
   Future<dynamic> deleteBusinessAddress(String id) async =>
       await _api.deletebusinessAddress(id);
+  Future<Uint8List> downloadInvoice(String? id) async =>
+      await _api.downloadInvoice(id);
+  Future<Uint8List> shareInvoice(String id) async =>
+      await _api.shareInvoice(id);
 }

@@ -1,5 +1,7 @@
 // ignore_for_file: strict_top_level_inference
 
+import 'dart:typed_data';
+
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import '../../core_folder/app/app.locator.dart';
@@ -596,6 +598,16 @@ class PharmRepoImpl {
 
   Future<dynamic> deleteBusinessAddress(String id) async {
     final response = await _contract.deleteBusinessAddress(id);
+    return response;
+  }
+
+ Future<Uint8List> downloadInvoice(String? id) async {
+    final response = await _contract.downloadInvoice(id);
+    return response;
+  }
+
+  Future<Uint8List> shareInvoice(String id) async {
+    final response = await _contract.shareInvoice(id);
     return response;
   }
 

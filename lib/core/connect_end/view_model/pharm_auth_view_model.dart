@@ -1,5 +1,7 @@
 // ignore_for_file: strict_top_level_inference, use_build_context_synchronously, prefer_typing_uninitialized_variables, deprecated_member_use, unnecessary_null_comparison, library_prefixes
+import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 import 'package:flutter/services.dart';
 import 'package:medicate_app/core/app_assets/constant.dart';
 import 'package:medicate_app/core/connect_end/model/create_tenant_reminder_entity_model/patient_details.dart';
@@ -40,6 +42,7 @@ import 'package:medicate_app/core/core_folder/app/app.router.dart';
 import 'package:medicate_app/main.dart';
 import 'package:medicate_app/ui/widget/deactivate_user_modal_widget.dart';
 import 'package:pinput/pinput.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:stacked/stacked.dart';
 import '../../../ui/dashboard/pharm_dashboard/pharmacy_whole_sale_checkout.dart';
 import '../../../ui/dashboard/pharm_dashboard/pharmacy_wholesale_screen.dart';
@@ -87,6 +90,7 @@ import '../model/get_created_user_response_model/staff.dart';
 import '../model/get_reminder_by_id/get_reminder_by_id.dart';
 import '../model/get_roles_response_model/get_roles_response_model.dart';
 import '../model/get_single_market_product_response_model/get_single_market_product_response_model.dart';
+import '../model/get_tenant_response_model/business_addresses.dart';
 import '../model/get_tenant_response_model/get_tenant_response_model.dart';
 import '../model/get_today_reminder_model/get_today_reminder_model.dart';
 import '../model/get_transaction_wallet_response_model/get_transaction_wallet_response_model.dart';
@@ -145,6 +149,8 @@ import 'package:medicate_app/core/connect_end/model/list_market_product_response
     as p;
 import 'package:medicate_app/core/connect_end/model/get_tenant_response_model/business_addresses.dart'
     as gT;
+import 'package:flutter_file_dialog/flutter_file_dialog.dart';
+import 'package:path_provider/path_provider.dart';
 
 // import 'package:medicate_app/core/connect_end/model/submit_level_two_kyc_entity_model/submit_level_two_kyc_entity_model.dart'
 //     as phmKyc;
@@ -166,6 +172,10 @@ class PharmViewModel extends BaseViewModel {
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
+  bool _isLoadingInvoice = false;
+  bool get isLoadingInvoice => _isLoadingInvoice;
+  bool _isLoadingInvoiceShare = false;
+  bool get isLoadingShare => _isLoadingInvoiceShare;
   bool _isLoadingWallet = false;
   bool get isLoadingWallet => _isLoadingWallet;
   bool _isLoadingRemoveItem = false;
@@ -730,6 +740,7 @@ class PharmViewModel extends BaseViewModel {
   int? returnNoDays;
   DateTime? pickedDatedStart;
   String? pickedDatedStartString;
+  BusinessAddresses? profileUpdate;
 
   SubmitLevelTwoKycEntityModel _submitLevelTwoKycEntityModelMeansOfId =
       SubmitLevelTwoKycEntityModel();
@@ -2565,6 +2576,163 @@ class PharmViewModel extends BaseViewModel {
     }
     notifyListeners();
   }
+
+  // var random = Random();
+  Future<void> downloadInvoice(
+    BuildContext context, {
+    String? wholeSaleOrderId,
+  }) async {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+
+    try {
+      _isLoadingInvoice = true;
+      notifyListeners();
+
+      final Uint8List invoiceBytes = await runBusyFuture(
+        repositoryImply.downloadInvoice(wholeSaleOrderId!),
+        throwException: true,
+      );
+
+      logger.d('Invoice response type: ${invoiceBytes.runtimeType}');
+
+      logger.d('Invoice size: ${invoiceBytes.length} bytes');
+
+      final dir = await getTemporaryDirectory();
+
+      final filename =
+          '${dir.path}/OrderInvoice_${wholeSaleOrderId}_${DateTime.now().millisecondsSinceEpoch}.pdf';
+
+      final file = File(filename);
+
+      await file.writeAsBytes(invoiceBytes, flush: true);
+
+      final params = SaveFileDialogParams(sourceFilePath: file.path);
+
+      final finalPath = await FlutterFileDialog.saveFile(params: params);
+
+      if (finalPath != null) {
+        scaffoldMessenger.showSnackBar(
+          const SnackBar(
+            content: Text('Invoice saved successfully'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e, stackTrace) {
+      logger.e('Invoice download failed', error: e, stackTrace: stackTrace);
+
+      scaffoldMessenger.showSnackBar(
+        SnackBar(
+          content: Text(
+            'Failed to download invoice: $e',
+            style: const TextStyle(
+              fontSize: 12,
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          backgroundColor: const Color(0xFFe91e63),
+        ),
+      );
+    } finally {
+      _isLoadingInvoice = false;
+      notifyListeners();
+    }
+  }
+  Future<void> shareInvoice(
+    BuildContext context, {
+    String? wholeSaleOrderId,
+  }) async {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+
+    try {
+      _isLoadingInvoiceShare = true;
+      notifyListeners();
+
+      final Uint8List invoiceBytes = await runBusyFuture(
+        repositoryImply.shareInvoice(wholeSaleOrderId!),
+        throwException: true,
+      );
+
+      logger.d('Invoice response type: ${invoiceBytes.runtimeType}');
+
+      logger.d('Invoice size: ${invoiceBytes.length} bytes');
+
+      final dir = await getTemporaryDirectory();
+
+      final filename =
+          '${dir.path}/OrderInvoice_${wholeSaleOrderId}_${DateTime.now().millisecondsSinceEpoch}.pdf';
+
+      final file = File(filename);
+
+      await file.writeAsBytes(invoiceBytes, flush: true);
+
+      final params = SaveFileDialogParams(sourceFilePath: file.path);
+
+      var finalPath = await FlutterFileDialog.saveFile(params: params);
+
+      if (finalPath != null) {
+        scaffoldMessenger.showSnackBar(
+          const SnackBar(
+            content: Text('Invoice saved successfully'),
+            backgroundColor: Colors.green,
+          ),
+        );
+        await Future.delayed(Duration(microseconds: 20));
+        sharePdfFile(file.path);
+        
+      }
+    } catch (e, stackTrace) {
+      logger.e('Invoice download failed', error: e, stackTrace: stackTrace);
+
+      scaffoldMessenger.showSnackBar(
+        SnackBar(
+          content: Text(
+            'Failed to download invoice: $e',
+            style: const TextStyle(
+              fontSize: 12,
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          backgroundColor: const Color(0xFFe91e63),
+        ),
+      );
+    } finally {
+      _isLoadingInvoiceShare = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> sharePdfFile(String filePath) async {
+  // Check if file exists
+  if (await File(filePath).exists()) {
+    await Share.shareXFiles(
+      [XFile(filePath)],
+      text: 'Order Invoice file',
+      subject: 'Shared PDF',
+    );
+  } else {
+    // Handle file not found
+    print('File not found');
+  }
+}
+
+  // Future<void> shareInvoice(context, {String? wholeSaleOrderId}) async {
+  //   try {
+  //     _isLoadingInvoiceShare = true;
+  //     var v = await runBusyFuture(
+  //       repositoryImply.shareInvoice(wholeSaleOrderId!),
+  //       throwException: true,
+  //     );
+  //     logger.d(v);
+  //     _isLoadingInvoiceShare = false;
+  //   } catch (e) {
+  //     _isLoadingInvoiceShare = false;
+  //     logger.d(e);
+  //   }
+  //   notifyListeners();
+  // }
 
   Future<void> getTenant(context) async {
     try {

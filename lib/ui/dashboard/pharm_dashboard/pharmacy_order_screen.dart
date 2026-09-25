@@ -1825,11 +1825,33 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                     color: AppColors.primary,
                                                   ),
                                                 ),
-                                                child: SvgPicture.asset(
-                                                  AppImage.download_arrow,
-                                                  height: 20.h,
-                                                  width: 20.w,
-                                                  color: AppColors.primary,
+                                                child: GestureDetector(
+                                                  onTap: () {
+                                                    model.downloadInvoice(
+                                                      context,
+                                                      wholeSaleOrderId: model
+                                                          .getWholesaleOrderResponseModel!
+                                                          .data!
+                                                          .order!
+                                                          .id,
+                                                    );
+                                                    model.notifyListeners();
+                                                  },
+                                                  child: model.isLoadingInvoice
+                                                      ? SpinKitRing(
+                                                          color:
+                                                              AppColors.primary,
+                                                          size: 30.sp,
+                                                          lineWidth: 4,
+                                                        )
+                                                      : SvgPicture.asset(
+                                                          AppImage
+                                                              .download_arrow,
+                                                          height: 20.h,
+                                                          width: 20.w,
+                                                          color:
+                                                              AppColors.primary,
+                                                        ),
                                                 ),
                                               ),
                                             ),
@@ -1850,11 +1872,31 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                     color: AppColors.primary,
                                                   ),
                                                 ),
-                                                child: SvgPicture.asset(
-                                                  AppImage.share,
-                                                  height: 20.h,
-                                                  width: 20.w,
-                                                  color: AppColors.primary,
+                                                child: GestureDetector(
+                                                  onTap: () {
+                                                    model.shareInvoice(
+                                                      context,
+                                                      wholeSaleOrderId: model
+                                                          .getWholesaleOrderResponseModel!
+                                                          .data!
+                                                          .order!
+                                                          .id,
+                                                    );
+                                                    model.notifyListeners();
+                                                  },
+                                                  child: model.isLoadingShare
+                                                      ? SpinKitRing(
+                                                          color:
+                                                              AppColors.primary,
+                                                          size: 30.sp,
+                                                          lineWidth: 4,
+                                                        )
+                                                      : SvgPicture.asset(
+                                                    AppImage.share,
+                                                    height: 20.h,
+                                                    width: 20.w,
+                                                    color: AppColors.primary,
+                                                  ),
                                                 ),
                                               ),
                                             ),
@@ -1927,32 +1969,60 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                     color: AppColors.primary,
                                                   ),
                                                 ),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    SvgPicture.asset(
-                                                      AppImage.download_arrow,
-                                                      height: 18.20.h,
-                                                      width: 18.20.w,
-                                                      color: AppColors.primary,
-                                                    ),
-                                                    SizedBox(width: 6.10.w),
-                                                    Expanded(
-                                                      child: TextView(
-                                                        text:
-                                                            'Download Invoice',
-                                                        textStyle: TextStyle(
-                                                          fontFamily: 'DMSans',
-                                                          fontSize: 15.2.sp,
-                                                          fontWeight:
-                                                              FontWeight.w400,
+                                                child: GestureDetector(
+                                                  onTap: () {
+                                                    model.downloadInvoice(
+                                                      context,
+                                                      wholeSaleOrderId: model
+                                                          .getWholesaleOrderResponseModel!
+                                                          .data!
+                                                          .order!
+                                                          .id,
+                                                    );
+                                                    model.notifyListeners();
+                                                  },
+                                                  child: model.isLoadingInvoice
+                                                      ? SpinKitRing(
                                                           color:
                                                               AppColors.primary,
+                                                          size: 30.sp,
+                                                          lineWidth: 4,
+                                                        )
+                                                      : Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            SvgPicture.asset(
+                                                              AppImage
+                                                                  .download_arrow,
+                                                              height: 18.20.h,
+                                                              width: 18.20.w,
+                                                              color: AppColors
+                                                                  .primary,
+                                                            ),
+                                                            SizedBox(
+                                                              width: 6.10.w,
+                                                            ),
+                                                            Expanded(
+                                                              child: TextView(
+                                                                text:
+                                                                    'Download Invoice',
+                                                                textStyle: TextStyle(
+                                                                  fontFamily:
+                                                                      'DMSans',
+                                                                  fontSize:
+                                                                      15.2.sp,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400,
+                                                                  color: AppColors
+                                                                      .primary,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
                                                         ),
-                                                      ),
-                                                    ),
-                                                  ],
                                                 ),
                                               ),
                                             ),
@@ -1973,29 +2043,50 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                     color: AppColors.primary,
                                                   ),
                                                 ),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    SvgPicture.asset(
-                                                      AppImage.share,
-                                                      height: 18.20.h,
-                                                      width: 18.20.w,
-                                                      color: AppColors.primary,
-                                                    ),
-                                                    SizedBox(width: 10.w),
-                                                    TextView(
-                                                      text: 'Share',
-                                                      textStyle: TextStyle(
-                                                        fontFamily: 'DMSans',
-                                                        fontSize: 15.52.sp,
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        color:
-                                                            AppColors.primary,
+                                                child: GestureDetector(
+                                                  onTap: () {
+                                                    
+                                                 model.shareInvoice(
+                                                      context,
+                                                      wholeSaleOrderId: model
+                                                          .getWholesaleOrderResponseModel!
+                                                          .data!
+                                                          .order!
+                                                          .id,
+                                                    );
+                                                    model.notifyListeners();
+                                                  },
+                                                  child: model.isLoadingShare
+                                                      ? SpinKitRing(
+                                                          color:
+                                                              AppColors.primary,
+                                                          size: 30.sp,
+                                                          lineWidth: 4,
+                                                        )
+                                                      :Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.center,
+                                                    children: [
+                                                      SvgPicture.asset(
+                                                        AppImage.share,
+                                                        height: 18.20.h,
+                                                        width: 18.20.w,
+                                                        color: AppColors.primary,
                                                       ),
-                                                    ),
-                                                  ],
+                                                      SizedBox(width: 10.w),
+                                                      TextView(
+                                                        text: 'Share',
+                                                        textStyle: TextStyle(
+                                                          fontFamily: 'DMSans',
+                                                          fontSize: 15.52.sp,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color:
+                                                              AppColors.primary,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
                                               ),
                                             ),

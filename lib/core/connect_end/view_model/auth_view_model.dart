@@ -74365,7 +74365,7 @@ class AuthViewModel extends BaseViewModel {
     dynamic result = await fi.FilePicker.pickFiles(
       type: fi.FileType.custom,
       allowedExtensions: ['csv'],
-      allowMultiple: false,
+      // allowMultiple: false,
     );
 
     if (result != null) {

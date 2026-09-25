@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:medicate_app/core/connect_end/model/checkout_delivery_option_entity_model.dart';
@@ -339,6 +341,7 @@ class PharmApi {
       rethrow;
     }
   }
+
   Future<dynamic> saveLevelTwoPharmacyKyc(
     SubmitLevelTwoKycEntityModel levelTwoKyc,
   ) async {
@@ -1222,6 +1225,35 @@ class PharmApi {
       );
       logger.d(response.data);
       return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<Uint8List> downloadInvoice(String? id) async {
+    try {
+      final response = await _service.call(
+        '${UrlConfig.wholesale_orders}/$id/invoice?disposition=attachment',
+        RequestMethod.get,
+        options: Options(responseType: ResponseType.bytes),
+      );
+      return Uint8List.fromList(List<int>.from(response.data));
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<Uint8List> shareInvoice(String? id) async {
+    try {
+      final response = await _service.call(
+        '${UrlConfig.wholesale_orders}/$id/invoice?disposition=inline',
+        RequestMethod.get,
+        options: Options(responseType: ResponseType.bytes)
+      );
+      logger.d(response.data);
+      return Uint8List.fromList(List<int>.from(response.data));
     } catch (e) {
       logger.d("response:$e");
       rethrow;
