@@ -211,7 +211,8 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                               color: AppColors.black,
                             ),
                           ),
-                          model.isLoading
+                          model.isLoading || model
+                                        .wholesaleGetProductAddedToCartResponseModel==null
                               ? SpinKitRing(
                                   color: AppColors.primary,
                                   lineWidth: 2,
@@ -275,7 +276,8 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                               color: AppColors.black,
                             ),
                           ),
-                          model.isLoading
+                          model.isLoading || model
+                                            .wholesaleGetProductAddedToCartResponseModel==null
                               ? SpinKitRing(
                                   color: AppColors.primary,
                                   lineWidth: 2,
@@ -340,10 +342,16 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                           model.dateTimeController.clear();
                           await Future.delayed(Duration(microseconds: 10));
                           if (model
+                                  .getCheckoutDeliveryOptionResponseModel!=null &&model
                               .getCheckoutDeliveryOptionResponseModel!
                               .data!
                               .methods!
-                              .isNotEmpty) {
+                              .isNotEmpty && model
+                                      .getCheckoutDeliveryOptionResponseModel!
+                                      .data!
+                                      .methods![0]
+                                      .deliveryFee !=
+                                  null) {
                             model.deliveryFeeAmount = model
                                 .getCheckoutDeliveryOptionResponseModel!
                                 .data!
@@ -425,6 +433,7 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                         onTap: () async {
                           model.delivery = Delivery.schedule;
                           if (model
+                                  .getCheckoutDeliveryOptionResponseModel!=null&&model
                                   .getCheckoutDeliveryOptionResponseModel!
                                   .data!
                                   .methods!
@@ -613,7 +622,10 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                                   } else {
                                     model.deliveryFeeAmount = 0;
                                   }
-                                }
+                                  model.notifyListeners();
+                                }else {
+                                    model.deliveryFeeAmount = 0;
+                                  }
                                 // if (model.delivery == Delivery.instance) {
                                 //   model.quoteInstantDelivery(
                                 //     context: context,
@@ -840,6 +852,7 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                                                   (time) => GestureDetector(
                                                     onTap: () async {
                                                       model.time = time;
+                                                      print('model.timemo::${model.time?.name}');
                                                       model.notifyListeners();
                                                     },
                                                     child: Container(

@@ -1424,7 +1424,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                       ),
                                                                   child:
                                                                       model
-                                                                          .isLoadingLicense
+                                                                          .isLoadingTIN
                                                                       ? SizedBox(
                                                                           width:
                                                                               10.w,

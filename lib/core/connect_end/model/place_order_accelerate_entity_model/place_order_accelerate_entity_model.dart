@@ -2,6 +2,7 @@ import 'delivery_details.dart';
 
 class PlaceOrderAccelerateEntityModel {
   String? deliveryMethod;
+  String? deliveryAddressId;
   DeliveryDetails? deliveryDetails;
   String? paymentMethod;
   String? callbackUrl;
@@ -17,6 +18,7 @@ class PlaceOrderAccelerateEntityModel {
 
   PlaceOrderAccelerateEntityModel({
     this.deliveryMethod,
+    this.deliveryAddressId,
     this.deliveryDetails,
     this.paymentMethod,
     this.callbackUrl,
@@ -34,6 +36,7 @@ class PlaceOrderAccelerateEntityModel {
   factory PlaceOrderAccelerateEntityModel.fromJson(Map<String, dynamic> json) {
     return PlaceOrderAccelerateEntityModel(
       deliveryMethod: json['deliveryMethod'] as String?,
+      deliveryAddressId: json['deliveryAddressId'] as String?,
       deliveryDetails: json['deliveryDetails'] == null
           ? null
           : DeliveryDetails.fromJson(
@@ -55,6 +58,7 @@ class PlaceOrderAccelerateEntityModel {
 
   Map<String, dynamic> toJson() => {
     'deliveryMethod': deliveryMethod,
+    'deliveryAddressId': deliveryAddressId,
     'deliveryDetails': deliveryDetails?.toJson(),
     'paymentMethod': paymentMethod,
     'callbackUrl': callbackUrl,

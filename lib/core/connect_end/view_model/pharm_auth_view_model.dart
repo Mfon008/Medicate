@@ -2496,6 +2496,7 @@ class PharmViewModel extends BaseViewModel {
     context,
     String? id,
     isCheckout = false,
+    isOnHomePage = false,
   }) async {
     try {
       _isLoading = true;
@@ -2507,6 +2508,9 @@ class PharmViewModel extends BaseViewModel {
         if (v['statusCode'] == 200 || v['statusCode'] == 201) {
           await getTenant(context);
         }
+      }
+      if (isOnHomePage) {
+        Navigator.pop(context);
       }
       _isLoading = false;
     } catch (e) {
@@ -18888,10 +18892,18 @@ class PharmViewModel extends BaseViewModel {
                                                 context: context,
                                                 scheduleDelivery:
                                                     QuoteScheduleDeliveryEneityModel(
-                                                      deliveryMethod: 'INSTANT',
+                                                      deliveryMethod:
+                                                          'SCHEDULED_BLOCK',
                                                       deliveryAddressId:
                                                           mapLocationAddressSelected!
                                                               .id,
+                                                      deliveryDate: convertDate(
+                                                        dateTimeController.text,
+                                                      ),
+                                                      timeBlockEnd:
+                                                          time!.endTime,
+                                                      timeBlockStart:
+                                                          time!.startTime,
                                                     ),
                                               );
                                             }
@@ -18917,25 +18929,22 @@ class PharmViewModel extends BaseViewModel {
                                                         dateTimeController.text,
                                                       )
                                                     : null,
-                                                deliveryDetails:
-                                                    del.DeliveryDetails(
-                                                      state:
-                                                          stateController.text,
-                                                      lga: lgaController.text,
-                                                      contactPhone:
-                                                          phoneController.text,
-                                                      deliveryAddress:
-                                                          deliveryAddressController
-                                                              .text,
-                                                      orderNotes:
-                                                          orderNotesController
-                                                              .text,
-                                                    ),
+                                                deliveryDetails: del.DeliveryDetails(
+                                                  state:
+                                                      mapLocationAddressSelected!
+                                                          .state,
+                                                  lga:
+                                                      mapLocationAddressSelected!
+                                                          .lga,
+                                                  contactPhone:
+                                                      phoneController.text,
+                                                  deliveryAddress:
+                                                      mapLocationAddressSelected!
+                                                          .businessAddress,
+                                                  orderNotes:
+                                                      orderNotesController.text,
+                                                ),
                                                 paymentMethod: "WALLET",
-                                                stateCode: stateController.text
-                                                    .toUpperCase(),
-                                                lgaCode: lgaController.text
-                                                    .toUpperCase(),
                                                 expectedDeliveryFee:
                                                     _quoteInstantDeliveryResponseModel !=
                                                         null
@@ -19004,7 +19013,7 @@ class PharmViewModel extends BaseViewModel {
                                         borderRadius: BorderRadius.circular(30),
                                       ),
                                     ),
-                                    child: _isLoadingWallet
+                                    child: isLoadingWallet
                                         ? SpinKitCircle(
                                             color: AppColors.white,
                                             size: 22.sp,
@@ -19036,7 +19045,11 @@ class PharmViewModel extends BaseViewModel {
                         color: AppColors.appWhite,
                         borderRadius: BorderRadius.circular(12.r),
                       ),
-                      child: SpinKitRing(color: AppColors.primary, size: 42.sp,lineWidth: 3.4,),
+                      child: SpinKitRing(
+                        color: AppColors.primary,
+                        size: 42.sp,
+                        lineWidth: 3.4,
+                      ),
                     ),
                   );
           },
@@ -19229,8 +19242,9 @@ class PharmViewModel extends BaseViewModel {
                                 await model.updatePrimaryBusinessAddress(
                                   context: contxt,
                                   id: mapLocationAddressSelected!.id!,
+                                  isOnHomePage: true,
                                 );
-                                Navigator.pop(context);
+                                //
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.primary,
@@ -19487,9 +19501,18 @@ class PharmViewModel extends BaseViewModel {
                           SizedBox(
                             width: double.infinity,
                             child: ElevatedButton(
-                              onPressed: () => navigate.navigateTo(
-                                Routes.pharmacyOrderScreen,
-                              ),
+                              onPressed: () async {
+                                navigate.clearStackAndShow(
+                                  Routes.pharmacyDashboard,
+                                  arguments: PharmacyDashboardArguments(
+                                    index: 2,
+                                  ),
+                                );
+                                await Future.delayed(
+                                  Duration(microseconds: 20),
+                                );
+                                navigate.navigateTo(Routes.pharmacyOrderScreen);
+                              },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.white,
                                 padding: EdgeInsets.symmetric(vertical: 16),
@@ -19520,7 +19543,7 @@ class PharmViewModel extends BaseViewModel {
                             width: double.infinity,
                             child: ElevatedButton(
                               onPressed: () {
-                                navigate.navigateTo(
+                                navigate.clearStackAndShow(
                                   Routes.pharmacyDashboard,
                                   arguments: PharmacyDashboardArguments(
                                     index: 2,
@@ -20665,26 +20688,47 @@ class PharmViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  paymentMethodFlowWholesale(context, {double? amount}) {
+  paymentMethodFlowWholesale(context, {double? amount}) async {
     if (payMethod == PayMethod.accelerate) {
+      if (delivery == Delivery.instance) {
+        await quoteInstantDelivery(
+          context: context,
+          instantDelivery: QuoteInstantDeliveryEntityModel(
+            deliveryMethod: 'INSTANT',
+            deliveryAddressId: mapLocationAddressSelected!.id,
+          ),
+        );
+      } else {
+        await quoteScheduleDelivery(
+          context: context,
+          scheduleDelivery: QuoteScheduleDeliveryEneityModel(
+            deliveryMethod: 'SCHEDULED_BLOCK',
+            deliveryAddressId: mapLocationAddressSelected!.id,
+            deliveryDate: convertDate(dateTimeController.text),
+            timeBlockEnd: time!.endTime,
+            timeBlockStart: time!.startTime,
+          ),
+        );
+      }
+      await Future.delayed(Duration(microseconds: 100));
       placeOrderAccelerate(
         context: context,
         placeOrderAccelerate: PlaceOrderAccelerateEntityModel(
           deliveryMethod: delivery == Delivery.instance
               ? 'INSTANT'
               : 'SCHEDULED_BLOCK',
+
+          deliveryAddressId: mapLocationAddressSelected!.id,
           deliveryDetails: DeliveryDetails(
-            state: stateController.text,
-            lga: lgaController.text,
+            state: mapLocationAddressSelected!.state,
+            lga: mapLocationAddressSelected!.lga,
             contactPhone: phoneController.text,
-            deliveryAddress: deliveryAddressController.text,
+            deliveryAddress: mapLocationAddressSelected!.businessAddress,
             orderNotes: orderNotesController.text,
           ),
           paymentMethod: 'ACCELERATE',
           callbackUrl:
               "https://app.medicate.health/wholesale/orders/payment-callback",
-          stateCode: stateController.text.toUpperCase(),
-          lgaCode: lgaController.text.toUpperCase(),
           expectedDeliveryFee: _quoteInstantDeliveryResponseModel != null
               ? _quoteInstantDeliveryResponseModel!.data!.checkout!.deliveryFee
               : _quoteScheduleDeliveryResponseModel!
@@ -20845,6 +20889,8 @@ class PharmViewModel extends BaseViewModel {
           context,
           message: _placeOrderWalletResponseModel?.message ?? '',
         );
+        Navigator.pop(context);
+        await Future.delayed(Duration(microseconds: 10));
         orderPaymentSuccess(context: context, amount: amount!);
       }
       _isLoadingWallet = false;
@@ -20969,9 +21015,9 @@ class PharmViewModel extends BaseViewModel {
               disposeViewModel: false,
               onDispose: (viewModel) {},
               builder: (_, PharmViewModel model, _) {
-                return Container(
-                  color: AppColors.transparent,
+                return SafeArea(
                   child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -21001,588 +21047,632 @@ class PharmViewModel extends BaseViewModel {
                         ),
                       ),
                       SizedBox(height: 6.10.h),
-                      Dialog(
-                        insetPadding: EdgeInsets.all(16.20.w),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        backgroundColor: AppColors.white,
-                        child: Padding(
-                          padding: EdgeInsets.all(21.4.w),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              TextView(
-                                text: !isEdit ? 'Add Address' : 'Edit Address',
-                                textStyle: TextStyle(
-                                  fontSize: 15.86.sp,
-                                  fontWeight: FontWeight.w500,
-                                  color: AppColors.reminder1,
-                                  fontFamily: 'DMSans',
-                                ),
-                              ),
-                              SizedBox(height: 16.2.h),
-                              TextFormWidget(
-                                hint: 'Business address',
-                                hintSize: 14,
-                                borderColor: AppColors.transparent,
-                                borderTopLeft: 10.r,
-                                borderTopRight: 10.r,
-                                borderBottomLeft: 10.r,
-                                borderBottomRight: 10.r,
-                                labelStyle: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  fontFamily: 'Arial',
-                                  fontSize: 14.2.sp,
-                                  color: AppColors.infoGrey,
-                                ),
-                                fillColor: AppColors.grey,
-                                isFilled: true,
-                                controller: businessAddController,
-                                validator: AppValidator.validateString(),
-                                onChange: (p0) {},
-                              ),
-                              SizedBox(height: 20.h),
-                              TextFormWidget(
-                                hint: 'Country',
-                                hintSize: 14,
-                                borderColor: AppColors.transparent,
-                                borderTopLeft: 10.r,
-                                borderTopRight: 10.r,
-                                borderBottomLeft: 10.r,
-                                borderBottomRight: 10.r,
-                                label: '--Select--',
-                                readOnly: true,
-                                labelStyle: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  fontFamily: 'Arial',
-                                  fontSize: 14.2.sp,
-                                  color: AppColors.infoGrey,
-                                ),
-                                fillColor: AppColors.grey,
-                                isFilled: true,
-                                controller: countryBusController,
-                                validator: AppValidator.validateString(),
-                                suffixWidget: Builder(
-                                  builder: (context) {
-                                    return GestureDetector(
-                                      onTap: () async {
-                                        final RenderBox button =
-                                            context.findRenderObject()
-                                                as RenderBox;
-
-                                        final RenderBox overlay =
-                                            Overlay.of(
-                                                  context,
-                                                ).context.findRenderObject()
-                                                as RenderBox;
-
-                                        final Offset buttonPosition = button
-                                            .localToGlobal(
-                                              Offset.zero,
-                                              ancestor: overlay,
-                                            );
-
-                                        final Size buttonSize = button.size;
-
-                                        final selectedState =
-                                            await showMenu<String>(
-                                              context: context,
-
-                                              position: RelativeRect.fromLTRB(
-                                                buttonPosition.dx,
-                                                buttonPosition.dy +
-                                                    buttonSize.height +
-                                                    5.h,
-                                                overlay.size.width -
-                                                    buttonPosition.dx -
-                                                    buttonSize.width,
-                                                0,
-                                              ),
-
-                                              constraints: BoxConstraints(
-                                                minWidth: 200.w,
-                                                maxWidth: 250.w,
-                                                minHeight: 60.h,
-                                                maxHeight: 450.h,
-                                              ),
-
-                                              color: AppColors.white,
-
-                                              elevation: 4,
-
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(10.r),
-                                              ),
-
-                                              items: ['Nigeria']
-                                                  .map<PopupMenuEntry<String>>((
-                                                    s,
-                                                  ) {
-                                                    final String country = s;
-
-                                                    return PopupMenuItem<
-                                                      String
-                                                    >(
-                                                      value: country,
-                                                      height: 38.h,
-                                                      padding:
-                                                          EdgeInsets.symmetric(
-                                                            horizontal: 14.w,
-                                                          ),
-                                                      child: TextView(
-                                                        text: country,
-                                                        textStyle: TextStyle(
-                                                          fontFamily:
-                                                              'GoogleSans',
-                                                          fontSize: 13.70.sp,
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          color:
-                                                              AppColors.black,
-                                                        ),
-                                                      ),
-                                                    );
-                                                  })
-                                                  .toList(),
-                                            );
-
-                                        if (selectedState != null) {
-                                          countryBusController.text =
-                                              selectedState;
-
-                                          // Reset LGA whenever state changes
-                                          lgaController.clear();
-                                          model.notifyListeners();
-                                        }
-                                      },
-
-                                      child: Padding(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 8.w,
-                                        ),
-                                        child: Icon(
-                                          Icons.keyboard_arrow_down,
-                                          color: AppColors.grey1,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-
-                              SizedBox(height: 16.2.h),
-                              TextFormWidget(
-                                hint: 'State',
-                                label: '--Select--',
-                                rightPos: -14,
-                                hintSize: 14,
-                                borderColor: AppColors.transparent,
-                                borderTopLeft: 10.r,
-                                borderTopRight: 10.r,
-                                borderBottomLeft: 10.r,
-                                borderBottomRight: 10.r,
-                                labelStyle: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  fontFamily: 'Arial',
-                                  fontSize: 14.2.sp,
-                                  color: AppColors.infoGrey,
-                                ),
-                                fillColor: AppColors.grey,
-                                isFilled: true,
-                                readOnly: true,
-                                controller: stateBusController,
-                                suffixWidget: Builder(
-                                  builder: (context) {
-                                    return GestureDetector(
-                                      onTap: () async {
-                                        final RenderBox button =
-                                            context.findRenderObject()
-                                                as RenderBox;
-
-                                        final RenderBox overlay =
-                                            Overlay.of(
-                                                  context,
-                                                ).context.findRenderObject()
-                                                as RenderBox;
-
-                                        final Offset buttonPosition = button
-                                            .localToGlobal(
-                                              Offset.zero,
-                                              ancestor: overlay,
-                                            );
-
-                                        final Size buttonSize = button.size;
-
-                                        final selectedState =
-                                            await showMenu<String>(
-                                              context: context,
-
-                                              position: RelativeRect.fromLTRB(
-                                                buttonPosition.dx,
-                                                buttonPosition.dy +
-                                                    buttonSize.height +
-                                                    5.h,
-                                                overlay.size.width -
-                                                    buttonPosition.dx -
-                                                    buttonSize.width,
-                                                0,
-                                              ),
-
-                                              constraints: BoxConstraints(
-                                                minWidth: 200.w,
-                                                maxWidth: 250.w,
-                                                minHeight: 150.h,
-                                                maxHeight: 450.h,
-                                              ),
-
-                                              color: AppColors.white,
-
-                                              elevation: 4,
-
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(10.r),
-                                              ),
-
-                                              items: stateLgaFormat
-                                                  .map<PopupMenuEntry<String>>((
-                                                    s,
-                                                  ) {
-                                                    final String state =
-                                                        s['state']
-                                                            ?.toString() ??
-                                                        '';
-
-                                                    return PopupMenuItem<
-                                                      String
-                                                    >(
-                                                      value: state,
-                                                      height: 38.h,
-                                                      padding:
-                                                          EdgeInsets.symmetric(
-                                                            horizontal: 14.w,
-                                                          ),
-                                                      child: TextView(
-                                                        text: state,
-                                                        textStyle: TextStyle(
-                                                          fontFamily:
-                                                              'GoogleSans',
-                                                          fontSize: 13.70.sp,
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          color:
-                                                              AppColors.black,
-                                                        ),
-                                                      ),
-                                                    );
-                                                  })
-                                                  .toList(),
-                                            );
-
-                                        if (selectedState != null) {
-                                          stateBusController.text =
-                                              selectedState;
-                                          final selectedStateLga =
-                                              stateLgaFormat.firstWhere(
-                                                (state) =>
-                                                    state['state']
-                                                        .toString()
-                                                        .trim()
-                                                        .toLowerCase() ==
-                                                    stateController.text
-                                                        .trim()
-                                                        .toLowerCase(),
-                                                orElse: () => <String, dynamic>{
-                                                  'state': '',
-                                                  'lgas': <String>[],
-                                                },
-                                              );
-
-                                          final selectedLgas =
-                                              List<String>.from(
-                                                selectedStateLga['lgas'] ??
-                                                    <String>[],
-                                              );
-
-                                          lgaList = List<String>.from(
-                                            selectedLgas,
-                                          );
-                                          lgaListCopy = List<String>.from(
-                                            selectedLgas,
-                                          );
-
-                                          // Optional: reset previously selected LGAs
-                                          lgaAddedList.clear();
-                                        }
-                                        setModalState(() {});
-                                        model.notifyListeners();
-                                      },
-
-                                      child: Padding(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 8.w,
-                                        ),
-                                        child: Icon(
-                                          Icons.keyboard_arrow_down,
-                                          color: isEdit
-                                              ? AppColors.greygreyer
-                                              : AppColors.grey1,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                                validator: AppValidator.validateString(),
-                              ),
-                              SizedBox(height: 12.30.h),
-                              TextFormWidget(
-                                hint: 'LGA',
-                                label: '-Select-',
-                                hintColor: AppColors.reminder,
-                                hintSize: Platform.isAndroid ? 14.sp : 12.sp,
-                                borderColor: AppColors.transparent,
-                                borderTopLeft: 10.r,
-                                borderTopRight: 10.r,
-                                borderBottomLeft: 10.r,
-                                borderBottomRight: 10.r,
-                                fillColor: AppColors.grey,
-                                isFilled: true,
-                                readOnly: true,
-                                controller: lgaBusController,
-                                suffixWidget: Builder(
-                                  builder: (context) {
-                                    return GestureDetector(
-                                      onTap: () async {
-                                        final RenderBox button =
-                                            context.findRenderObject()
-                                                as RenderBox;
-
-                                        final RenderBox overlay =
-                                            Overlay.of(
-                                                  context,
-                                                ).context.findRenderObject()
-                                                as RenderBox;
-
-                                        final Offset buttonPosition = button
-                                            .localToGlobal(
-                                              Offset.zero,
-                                              ancestor: overlay,
-                                            );
-
-                                        final Size buttonSize = button.size;
-
-                                        final selectedState = stateLgaFormat
-                                            .firstWhere(
-                                              (state) =>
-                                                  state['state']
-                                                      .toString()
-                                                      .trim()
-                                                      .toLowerCase() ==
-                                                  stateBusController.text
-                                                      .trim()
-                                                      .toLowerCase(),
-                                              orElse: () => <String, dynamic>{
-                                                'state': '',
-                                                'lgas': <String>[],
-                                              },
-                                            );
-
-                                        final List<dynamic> lgas =
-                                            selectedState['lgas'] ?? [];
-
-                                        if (lgas.isEmpty) {
-                                          return;
-                                        }
-
-                                        final selectedLga =
-                                            await showMenu<String>(
-                                              context: context,
-
-                                              position: RelativeRect.fromLTRB(
-                                                buttonPosition.dx,
-                                                buttonPosition.dy +
-                                                    buttonSize.height +
-                                                    5.h,
-                                                overlay.size.width -
-                                                    buttonPosition.dx -
-                                                    buttonSize.width,
-                                                0,
-                                              ),
-
-                                              constraints: BoxConstraints(
-                                                minWidth: 200.w,
-                                                maxWidth: 250.w,
-                                                minHeight: 110.h,
-                                                maxHeight: 420.h,
-                                              ),
-
-                                              color: AppColors.white,
-
-                                              elevation: 4,
-
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(10.r),
-                                              ),
-
-                                              items: lgas
-                                                  .map<PopupMenuEntry<String>>((
-                                                    lga,
-                                                  ) {
-                                                    return PopupMenuItem<
-                                                      String
-                                                    >(
-                                                      value: lga.toString(),
-                                                      height: 38.h,
-                                                      padding:
-                                                          EdgeInsets.symmetric(
-                                                            horizontal: 14.w,
-                                                          ),
-                                                      child: TextView(
-                                                        text: lga.toString(),
-                                                        textStyle: TextStyle(
-                                                          fontFamily:
-                                                              'GoogleSans',
-                                                          fontSize: 13.70.sp,
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          color:
-                                                              AppColors.black,
-                                                        ),
-                                                      ),
-                                                    );
-                                                  })
-                                                  .toList(),
-                                            );
-
-                                        if (selectedLga != null) {
-                                          lgaBusController.text = selectedLga;
-                                          model.notifyListeners();
-                                        }
-                                      },
-
-                                      child: Padding(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 8.w,
-                                        ),
-                                        child: Icon(
-                                          Icons.keyboard_arrow_down,
-                                          color: AppColors.grey1,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                                validator: AppValidator.validateString(),
-                                style: TextStyle(
-                                  fontSize: 16.20.sp,
-                                  fontWeight: FontWeight.w400,
-                                  fontFamily: 'DMSans',
-                                ),
-
-                                labelStyle: TextStyle(
-                                  fontSize: 15.20.sp,
-                                  fontWeight: FontWeight.w400,
-                                  fontFamily: 'DMSans',
-                                  color: AppColors.faintedGrey,
-                                ),
-                              ),
-                              SizedBox(height: 30.h),
-                              Row(
+                      Flexible(
+                        child: Dialog(
+                          insetPadding: EdgeInsets.symmetric(
+                            horizontal: 16.20.w,
+                            vertical: 16.20.h,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          backgroundColor: AppColors.white,
+                          child: Padding(
+                            padding: EdgeInsets.all(21.4.w),
+                            child: SingleChildScrollView(
+                              keyboardDismissBehavior:
+                                  ScrollViewKeyboardDismissBehavior.onDrag,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Expanded(
-                                    flex: 2,
-                                    child: ButtonWidget(
-                                      border: 100.r,
-                                      buttonColor: AppColors.grey,
-                                      buttonText: 'Cancel',
+                                  TextView(
+                                    text: !isEdit
+                                        ? 'Add Address'
+                                        : 'Edit Address',
+                                    textStyle: TextStyle(
+                                      fontSize: 17.6.sp,
+                                      fontWeight: FontWeight.w500,
                                       color: AppColors.reminder1,
-                                      buttonBorderColor: AppColors.transparent,
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                        notifyListeners();
+                                      fontFamily: 'DMSans',
+                                    ),
+                                  ),
+                                  SizedBox(height: 16.2.h),
+                                  TextFormWidget(
+                                    hint: 'Business address',
+                                    hintSize: 16,
+                                    borderColor: AppColors.transparent,
+                                    borderTopLeft: 10.r,
+                                    borderTopRight: 10.r,
+                                    borderBottomLeft: 10.r,
+                                    borderBottomRight: 10.r,
+                                    labelStyle: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: 'Arial',
+                                      fontSize: 14.2.sp,
+                                      color: AppColors.infoGrey,
+                                    ),
+                                    fillColor: AppColors.grey,
+                                    isFilled: true,
+                                    controller: businessAddController,
+                                    validator: AppValidator.validateString(),
+                                    onChange: (p0) {},
+                                  ),
+                                  SizedBox(height: 20.h),
+                                  TextFormWidget(
+                                    hint: 'Country',
+                                    hintSize: 16,
+                                    borderColor: AppColors.transparent,
+                                    borderTopLeft: 10.r,
+                                    borderTopRight: 10.r,
+                                    borderBottomLeft: 10.r,
+                                    borderBottomRight: 10.r,
+                                    label: '--Select--',
+                                    readOnly: true,
+                                    labelStyle: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: 'Arial',
+                                      fontSize: 14.2.sp,
+                                      color: AppColors.infoGrey,
+                                    ),
+                                    fillColor: AppColors.grey,
+                                    isFilled: true,
+                                    controller: countryBusController,
+                                    validator: AppValidator.validateString(),
+                                    suffixWidget: Builder(
+                                      builder: (context) {
+                                        return GestureDetector(
+                                          onTap: () async {
+                                            final RenderBox button =
+                                                context.findRenderObject()
+                                                    as RenderBox;
+
+                                            final RenderBox overlay =
+                                                Overlay.of(
+                                                      context,
+                                                    ).context.findRenderObject()
+                                                    as RenderBox;
+
+                                            final Offset buttonPosition = button
+                                                .localToGlobal(
+                                                  Offset.zero,
+                                                  ancestor: overlay,
+                                                );
+
+                                            final Size buttonSize = button.size;
+
+                                            final selectedState =
+                                                await showMenu<String>(
+                                                  context: context,
+
+                                                  position:
+                                                      RelativeRect.fromLTRB(
+                                                        buttonPosition.dx,
+                                                        buttonPosition.dy +
+                                                            buttonSize.height +
+                                                            5.h,
+                                                        overlay.size.width -
+                                                            buttonPosition.dx -
+                                                            buttonSize.width,
+                                                        0,
+                                                      ),
+
+                                                  constraints: BoxConstraints(
+                                                    minWidth: 200.w,
+                                                    maxWidth: 250.w,
+                                                    minHeight: 60.h,
+                                                    maxHeight: 450.h,
+                                                  ),
+
+                                                  color: AppColors.white,
+
+                                                  elevation: 4,
+
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          10.r,
+                                                        ),
+                                                  ),
+
+                                                  items: ['Nigeria']
+                                                      .map<
+                                                        PopupMenuEntry<String>
+                                                      >((s) {
+                                                        final String country =
+                                                            s;
+
+                                                        return PopupMenuItem<
+                                                          String
+                                                        >(
+                                                          value: country,
+                                                          height: 38.h,
+                                                          padding:
+                                                              EdgeInsets.symmetric(
+                                                                horizontal:
+                                                                    14.w,
+                                                              ),
+                                                          child: TextView(
+                                                            text: country,
+                                                            textStyle: TextStyle(
+                                                              fontFamily:
+                                                                  'GoogleSans',
+                                                              fontSize:
+                                                                  13.70.sp,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                              color: AppColors
+                                                                  .black,
+                                                            ),
+                                                          ),
+                                                        );
+                                                      })
+                                                      .toList(),
+                                                );
+
+                                            if (selectedState != null) {
+                                              countryBusController.text =
+                                                  selectedState;
+
+                                              // Reset LGA whenever state changes
+                                              lgaController.clear();
+                                              model.notifyListeners();
+                                            }
+                                          },
+
+                                          child: Padding(
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 8.w,
+                                            ),
+                                            child: Icon(
+                                              Icons.keyboard_arrow_down,
+                                              color: AppColors.grey1,
+                                            ),
+                                          ),
+                                        );
                                       },
                                     ),
                                   ),
-                                  SizedBox(width: 20.w),
-                                  Expanded(
-                                    flex: 3,
-                                    child: ButtonWidget(
-                                      border: 100.r,
-                                      buttonColor: AppColors.primary,
-                                      buttonText: !isEdit
-                                          ? 'Add'
-                                          : 'Save Changes',
-                                      isLoading: model.isLoading,
-                                      color: AppColors.white,
-                                      buttonBorderColor: AppColors.transparent,
-                                      onPressed: () async {
-                                        if (isEdit) {
-                                          // if (editIndex != null &&
-                                          //     editIndex >= 0 &&
-                                          //     editIndex <
-                                          //         model.getTetantResponseModel!.data!.businessAddresses!.length) {
-                                          model.updateBusinessAddress(
-                                            context: context,
-                                            businessAddress:
-                                                BusinessAddressesEntity(
-                                                  state: stateBusController.text
-                                                      .trim(),
-                                                  lga: lgaBusController.text
-                                                      .trim(),
-                                                  country: countryBusController
-                                                      .text
-                                                      .trim(),
-                                                  businessAddress:
-                                                      businessAddController.text
-                                                          .trim(),
-                                                ),
-                                            id: businessAddresses!.id,
-                                          );
-                                          // }
-                                        } else {
-                                          // ADD NEW STATE
-                                          if (model
-                                                  .getTetantResponseModel!
-                                                  .data!
-                                                  .businessAddresses!
-                                                  .length <
-                                              3) {
-                                            model.addBusinessAddresses(
-                                              context: context,
-                                              businessAddresses:
-                                                  BusinessAddressesEntity(
-                                                    state: stateBusController
-                                                        .text
-                                                        .trim(),
-                                                    lga: lgaBusController.text
-                                                        .trim(),
-                                                    country:
-                                                        countryBusController
-                                                            .text
-                                                            .trim(),
-                                                    businessAddress:
-                                                        businessAddController
-                                                            .text
-                                                            .trim(),
+
+                                  SizedBox(height: 16.2.h),
+                                  TextFormWidget(
+                                    hint: 'State',
+                                    label: '--Select--',
+                                    rightPos: -14,
+                                    hintSize: 16,
+                                    borderColor: AppColors.transparent,
+                                    borderTopLeft: 10.r,
+                                    borderTopRight: 10.r,
+                                    borderBottomLeft: 10.r,
+                                    borderBottomRight: 10.r,
+                                    labelStyle: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: 'Arial',
+                                      fontSize: 14.2.sp,
+                                      color: AppColors.infoGrey,
+                                    ),
+                                    fillColor: AppColors.grey,
+                                    isFilled: true,
+                                    readOnly: true,
+                                    controller: stateBusController,
+                                    suffixWidget: Builder(
+                                      builder: (context) {
+                                        return GestureDetector(
+                                          onTap: () async {
+                                            final RenderBox button =
+                                                context.findRenderObject()
+                                                    as RenderBox;
+
+                                            final RenderBox overlay =
+                                                Overlay.of(
+                                                      context,
+                                                    ).context.findRenderObject()
+                                                    as RenderBox;
+
+                                            final Offset buttonPosition = button
+                                                .localToGlobal(
+                                                  Offset.zero,
+                                                  ancestor: overlay,
+                                                );
+
+                                            final Size buttonSize = button.size;
+
+                                            final selectedState =
+                                                await showMenu<String>(
+                                                  context: context,
+
+                                                  position:
+                                                      RelativeRect.fromLTRB(
+                                                        buttonPosition.dx,
+                                                        buttonPosition.dy +
+                                                            buttonSize.height +
+                                                            5.h,
+                                                        overlay.size.width -
+                                                            buttonPosition.dx -
+                                                            buttonSize.width,
+                                                        0,
+                                                      ),
+
+                                                  constraints: BoxConstraints(
+                                                    minWidth: 200.w,
+                                                    maxWidth: 250.w,
+                                                    minHeight: 150.h,
+                                                    maxHeight: 450.h,
                                                   ),
-                                            );
-                                          }
-                                        }
-                                        // }
-                                        await Future.delayed(
-                                          Duration(seconds: 1),
+
+                                                  color: AppColors.white,
+
+                                                  elevation: 4,
+
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          10.r,
+                                                        ),
+                                                  ),
+
+                                                  items: stateLgaFormat
+                                                      .map<
+                                                        PopupMenuEntry<String>
+                                                      >((s) {
+                                                        final String state =
+                                                            s['state']
+                                                                ?.toString() ??
+                                                            '';
+
+                                                        return PopupMenuItem<
+                                                          String
+                                                        >(
+                                                          value: state,
+                                                          height: 38.h,
+                                                          padding:
+                                                              EdgeInsets.symmetric(
+                                                                horizontal:
+                                                                    14.w,
+                                                              ),
+                                                          child: TextView(
+                                                            text: state,
+                                                            textStyle: TextStyle(
+                                                              fontFamily:
+                                                                  'GoogleSans',
+                                                              fontSize:
+                                                                  13.70.sp,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                              color: AppColors
+                                                                  .black,
+                                                            ),
+                                                          ),
+                                                        );
+                                                      })
+                                                      .toList(),
+                                                );
+
+                                            if (selectedState != null) {
+                                              stateBusController.text =
+                                                  selectedState;
+                                              final selectedStateLga =
+                                                  stateLgaFormat.firstWhere(
+                                                    (state) =>
+                                                        state['state']
+                                                            .toString()
+                                                            .trim()
+                                                            .toLowerCase() ==
+                                                        stateController.text
+                                                            .trim()
+                                                            .toLowerCase(),
+                                                    orElse: () =>
+                                                        <String, dynamic>{
+                                                          'state': '',
+                                                          'lgas': <String>[],
+                                                        },
+                                                  );
+
+                                              final selectedLgas =
+                                                  List<String>.from(
+                                                    selectedStateLga['lgas'] ??
+                                                        <String>[],
+                                                  );
+
+                                              lgaList = List<String>.from(
+                                                selectedLgas,
+                                              );
+                                              lgaListCopy = List<String>.from(
+                                                selectedLgas,
+                                              );
+
+                                              // Optional: reset previously selected LGAs
+                                              lgaAddedList.clear();
+                                            }
+                                            setModalState(() {});
+                                            model.notifyListeners();
+                                          },
+
+                                          child: Padding(
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 8.w,
+                                            ),
+                                            child: Icon(
+                                              Icons.keyboard_arrow_down,
+                                              color: isEdit
+                                                  ? AppColors.greygreyer
+                                                  : AppColors.grey1,
+                                            ),
+                                          ),
                                         );
-                                        lgaListCopy.clear();
-                                        model.notifyListeners();
                                       },
                                     ),
+                                    validator: AppValidator.validateString(),
+                                  ),
+                                  SizedBox(height: 12.30.h),
+                                  TextFormWidget(
+                                    hint: 'LGA',
+                                    label: '-Select-',
+                                    hintColor: AppColors.reminder,
+                                    hintSize: Platform.isAndroid
+                                        ? 16.sp
+                                        : 14.sp,
+                                    borderColor: AppColors.transparent,
+                                    borderTopLeft: 10.r,
+                                    borderTopRight: 10.r,
+                                    borderBottomLeft: 10.r,
+                                    borderBottomRight: 10.r,
+                                    fillColor: AppColors.grey,
+                                    isFilled: true,
+                                    readOnly: true,
+                                    controller: lgaBusController,
+                                    suffixWidget: Builder(
+                                      builder: (context) {
+                                        return GestureDetector(
+                                          onTap: () async {
+                                            final RenderBox button =
+                                                context.findRenderObject()
+                                                    as RenderBox;
+
+                                            final RenderBox overlay =
+                                                Overlay.of(
+                                                      context,
+                                                    ).context.findRenderObject()
+                                                    as RenderBox;
+
+                                            final Offset buttonPosition = button
+                                                .localToGlobal(
+                                                  Offset.zero,
+                                                  ancestor: overlay,
+                                                );
+
+                                            final Size buttonSize = button.size;
+
+                                            final selectedState = stateLgaFormat
+                                                .firstWhere(
+                                                  (state) =>
+                                                      state['state']
+                                                          .toString()
+                                                          .trim()
+                                                          .toLowerCase() ==
+                                                      stateBusController.text
+                                                          .trim()
+                                                          .toLowerCase(),
+                                                  orElse: () =>
+                                                      <String, dynamic>{
+                                                        'state': '',
+                                                        'lgas': <String>[],
+                                                      },
+                                                );
+
+                                            final List<dynamic> lgas =
+                                                selectedState['lgas'] ?? [];
+
+                                            if (lgas.isEmpty) {
+                                              return;
+                                            }
+
+                                            final selectedLga =
+                                                await showMenu<String>(
+                                                  context: context,
+
+                                                  position:
+                                                      RelativeRect.fromLTRB(
+                                                        buttonPosition.dx,
+                                                        buttonPosition.dy +
+                                                            buttonSize.height +
+                                                            5.h,
+                                                        overlay.size.width -
+                                                            buttonPosition.dx -
+                                                            buttonSize.width,
+                                                        0,
+                                                      ),
+
+                                                  constraints: BoxConstraints(
+                                                    minWidth: 200.w,
+                                                    maxWidth: 250.w,
+                                                    minHeight: 110.h,
+                                                    maxHeight: 420.h,
+                                                  ),
+
+                                                  color: AppColors.white,
+
+                                                  elevation: 4,
+
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          10.r,
+                                                        ),
+                                                  ),
+
+                                                  items: lgas
+                                                      .map<
+                                                        PopupMenuEntry<String>
+                                                      >((lga) {
+                                                        return PopupMenuItem<
+                                                          String
+                                                        >(
+                                                          value: lga.toString(),
+                                                          height: 38.h,
+                                                          padding:
+                                                              EdgeInsets.symmetric(
+                                                                horizontal:
+                                                                    14.w,
+                                                              ),
+                                                          child: TextView(
+                                                            text: lga
+                                                                .toString(),
+                                                            textStyle: TextStyle(
+                                                              fontFamily:
+                                                                  'GoogleSans',
+                                                              fontSize:
+                                                                  13.70.sp,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                              color: AppColors
+                                                                  .black,
+                                                            ),
+                                                          ),
+                                                        );
+                                                      })
+                                                      .toList(),
+                                                );
+
+                                            if (selectedLga != null) {
+                                              lgaBusController.text =
+                                                  selectedLga;
+                                              model.notifyListeners();
+                                            }
+                                          },
+
+                                          child: Padding(
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 8.w,
+                                            ),
+                                            child: Icon(
+                                              Icons.keyboard_arrow_down,
+                                              color: AppColors.grey1,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                    validator: AppValidator.validateString(),
+                                    style: TextStyle(
+                                      fontSize: 16.20.sp,
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: 'DMSans',
+                                    ),
+
+                                    labelStyle: TextStyle(
+                                      fontSize: 15.20.sp,
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: 'DMSans',
+                                      color: AppColors.faintedGrey,
+                                    ),
+                                  ),
+                                  SizedBox(height: 30.h),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        flex: 2,
+                                        child: ButtonWidget(
+                                          border: 100.r,
+                                          buttonColor: AppColors.grey,
+                                          buttonText: 'Cancel',
+                                          color: AppColors.reminder1,
+                                          buttonBorderColor:
+                                              AppColors.transparent,
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                            notifyListeners();
+                                          },
+                                        ),
+                                      ),
+                                      SizedBox(width: 20.w),
+                                      Expanded(
+                                        flex: 3,
+                                        child: ButtonWidget(
+                                          border: 100.r,
+                                          buttonColor: AppColors.primary,
+                                          buttonText: !isEdit
+                                              ? 'Add'
+                                              : 'Save Changes',
+                                          isLoading: model.isLoading,
+                                          color: AppColors.white,
+                                          buttonBorderColor:
+                                              AppColors.transparent,
+                                          onPressed: () async {
+                                            if (isEdit) {
+                                              // if (editIndex != null &&
+                                              //     editIndex >= 0 &&
+                                              //     editIndex <
+                                              //         model.getTetantResponseModel!.data!.businessAddresses!.length) {
+                                              model.updateBusinessAddress(
+                                                context: context,
+                                                businessAddress:
+                                                    BusinessAddressesEntity(
+                                                      state: stateBusController
+                                                          .text
+                                                          .trim(),
+                                                      lga: lgaBusController.text
+                                                          .trim(),
+                                                      country:
+                                                          countryBusController
+                                                              .text
+                                                              .trim(),
+                                                      businessAddress:
+                                                          businessAddController
+                                                              .text
+                                                              .trim(),
+                                                    ),
+                                                id: businessAddresses!.id,
+                                              );
+                                              // }
+                                            } else {
+                                              // ADD NEW STATE
+                                              if (model
+                                                      .getTetantResponseModel!
+                                                      .data!
+                                                      .businessAddresses!
+                                                      .length <
+                                                  3) {
+                                                model.addBusinessAddresses(
+                                                  context: context,
+                                                  businessAddresses:
+                                                      BusinessAddressesEntity(
+                                                        state:
+                                                            stateBusController
+                                                                .text
+                                                                .trim(),
+                                                        lga: lgaBusController
+                                                            .text
+                                                            .trim(),
+                                                        country:
+                                                            countryBusController
+                                                                .text
+                                                                .trim(),
+                                                        businessAddress:
+                                                            businessAddController
+                                                                .text
+                                                                .trim(),
+                                                      ),
+                                                );
+                                              }
+                                            }
+                                            // }
+                                            await Future.delayed(
+                                              Duration(seconds: 1),
+                                            );
+                                            lgaListCopy.clear();
+                                            model.notifyListeners();
+                                          },
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
-                            ],
+                            ),
                           ),
                         ),
                       ),
