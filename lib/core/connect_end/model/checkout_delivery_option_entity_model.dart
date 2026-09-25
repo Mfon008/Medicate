@@ -1,17 +1,15 @@
 class CheckoutDeliveryOptionEntityModel {
-  String? stateCode;
-  String? lgaCode;
+  String? deliveryAddressId;
 
-  CheckoutDeliveryOptionEntityModel({this.stateCode, this.lgaCode});
+  CheckoutDeliveryOptionEntityModel({this.deliveryAddressId});
 
   factory CheckoutDeliveryOptionEntityModel.fromJson(
     Map<String, dynamic> json,
   ) {
     return CheckoutDeliveryOptionEntityModel(
-      stateCode: json['stateCode'] as String?,
-      lgaCode: json['lgaCode'] as String?,
+      deliveryAddressId: json['deliveryAddressId'] as String?,
     );
   }
 
-  Map<String, dynamic> toJson() => {'stateCode': stateCode, 'lgaCode': lgaCode};
+  Map<String, dynamic> toJson() => {'deliveryAddressId': deliveryAddressId};
 }

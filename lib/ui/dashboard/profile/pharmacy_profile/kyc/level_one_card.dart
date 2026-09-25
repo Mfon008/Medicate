@@ -336,7 +336,12 @@ class _LevelOneCardState extends State<LevelOneCard> {
                                       SizedBox(height: 4.h),
 
                                       widget.model!.getPharmacyKycResponseModel !=
-                                                  null &&
+                                                  null && widget
+                                                  .model!
+                                                  .getPharmacyKycResponseModel!
+                                                  .data!
+                                                  .level1!
+                                                  .selectedServices!=null &&
                                               widget
                                                   .model!
                                                   .getPharmacyKycResponseModel!
@@ -439,6 +444,7 @@ class _LevelOneCardState extends State<LevelOneCard> {
                                                 ),
                                               ),
                                             ),
+                                    
                                     ],
                                   ),
                                 ),

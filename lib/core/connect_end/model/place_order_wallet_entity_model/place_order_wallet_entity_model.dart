@@ -3,6 +3,7 @@ import 'delivery_details.dart';
 class PlaceOrderWalletEntityModel {
   String? deliveryMethod;
   String? deliveryDate;
+  String? deliveryAddressId;
   DeliveryDetails? deliveryDetails;
   String? paymentMethod;
   double? expectedSubtotal;
@@ -16,6 +17,7 @@ class PlaceOrderWalletEntityModel {
   PlaceOrderWalletEntityModel({
     this.deliveryMethod,
     this.deliveryDate,
+    this.deliveryAddressId,
     this.deliveryDetails,
     this.paymentMethod,
     this.expectedSubtotal,
@@ -31,6 +33,7 @@ class PlaceOrderWalletEntityModel {
     return PlaceOrderWalletEntityModel(
       deliveryMethod: json['deliveryMethod'] as String?,
       deliveryDate: json['deliveryDate'] as String?,
+      deliveryAddressId: json['deliveryAddressId'] as String?,
       deliveryDetails: json['deliveryDetails'] == null
           ? null
           : DeliveryDetails.fromJson(
@@ -50,6 +53,7 @@ class PlaceOrderWalletEntityModel {
   Map<String, dynamic> toJson() => {
     'deliveryMethod': deliveryMethod,
     'deliveryDate': deliveryDate,
+    'deliveryAddressId': deliveryAddressId,
     'deliveryDetails': deliveryDetails?.toJson(),
     'paymentMethod': paymentMethod,
     'expectedSubtotal': expectedSubtotal,

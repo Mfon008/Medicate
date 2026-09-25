@@ -303,6 +303,7 @@ class PharmContractsImpl {
     CheckoutDeliveryOptionEntityModel checkoutDeliveryOption,
   ) async => await _api.checkoutDeliveryOption(checkoutDeliveryOption);
 
+  Future<dynamic> updatePrimaryBusinessAddress(String id) async  => await _api.updatePrimaryBusinessAddress(id);
   Future<dynamic> addBusinessAddresses(
     BusinessAddressesEntity businessAddresses,
   ) async => await _api.addBusinessAddresses(businessAddresses);

@@ -190,43 +190,35 @@ class PharmacyOrderScreen extends StatelessWidget {
                                               color: AppColors.white,
                                             ),
                                           ),
-                                          SizedBox(width: 12.w),
-                                          Container(
-                                            width:
-                                                model
+                                          SizedBox(width: 10.2.w),
+                                          Expanded(
+                                            child: Container(
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal: 3.4.w,
+                                                vertical: 3.42.w,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                color: AppColors.appWhite,
+                                                borderRadius:
+                                                    BorderRadius.circular(22),
+                                              ),
+                                              child: TextView(
+                                                text:
+                                                    model
                                                         .getWholesaleOrderResponseModel!
                                                         .data!
                                                         .order!
-                                                        .badgeText!
-                                                        .length >
-                                                    8
-                                                ? 130.w
-                                                : 80.w,
-                                            padding: EdgeInsets.symmetric(
-                                              horizontal: 10.64.w,
-                                              vertical: 3.42.w,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              color: AppColors.appWhite,
-                                              borderRadius:
-                                                  BorderRadius.circular(22),
-                                            ),
-                                            child: TextView(
-                                              text:
-                                                  model
-                                                      .getWholesaleOrderResponseModel!
-                                                      .data!
-                                                      .order!
-                                                      .badgeText ??
-                                                  '',
-                                              textOverflow: TextOverflow.fade,
-                                              maxLines: 1,
-                                              textAlign: TextAlign.center,
-                                              textStyle: TextStyle(
-                                                fontFamily: 'DMSans',
-                                                fontSize: 14.2.sp,
-                                                fontWeight: FontWeight.w500,
-                                                color: AppColors.lightBlue,
+                                                        .badgeText ??
+                                                    '',
+                                                textOverflow: TextOverflow.fade,
+                                                maxLines: 1,
+                                                textAlign: TextAlign.center,
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'DMSans',
+                                                  fontSize: 13.2.sp,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: AppColors.primary,
+                                                ),
                                               ),
                                             ),
                                           ),
@@ -1792,6 +1784,225 @@ class PharmacyOrderScreen extends StatelessWidget {
                                     ],
                                   ),
                                 ),
+                                model
+                                                .getWholesaleOrderResponseModel!
+                                                .data!
+                                                .order!
+                                                .badgeText!
+                                                .toLowerCase() ==
+                                            'returned' ||
+                                        model
+                                            .getWholesaleOrderResponseModel!
+                                            .data!
+                                            .order!
+                                            .badgeText!
+                                            .contains('failed')
+                                    ? Padding(
+                                        padding: EdgeInsets.only(
+                                          left: 20.w,
+                                          right: 20.w,
+                                          bottom: 20.w,
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Expanded(
+                                              flex: 1,
+                                              child: Container(
+                                                padding: EdgeInsets.symmetric(
+                                                  vertical: 12.w,
+                                                  horizontal: 20.w,
+                                                ),
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                        100.r,
+                                                      ),
+                                                  border: Border.all(
+                                                    color: AppColors.primary,
+                                                  ),
+                                                ),
+                                                child: SvgPicture.asset(
+                                                  AppImage.download_arrow,
+                                                  height: 20.h,
+                                                  width: 20.w,
+                                                  color: AppColors.primary,
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(width: 7.10.h),
+                                            Expanded(
+                                              flex: 1,
+                                              child: Container(
+                                                padding: EdgeInsets.symmetric(
+                                                  vertical: 12.w,
+                                                  horizontal: 20.w,
+                                                ),
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                        100.r,
+                                                      ),
+                                                  border: Border.all(
+                                                    color: AppColors.primary,
+                                                  ),
+                                                ),
+                                                child: SvgPicture.asset(
+                                                  AppImage.share,
+                                                  height: 20.h,
+                                                  width: 20.w,
+                                                  color: AppColors.primary,
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(width: 7.10.h),
+                                            Expanded(
+                                              flex: 2,
+                                              child: Container(
+                                                padding: EdgeInsets.symmetric(
+                                                  vertical: 10.w,
+                                                  horizontal: 20.w,
+                                                ),
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                        100.r,
+                                                      ),
+                                                  color: AppColors.primary,
+                                                ),
+                                                child: Row(
+                                                  children: [
+                                                    SvgPicture.asset(
+                                                      AppImage.infinity_arrow,
+                                                      height: 18.20.h,
+                                                      width: 18.20.w,
+                                                      color: AppColors.white,
+                                                    ),
+                                                    SizedBox(width: 6.72.w),
+                                                    TextView(
+                                                      text: 'Re-order',
+                                                      textStyle: TextStyle(
+                                                        fontFamily: 'DMSans',
+                                                        fontSize: 17.2.sp,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        color: AppColors.white,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    : Padding(
+                                        padding: EdgeInsets.only(
+                                          left: 16.20.w,
+                                          right: 16.20.w,
+                                          bottom: 20.w,
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Expanded(
+                                              flex: 5,
+                                              child: Container(
+                                                padding: EdgeInsets.symmetric(
+                                                  vertical: 12.w,
+                                                  horizontal: 10.w,
+                                                ),
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                        100.r,
+                                                      ),
+                                                  border: Border.all(
+                                                    color: AppColors.primary,
+                                                  ),
+                                                ),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    SvgPicture.asset(
+                                                      AppImage.download_arrow,
+                                                      height: 18.20.h,
+                                                      width: 18.20.w,
+                                                      color: AppColors.primary,
+                                                    ),
+                                                    SizedBox(width: 6.10.w),
+                                                    Expanded(
+                                                      child: TextView(
+                                                        text:
+                                                            'Download Invoice',
+                                                        textStyle: TextStyle(
+                                                          fontFamily: 'DMSans',
+                                                          fontSize: 15.2.sp,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color:
+                                                              AppColors.primary,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(width: 13.10.h),
+                                            Expanded(
+                                              flex: 3,
+                                              child: Container(
+                                                padding: EdgeInsets.symmetric(
+                                                  vertical: 12.w,
+                                                  horizontal: 10.w,
+                                                ),
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                        100.r,
+                                                      ),
+                                                  border: Border.all(
+                                                    color: AppColors.primary,
+                                                  ),
+                                                ),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    SvgPicture.asset(
+                                                      AppImage.share,
+                                                      height: 18.20.h,
+                                                      width: 18.20.w,
+                                                      color: AppColors.primary,
+                                                    ),
+                                                    SizedBox(width: 10.w),
+                                                    TextView(
+                                                      text: 'Share',
+                                                      textStyle: TextStyle(
+                                                        fontFamily: 'DMSans',
+                                                        fontSize: 15.52.sp,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        color:
+                                                            AppColors.primary,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(width: 7.10.h),
+                                          ],
+                                        ),
+                                      ),
                               ],
                             ),
                           )

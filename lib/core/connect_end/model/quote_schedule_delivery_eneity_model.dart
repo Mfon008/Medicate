@@ -1,16 +1,14 @@
 class QuoteScheduleDeliveryEneityModel {
   String? deliveryMethod;
   String? deliveryDate;
-  String? stateCode;
-  String? lgaCode;
+  String? deliveryAddressId;
   String? timeBlockStart;
   String? timeBlockEnd;
 
   QuoteScheduleDeliveryEneityModel({
     this.deliveryMethod,
     this.deliveryDate,
-    this.stateCode,
-    this.lgaCode,
+    this.deliveryAddressId,
     this.timeBlockStart,
     this.timeBlockEnd,
   });
@@ -19,8 +17,7 @@ class QuoteScheduleDeliveryEneityModel {
     return QuoteScheduleDeliveryEneityModel(
       deliveryMethod: json['deliveryMethod'] as String?,
       deliveryDate: json['deliveryDate'] as String?,
-      stateCode: json['stateCode'] as String?,
-      lgaCode: json['lgaCode'] as String?,
+      deliveryAddressId: json['deliveryAddressId'] as String?,
       timeBlockStart: json['timeBlockStart'] as String?,
       timeBlockEnd: json['timeBlockEnd'] as String?,
     );
@@ -29,8 +26,7 @@ class QuoteScheduleDeliveryEneityModel {
   Map<String, dynamic> toJson() => {
     'deliveryMethod': deliveryMethod,
     'deliveryDate': deliveryDate,
-    'stateCode': stateCode,
-    'lgaCode': lgaCode,
+    'deliveryAddressId': deliveryAddressId,
     'timeBlockStart': timeBlockStart,
     'timeBlockEnd': timeBlockEnd,
   };

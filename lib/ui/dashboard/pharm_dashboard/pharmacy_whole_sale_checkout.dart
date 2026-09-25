@@ -11,10 +11,7 @@ import 'package:stacked/stacked.dart';
 import '../../../../core/app_assets/app_validation.dart';
 import '../../../../core/app_assets/image.dart';
 import '../../../../core/config/colors.dart';
-// import '../../../core/app_assets/state_lga_format.dart';
 import '../../../core/connect_end/model/checkout_delivery_option_entity_model.dart';
-// import '../../../core/connect_end/model/quote_instant_delivery_entity_model.dart';
-import '../../../core/connect_end/model/quote_schedule_delivery_eneity_model.dart';
 import '../../../core/connect_end/view_model/pharm_auth_view_model.dart';
 import '../../widget/auto_scroll_text.dart';
 import '../../widget/button.dart';
@@ -30,8 +27,48 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<PharmViewModel>.reactive(
       viewModelBuilder: () => PharmViewModel(),
-      onViewModelReady: (model) {
-        model.getTenant(context);
+      onViewModelReady: (model) async {
+        await model.getTenant(context);
+        model.getWholesaleProductAddedToCart(context);
+        if (model.getTetantResponseModel != null &&
+            model.getTetantResponseModel!.data!.businessAddresses!.isNotEmpty) {
+          final primaryAddresses = model
+              .getTetantResponseModel!
+              .data!
+              .businessAddresses!
+              .where((test) => test.isPrimary!);
+          if (primaryAddresses.isNotEmpty) {
+            model.mapLocationAddressSelected = primaryAddresses.first;
+            await Future.delayed(Duration(microseconds: 10));
+            await model.getCheckoutDeliveryOption(
+              context: context,
+              checkoutDeliveryOption: CheckoutDeliveryOptionEntityModel(
+                deliveryAddressId: model.mapLocationAddressSelected!.id,
+              ),
+            );
+            if (model.getCheckoutDeliveryOptionResponseModel != null &&
+                model
+                    .getCheckoutDeliveryOptionResponseModel!
+                    .data!
+                    .methods!
+                    .isNotEmpty &&
+                model
+                        .getCheckoutDeliveryOptionResponseModel!
+                        .data!
+                        .methods![0]
+                        .deliveryFee !=
+                    null) {
+              if (model.delivery == Delivery.instance) {
+                model.deliveryFeeAmount = model
+                    .getCheckoutDeliveryOptionResponseModel!
+                    .data!
+                    .methods![0]
+                    .deliveryFee!;
+              }
+              model.notifyListeners();
+            }
+          }
+        }
       },
       disposeViewModel: false,
       onDispose: (viewModel) {},
@@ -61,217 +98,133 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 17.2.w, vertical: 24.w),
             child: Column(
               children: [
-                model.isLoading
-                    ? SpinKitRing(
-                        size: 35.72.sp,
-                        color: AppColors.primary1,
-                        lineWidth: 5,
-                      )
-                    : model.quoteInstantDeliveryResponseModel != null ||
-                          model.quoteScheduleDeliveryResponseModel != null
-                    ? Container(
-                        margin: EdgeInsets.only(bottom: 20.w),
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 20.w,
-                          vertical: 20.w,
-                        ),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10.r),
-                          color: AppColors.white,
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                SvgPicture.asset(AppImage.order_summary),
-                                SizedBox(width: 12.w),
-                                TextView(
-                                  text: 'Order Summary',
-                                  textStyle: TextStyle(
-                                    fontFamily: 'DMSans',
-                                    fontSize: 15.42.sp,
-                                    fontWeight: FontWeight.w400,
-                                    color: AppColors.black,
-                                  ),
-                                ),
-                              ],
+                Container(
+                  margin: EdgeInsets.only(bottom: 20.w),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 20.w,
+                    vertical: 20.w,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10.r),
+                    color: AppColors.white,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          SvgPicture.asset(AppImage.order_summary),
+                          SizedBox(width: 12.w),
+                          TextView(
+                            text: 'Order Summary',
+                            textStyle: TextStyle(
+                              fontFamily: 'DMSans',
+                              fontSize: 15.42.sp,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.black,
                             ),
-                            SizedBox(height: 10.h),
-                            if (model.quoteInstantDeliveryResponseModel != null)
-                              ...model
-                                  .quoteInstantDeliveryResponseModel!
-                                  .data!
-                                  .checkout!
-                                  .items!
-                                  .map(
-                                    (p) => Column(
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                SizedBox(
-                                                  width: 210.w,
-                                                  child: TextView(
-                                                    maxLines: 1,
-                                                    text:
-                                                        p
-                                                            .product
-                                                            ?.productName ??
-                                                        '',
-                                                    textOverflow:
-                                                        TextOverflow.ellipsis,
-                                                    textStyle: TextStyle(
-                                                      fontFamily: 'DMSans',
-                                                      fontSize: 15.42.sp,
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      color: AppColors.black,
-                                                      letterSpacing: -0.1,
-                                                    ),
-                                                  ),
-                                                ),
-                                                TextView(
-                                                  text:
-                                                      'Qty: ${p.quantity} | ${formatNaira(p.product?.priceDetails?.displayPricePerUnit ?? 0)}',
-                                                  textStyle: TextStyle(
-                                                    fontFamily: 'DMSans',
-                                                    fontSize: 12.42.sp,
-                                                    fontWeight: FontWeight.w300,
-                                                    color: AppColors.infoGrey,
-                                                    letterSpacing: -0.1,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            TextView(
-                                              text: formatNairaNoDecimal(
-                                                p.lineTotal!,
-                                              ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 10.h),
+
+                      if (model.wholesaleGetProductAddedToCartResponseModel !=
+                          null)
+                        ...model
+                            .wholesaleGetProductAddedToCartResponseModel!
+                            .data!
+                            .cart!
+                            .items!
+                            .map(
+                              (c) => Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          SizedBox(
+                                            width: 210.w,
+                                            child: TextView(
                                               maxLines: 1,
+                                              text:
+                                                  c.product?.productName ?? '',
                                               textOverflow:
                                                   TextOverflow.ellipsis,
                                               textStyle: TextStyle(
                                                 fontFamily: 'DMSans',
-                                                fontSize: 14.42.sp,
-                                                fontWeight: FontWeight.w600,
-                                                color: AppColors.reminder1,
+                                                fontSize: 15.42.sp,
+                                                fontWeight: FontWeight.w400,
+                                                color: AppColors.black,
                                                 letterSpacing: -0.1,
                                               ),
                                             ),
-                                          ],
-                                        ),
-                                        Divider(color: AppColors.infoGrey1),
-                                      ],
-                                    ),
-                                  )
-                            else
-                              ...model
-                                  .quoteScheduleDeliveryResponseModel!
-                                  .data!
-                                  .checkout!
-                                  .items!
-                                  .map(
-                                    (p) => Column(
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                SizedBox(
-                                                  width: 210.w,
-                                                  child: TextView(
-                                                    maxLines: 1,
-                                                    text:
-                                                        p
-                                                            .product
-                                                            ?.productName ??
-                                                        '',
-                                                    textOverflow:
-                                                        TextOverflow.ellipsis,
-                                                    textStyle: TextStyle(
-                                                      fontFamily: 'DMSans',
-                                                      fontSize: 15.42.sp,
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      color: AppColors.black,
-                                                      letterSpacing: -0.1,
-                                                    ),
-                                                  ),
-                                                ),
-                                                TextView(
-                                                  text:
-                                                      'Qty: ${p.quantity} | ${formatNaira(p.product?.priceDetails?.displayPricePerUnit ?? 0)}',
-                                                  textStyle: TextStyle(
-                                                    fontFamily: 'DMSans',
-                                                    fontSize: 12.42.sp,
-                                                    fontWeight: FontWeight.w300,
-                                                    color: AppColors.infoGrey,
-                                                    letterSpacing: -0.1,
-                                                  ),
-                                                ),
-                                              ],
+                                          ),
+                                          TextView(
+                                            text:
+                                                'Qty: ${c.quantity} | ${formatNaira(c.product?.priceDetails?.displayPricePerUnit ?? 0)}',
+                                            textStyle: TextStyle(
+                                              fontFamily: 'DMSans',
+                                              fontSize: 12.42.sp,
+                                              fontWeight: FontWeight.w300,
+                                              color: AppColors.infoGrey,
+                                              letterSpacing: -0.1,
                                             ),
-                                            TextView(
-                                              text: formatNairaDouble(
-                                                p.lineTotal!,
-                                              ),
-                                              textStyle: TextStyle(
-                                                fontFamily: 'DMSans',
-                                                fontSize: 14.42.sp,
-                                                fontWeight: FontWeight.w600,
-                                                color: AppColors.reminder1,
-                                                letterSpacing: -0.1,
-                                              ),
-                                            ),
-                                          ],
+                                          ),
+                                        ],
+                                      ),
+                                      TextView(
+                                        text: formatNairaNoDecimal(
+                                          c.lineTotal!,
                                         ),
-                                        Divider(color: AppColors.infoGrey1),
-                                      ],
-                                    ),
+                                        maxLines: 1,
+                                        textOverflow: TextOverflow.ellipsis,
+                                        textStyle: TextStyle(
+                                          fontFamily: 'DMSans',
+                                          fontSize: 14.42.sp,
+                                          fontWeight: FontWeight.w600,
+                                          color: AppColors.reminder1,
+                                          letterSpacing: -0.1,
+                                        ),
+                                      ),
+                                    ],
                                   ),
+                                  Divider(color: AppColors.infoGrey1),
+                                ],
+                              ),
+                            ),
 
-                            SizedBox(height: 10.h),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                TextView(
-                                  text: 'Subtotal',
-                                  textStyle: TextStyle(
-                                    fontFamily: 'DMSans',
-                                    fontSize: 14.2.sp,
-                                    fontWeight: FontWeight.w400,
-                                    color: AppColors.black,
+                      SizedBox(height: 10.h),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          TextView(
+                            text: 'Subtotal',
+                            textStyle: TextStyle(
+                              fontFamily: 'DMSans',
+                              fontSize: 14.2.sp,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.black,
+                            ),
+                          ),
+                          model.isLoading
+                              ? SpinKitRing(
+                                  color: AppColors.primary,
+                                  lineWidth: 2,
+                                  size: 20.sp,
+                                )
+                              : TextView(
+                                  text: formatNairaDouble(
+                                    model
+                                        .wholesaleGetProductAddedToCartResponseModel!
+                                        .data!
+                                        .cart!
+                                        .subtotal!,
                                   ),
-                                ),
-                                TextView(
-                                  text:
-                                      model.quoteInstantDeliveryResponseModel !=
-                                          null
-                                      ? formatNairaDouble(
-                                          model
-                                              .quoteInstantDeliveryResponseModel!
-                                              .data!
-                                              .checkout!
-                                              .subtotal!,
-                                        )
-                                      : formatNairaDouble(
-                                          model
-                                              .quoteScheduleDeliveryResponseModel!
-                                              .data!
-                                              .checkout!
-                                              .subtotal!,
-                                        ),
                                   textStyle: TextStyle(
                                     fontFamily: 'DMSans',
                                     fontSize: 14.42.sp,
@@ -280,82 +233,63 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                                     letterSpacing: -0.1,
                                   ),
                                 ),
-                              ],
+                        ],
+                      ),
+                      SizedBox(height: 10.h),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          TextView(
+                            text: 'Delivery',
+                            textStyle: TextStyle(
+                              fontFamily: 'DMSans',
+                              fontSize: 14.2.sp,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.black,
                             ),
-                            SizedBox(height: 10.h),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                TextView(
-                                  text: 'Delivery',
-                                  textStyle: TextStyle(
-                                    fontFamily: 'DMSans',
-                                    fontSize: 14.2.sp,
-                                    fontWeight: FontWeight.w400,
-                                    color: AppColors.black,
-                                  ),
-                                ),
-                                TextView(
-                                  text:
-                                      model.quoteInstantDeliveryResponseModel !=
-                                          null
-                                      ? formatNaira(
-                                          model
-                                              .quoteInstantDeliveryResponseModel!
-                                              .data!
-                                              .checkout!
-                                              .deliveryFee!,
-                                        )
-                                      : formatNaira(
-                                          model
-                                              .quoteScheduleDeliveryResponseModel!
-                                              .data!
-                                              .checkout!
-                                              .deliveryFee!,
-                                        ),
-                                  textStyle: TextStyle(
-                                    fontFamily: 'DMSans',
-                                    fontSize: 14.42.sp,
-                                    fontWeight: FontWeight.w600,
-                                    color: AppColors.reminder1,
-                                    letterSpacing: -0.1,
-                                  ),
-                                ),
-                              ],
+                          ),
+                          TextView(
+                            text: formatNaira(model.deliveryFeeAmount),
+                            textStyle: TextStyle(
+                              fontFamily: 'DMSans',
+                              fontSize: 14.42.sp,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.reminder1,
+                              letterSpacing: -0.1,
                             ),
+                          ),
+                        ],
+                      ),
 
-                            Divider(color: AppColors.infoGrey1),
-                            SizedBox(height: 4.10.h),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                TextView(
-                                  text: 'Total:',
-                                  textStyle: TextStyle(
-                                    fontFamily: 'DMSans',
-                                    fontSize: 16.2.sp,
-                                    fontWeight: FontWeight.w400,
-                                    color: AppColors.black,
+                      Divider(color: AppColors.infoGrey1),
+                      SizedBox(height: 4.10.h),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          TextView(
+                            text: 'Total:',
+                            textStyle: TextStyle(
+                              fontFamily: 'DMSans',
+                              fontSize: 16.2.sp,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.black,
+                            ),
+                          ),
+                          model.isLoading
+                              ? SpinKitRing(
+                                  color: AppColors.primary,
+                                  lineWidth: 2,
+                                  size: 20.sp,
+                                )
+                              : TextView(
+                                  text: formatNairaDouble(
+                                    model
+                                            .wholesaleGetProductAddedToCartResponseModel!
+                                            .data!
+                                            .cart!
+                                            .subtotal! +
+                                        model.deliveryFeeAmount,
                                   ),
-                                ),
-                                TextView(
-                                  text:
-                                      model.quoteInstantDeliveryResponseModel !=
-                                          null
-                                      ? formatNairaDouble(
-                                          model
-                                              .quoteInstantDeliveryResponseModel!
-                                              .data!
-                                              .checkout!
-                                              .total!,
-                                        )
-                                      : formatNairaDouble(
-                                          model
-                                              .quoteScheduleDeliveryResponseModel!
-                                              .data!
-                                              .checkout!
-                                              .total!,
-                                        ),
                                   textStyle: TextStyle(
                                     fontFamily: 'DMSans',
                                     fontSize: 16.42.sp,
@@ -364,12 +298,12 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                                     letterSpacing: -0.1,
                                   ),
                                 ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      )
-                    : SizedBox.shrink(),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                // : SizedBox.shrink(),
                 Container(
                   margin: EdgeInsets.only(bottom: 20.w),
                   padding: EdgeInsets.symmetric(
@@ -401,9 +335,23 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                       ),
                       SizedBox(height: 12.h),
                       GestureDetector(
-                        onTap: () {
+                        onTap: () async {
                           model.delivery = Delivery.instance;
                           model.dateTimeController.clear();
+                          await Future.delayed(Duration(microseconds: 10));
+                          if (model
+                              .getCheckoutDeliveryOptionResponseModel!
+                              .data!
+                              .methods!
+                              .isNotEmpty) {
+                            model.deliveryFeeAmount = model
+                                .getCheckoutDeliveryOptionResponseModel!
+                                .data!
+                                .methods![0]
+                                .deliveryFee!;
+                          } else {
+                            model.deliveryFeeAmount = 0;
+                          }
                           model.notifyListeners();
                         },
                         child: Container(
@@ -474,8 +422,27 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                       ),
                       SizedBox(height: 12.h),
                       GestureDetector(
-                        onTap: () {
+                        onTap: () async {
                           model.delivery = Delivery.schedule;
+                          if (model
+                                  .getCheckoutDeliveryOptionResponseModel!
+                                  .data!
+                                  .methods!
+                                  .isNotEmpty &&
+                              model
+                                      .getCheckoutDeliveryOptionResponseModel!
+                                      .data!
+                                      .methods![1]
+                                      .deliveryFee !=
+                                  null) {
+                            model.deliveryFeeAmount = model
+                                .getCheckoutDeliveryOptionResponseModel!
+                                .data!
+                                .methods![1]
+                                .deliveryFee!;
+                          } else {
+                            model.deliveryFeeAmount = 0;
+                          }
                           model.notifyListeners();
                         },
                         child: Container(
@@ -590,417 +557,180 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                                 .data!
                                 .businessAddresses!
                                 .isNotEmpty)
-                          ...model
-                              .getTetantResponseModel!
-                              .data!
-                              .businessAddresses!
-                              .map(
-                                (e) => GestureDetector(
-                                  onTap: () {
-                                    model.mapLocationAddressSelected = e;
-                                    model.notifyListeners();
-                                  },
-                                  child: Container(
-                                    width: double.infinity,
-                                    margin: EdgeInsets.only(top: 14.w),
-                                    padding: EdgeInsets.symmetric(
-                                      vertical: 10.w,
-                                      horizontal: 12.w,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color:
-                                            model.mapLocationAddressSelected ==
-                                                e
-                                            ? AppColors.primary
-                                            : AppColors.infoGrey1,
+                          ...model.getTetantResponseModel!.data!.businessAddresses!.map(
+                            (e) => GestureDetector(
+                              onTap: () async {
+                                model.mapLocationAddressSelected = e;
+                                await Future.delayed(
+                                  Duration(microseconds: 10),
+                                );
+                                await model.updatePrimaryBusinessAddress(
+                                  context: context,
+                                  id: model.mapLocationAddressSelected!.id!,
+                                  isCheckout: true,
+                                );
+                                await model.getCheckoutDeliveryOption(
+                                  context: context,
+                                  checkoutDeliveryOption:
+                                      CheckoutDeliveryOptionEntityModel(
+                                        deliveryAddressId: model
+                                            .mapLocationAddressSelected!
+                                            .id,
                                       ),
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        model.mapLocationAddressSelected == e
-                                            ? Container(
-                                                padding: EdgeInsets.all(2.6.w),
-                                                decoration: BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                  border: Border.all(
-                                                    color: AppColors.primary,
-                                                    width: 2,
-                                                  ),
-                                                ),
-                                                child: Container(
-                                                  padding: EdgeInsets.all(
-                                                    3.2.w,
-                                                  ),
-                                                  decoration: BoxDecoration(
-                                                    shape: BoxShape.circle,
-                                                    color: AppColors.primary,
-                                                  ),
-                                                ),
-                                              )
-                                            : Container(
-                                                padding: EdgeInsets.all(6.w),
-                                                decoration: BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                  border: Border.all(
-                                                    color: AppColors.infoGrey1,
-                                                    width: 2,
-                                                  ),
-                                                ),
-                                              ),
+                                );
+                                if (model.getCheckoutDeliveryOptionResponseModel !=
+                                        null &&
+                                    model
+                                        .getCheckoutDeliveryOptionResponseModel!
+                                        .data!
+                                        .methods!
+                                        .isNotEmpty) {
+                                  if (model.delivery == Delivery.instance &&
+                                      model
+                                              .getCheckoutDeliveryOptionResponseModel!
+                                              .data!
+                                              .methods![0]
+                                              .deliveryFee !=
+                                          null) {
+                                    model.deliveryFeeAmount = model
+                                        .getCheckoutDeliveryOptionResponseModel!
+                                        .data!
+                                        .methods![0]
+                                        .deliveryFee!;
+                                  }
+                                  else if (model.delivery == Delivery.schedule &&
+                                      model
+                                              .getCheckoutDeliveryOptionResponseModel!
+                                              .data!
+                                              .methods![1]
+                                              .deliveryFee !=
+                                          null) {
+                                    model.deliveryFeeAmount = model
+                                        .getCheckoutDeliveryOptionResponseModel!
+                                        .data!
+                                        .methods![1]
+                                        .deliveryFee!;
+                                  } else {
+                                    model.deliveryFeeAmount = 0;
+                                  }
+                                }
+                                // if (model.delivery == Delivery.instance) {
+                                //   model.quoteInstantDelivery(
+                                //     context: context,
+                                //     instantDelivery:
+                                //         QuoteInstantDeliveryEntityModel(
+                                //           deliveryMethod: 'INSTANT',
+                                //           deliveryAddressId: model
+                                //               .mapLocationAddressSelected!
+                                //               .id,
+                                //         ),
+                                //   );
+                                // }
+                                // if (model.delivery == Delivery.schedule) {
+                                //   await model.quoteScheduleDelivery(
+                                //     context: context,
+                                //     scheduleDelivery:
+                                //         QuoteScheduleDeliveryEneityModel(
+                                //           deliveryMethod: 'SCHEDULED_BLOCK',
+                                //           deliveryAddressId: model
+                                //               .mapLocationAddressSelected!
+                                //               .id,
+                                //           deliveryDate: convertDate(
+                                //             model.dateTimeController.text,
+                                //           ),
+                                //           timeBlockStart:
+                                //               model.time!.startTime,
+                                //           timeBlockEnd: model.time!.endTime,
+                                //         ),
+                                //   );
+                                // } else {}
 
-                                        SizedBox(width: 10.w),
-
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              AutoScrollingText(
-                                                text: e.businessAddress ?? '',
-                                                textStyle: TextStyle(
-                                                  fontFamily: 'DMSans',
-                                                  fontSize: 14.20.sp,
-                                                  fontWeight: FontWeight.w500,
-                                                  color: AppColors.black,
-                                                ),
-                                              ),
-
-                                              SizedBox(height: 3.h),
-
-                                              AutoScrollingText(
-                                                text:
-                                                    '${e.lga}, ${e.state}, ${e.country}',
-                                                textStyle: TextStyle(
-                                                  fontFamily: 'DMSans',
-                                                  fontSize: 13.20.sp,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: AppColors.infoGrey,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                                model.notifyListeners();
+                              },
+                              child: Container(
+                                width: double.infinity,
+                                margin: EdgeInsets.only(top: 14.w),
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 10.w,
+                                  horizontal: 12.w,
+                                ),
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: model.mapLocationAddressSelected == e
+                                        ? AppColors.primary
+                                        : AppColors.infoGrey1,
                                   ),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Row(
+                                  children: [
+                                    model.mapLocationAddressSelected == e
+                                        ? Container(
+                                            padding: EdgeInsets.all(2.6.w),
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              border: Border.all(
+                                                color: AppColors.primary,
+                                                width: 2,
+                                              ),
+                                            ),
+                                            child: Container(
+                                              padding: EdgeInsets.all(3.2.w),
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: AppColors.primary,
+                                              ),
+                                            ),
+                                          )
+                                        : Container(
+                                            padding: EdgeInsets.all(6.w),
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              border: Border.all(
+                                                color: AppColors.infoGrey1,
+                                                width: 2,
+                                              ),
+                                            ),
+                                          ),
+
+                                    SizedBox(width: 10.w),
+
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          AutoScrollingText(
+                                            text: e.businessAddress ?? '',
+                                            textStyle: TextStyle(
+                                              fontFamily: 'DMSans',
+                                              fontSize: 14.20.sp,
+                                              fontWeight: FontWeight.w500,
+                                              color: AppColors.black,
+                                            ),
+                                          ),
+
+                                          SizedBox(height: 3.h),
+
+                                          AutoScrollingText(
+                                            text:
+                                                '${e.lga}, ${e.state}, ${e.country}',
+                                            textStyle: TextStyle(
+                                              fontFamily: 'DMSans',
+                                              fontSize: 13.20.sp,
+                                              fontWeight: FontWeight.w400,
+                                              color: AppColors.infoGrey,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-
-                        // TextFormWidget(
-                        //   hint: 'State',
-                        //   label: 'Select State',
-                        //   hintWeight: FontWeight.w400,
-                        //   hintColor: AppColors.reminder,
-                        //   hintSize: Platform.isAndroid ? 14.sp : 12.sp,
-                        //   borderColor: AppColors.infoGrey1,
-                        //   borderTopLeft: 10.r,
-                        //   borderTopRight: 10.r,
-                        //   borderBottomLeft: 10.r,
-                        //   borderBottomRight: 10.r,
-                        //   readOnly: true,
-                        //   fillColor: AppColors.white,
-                        //   isFilled: true,
-                        //   controller: model.stateController,
-                        //   suffixWidget: Builder(
-                        //     builder: (context) {
-                        //       return GestureDetector(
-                        //         onTap: () async {
-                        //           final RenderBox button =
-                        //               context.findRenderObject() as RenderBox;
-
-                        //           final RenderBox overlay =
-                        //               Overlay.of(
-                        //                     context,
-                        //                   ).context.findRenderObject()
-                        //                   as RenderBox;
-
-                        //           final Offset buttonPosition = button
-                        //               .localToGlobal(
-                        //                 Offset.zero,
-                        //                 ancestor: overlay,
-                        //               );
-
-                        //           final Size buttonSize = button.size;
-
-                        //           final selectedState = await showMenu<String>(
-                        //             context: context,
-
-                        //             position: RelativeRect.fromLTRB(
-                        //               buttonPosition.dx,
-                        //               buttonPosition.dy +
-                        //                   buttonSize.height +
-                        //                   5.h,
-                        //               overlay.size.width -
-                        //                   buttonPosition.dx -
-                        //                   buttonSize.width,
-                        //               0,
-                        //             ),
-
-                        //             constraints: BoxConstraints(
-                        //               minWidth: 200.w,
-                        //               maxWidth: 250.w,
-                        //               minHeight: 150.h,
-                        //               maxHeight: 450.h,
-                        //             ),
-
-                        //             color: AppColors.white,
-
-                        //             elevation: 4,
-
-                        //             shape: RoundedRectangleBorder(
-                        //               borderRadius: BorderRadius.circular(10.r),
-                        //             ),
-
-                        //             items: stateLgaFormat
-                        //                 .map<PopupMenuEntry<String>>((s) {
-                        //                   final String state =
-                        //                       s['state']?.toString() ?? '';
-
-                        //                   return PopupMenuItem<String>(
-                        //                     value: state,
-                        //                     height: 38.h,
-                        //                     padding: EdgeInsets.symmetric(
-                        //                       horizontal: 14.w,
-                        //                     ),
-                        //                     child: TextView(
-                        //                       text: state,
-                        //                       textStyle: TextStyle(
-                        //                         fontFamily: 'GoogleSans',
-                        //                         fontSize: 13.70.sp,
-                        //                         fontWeight: FontWeight.w500,
-                        //                         color: AppColors.black,
-                        //                       ),
-                        //                     ),
-                        //                   );
-                        //                 })
-                        //                 .toList(),
-                        //           );
-
-                        //           if (selectedState != null) {
-                        //             model.stateController.text = selectedState;
-
-                        //             // Reset LGA whenever state changes
-                        //             model.lgaController.clear();
-
-                        //             model.notifyListeners();
-                        //           }
-                        //         },
-
-                        //         child: Padding(
-                        //           padding: EdgeInsets.symmetric(
-                        //             horizontal: 8.w,
-                        //           ),
-                        //           child: Icon(
-                        //             Icons.keyboard_arrow_down,
-                        //             color: AppColors.grey1,
-                        //           ),
-                        //         ),
-                        //       );
-                        //     },
-                        //   ),
-
-                        //   validator: AppValidator.validateString(),
-
-                        //   style: TextStyle(
-                        //     fontSize: 16.20.sp,
-                        //     fontWeight: FontWeight.w400,
-                        //     fontFamily: 'DMSans',
-                        //   ),
-
-                        //   labelStyle: TextStyle(
-                        //     fontSize: 15.20.sp,
-                        //     fontWeight: FontWeight.w400,
-                        //     fontFamily: 'DMSans',
-                        //     color: AppColors.faintedGrey,
-                        //   ),
-                        // ),
-                        // SizedBox(height: 12.h),
-                        // TextFormWidget(
-                        //   hint: 'LGA',
-                        //   label: '--',
-                        //   hintWeight: FontWeight.w400,
-                        //   hintColor: AppColors.reminder,
-                        //   hintSize: Platform.isAndroid ? 14.sp : 12.sp,
-                        //   borderColor: AppColors.infoGrey1,
-                        //   borderTopLeft: 10.r,
-                        //   borderTopRight: 10.r,
-                        //   borderBottomLeft: 10.r,
-                        //   borderBottomRight: 10.r,
-                        //   fillColor: AppColors.white,
-                        //   isFilled: true,
-                        //   readOnly: true,
-                        //   controller: model.lgaController,
-                        //   suffixWidget: Builder(
-                        //     builder: (context) {
-                        //       return GestureDetector(
-                        //         onTap: () async {
-                        //           final RenderBox button =
-                        //               context.findRenderObject() as RenderBox;
-
-                        //           final RenderBox overlay =
-                        //               Overlay.of(
-                        //                     context,
-                        //                   ).context.findRenderObject()
-                        //                   as RenderBox;
-
-                        //           final Offset buttonPosition = button
-                        //               .localToGlobal(
-                        //                 Offset.zero,
-                        //                 ancestor: overlay,
-                        //               );
-
-                        //           final Size buttonSize = button.size;
-
-                        //           final selectedState = stateLgaFormat
-                        //               .firstWhere(
-                        //                 (state) =>
-                        //                     state['state']
-                        //                         .toString()
-                        //                         .trim()
-                        //                         .toLowerCase() ==
-                        //                     model.stateController.text
-                        //                         .trim()
-                        //                         .toLowerCase(),
-                        //                 orElse: () => <String, dynamic>{
-                        //                   'state': '',
-                        //                   'lgas': <String>[],
-                        //                 },
-                        //               );
-
-                        //           final List<dynamic> lgas =
-                        //               selectedState['lgas'] ?? [];
-
-                        //           if (lgas.isEmpty) {
-                        //             return;
-                        //           }
-
-                        //           final selectedLga = await showMenu<String>(
-                        //             context: context,
-
-                        //             position: RelativeRect.fromLTRB(
-                        //               buttonPosition.dx,
-                        //               buttonPosition.dy +
-                        //                   buttonSize.height +
-                        //                   5.h,
-                        //               overlay.size.width -
-                        //                   buttonPosition.dx -
-                        //                   buttonSize.width,
-                        //               0,
-                        //             ),
-
-                        //             constraints: BoxConstraints(
-                        //               minWidth: 200.w,
-                        //               maxWidth: 250.w,
-                        //               minHeight: 110.h,
-                        //               maxHeight: 420.h,
-                        //             ),
-
-                        //             color: AppColors.white,
-
-                        //             elevation: 4,
-
-                        //             shape: RoundedRectangleBorder(
-                        //               borderRadius: BorderRadius.circular(10.r),
-                        //             ),
-
-                        //             items: lgas.map<PopupMenuEntry<String>>((
-                        //               lga,
-                        //             ) {
-                        //               return PopupMenuItem<String>(
-                        //                 value: lga.toString(),
-                        //                 height: 38.h,
-                        //                 padding: EdgeInsets.symmetric(
-                        //                   horizontal: 14.w,
-                        //                 ),
-                        //                 child: TextView(
-                        //                   text: lga.toString(),
-                        //                   textStyle: TextStyle(
-                        //                     fontFamily: 'GoogleSans',
-                        //                     fontSize: 13.70.sp,
-                        //                     fontWeight: FontWeight.w500,
-                        //                     color: AppColors.black,
-                        //                   ),
-                        //                 ),
-                        //               );
-                        //             }).toList(),
-                        //           );
-
-                        //           if (selectedLga != null) {
-                        //             model.lgaController.text = selectedLga;
-                        //             if (model.delivery == Delivery.instance) {
-                        //               model.quoteInstantDelivery(
-                        //                 context: context,
-                        //                 instantDelivery:
-                        //                     QuoteInstantDeliveryEntityModel(
-                        //                       deliveryMethod: 'INSTANT',
-                        //                       stateCode:
-                        //                           model.stateController.text,
-                        //                       lgaCode: model.lgaController.text,
-                        //                     ),
-                        //               );
-                        //             } else {}
-                        //             model.notifyListeners();
-                        //           }
-                        //         },
-
-                        //         child: Padding(
-                        //           padding: EdgeInsets.symmetric(
-                        //             horizontal: 8.w,
-                        //           ),
-                        //           child: Icon(
-                        //             Icons.keyboard_arrow_down,
-                        //             color: AppColors.grey1,
-                        //           ),
-                        //         ),
-                        //       );
-                        //     },
-                        //   ),
-                        //   validator: AppValidator.validateString(),
-                        //   style: TextStyle(
-                        //     fontSize: 16.20.sp,
-                        //     fontWeight: FontWeight.w400,
-                        //     fontFamily: 'DMSans',
-                        //   ),
-
-                        //   labelStyle: TextStyle(
-                        //     fontSize: 15.20.sp,
-                        //     fontWeight: FontWeight.w400,
-                        //     fontFamily: 'DMSans',
-                        //     color: AppColors.faintedGrey,
-                        //   ),
-                        // ),
-                        // SizedBox(height: 12.h),
-                        // TextFormWidget(
-                        //   hint: 'Delivery address',
-                        //   label: 'Facility address, city, state',
-                        //   hintWeight: FontWeight.w400,
-                        //   hintColor: AppColors.reminder,
-                        //   hintSize: Platform.isAndroid ? 14.sp : 12.sp,
-                        //   borderColor: AppColors.infoGrey1,
-                        //   borderTopLeft: 10.r,
-                        //   borderTopRight: 10.r,
-                        //   borderBottomLeft: 10.r,
-                        //   borderBottomRight: 10.r,
-                        //   fillColor: AppColors.white,
-                        //   isFilled: true,
-                        //   controller: model.deliveryAddressController,
-                        //   maxline: 4,
-                        //   validator: AppValidator.validateString(),
-                        //   style: TextStyle(
-                        //     fontSize: 16.20.sp,
-                        //     fontWeight: FontWeight.w400,
-                        //     fontFamily: 'DMSans',
-                        //   ),
-                        //   labelStyle: TextStyle(
-                        //     fontSize: 15.20.sp,
-                        //     fontWeight: FontWeight.w400,
-                        //     fontFamily: 'DMSans',
-                        //     color: AppColors.faintedGrey,
-                        //   ),
-                        // ),
-                        model.delivery == Delivery.schedule
+                            ),
+                          ),
+                          model.delivery == Delivery.schedule
                             ? Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -1029,18 +759,6 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                                           await model.selectDateCheckout(
                                             context: context,
                                             model: model,
-                                          );
-
-                                          model.getCheckoutDeliveryOption(
-                                            context: context,
-                                            checkoutDeliveryOption:
-                                                CheckoutDeliveryOptionEntityModel(
-                                                  stateCode: model
-                                                      .stateController
-                                                      .text,
-                                                  lgaCode:
-                                                      model.lgaController.text,
-                                                ),
                                           );
                                           model.notifyListeners();
                                         },
@@ -1122,38 +840,6 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                                                   (time) => GestureDetector(
                                                     onTap: () async {
                                                       model.time = time;
-                                                      await Future.delayed(
-                                                        Duration(seconds: 1),
-                                                      );
-                                                      await model.quoteScheduleDelivery(
-                                                        context: context,
-                                                        scheduleDelivery:
-                                                            QuoteScheduleDeliveryEneityModel(
-                                                              deliveryMethod:
-                                                                  'SCHEDULED_BLOCK',
-                                                              stateCode: model
-                                                                  .stateController
-                                                                  .text,
-                                                              lgaCode: model
-                                                                  .lgaController
-                                                                  .text,
-                                                              deliveryDate:
-                                                                  convertDate(
-                                                                    model
-                                                                        .dateTimeController
-                                                                        .text,
-                                                                  ),
-                                                              timeBlockStart:
-                                                                  model
-                                                                      .time!
-                                                                      .startTime,
-                                                              timeBlockEnd:
-                                                                  model
-                                                                      .time!
-                                                                      .endTime,
-                                                            ),
-                                                      );
-
                                                       model.notifyListeners();
                                                     },
                                                     child: Container(
@@ -1203,90 +889,7 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                                                       ),
                                                     ),
                                                   ),
-                                                ),
-
-                                              // GestureDetector(
-                                              //   onTap: () {
-                                              //     model.cartTimeAdded =
-                                              //         CartAddedTime.afternoon;
-                                              //     model.notifyListeners();
-                                              //   },
-                                              //   child: Container(
-                                              //     width: double.infinity,
-                                              //     padding: EdgeInsets.symmetric(
-                                              //       horizontal: 10.w,
-                                              //       vertical: 12.4.w,
-                                              //     ),
-                                              //     margin: EdgeInsets.only(bottom: 12.w),
-                                              //     decoration: BoxDecoration(
-                                              //       border: Border.all(
-                                              //         color:
-                                              //             model.cartTimeAdded ==
-                                              //                 CartAddedTime.afternoon
-                                              //             ? AppColors.primary
-                                              //             : AppColors.infoGrey1,
-                                              //         width: 1.22,
-                                              //       ),
-                                              //       borderRadius: BorderRadius.circular(10.r),
-                                              //     ),
-                                              //     child: Center(
-                                              //       child: TextView(
-                                              //         text: 'Afternoon (12PM - 4PM)',
-                                              //         textStyle: TextStyle(
-                                              //           fontFamily: 'DMSans',
-                                              //           fontSize: 14.82.sp,
-                                              //           fontWeight: FontWeight.w500,
-                                              //           color:
-                                              //               model.cartTimeAdded ==
-                                              //                   CartAddedTime.afternoon
-                                              //               ? AppColors.primary
-                                              //               : AppColors.infoGrey,
-                                              //         ),
-                                              //       ),
-                                              //     ),
-                                              //   ),
-                                              // ),
-                                              // GestureDetector(
-                                              //   onTap: () {
-                                              //     model.cartTimeAdded = CartAddedTime.evening;
-                                              //     model.notifyListeners();
-                                              //   },
-                                              //   child: Container(
-                                              //     width: double.infinity,
-                                              //     padding: EdgeInsets.symmetric(
-                                              //       horizontal: 10.w,
-                                              //       vertical: 12.4.w,
-                                              //     ),
-                                              //     margin: EdgeInsets.only(bottom: 12.w),
-                                              //     decoration: BoxDecoration(
-                                              //       border: Border.all(
-                                              //         color:
-                                              //             model.cartTimeAdded ==
-                                              //                 CartAddedTime.evening
-                                              //             ? AppColors.primary
-                                              //             : AppColors.infoGrey1,
-                                              //         width: 1.22,
-                                              //       ),
-                                              //       borderRadius: BorderRadius.circular(10.r),
-                                              //     ),
-                                              //     child: Center(
-                                              //       child: TextView(
-                                              //         text: 'Evening (4PM - 8PM)',
-                                              //         textStyle: TextStyle(
-                                              //           fontFamily: 'DMSans',
-                                              //           fontSize: 14.82.sp,
-                                              //           fontWeight: FontWeight.w500,
-                                              //           color:
-                                              //               model.cartTimeAdded ==
-                                              //                   CartAddedTime.evening
-                                              //               ? AppColors.primary
-                                              //               : AppColors.infoGrey,
-                                              //         ),
-                                              //       ),
-                                              //     ),
-                                              //   ),
-                                              // ),
-                                            ],
+                                                ),],
                                           ),
                                         ),
 
@@ -1604,185 +1207,19 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                           ),
                         ),
                       ),
-
-                      // SizedBox(height: 10.h),
-                      // GestureDetector(
-                      //   onTap: () {
-                      //     model.payMethod = PayMethod.paystack;
-                      //     model.notifyListeners();
-                      //   },
-                      //   child: Container(
-                      //     padding: EdgeInsets.symmetric(
-                      //       horizontal: 15.6.w,
-                      //       vertical: 16.20.w,
-                      //     ),
-                      //     decoration: BoxDecoration(
-                      //       border: Border.all(
-                      //         color: model.payMethod == PayMethod.paystack
-                      //             ? AppColors.primary
-                      //             : AppColors.infoGrey1,
-                      //         width: 1.22,
-                      //       ),
-                      //       borderRadius: BorderRadius.circular(10.r),
-                      //     ),
-                      //     child: Column(
-                      //       crossAxisAlignment: CrossAxisAlignment.start,
-                      //       children: [
-                      //         Row(
-                      //           mainAxisAlignment: MainAxisAlignment.start,
-                      //           children: [
-                      //             Radio<PayMethod>(
-                      //               value: PayMethod.paystack,
-                      //               groupValue: model.payMethod,
-                      //               fillColor: WidgetStateProperty.all(
-                      //                 model.payMethod == PayMethod.paystack
-                      //                     ? AppColors.primary
-                      //                     : AppColors.infoGrey,
-                      //               ),
-                      //               materialTapTargetSize:
-                      //                   MaterialTapTargetSize.shrinkWrap,
-                      //               visualDensity: VisualDensity(
-                      //                 horizontal: -4,
-                      //                 vertical: -4,
-                      //               ),
-                      //               onChanged: (value) {
-                      //                 model.payMethod = value!;
-                      //                 model.notifyListeners();
-                      //               },
-                      //             ),
-
-                      //             SizedBox(width: 6.12.w),
-                      //             Expanded(
-                      //               child: Column(
-                      //                 crossAxisAlignment:
-                      //                     CrossAxisAlignment.start,
-                      //                 children: [
-                      //                   Image.asset(
-                      //                     AppImage.paystack,
-                      //                     height: 16.h,
-                      //                     width: 90.w,
-                      //                   ),
-                      //                   SizedBox(height: 8.10.h),
-                      //                   TextView(
-                      //                     text:
-                      //                         'Direct gateway payment with card, transfer or USSD..',
-                      //                     textStyle: TextStyle(
-                      //                       fontFamily: 'DMSans',
-                      //                       fontSize: 13.62.sp,
-                      //                       fontWeight: FontWeight.w500,
-                      //                       color: AppColors.faintedGrey,
-                      //                     ),
-                      //                   ),
-                      //                 ],
-                      //               ),
-                      //             ),
-                      //           ],
-                      //         ),
-                      //       ],
-                      //     ),
-                      //   ),
-                      // ),
-
-                      // SizedBox(height: 10.h),
-                      // GestureDetector(
-                      //   onTap: () {
-                      //     model.payMethod = PayMethod.flutterwave;
-                      //     model.notifyListeners();
-                      //   },
-                      //   child: Container(
-                      //     padding: EdgeInsets.symmetric(
-                      //       horizontal: 15.6.w,
-                      //       vertical: 16.20.w,
-                      //     ),
-                      //     decoration: BoxDecoration(
-                      //       border: Border.all(
-                      //         color: model.payMethod == PayMethod.flutterwave
-                      //             ? AppColors.primary
-                      //             : AppColors.infoGrey1,
-                      //         width: 1.22,
-                      //       ),
-                      //       borderRadius: BorderRadius.circular(10.r),
-                      //     ),
-                      //     child: Column(
-                      //       crossAxisAlignment: CrossAxisAlignment.start,
-                      //       children: [
-                      //         Row(
-                      //           mainAxisAlignment: MainAxisAlignment.start,
-                      //           children: [
-                      //             Radio<PayMethod>(
-                      //               value: PayMethod.flutterwave,
-                      //               groupValue: model.payMethod,
-                      //               fillColor: WidgetStateProperty.all(
-                      //                 model.payMethod == PayMethod.flutterwave
-                      //                     ? AppColors.primary
-                      //                     : AppColors.infoGrey,
-                      //               ),
-                      //               materialTapTargetSize:
-                      //                   MaterialTapTargetSize.shrinkWrap,
-                      //               visualDensity: VisualDensity(
-                      //                 horizontal: -4,
-                      //                 vertical: -4,
-                      //               ),
-                      //               onChanged: (value) {
-                      //                 model.payMethod = value!;
-                      //                 model.notifyListeners();
-                      //               },
-                      //             ),
-
-                      //             SizedBox(width: 6.12.w),
-                      //             Expanded(
-                      //               child: Column(
-                      //                 crossAxisAlignment:
-                      //                     CrossAxisAlignment.start,
-                      //                 children: [
-                      //                   Image.asset(
-                      //                     AppImage.flutterwave,
-                      //                     height: 16.h,
-                      //                     width: 90.w,
-                      //                   ),
-                      //                   SizedBox(height: 8.10.h),
-                      //                   TextView(
-                      //                     text:
-                      //                         'Card, mobile money and international payments.',
-                      //                     textStyle: TextStyle(
-                      //                       fontFamily: 'DMSans',
-                      //                       fontSize: 13.62.sp,
-                      //                       fontWeight: FontWeight.w500,
-                      //                       color: AppColors.faintedGrey,
-                      //                     ),
-                      //                   ),
-                      //                 ],
-                      //               ),
-                      //             ),
-                      //           ],
-                      //         ),
-                      //       ],
-                      //     ),
-                      //   ),
-                      // ),
                       SizedBox(height: 30.h),
-                      model.quoteInstantDeliveryResponseModel != null ||
-                              model.quoteScheduleDeliveryResponseModel != null
-                          ? Center(
+                      Center(
                               child: GestureDetector(
                                 onTap: () {
                                   if (formKey.currentState!.validate()) {
                                     model.paymentMethodFlowWholesale(
                                       context,
-                                      amount:
-                                          model.quoteInstantDeliveryResponseModel !=
-                                              null
-                                          ? model
-                                                .quoteInstantDeliveryResponseModel!
-                                                .data!
-                                                .checkout!
-                                                .total!
-                                          : model
-                                                .quoteScheduleDeliveryResponseModel!
-                                                .data!
-                                                .checkout!
-                                                .total!,
-                                    );
+                                      amount:model
+                                            .wholesaleGetProductAddedToCartResponseModel!
+                                            .data!
+                                            .cart!
+                                            .subtotal! +
+                                        model.deliveryFeeAmount);
                                     model.notifyListeners();
                                   }
                                 },
@@ -1815,7 +1252,7 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                                 ),
                               ),
                             )
-                          : SizedBox.shrink(),
+                          
                     ],
                   ),
                 ),

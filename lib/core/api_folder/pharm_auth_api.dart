@@ -1200,6 +1200,20 @@ class PharmApi {
     }
   }
 
+  Future<dynamic> updatePrimaryBusinessAddress(String id) async {
+    try {
+      final response = await _service.call(
+        '${UrlConfig.auth_tenants_profile_addresses}/$id/primary',
+        RequestMethod.patch,
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
   Future<dynamic> deletebusinessAddress(String? id) async {
     try {
       final response = await _service.call(

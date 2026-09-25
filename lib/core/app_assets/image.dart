@@ -110,6 +110,8 @@ class AppImage {
   static const String phone = 'assets/svgs/phone.svg';
   static const String world_web = 'assets/svgs/world_web.svg';
   static const String infinity_arrow = 'assets/svgs/infinity_arrow.svg';
+  static const String download_arrow = 'assets/svgs/download_arrow.svg';
+  static const String share = 'assets/svgs/share.svg';
   static const String whatsapp = 'assets/svgs/whatsapp.svg';
   static const String big_logo = 'assets/svgs/big_logo.svg';
   static const String cart = 'assets/svgs/cart.svg';

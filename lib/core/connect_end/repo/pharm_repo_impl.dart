@@ -578,6 +578,11 @@ class PharmRepoImpl {
     return response;
   }
 
+  Future<dynamic> updatePrimaryBusinessAddress(String id) async {
+    final response = await _contract.updatePrimaryBusinessAddress(id);
+    return response;
+  }
+
   Future<dynamic> updateBusinessAddress({
     BusinessAddressesEntity? businessAddresses,
     String? id,

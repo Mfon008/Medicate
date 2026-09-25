@@ -157,7 +157,6 @@ class _PharmacyWholesaleScreenState extends State<PharmacyWholesaleScreen> {
                             color: AppColors.primary,
                           ),
                           onPressed: () {},
-                          // navigate.navigateTo(Routes.emptyNotification),
                           splashRadius: 28,
                         ),
                       ),

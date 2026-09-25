@@ -627,6 +627,7 @@ class PharmViewModel extends BaseViewModel {
 
   List<int> intList = [];
   List<int> intListCustom = [];
+  int deliveryFeeAmount = 0;
 
   GlobalKey<FormState> formKeyEmailReminder = GlobalKey<FormState>();
   GlobalKey<FormState> formKeyPhoneReminder = GlobalKey<FormState>();
@@ -706,8 +707,7 @@ class PharmViewModel extends BaseViewModel {
     }
     if (text == 'Alien ID Card') {
       return 'ALIEN_ID_CARD';
-    }
-    else{
+    } else {
       return text;
     }
   }
@@ -731,16 +731,20 @@ class PharmViewModel extends BaseViewModel {
   DateTime? pickedDatedStart;
   String? pickedDatedStartString;
 
-  SubmitLevelTwoKycEntityModel _submitLevelTwoKycEntityModelMeansOfId = SubmitLevelTwoKycEntityModel();
+  SubmitLevelTwoKycEntityModel _submitLevelTwoKycEntityModelMeansOfId =
+      SubmitLevelTwoKycEntityModel();
   SubmitLevelTwoKycEntityModel? get submitLevelTwoKycEntityModelMeansOfId =>
       _submitLevelTwoKycEntityModelMeansOfId;
-  SubmitLevelTwoKycEntityModel _submitLevelTwoKycEntityModelCAC = SubmitLevelTwoKycEntityModel();
+  SubmitLevelTwoKycEntityModel _submitLevelTwoKycEntityModelCAC =
+      SubmitLevelTwoKycEntityModel();
   SubmitLevelTwoKycEntityModel? get submitLevelTwoKycEntityModelCAC =>
       _submitLevelTwoKycEntityModelCAC;
-  SubmitLevelTwoKycEntityModel _submitLevelTwoKycEntityModelLin = SubmitLevelTwoKycEntityModel();
+  SubmitLevelTwoKycEntityModel _submitLevelTwoKycEntityModelLin =
+      SubmitLevelTwoKycEntityModel();
   SubmitLevelTwoKycEntityModel? get submitLevelTwoKycEntityModelLin =>
       _submitLevelTwoKycEntityModelLin;
-  SubmitLevelTwoKycEntityModel _submitLevelTwoKycEntityModelTIN = SubmitLevelTwoKycEntityModel();
+  SubmitLevelTwoKycEntityModel _submitLevelTwoKycEntityModelTIN =
+      SubmitLevelTwoKycEntityModel();
   SubmitLevelTwoKycEntityModel? get submitLevelTwoKycEntityModelTIN =>
       _submitLevelTwoKycEntityModelTIN;
 
@@ -2488,6 +2492,31 @@ class PharmViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  Future<void> updatePrimaryBusinessAddress({
+    context,
+    String? id,
+    isCheckout = false,
+  }) async {
+    try {
+      _isLoading = true;
+      var v = await runBusyFuture(
+        repositoryImply.updatePrimaryBusinessAddress(id!),
+        throwException: true,
+      );
+      if (!isCheckout) {
+        if (v['statusCode'] == 200 || v['statusCode'] == 201) {
+          await getTenant(context);
+        }
+      }
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
   Future<void> updateBusinessAddress({
     context,
     BusinessAddressesEntity? businessAddress,
@@ -2752,7 +2781,7 @@ class PharmViewModel extends BaseViewModel {
         AppUtils.snackbar(context, message: v['message']);
         getPharmacyKyc(context);
       } else {
-        AppUtils.snackbar(context, message: v['message'],error: true);
+        AppUtils.snackbar(context, message: v['message'], error: true);
       }
       _isLoading = false;
     } catch (e) {
@@ -3766,7 +3795,7 @@ class PharmViewModel extends BaseViewModel {
       ),
     ],
     child: Padding(
-      padding: EdgeInsets.only(top: 16.w, bottom: 16.w),
+      padding: EdgeInsets.all(16.w),
       child: SvgPicture.asset(AppImage.arrow_down, height: 10.h, width: 10.w),
     ),
   );
@@ -18723,6 +18752,7 @@ class PharmViewModel extends BaseViewModel {
                                 ),
                                 SizedBox(height: 12.h),
                                 Container(
+                                  width: double.infinity,
                                   padding: EdgeInsets.symmetric(
                                     vertical: 10.w,
                                     horizontal: 12.w,
@@ -18731,11 +18761,13 @@ class PharmViewModel extends BaseViewModel {
                                     color: AppColors.f1,
                                     borderRadius: BorderRadius.circular(12.r),
                                   ),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      Column(
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
@@ -18748,51 +18780,57 @@ class PharmViewModel extends BaseViewModel {
                                               fontWeight: FontWeight.w400,
                                             ),
                                           ),
-                                          SizedBox(height: 6.h),
-                                          TextView(
-                                            text: formatNaira(
-                                              double.parse(
-                                                model
-                                                        .getWalletBalanceResponseModel
-                                                        ?.data
-                                                        ?.balance ??
-                                                    '0.0',
-                                              ),
-                                            ),
 
-                                            letterSpacing: -2,
-                                            textStyle: TextStyle(
-                                              fontFamily: 'DMSans',
-                                              color: AppColors.black,
-                                              fontSize: 22.0.sp,
-                                              fontWeight: FontWeight.w600,
+                                          SizedBox(height: 12.h),
+                                          GestureDetector(
+                                            onTap: () =>
+                                                model.fundPaymentWalletProduct(
+                                                  context,
+                                                ),
+                                            child: Container(
+                                              padding: EdgeInsets.symmetric(
+                                                vertical: 4.w,
+                                                horizontal: 10.w,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(22.r),
+                                                color: AppColors.primary,
+                                              ),
+                                              child: TextView(
+                                                text: '+ Top Up',
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'DMSans',
+                                                  color: AppColors.white,
+                                                  fontSize: 16.20.sp,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
                                             ),
                                           ),
                                         ],
                                       ),
-                                      SizedBox(height: 12.h),
-                                      GestureDetector(
-                                        onTap: () => model
-                                            .fundPaymentWalletProduct(context),
-                                        child: Container(
-                                          padding: EdgeInsets.symmetric(
-                                            vertical: 8.w,
-                                            horizontal: 10.w,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(
-                                              22.r,
+                                      SizedBox(height: 6.h),
+                                      SingleChildScrollView(
+                                        scrollDirection: Axis.horizontal,
+                                        child: TextView(
+                                          text: formatNaira(
+                                            double.parse(
+                                              model
+                                                      .getWalletBalanceResponseModel
+                                                      ?.data
+                                                      ?.balance ??
+                                                  '0.0',
                                             ),
-                                            color: AppColors.primary,
                                           ),
-                                          child: TextView(
-                                            text: '+ Top Up',
-                                            textStyle: TextStyle(
-                                              fontFamily: 'DMSans',
-                                              color: AppColors.white,
-                                              fontSize: 17.20.sp,
-                                              fontWeight: FontWeight.w500,
-                                            ),
+                                          textOverflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                          letterSpacing: -1,
+                                          textStyle: TextStyle(
+                                            fontFamily: 'DMSans',
+                                            color: AppColors.black,
+                                            fontSize: 20.sp,
+                                            fontWeight: FontWeight.w500,
                                           ),
                                         ),
                                       ),
@@ -18833,7 +18871,33 @@ class PharmViewModel extends BaseViewModel {
                                             ) <
                                             amount
                                         ? () {}
-                                        : () {
+                                        : () async {
+                                            if (delivery == Delivery.instance) {
+                                              await quoteInstantDelivery(
+                                                context: context,
+                                                instantDelivery:
+                                                    QuoteInstantDeliveryEntityModel(
+                                                      deliveryMethod: 'INSTANT',
+                                                      deliveryAddressId:
+                                                          mapLocationAddressSelected!
+                                                              .id,
+                                                    ),
+                                              );
+                                            } else {
+                                              await quoteScheduleDelivery(
+                                                context: context,
+                                                scheduleDelivery:
+                                                    QuoteScheduleDeliveryEneityModel(
+                                                      deliveryMethod: 'INSTANT',
+                                                      deliveryAddressId:
+                                                          mapLocationAddressSelected!
+                                                              .id,
+                                                    ),
+                                              );
+                                            }
+                                            await Future.delayed(
+                                              Duration(microseconds: 100),
+                                            );
                                             placeOrderWallet(
                                               context: context,
                                               amount: amount,
@@ -18843,6 +18907,9 @@ class PharmViewModel extends BaseViewModel {
                                                         Delivery.instance
                                                     ? 'INSTANT'
                                                     : 'SCHEDULED_BLOCK',
+                                                deliveryAddressId:
+                                                    mapLocationAddressSelected!
+                                                        .id,
                                                 deliveryDate:
                                                     _quoteScheduleDeliveryResponseModel !=
                                                         null
@@ -18960,7 +19027,18 @@ class PharmViewModel extends BaseViewModel {
                       ],
                     ),
                   )
-                : SizedBox.shrink();
+                : Center(
+                    child: Container(
+                      width: 90.w,
+                      height: 80.w,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: AppColors.appWhite,
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      child: SpinKitRing(color: AppColors.primary, size: 42.sp,lineWidth: 3.4,),
+                    ),
+                  );
           },
         );
       },
@@ -18971,11 +19049,26 @@ class PharmViewModel extends BaseViewModel {
     showDialog(
       context: context,
       barrierDismissible: false, // prevent closing by tapping outside
-      builder: (BuildContext context) {
+      builder: (BuildContext contxt) {
         return ViewModelBuilder<PharmViewModel>.reactive(
           viewModelBuilder: () => PharmViewModel(),
           onViewModelReady: (model) async {
-            model.getTenant(context);
+            await model.getTenant(context);
+            if (model.getTetantResponseModel != null &&
+                model
+                    .getTetantResponseModel!
+                    .data!
+                    .businessAddresses!
+                    .isNotEmpty) {
+              final primaryAddresses = model
+                  .getTetantResponseModel!
+                  .data!
+                  .businessAddresses!
+                  .where((test) => test.isPrimary!);
+              if (primaryAddresses.isNotEmpty) {
+                mapLocationAddressSelected = primaryAddresses.first;
+              }
+            }
           },
           disposeViewModel: false,
           onDispose: (viewModel) {},
@@ -19046,6 +19139,7 @@ class PharmViewModel extends BaseViewModel {
                                   (e) => GestureDetector(
                                     onTap: () {
                                       mapLocationAddressSelected = e;
+                                      e.isPrimary = false;
                                       notifyListeners();
                                       model.notifyListeners();
                                     },
@@ -19058,7 +19152,11 @@ class PharmViewModel extends BaseViewModel {
                                       ),
                                       decoration: BoxDecoration(
                                         border: Border.all(
-                                          color: mapLocationAddressSelected == e
+                                          color:
+                                              mapLocationAddressSelected == e ||
+                                                  mapLocationAddressSelected ==
+                                                          e &&
+                                                      !e.isPrimary!
                                               ? AppColors.primary
                                               : AppColors.infoGrey1,
                                         ),
@@ -19066,7 +19164,10 @@ class PharmViewModel extends BaseViewModel {
                                       ),
                                       child: Row(
                                         children: [
-                                          mapLocationAddressSelected == e
+                                          mapLocationAddressSelected == e ||
+                                                  mapLocationAddressSelected ==
+                                                          e &&
+                                                      !e.isPrimary!
                                               ? SvgPicture.asset(
                                                   AppImage.add_locator,
                                                 )
@@ -19124,7 +19225,11 @@ class PharmViewModel extends BaseViewModel {
                           SizedBox(
                             width: double.infinity,
                             child: ElevatedButton(
-                              onPressed: () {
+                              onPressed: () async {
+                                await model.updatePrimaryBusinessAddress(
+                                  context: contxt,
+                                  id: mapLocationAddressSelected!.id!,
+                                );
                                 Navigator.pop(context);
                               },
                               style: ElevatedButton.styleFrom(
@@ -19134,15 +19239,24 @@ class PharmViewModel extends BaseViewModel {
                                   borderRadius: BorderRadius.circular(30),
                                 ),
                               ),
-                              child: Text(
-                                "Save",
-                                style: TextStyle(
-                                  fontSize: 18.0,
-                                  fontFamily: 'DMSans',
-                                  color: AppColors.white,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
+                              child: model.isLoading
+                                  ? SizedBox(
+                                      height: 16.h,
+                                      width: 16.w,
+                                      child: CircularProgressIndicator(
+                                        color: AppColors.white,
+                                        strokeWidth: 1.8,
+                                      ),
+                                    )
+                                  : Text(
+                                      "Save",
+                                      style: TextStyle(
+                                        fontSize: 18.0,
+                                        fontFamily: 'DMSans',
+                                        color: AppColors.white,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
                             ),
                           ),
                         ],
@@ -20619,7 +20733,11 @@ class PharmViewModel extends BaseViewModel {
         repositoryImply.quoteInstantDelivery(instantDelivery),
         throwException: true,
       );
-      _quoteScheduleDeliveryResponseModel = null;
+      if (_quoteInstantDeliveryResponseModel!.statusCode == 200 ||
+          _quoteInstantDeliveryResponseModel!.statusCode == 201) {
+        // _wholesaleGetProductAddedToCartResponseModel = null;
+        _quoteScheduleDeliveryResponseModel = null;
+      }
       _isLoading = false;
     } catch (e) {
       _isLoading = false;
@@ -20640,7 +20758,11 @@ class PharmViewModel extends BaseViewModel {
         repositoryImply.quoteScheduleDelivery(scheduleDelivery),
         throwException: true,
       );
-      _quoteInstantDeliveryResponseModel = null;
+      if (_quoteScheduleDeliveryResponseModel!.statusCode == 200 ||
+          _quoteScheduleDeliveryResponseModel!.statusCode == 201) {
+        // _wholesaleGetProductAddedToCartResponseModel = null;
+        _quoteInstantDeliveryResponseModel = null;
+      }
       _isLoading = false;
     } catch (e) {
       _isLoading = false;
@@ -20662,16 +20784,11 @@ class PharmViewModel extends BaseViewModel {
         throwException: true,
       );
       if (delivery == Delivery.schedule &&
-              _getCheckoutDeliveryOptionResponseModel!.data!.methods!.isEmpty ||
-          _getCheckoutDeliveryOptionResponseModel!
-              .data!
-              .methods![1]
-              .timeBlocks!
-              .isEmpty) {
+          _getCheckoutDeliveryOptionResponseModel!.data!.methods!.isEmpty) {
         AppUtils.snackbar(
           context,
           message:
-              'Delivery is not available for ${lgaController.text},  ${stateController.text}.',
+              'Delivery is not available for ${_getCheckoutDeliveryOptionResponseModel!.data!.destination!.lgaName ?? ''},  ${_getCheckoutDeliveryOptionResponseModel!.data!.destination!.stateName ?? ''}.',
           error: true,
         );
       }
