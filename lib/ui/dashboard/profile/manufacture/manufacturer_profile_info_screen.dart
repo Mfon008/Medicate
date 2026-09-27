@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -395,14 +397,17 @@ class _ManufacturerProfileInfoScreenState
                               ),
                             ),
                             IconButton(
-                              onPressed: () {
+                              onPressed: () async {
                                 model.stateController.clear();
                                 model.lgaController.clear();
                                 model.businessAddController.clear();
                                 model.countryController.clear();
-                                model.showBusinessAreaLGAAndStateCountryDialog(
+                                final result = await model.showBusinessAreaLGAAndStateCountryDialog(
                                   context,
                                 );
+                                if(result == true){
+                                   model.getUserDetails(context);
+                                }
                               },
                               icon: Icon(
                                 Icons.add,

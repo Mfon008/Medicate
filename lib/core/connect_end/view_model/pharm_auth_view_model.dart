@@ -21768,10 +21768,6 @@ class PharmViewModel extends BaseViewModel {
                                               AppColors.transparent,
                                           onPressed: () async {
                                             if (isEdit) {
-                                              // if (editIndex != null &&
-                                              //     editIndex >= 0 &&
-                                              //     editIndex <
-                                              //         model.getTetantResponseModel!.data!.businessAddresses!.length) {
                                               model.updateBusinessAddress(
                                                 context: context,
                                                 businessAddress:

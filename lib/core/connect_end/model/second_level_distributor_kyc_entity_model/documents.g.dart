@@ -27,28 +27,28 @@ Documents _$DocumentsFromJson(Map<String, dynamic> json) => Documents(
   companyLogo: json['companyLogo'] == null
       ? null
       : CompanyLogo.fromJson(json['companyLogo'] as Map<String, dynamic>),
-  gmpCertificate: json['gmpCertificate'] == null
-      ? null
-      : GmpCertificate.fromJson(json['gmpCertificate'] as Map<String, dynamic>),
-  importPermit: json['importPermit'] == null
-      ? null
-      : ImportPermit.fromJson(json['importPermit'] as Map<String, dynamic>),
-  manufacturerAuthorizationLetter:
-      json['manufacturerAuthorizationLetter'] == null
-      ? null
-      : ManufacturerAuthorizationLetter.fromJson(
-          json['manufacturerAuthorizationLetter'] as Map<String, dynamic>,
-        ),
-  nafdacManufacturingLicense: json['nafdacManufacturingLicense'] == null
-      ? null
-      : NafdacManufacturingLicense.fromJson(
-          json['nafdacManufacturingLicense'] as Map<String, dynamic>,
-        ),
-  productRegistrationEvidence: json['productRegistrationEvidence'] == null
-      ? null
-      : ProductRegistrationEvidence.fromJson(
-          json['productRegistrationEvidence'] as Map<String, dynamic>,
-        ),
+  // gmpCertificate: json['gmpCertificate'] == null
+  //     ? null
+  //     : GmpCertificate.fromJson(json['gmpCertificate'] as Map<String, dynamic>),
+  // importPermit: json['importPermit'] == null
+  //     ? null
+  //     : ImportPermit.fromJson(json['importPermit'] as Map<String, dynamic>),
+  // manufacturerAuthorizationLetter:
+  //     json['manufacturerAuthorizationLetter'] == null
+  //     ? null
+  //     : ManufacturerAuthorizationLetter.fromJson(
+  //         json['manufacturerAuthorizationLetter'] as Map<String, dynamic>,
+  //       ),
+  // nafdacManufacturingLicense: json['nafdacManufacturingLicense'] == null
+  //     ? null
+  //     : NafdacManufacturingLicense.fromJson(
+  //         json['nafdacManufacturingLicense'] as Map<String, dynamic>,
+  //       ),
+  // productRegistrationEvidence: json['productRegistrationEvidence'] == null
+  //     ? null
+  //     : ProductRegistrationEvidence.fromJson(
+  //         json['productRegistrationEvidence'] as Map<String, dynamic>,
+  //       ),
 );
 
 Map<String, dynamic> _$DocumentsToJson(Documents instance) => <String, dynamic>{
@@ -58,9 +58,9 @@ Map<String, dynamic> _$DocumentsToJson(Documents instance) => <String, dynamic>{
   'nafdacPermit': instance.nafdacPermit,
   'pharmacyCouncilLicense': instance.pharmacyCouncilLicense,
   'companyLogo': instance.companyLogo,
-  'gmpCertificate': instance.gmpCertificate,
-  'nafdacManufacturingLicense': instance.nafdacManufacturingLicense,
-  'importPermit': instance.importPermit,
-  'manufacturerAuthorizationLetter': instance.manufacturerAuthorizationLetter,
-  'productRegistrationEvidence': instance.productRegistrationEvidence,
+  // 'gmpCertificate': instance.gmpCertificate,
+  // 'nafdacManufacturingLicense': instance.nafdacManufacturingLicense,
+  // 'importPermit': instance.importPermit,
+  // 'manufacturerAuthorizationLetter': instance.manufacturerAuthorizationLetter,
+  // 'productRegistrationEvidence': instance.productRegistrationEvidence,
 };

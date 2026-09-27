@@ -23,6 +23,7 @@ import 'package:medicate_app/ui/widget/text.dart';
 import 'package:stacked/stacked.dart';
 import '../../../../../core/app_assets/app_validation.dart';
 import '../../../../../core/app_assets/constant.dart';
+import '../../../../../core/connect_end/model/second_level_distributor_kyc_entity_model/coverage_areas.dart';
 import '../../../../../core/connect_end/model/second_level_distributor_kyc_entity_model/importer.dart';
 import '../../../../../core/connect_end/model/second_level_distributor_kyc_entity_model/manufacturer_authorization_letter.dart';
 import '../../../../../core/connect_end/model/second_level_distributor_kyc_entity_model/second_level_distributor_kyc_entity_model.dart';
@@ -117,7 +118,6 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
   Future<void> getStuffs(ManufacturerViewModel model) async {
     model.businessTypes =
         model.getDistributorKycResponseModel?.data?.level2?.businessTypes ?? [];
-    await Future.delayed(Duration(seconds: 1));
 
     if (model.businessTypes.contains('DISTRIBUTOR')) {
       isSwitchedDistributor = true;
@@ -387,6 +387,13 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
     } else {
       cacRegNoControllerDistributorContactPersonNumber.text = '';
     }
+     model.listOfAddedLocation = 
+    (model.getDistributorKycResponseModel?.data?.level2?.distributor?.coverageAreas ?? [])
+        .map<CoverageAreas>(
+          (e) => CoverageAreas.fromJson(e as Map<String, dynamic>),
+        )
+        .toList();
+    await Future.delayed(Duration(seconds: 1));
     final manPhoneNumber = model
         .getDistributorKycResponseModel
         ?.data
@@ -870,10 +877,11 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                 decoration: BoxDecoration(
                                   color: model.kycStatusColor(
                                     model
-                                        .getDistributorKycResponseModel
-                                        ?.data
-                                        ?.kycLevels?[1]
-                                        .status,
+                                            .getDistributorKycResponseModel
+                                            ?.data
+                                            ?.kycLevels![1]
+                                            .status ??
+                                        '',
                                   ),
                                   borderRadius: BorderRadius.circular(10.r),
                                 ),
@@ -906,10 +914,11 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                             size: 18.90.sp,
                                             color: model.kycStatusColorIcon(
                                               model
-                                                  .getDistributorKycResponseModel
-                                                  ?.data
-                                                  ?.kycLevels?[1]
-                                                  .status,
+                                                      .getDistributorKycResponseModel
+                                                      ?.data
+                                                      ?.kycLevels?[1]
+                                                      .status ??
+                                                  "",
                                             ),
                                           ),
 
@@ -918,10 +927,11 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                       child: Text(
                                         model.kycStatusText(
                                           model
-                                              .getDistributorKycResponseModel
-                                              ?.data
-                                              ?.kycLevels?[1]
-                                              .status,
+                                                  .getDistributorKycResponseModel
+                                                  ?.data
+                                                  ?.kycLevels?[1]
+                                                  .status ??
+                                              "",
                                         ),
                                         style: TextStyle(
                                           fontSize: 12.5.sp,
@@ -1226,6 +1236,16 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                             AppValidator.validateString(),
                                                         controller:
                                                             cacRegNoControllerDistributorBusinessAddress,
+                                                        onChange: (p0) {
+                                                          setState(() {
+                                                            cacRegNoControllerManufacturerBusinessAddress
+                                                                    .text =
+                                                                p0;
+                                                            cacRegNoControllerImporterBusinessAddress
+                                                                    .text =
+                                                                p0;
+                                                          });
+                                                        },
                                                       ),
                                                       SizedBox(height: 20.h),
                                                       TextFormWidget(
@@ -1255,6 +1275,16 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                             AppValidator.validateString(),
                                                         controller:
                                                             cacRegNoControllerDistributorContactPerson,
+                                                        onChange: (p0) {
+                                                          setState(() {
+                                                            cacRegNoControllerManufacturerContactPerson
+                                                                    .text =
+                                                                p0;
+                                                            cacRegNoControllerImporterContactPerson
+                                                                    .text =
+                                                                p0;
+                                                          });
+                                                        },
                                                       ),
                                                       SizedBox(height: 20.h),
                                                       TextFormWidget(
@@ -1285,6 +1315,16 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                             AppValidator.validateString(),
                                                         controller:
                                                             cacRegNoControllerDistributorContactPersonNumber,
+                                                        onChange: (p0) {
+                                                          setState(() {
+                                                            cacRegNoControllerManufacturerContactPersonNumber
+                                                                    .text =
+                                                                p0;
+                                                            cacRegNoControllerImporterContactPersonNumber
+                                                                    .text =
+                                                                p0;
+                                                          });
+                                                        },
                                                       ),
                                                       SizedBox(height: 20.h),
                                                       TextFormWidget(
@@ -1315,6 +1355,16 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                             AppValidator.validateString(),
                                                         controller:
                                                             cacRegNoControllerDistributorContactPersonEmail,
+                                                        onChange: (p0) {
+                                                          setState(() {
+                                                            cacRegNoControllerManufacturerContactPersonEmail
+                                                                    .text =
+                                                                p0;
+                                                            cacRegNoControllerImporterContactPersonEmail
+                                                                    .text =
+                                                                p0;
+                                                          });
+                                                        },
                                                       ),
                                                       SizedBox(height: 20.h),
                                                       TextFormWidget(
@@ -1375,7 +1425,6 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                             cacRegNoControllerDistributorTin,
                                                       ),
                                                       SizedBox(height: 20.h),
-
                                                       TextView(
                                                         text:
                                                             'Documents to upload',
@@ -1388,9 +1437,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                           fontFamily: 'DMSans',
                                                         ),
                                                       ),
-
                                                       SizedBox(height: 10.h),
-
                                                       Divider(
                                                         color: AppColors.f1,
                                                       ),
@@ -1518,6 +1565,44 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                           .kyc_eye,
                                                                     ),
                                                                   ),
+                                                                  model.secondLevelDistributorKycEntityModelCAC!.distributor?.documents?.cacCertificate !=
+                                                                          null
+                                                                      ? GestureDetector(
+                                                                          onTap: () => model.pickImageDistributorKycCAC(
+                                                                            context,
+                                                                          ),
+                                                                          child:
+                                                                              model.isLoadingCAC
+                                                                              ? SizedBox(
+                                                                                  width: 10.w,
+                                                                                  height: 10.h,
+                                                                                  child: CircularProgressIndicator(
+                                                                                    color: AppColors.primary,
+                                                                                    strokeWidth: 2.w,
+                                                                                  ),
+                                                                                )
+                                                                              : SvgPicture.asset(
+                                                                                  AppImage.upload_arr_up,
+                                                                                ),
+                                                                        )
+                                                                      : SizedBox.shrink(),
+                                                                  SizedBox(
+                                                                    width:
+                                                                        8.10.w,
+                                                                  ),
+                                                                  model.secondLevelDistributorKycEntityModelCAC!.distributor?.documents?.cacCertificate !=
+                                                                          null
+                                                                      ? GestureDetector(
+                                                                          onTap: () {
+                                                                            model.secondLevelDistributorKycEntityModelCAC!.distributor?.documents?.cacCertificate =
+                                                                                null;
+                                                                            model.notifyListeners();
+                                                                          },
+                                                                          child: SvgPicture.asset(
+                                                                            AppImage.delete,
+                                                                          ),
+                                                                        )
+                                                                      : SizedBox.shrink(),
                                                                 ],
                                                               ),
                                                             )
@@ -1748,6 +1833,44 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                           .kyc_eye,
                                                                     ),
                                                                   ),
+                                                                  model.secondLevelDistributorKycEntityModelPharmLin!.distributor !=null && model.secondLevelDistributorKycEntityModelPharmLin!.distributor!.documents!.pharmaceuticalDistributionLicense !=
+                                                                          null
+                                                                      ? GestureDetector(
+                                                                          onTap: () => model.pickImageDistributorKycPharmLin(
+                                                                            context,
+                                                                          ),
+                                                                          child:
+                                                                              model.isLoadingGMP
+                                                                              ? SizedBox(
+                                                                                  width: 10.w,
+                                                                                  height: 10.h,
+                                                                                  child: CircularProgressIndicator(
+                                                                                    color: AppColors.primary,
+                                                                                    strokeWidth: 2.w,
+                                                                                  ),
+                                                                                )
+                                                                              : SvgPicture.asset(
+                                                                                  AppImage.upload_arr_up,
+                                                                                ),
+                                                                        )
+                                                                      : SizedBox.shrink(),
+                                                                  SizedBox(
+                                                                    width:
+                                                                        8.10.w,
+                                                                  ),
+                                                                  model.secondLevelDistributorKycEntityModelPharmLin!.distributor !=null && model.secondLevelDistributorKycEntityModelPharmLin!.distributor!.documents!.pharmaceuticalDistributionLicense !=
+                                                                          null
+                                                                      ? GestureDetector(
+                                                                          onTap: () {
+                                                                            model.secondLevelDistributorKycEntityModelPharmLin!.distributor!.documents!.pharmaceuticalDistributionLicense =
+                                                                                null;
+                                                                            model.notifyListeners();
+                                                                          },
+                                                                          child: SvgPicture.asset(
+                                                                            AppImage.delete,
+                                                                          ),
+                                                                        )
+                                                                      : SizedBox.shrink(),
                                                                 ],
                                                               ),
                                                             )
@@ -1977,6 +2100,44 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                           .kyc_eye,
                                                                     ),
                                                                   ),
+                                                                  model.secondLevelDistributorKycEntityModelNAF?.distributor?.documents?.nafdacPermit !=
+                                                                          null
+                                                                      ? GestureDetector(
+                                                                          onTap: () => model.pickImageDistributorKycNAFPermit(
+                                                                            context,
+                                                                          ),
+                                                                          child:
+                                                                              model.isLoadingNAF
+                                                                              ? SizedBox(
+                                                                                  width: 10.w,
+                                                                                  height: 10.h,
+                                                                                  child: CircularProgressIndicator(
+                                                                                    color: AppColors.primary,
+                                                                                    strokeWidth: 2.w,
+                                                                                  ),
+                                                                                )
+                                                                              : SvgPicture.asset(
+                                                                                  AppImage.upload_arr_up,
+                                                                                ),
+                                                                        )
+                                                                      : SizedBox.shrink(),
+                                                                  SizedBox(
+                                                                    width:
+                                                                        8.10.w,
+                                                                  ),
+                                                                  model.secondLevelDistributorKycEntityModelNAF?.distributor?.documents?.nafdacPermit !=
+                                                                          null
+                                                                      ? GestureDetector(
+                                                                          onTap: () {
+                                                                            model.secondLevelDistributorKycEntityModelNAF?.distributor?.documents?.nafdacPermit =
+                                                                                null;
+                                                                            model.notifyListeners();
+                                                                          },
+                                                                          child: SvgPicture.asset(
+                                                                            AppImage.delete,
+                                                                          ),
+                                                                        )
+                                                                      : SizedBox.shrink(),
                                                                 ],
                                                               ),
                                                             )
@@ -2206,6 +2367,44 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                           .kyc_eye,
                                                                     ),
                                                                   ),
+                                                                  model.secondLevelDistributorKycEntityModelPharmCouncilLin?.distributor?.documents?.pharmacyCouncilLicense !=
+                                                                          null
+                                                                      ? GestureDetector(
+                                                                          onTap: () => model.pickImageDistributorKycPharmCouncilLin(
+                                                                            context,
+                                                                          ),
+                                                                          child:
+                                                                              model.isLoadingProd
+                                                                              ? SizedBox(
+                                                                                  width: 10.w,
+                                                                                  height: 10.h,
+                                                                                  child: CircularProgressIndicator(
+                                                                                    color: AppColors.primary,
+                                                                                    strokeWidth: 2.w,
+                                                                                  ),
+                                                                                )
+                                                                              : SvgPicture.asset(
+                                                                                  AppImage.upload_arr_up,
+                                                                                ),
+                                                                        )
+                                                                      : SizedBox.shrink(),
+                                                                  SizedBox(
+                                                                    width:
+                                                                        8.10.w,
+                                                                  ),
+                                                                  model.secondLevelDistributorKycEntityModelPharmCouncilLin?.distributor?.documents?.pharmacyCouncilLicense !=
+                                                                          null
+                                                                      ? GestureDetector(
+                                                                          onTap: () {
+                                                                            model.secondLevelDistributorKycEntityModelPharmCouncilLin?.distributor?.documents?.pharmacyCouncilLicense =
+                                                                                null;
+                                                                            model.notifyListeners();
+                                                                          },
+                                                                          child: SvgPicture.asset(
+                                                                            AppImage.delete,
+                                                                          ),
+                                                                        )
+                                                                      : SizedBox.shrink(),
                                                                 ],
                                                               ),
                                                             )
@@ -2435,6 +2634,44 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                           .kyc_eye,
                                                                     ),
                                                                   ),
+                                                                  model.secondLevelDistributorKycEntityModelLogo?.distributor?.documents?.companyLogo !=
+                                                                          null
+                                                                      ? GestureDetector(
+                                                                          onTap: () => model.pickImageDistributorKycLogo(
+                                                                            context,
+                                                                          ),
+                                                                          child:
+                                                                              model.isLoadingLogo
+                                                                              ? SizedBox(
+                                                                                  width: 10.w,
+                                                                                  height: 10.h,
+                                                                                  child: CircularProgressIndicator(
+                                                                                    color: AppColors.primary,
+                                                                                    strokeWidth: 2.w,
+                                                                                  ),
+                                                                                )
+                                                                              : SvgPicture.asset(
+                                                                                  AppImage.upload_arr_up,
+                                                                                ),
+                                                                        )
+                                                                      : SizedBox.shrink(),
+                                                                  SizedBox(
+                                                                    width:
+                                                                        8.10.w,
+                                                                  ),
+                                                                  model.secondLevelDistributorKycEntityModelLogo?.distributor?.documents?.companyLogo !=
+                                                                          null
+                                                                      ? GestureDetector(
+                                                                          onTap: () {
+                                                                            model.secondLevelDistributorKycEntityModelLogo?.distributor?.documents?.companyLogo =
+                                                                                null;
+                                                                            model.notifyListeners();
+                                                                          },
+                                                                          child: SvgPicture.asset(
+                                                                            AppImage.delete,
+                                                                          ),
+                                                                        )
+                                                                      : SizedBox.shrink(),
                                                                 ],
                                                               ),
                                                             )
@@ -2540,86 +2777,92 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                               ),
                                                             ),
                                                       SizedBox(height: 20.h),
-                                                      Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
-                                                        children: [
-                                                          Row(
-                                                            children: [
-                                                              TextView(
-                                                                text:
-                                                                    'Area/Location ',
-                                                                textStyle: TextStyle(
-                                                                  fontSize:
-                                                                      15.86.sp,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w600,
-                                                                  color: AppColors
-                                                                      .reminder1,
-                                                                  fontFamily:
-                                                                      'DMSans',
-                                                                ),
-                                                              ),
-                                                              SizedBox(
-                                                                width: 6.10.w,
-                                                              ),
-                                                              Container(
-                                                                padding:
-                                                                    EdgeInsets.symmetric(
-                                                                      horizontal:
-                                                                          6.2.w,
-                                                                    ),
-                                                                decoration: BoxDecoration(
-                                                                  borderRadius:
-                                                                      BorderRadius.circular(
-                                                                        22,
-                                                                      ),
-                                                                  border: Border.all(
-                                                                    color: AppColors
-                                                                        .primary1,
-                                                                  ),
-                                                                ),
-                                                                child: TextView(
+                                                      if (model
+                                                              .getDistributorKycResponseModel!
+                                                              .data!
+                                                              .level2 !=
+                                                          null)
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: [
+                                                            Row(
+                                                              children: [
+                                                                TextView(
                                                                   text:
-                                                                      '${model.getDistributorKycResponseModel!.data!.level2!.distributor!.coverageAreas!.length}',
+                                                                      'Area/Location ',
                                                                   textStyle: TextStyle(
                                                                     fontSize:
-                                                                        12.6.sp,
+                                                                        15.86
+                                                                            .sp,
                                                                     fontWeight:
                                                                         FontWeight
-                                                                            .w300,
+                                                                            .w600,
                                                                     color: AppColors
-                                                                        .primary1,
+                                                                        .reminder1,
                                                                     fontFamily:
                                                                         'DMSans',
                                                                   ),
                                                                 ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                          IconButton(
-                                                            onPressed: () {
-                                                              model
-                                                                  .stateController
-                                                                  .clear();
-                                                              model.lgaListCopy
-                                                                  .clear();
-                                                              model
-                                                                  .showLGAAndStateDialog(
-                                                                    context,
-                                                                  );
-                                                            },
-                                                            icon: Icon(
-                                                              Icons.add,
-                                                              color: AppColors
-                                                                  .reminder1,
-                                                              size: 22.sp,
+                                                                SizedBox(
+                                                                  width: 6.10.w,
+                                                                ),
+                                                                Container(
+                                                                  padding: EdgeInsets.symmetric(
+                                                                    horizontal:
+                                                                        6.2.w,
+                                                                  ),
+                                                                  decoration: BoxDecoration(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                          22,
+                                                                        ),
+                                                                    border: Border.all(
+                                                                      color: AppColors
+                                                                          .primary1,
+                                                                    ),
+                                                                  ),
+                                                                  child: TextView(
+                                                                    text:
+                                                                        '${model.getDistributorKycResponseModel!.data!.level2!.distributor!.coverageAreas!.length}',
+                                                                    textStyle: TextStyle(
+                                                                      fontSize:
+                                                                          12.6.sp,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w300,
+                                                                      color: AppColors
+                                                                          .primary1,
+                                                                      fontFamily:
+                                                                          'DMSans',
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ],
                                                             ),
-                                                          ),
-                                                        ],
-                                                      ),
+                                                            IconButton(
+                                                              onPressed: () {
+                                                                model
+                                                                    .stateController
+                                                                    .clear();
+                                                                model
+                                                                    .lgaListCopy
+                                                                    .clear();
+                                                                model
+                                                                    .showLGAAndStateDialog(
+                                                                      context,
+                                                                    );
+                                                              },
+                                                              icon: Icon(
+                                                                Icons.add,
+                                                                color: AppColors
+                                                                    .reminder1,
+                                                                size: 22.sp,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
                                                       Divider(
                                                         color: AppColors.f1,
                                                       ),
@@ -2666,7 +2909,8 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                               children: [
                                                                 TextView(
                                                                   text:
-                                                                      o.state?.capitalize() ??
+                                                                      o.state
+                                                                          ??
                                                                       '',
                                                                   textStyle: TextStyle(
                                                                     fontSize:
@@ -2856,6 +3100,302 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                               ],
                                                             ),
                                                           ),
+                                                        ),
+
+                                                      if (model
+                                                                      .getDistributorKycResponseModel!
+                                                                      .data!
+                                                                      .level2 ==
+                                                                  null &&
+                                                              model.coverageAreaIndex ==
+                                                                  1 ||
+                                                          model
+                                                                      .getDistributorKycResponseModel!
+                                                                      .data!
+                                                                      .level2 ==
+                                                                  null &&
+                                                              model.coverageAreaIndex ==
+                                                                  null)
+                                                        Column(
+                                                          children: [
+                                                            Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceBetween,
+                                                              children: [
+                                                                Row(
+                                                                  children: [
+                                                                    TextView(
+                                                                      text:
+                                                                          'Area/Location ',
+                                                                      textStyle: TextStyle(
+                                                                        fontSize:
+                                                                            15.86.sp,
+                                                                        fontWeight:
+                                                                            FontWeight.w600,
+                                                                        color: AppColors
+                                                                            .reminder1,
+                                                                        fontFamily:
+                                                                            'DMSans',
+                                                                      ),
+                                                                    ),
+                                                                    SizedBox(
+                                                                      width:
+                                                                          6.10.w,
+                                                                    ),
+                                                                    Container(
+                                                                      padding: EdgeInsets.symmetric(
+                                                                        horizontal:
+                                                                            6.2.w,
+                                                                      ),
+                                                                      decoration: BoxDecoration(
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(
+                                                                              22,
+                                                                            ),
+                                                                        border: Border.all(
+                                                                          color:
+                                                                              AppColors.primary1,
+                                                                        ),
+                                                                      ),
+                                                                      child: TextView(
+                                                                        text:
+                                                                            '${model.listOfAddedLocation.length}',
+                                                                        textStyle: TextStyle(
+                                                                          fontSize:
+                                                                              12.6.sp,
+                                                                          fontWeight:
+                                                                              FontWeight.w300,
+                                                                          color:
+                                                                              AppColors.primary1,
+                                                                          fontFamily:
+                                                                              'DMSans',
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                IconButton(
+                                                                  onPressed: () {
+                                                                    model
+                                                                        .stateController
+                                                                        .clear();
+                                                                    model
+                                                                        .lgaListCopy
+                                                                        .clear();
+                                                                    model.showLGAAndStateDialog(
+                                                                      context,
+                                                                      covAreaIndex:
+                                                                          1,
+                                                                    );
+                                                                  },
+                                                                  icon: Icon(
+                                                                    Icons.add,
+                                                                    color: AppColors
+                                                                        .reminder1,
+                                                                    size: 22.sp,
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            Divider(
+                                                              color:
+                                                                  AppColors.f1,
+                                                            ),
+                                                            if (model
+                                                                .listOfAddedLocation
+                                                                .isNotEmpty)
+                                                              ...model.listOfAddedLocation.map(
+                                                                (
+                                                                  o,
+                                                                ) => Container(
+                                                                  width: double
+                                                                      .infinity,
+                                                                  margin:
+                                                                      EdgeInsets.only(
+                                                                        bottom:
+                                                                            12.w,
+                                                                      ),
+                                                                  padding:
+                                                                      EdgeInsets.all(
+                                                                        16.w,
+                                                                      ),
+                                                                  decoration: BoxDecoration(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                          12,
+                                                                        ),
+                                                                    color:
+                                                                        AppColors
+                                                                            .grey,
+                                                                  ),
+                                                                  child: Column(
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .start,
+                                                                    children: [
+                                                                      TextView(
+                                                                        text: o.state??'',
+                                                                        textStyle: TextStyle(
+                                                                          fontSize:
+                                                                              13.86.sp,
+                                                                          fontWeight:
+                                                                              FontWeight.w600,
+                                                                          color:
+                                                                              AppColors.reminder1,
+                                                                          fontFamily:
+                                                                              'DMSans',
+                                                                        ),
+                                                                      ),
+                                                                      SizedBox(
+                                                                        height:
+                                                                            7.2.h,
+                                                                      ),
+
+                                                                      AnimatedSize(
+                                                                        duration: const Duration(
+                                                                          milliseconds:
+                                                                              300,
+                                                                        ),
+                                                                        curve: Curves
+                                                                            .easeInOut,
+                                                                        child:
+                                                                            model.coverageAreasMap ==
+                                                                                o
+                                                                            ? Wrap(
+                                                                                children: [
+                                                                                  ...o.lgas!.map(
+                                                                                    (
+                                                                                      e,
+                                                                                    ) => TextView(
+                                                                                      text: '$e, ',
+                                                                                      textStyle: TextStyle(
+                                                                                        fontSize: 13.86.sp,
+                                                                                        fontWeight: FontWeight.w200,
+                                                                                        color: AppColors.infoGrey,
+                                                                                        fontFamily: 'DMSans',
+                                                                                      ),
+                                                                                    ),
+                                                                                  ),
+                                                                                ],
+                                                                              )
+                                                                            : Text(
+                                                                                o.lgas!
+                                                                                    .map(
+                                                                                      (
+                                                                                        e,
+                                                                                      ) => e.toString(),
+                                                                                    )
+                                                                                    .join(
+                                                                                      ', ',
+                                                                                    ),
+                                                                                maxLines: 1,
+                                                                                overflow: TextOverflow.ellipsis,
+                                                                                style: TextStyle(
+                                                                                  fontSize: 13.86.sp,
+                                                                                  fontWeight: FontWeight.w200,
+                                                                                  color: AppColors.infoGrey,
+                                                                                  fontFamily: 'DMSans',
+                                                                                ),
+                                                                              ),
+                                                                      ),
+                                                                      SizedBox(
+                                                                        height:
+                                                                            10.h,
+                                                                      ),
+                                                                      GestureDetector(
+                                                                        onTap: () {
+                                                                          if (model.coverageAreasMap ==
+                                                                              o) {
+                                                                            model.coverageAreasMap =
+                                                                                null;
+                                                                          } else {
+                                                                            model.coverageAreasMap =
+                                                                                o;
+                                                                          }
+                                                                          model
+                                                                              .notifyListeners();
+                                                                        },
+                                                                        child: TextView(
+                                                                          text:
+                                                                              model.coverageAreasMap ==
+                                                                                  o
+                                                                              ? 'Hide'
+                                                                              : 'See all',
+                                                                          textStyle: TextStyle(
+                                                                            decoration:
+                                                                                TextDecoration.underline,
+                                                                            decorationColor:
+                                                                                model.coverageAreasMap ==
+                                                                                    o
+                                                                                ? AppColors.primary
+                                                                                : AppColors.reminder1,
+                                                                            fontSize:
+                                                                                12.86.sp,
+                                                                            fontWeight:
+                                                                                FontWeight.w500,
+                                                                            color:
+                                                                                model.coverageAreasMap ==
+                                                                                    o
+                                                                                ? AppColors.primary
+                                                                                : AppColors.reminder1,
+                                                                            fontFamily:
+                                                                                'DMSans',
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                      SizedBox(
+                                                                        height:
+                                                                            10.h,
+                                                                      ),
+                                                                      Row(
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.end,
+                                                                        children: [
+                                                                          GestureDetector(
+                                                                            onTap: () {
+                                                                              model.stateController.text = o.state ??'';
+                                                                              model.showLGAAndStateDialog(
+                                                                                context,
+                                                                                isEdit: true,
+                                                                                editState: o.state,
+                                                                                editLgas: o.lgas,
+                                                                              );
+                                                                              model.notifyListeners();
+                                                                            },
+                                                                            child: SvgPicture.asset(
+                                                                              AppImage.round_edit,
+                                                                              height: 22.h,
+                                                                              width: 22.h,
+                                                                            ),
+                                                                          ),
+                                                                          SizedBox(
+                                                                            width:
+                                                                                10.h,
+                                                                          ),
+                                                                          GestureDetector(
+                                                                            onTap: () {
+                                                                              model.listOfAddedLocation.remove(
+                                                                                o,
+                                                                              );
+                                                                              setState(
+                                                                                () {},
+                                                                              );
+                                                                              model.notifyListeners();
+                                                                            },
+                                                                            child: SvgPicture.asset(
+                                                                              AppImage.delete,
+                                                                              height: 20.h,
+                                                                              width: 20.h,
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                          ],
                                                         ),
                                                     ],
                                                   )
@@ -4467,6 +5007,630 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                 ),
                                                               ),
                                                             ),
+
+                                                      // if (model
+                                                      //         .getDistributorKycResponseModel!
+                                                      //         .data!
+                                                      //         .level2 !=
+                                                      //     null)
+                                                      //   Row(
+                                                      //     mainAxisAlignment:
+                                                      //         MainAxisAlignment
+                                                      //             .spaceBetween,
+                                                      //     children: [
+                                                      //       Row(
+                                                      //         children: [
+                                                      //           TextView(
+                                                      //             text:
+                                                      //                 'Area/Location ',
+                                                      //             textStyle: TextStyle(
+                                                      //               fontSize:
+                                                      //                   15.86
+                                                      //                       .sp,
+                                                      //               fontWeight:
+                                                      //                   FontWeight
+                                                      //                       .w600,
+                                                      //               color: AppColors
+                                                      //                   .reminder1,
+                                                      //               fontFamily:
+                                                      //                   'DMSans',
+                                                      //             ),
+                                                      //           ),
+                                                      //           SizedBox(
+                                                      //             width: 6.10.w,
+                                                      //           ),
+                                                      //           Container(
+                                                      //             padding: EdgeInsets.symmetric(
+                                                      //               horizontal:
+                                                      //                   6.2.w,
+                                                      //             ),
+                                                      //             decoration: BoxDecoration(
+                                                      //               borderRadius:
+                                                      //                   BorderRadius.circular(
+                                                      //                     22,
+                                                      //                   ),
+                                                      //               border: Border.all(
+                                                      //                 color: AppColors
+                                                      //                     .primary1,
+                                                      //               ),
+                                                      //             ),
+                                                      //             child: TextView(
+                                                      //               text:
+                                                      //                   '${model.getDistributorKycResponseModel!.data!.level2!.distributor!.coverageAreas!.length}',
+                                                      //               textStyle: TextStyle(
+                                                      //                 fontSize:
+                                                      //                     12.6.sp,
+                                                      //                 fontWeight:
+                                                      //                     FontWeight
+                                                      //                         .w300,
+                                                      //                 color: AppColors
+                                                      //                     .primary1,
+                                                      //                 fontFamily:
+                                                      //                     'DMSans',
+                                                      //               ),
+                                                      //             ),
+                                                      //           ),
+                                                      //         ],
+                                                      //       ),
+                                                      //       IconButton(
+                                                      //         onPressed: () {
+                                                      //           model
+                                                      //               .stateController
+                                                      //               .clear();
+                                                      //           model
+                                                      //               .lgaListCopy
+                                                      //               .clear();
+                                                      //           model
+                                                      //               .showLGAAndStateDialog(
+                                                      //                 context,
+                                                      //               );
+                                                      //         },
+                                                      //         icon: Icon(
+                                                      //           Icons.add,
+                                                      //           color: AppColors
+                                                      //               .reminder1,
+                                                      //           size: 22.sp,
+                                                      //         ),
+                                                      //       ),
+                                                      //     ],
+                                                      //   ),
+                                                      // Divider(
+                                                      //   color: AppColors.f1,
+                                                      // ),
+                                                      // if (model.getDistributorKycResponseModel !=
+                                                      //         null &&
+                                                      //     model
+                                                      //             .getDistributorKycResponseModel!
+                                                      //             .data!
+                                                      //             .level2 !=
+                                                      //         null &&
+                                                      //     model
+                                                      //         .getDistributorKycResponseModel!
+                                                      //         .data!
+                                                      //         .level2!
+                                                      //         .distributor!
+                                                      //         .coverageAreas!
+                                                      //         .isNotEmpty)
+                                                      //   ...model.getDistributorKycResponseModel!.data!.level2!.distributor!.coverageAreas!.map(
+                                                      //     (o) => Container(
+                                                      //       width:
+                                                      //           double.infinity,
+                                                      //       margin:
+                                                      //           EdgeInsets.only(
+                                                      //             bottom: 12.w,
+                                                      //           ),
+                                                      //       padding:
+                                                      //           EdgeInsets.all(
+                                                      //             16.w,
+                                                      //           ),
+                                                      //       decoration:
+                                                      //           BoxDecoration(
+                                                      //             borderRadius:
+                                                      //                 BorderRadius.circular(
+                                                      //                   12,
+                                                      //                 ),
+                                                      //             color:
+                                                      //                 AppColors
+                                                      //                     .grey,
+                                                      //           ),
+                                                      //       child: Column(
+                                                      //         crossAxisAlignment:
+                                                      //             CrossAxisAlignment
+                                                      //                 .start,
+                                                      //         children: [
+                                                      //           TextView(
+                                                      //             text:
+                                                      //                 o.state
+                                                      //                     ?.capitalize() ??
+                                                      //                 '',
+                                                      //             textStyle: TextStyle(
+                                                      //               fontSize:
+                                                      //                   13.86
+                                                      //                       .sp,
+                                                      //               fontWeight:
+                                                      //                   FontWeight
+                                                      //                       .w600,
+                                                      //               color: AppColors
+                                                      //                   .reminder1,
+                                                      //               fontFamily:
+                                                      //                   'DMSans',
+                                                      //             ),
+                                                      //           ),
+                                                      //           SizedBox(
+                                                      //             height: 7.2.h,
+                                                      //           ),
+
+                                                      //           AnimatedSize(
+                                                      //             duration:
+                                                      //                 const Duration(
+                                                      //                   milliseconds:
+                                                      //                       300,
+                                                      //                 ),
+                                                      //             curve: Curves
+                                                      //                 .easeInOut,
+                                                      //             child:
+                                                      //                 model.coverageAreas ==
+                                                      //                     o
+                                                      //                 ? Wrap(
+                                                      //                     children: [
+                                                      //                       ...o.lgas!.map(
+                                                      //                         (
+                                                      //                           e,
+                                                      //                         ) => TextView(
+                                                      //                           text: '$e, ',
+                                                      //                           textStyle: TextStyle(
+                                                      //                             fontSize: 13.86.sp,
+                                                      //                             fontWeight: FontWeight.w200,
+                                                      //                             color: AppColors.infoGrey,
+                                                      //                             fontFamily: 'DMSans',
+                                                      //                           ),
+                                                      //                         ),
+                                                      //                       ),
+                                                      //                     ],
+                                                      //                   )
+                                                      //                 : Text(
+                                                      //                     o.lgas!
+                                                      //                         .map(
+                                                      //                           (
+                                                      //                             e,
+                                                      //                           ) => '$e,',
+                                                      //                         )
+                                                      //                         .join(
+                                                      //                           ' ',
+                                                      //                         ),
+                                                      //                     maxLines:
+                                                      //                         1,
+                                                      //                     overflow:
+                                                      //                         TextOverflow.ellipsis,
+                                                      //                     style: TextStyle(
+                                                      //                       fontSize:
+                                                      //                           13.86.sp,
+                                                      //                       fontWeight:
+                                                      //                           FontWeight.w200,
+                                                      //                       color:
+                                                      //                           AppColors.infoGrey,
+                                                      //                       fontFamily:
+                                                      //                           'DMSans',
+                                                      //                     ),
+                                                      //                   ),
+                                                      //           ),
+                                                      //           SizedBox(
+                                                      //             height: 10.h,
+                                                      //           ),
+                                                      //           GestureDetector(
+                                                      //             onTap: () {
+                                                      //               if (model
+                                                      //                       .coverageAreas ==
+                                                      //                   o) {
+                                                      //                 model.coverageAreas =
+                                                      //                     null;
+                                                      //               } else {
+                                                      //                 model.coverageAreas =
+                                                      //                     o;
+                                                      //               }
+                                                      //               model
+                                                      //                   .notifyListeners();
+                                                      //             },
+                                                      //             child: TextView(
+                                                      //               text:
+                                                      //                   model.coverageAreas ==
+                                                      //                       o
+                                                      //                   ? 'Hide'
+                                                      //                   : 'See all',
+                                                      //               textStyle: TextStyle(
+                                                      //                 decoration:
+                                                      //                     TextDecoration
+                                                      //                         .underline,
+                                                      //                 decorationColor:
+                                                      //                     model.coverageAreas ==
+                                                      //                         o
+                                                      //                     ? AppColors.primary
+                                                      //                     : AppColors.reminder1,
+                                                      //                 fontSize:
+                                                      //                     12.86
+                                                      //                         .sp,
+                                                      //                 fontWeight:
+                                                      //                     FontWeight
+                                                      //                         .w500,
+                                                      //                 color:
+                                                      //                     model.coverageAreas ==
+                                                      //                         o
+                                                      //                     ? AppColors.primary
+                                                      //                     : AppColors.reminder1,
+                                                      //                 fontFamily:
+                                                      //                     'DMSans',
+                                                      //               ),
+                                                      //             ),
+                                                      //           ),
+                                                      //           SizedBox(
+                                                      //             height: 10.h,
+                                                      //           ),
+                                                      //           Row(
+                                                      //             mainAxisAlignment:
+                                                      //                 MainAxisAlignment
+                                                      //                     .end,
+                                                      //             children: [
+                                                      //               GestureDetector(
+                                                      //                 onTap: () {
+                                                      //                   model.stateController.text =
+                                                      //                       o.state ??
+                                                      //                       '';
+                                                      //                   model.showLGAAndStateDialog(
+                                                      //                     context,
+                                                      //                     isEdit:
+                                                      //                         true,
+                                                      //                     editState:
+                                                      //                         o.state,
+                                                      //                     editLgas:
+                                                      //                         o.lgas,
+                                                      //                   );
+                                                      //                   model
+                                                      //                       .notifyListeners();
+                                                      //                 },
+                                                      //                 child: SvgPicture.asset(
+                                                      //                   AppImage
+                                                      //                       .round_edit,
+                                                      //                   height:
+                                                      //                       22.h,
+                                                      //                   width:
+                                                      //                       22.h,
+                                                      //                 ),
+                                                      //               ),
+                                                      //               SizedBox(
+                                                      //                 width:
+                                                      //                     10.h,
+                                                      //               ),
+                                                      //               GestureDetector(
+                                                      //                 onTap: () {
+                                                      //                   model
+                                                      //                       .getDistributorKycResponseModel!
+                                                      //                       .data!
+                                                      //                       .level2!
+                                                      //                       .distributor!
+                                                      //                       .coverageAreas!
+                                                      //                       .remove(
+                                                      //                         o,
+                                                      //                       );
+                                                      //                   setState(
+                                                      //                     () {},
+                                                      //                   );
+                                                      //                   model
+                                                      //                       .notifyListeners();
+                                                      //                 },
+                                                      //                 child: SvgPicture.asset(
+                                                      //                   AppImage
+                                                      //                       .delete,
+                                                      //                   height:
+                                                      //                       20.h,
+                                                      //                   width:
+                                                      //                       20.h,
+                                                      //                 ),
+                                                      //               ),
+                                                      //             ],
+                                                      //           ),
+                                                      //         ],
+                                                      //       ),
+                                                      //     ),
+                                                      //   ),
+
+                                                      // if (model
+                                                      //                 .getDistributorKycResponseModel!
+                                                      //                 .data!
+                                                      //                 .level2 ==
+                                                      //             null &&
+                                                      //         model.coverageAreaIndex ==
+                                                      //             2 ||
+                                                      //     model
+                                                      //                 .getDistributorKycResponseModel!
+                                                      //                 .data!
+                                                      //                 .level2 ==
+                                                      //             null &&
+                                                      //         model.coverageAreaIndex ==
+                                                      //             null)
+                                                      //   Column(
+                                                      //     children: [
+                                                      //       Row(
+                                                      //         mainAxisAlignment:
+                                                      //             MainAxisAlignment
+                                                      //                 .spaceBetween,
+                                                      //         children: [
+                                                      //           Row(
+                                                      //             children: [
+                                                      //               TextView(
+                                                      //                 text:
+                                                      //                     'Area/Location ',
+                                                      //                 textStyle: TextStyle(
+                                                      //                   fontSize:
+                                                      //                       15.86.sp,
+                                                      //                   fontWeight:
+                                                      //                       FontWeight.w600,
+                                                      //                   color: AppColors
+                                                      //                       .reminder1,
+                                                      //                   fontFamily:
+                                                      //                       'DMSans',
+                                                      //                 ),
+                                                      //               ),
+                                                      //               SizedBox(
+                                                      //                 width:
+                                                      //                     6.10.w,
+                                                      //               ),
+                                                      //               Container(
+                                                      //                 padding: EdgeInsets.symmetric(
+                                                      //                   horizontal:
+                                                      //                       6.2.w,
+                                                      //                 ),
+                                                      //                 decoration: BoxDecoration(
+                                                      //                   borderRadius:
+                                                      //                       BorderRadius.circular(
+                                                      //                         22,
+                                                      //                       ),
+                                                      //                   border: Border.all(
+                                                      //                     color:
+                                                      //                         AppColors.primary1,
+                                                      //                   ),
+                                                      //                 ),
+                                                      //                 child: TextView(
+                                                      //                   text:
+                                                      //                       '${model.listOfAddedLocation.length}',
+                                                      //                   textStyle: TextStyle(
+                                                      //                     fontSize:
+                                                      //                         12.6.sp,
+                                                      //                     fontWeight:
+                                                      //                         FontWeight.w300,
+                                                      //                     color:
+                                                      //                         AppColors.primary1,
+                                                      //                     fontFamily:
+                                                      //                         'DMSans',
+                                                      //                   ),
+                                                      //                 ),
+                                                      //               ),
+                                                      //             ],
+                                                      //           ),
+                                                      //           IconButton(
+                                                      //             onPressed: () {
+                                                      //               model
+                                                      //                   .stateController
+                                                      //                   .clear();
+                                                      //               model
+                                                      //                   .lgaListCopy
+                                                      //                   .clear();
+                                                      //               model.showLGAAndStateDialog(
+                                                      //                 context,
+                                                      //                 covAreaIndex:
+                                                      //                     2,
+                                                      //               );
+                                                      //             },
+                                                      //             icon: Icon(
+                                                      //               Icons.add,
+                                                      //               color: AppColors
+                                                      //                   .reminder1,
+                                                      //               size: 22.sp,
+                                                      //             ),
+                                                      //           ),
+                                                      //         ],
+                                                      //       ),
+                                                      //       Divider(
+                                                      //         color:
+                                                      //             AppColors.f1,
+                                                      //       ),
+                                                      //       if (model
+                                                      //           .listOfAddedLocation
+                                                      //           .isNotEmpty)
+                                                      //         ...model.listOfAddedLocation.map(
+                                                      //           (
+                                                      //             o,
+                                                      //           ) => Container(
+                                                      //             width: double
+                                                      //                 .infinity,
+                                                      //             margin:
+                                                      //                 EdgeInsets.only(
+                                                      //                   bottom:
+                                                      //                       12.w,
+                                                      //                 ),
+                                                      //             padding:
+                                                      //                 EdgeInsets.all(
+                                                      //                   16.w,
+                                                      //                 ),
+                                                      //             decoration: BoxDecoration(
+                                                      //               borderRadius:
+                                                      //                   BorderRadius.circular(
+                                                      //                     12,
+                                                      //                   ),
+                                                      //               color:
+                                                      //                   AppColors
+                                                      //                       .grey,
+                                                      //             ),
+                                                      //             child: Column(
+                                                      //               crossAxisAlignment:
+                                                      //                   CrossAxisAlignment
+                                                      //                       .start,
+                                                      //               children: [
+                                                      //                 TextView(
+                                                      //                   text: o
+                                                      //                       .keys
+                                                      //                       .first,
+                                                      //                   textStyle: TextStyle(
+                                                      //                     fontSize:
+                                                      //                         13.86.sp,
+                                                      //                     fontWeight:
+                                                      //                         FontWeight.w600,
+                                                      //                     color:
+                                                      //                         AppColors.reminder1,
+                                                      //                     fontFamily:
+                                                      //                         'DMSans',
+                                                      //                   ),
+                                                      //                 ),
+                                                      //                 SizedBox(
+                                                      //                   height:
+                                                      //                       7.2.h,
+                                                      //                 ),
+
+                                                      //                 AnimatedSize(
+                                                      //                   duration: const Duration(
+                                                      //                     milliseconds:
+                                                      //                         300,
+                                                      //                   ),
+                                                      //                   curve: Curves
+                                                      //                       .easeInOut,
+                                                      //                   child:
+                                                      //                       model.coverageAreasMap ==
+                                                      //                           o
+                                                      //                       ? Wrap(
+                                                      //                           children: [
+                                                      //                             ...o.values.first.map(
+                                                      //                               (
+                                                      //                                 e,
+                                                      //                               ) => TextView(
+                                                      //                                 text: '$e, ',
+                                                      //                                 textStyle: TextStyle(
+                                                      //                                   fontSize: 13.86.sp,
+                                                      //                                   fontWeight: FontWeight.w200,
+                                                      //                                   color: AppColors.infoGrey,
+                                                      //                                   fontFamily: 'DMSans',
+                                                      //                                 ),
+                                                      //                               ),
+                                                      //                             ),
+                                                      //                           ],
+                                                      //                         )
+                                                      //                       : Text(
+                                                      //                           o.values.first
+                                                      //                               .map(
+                                                      //                                 (
+                                                      //                                   e,
+                                                      //                                 ) => e.toString(),
+                                                      //                               )
+                                                      //                               .join(
+                                                      //                                 ', ',
+                                                      //                               ),
+                                                      //                           maxLines: 1,
+                                                      //                           overflow: TextOverflow.ellipsis,
+                                                      //                           style: TextStyle(
+                                                      //                             fontSize: 13.86.sp,
+                                                      //                             fontWeight: FontWeight.w200,
+                                                      //                             color: AppColors.infoGrey,
+                                                      //                             fontFamily: 'DMSans',
+                                                      //                           ),
+                                                      //                         ),
+                                                      //                 ),
+                                                      //                 SizedBox(
+                                                      //                   height:
+                                                      //                       10.h,
+                                                      //                 ),
+                                                      //                 GestureDetector(
+                                                      //                   onTap: () {
+                                                      //                     if (model.coverageAreasMap ==
+                                                      //                         o) {
+                                                      //                       model.coverageAreasMap =
+                                                      //                           null;
+                                                      //                     } else {
+                                                      //                       model.coverageAreasMap =
+                                                      //                           o;
+                                                      //                     }
+                                                      //                     model
+                                                      //                         .notifyListeners();
+                                                      //                   },
+                                                      //                   child: TextView(
+                                                      //                     text:
+                                                      //                         model.coverageAreasMap ==
+                                                      //                             o
+                                                      //                         ? 'Hide'
+                                                      //                         : 'See all',
+                                                      //                     textStyle: TextStyle(
+                                                      //                       decoration:
+                                                      //                           TextDecoration.underline,
+                                                      //                       decorationColor:
+                                                      //                           model.coverageAreasMap ==
+                                                      //                               o
+                                                      //                           ? AppColors.primary
+                                                      //                           : AppColors.reminder1,
+                                                      //                       fontSize:
+                                                      //                           12.86.sp,
+                                                      //                       fontWeight:
+                                                      //                           FontWeight.w500,
+                                                      //                       color:
+                                                      //                           model.coverageAreasMap ==
+                                                      //                               o
+                                                      //                           ? AppColors.primary
+                                                      //                           : AppColors.reminder1,
+                                                      //                       fontFamily:
+                                                      //                           'DMSans',
+                                                      //                     ),
+                                                      //                   ),
+                                                      //                 ),
+                                                      //                 SizedBox(
+                                                      //                   height:
+                                                      //                       10.h,
+                                                      //                 ),
+                                                      //                 Row(
+                                                      //                   mainAxisAlignment:
+                                                      //                       MainAxisAlignment.end,
+                                                      //                   children: [
+                                                      //                     GestureDetector(
+                                                      //                       onTap: () {
+                                                      //                         model.stateController.text = o.keys.first;
+                                                      //                         model.showLGAAndStateDialog(
+                                                      //                           context,
+                                                      //                           isEdit: true,
+                                                      //                           editState: o.keys.first,
+                                                      //                           editLgas: o.values.first,
+                                                      //                         );
+                                                      //                         model.notifyListeners();
+                                                      //                       },
+                                                      //                       child: SvgPicture.asset(
+                                                      //                         AppImage.round_edit,
+                                                      //                         height: 22.h,
+                                                      //                         width: 22.h,
+                                                      //                       ),
+                                                      //                     ),
+                                                      //                     SizedBox(
+                                                      //                       width:
+                                                      //                           10.h,
+                                                      //                     ),
+                                                      //                     GestureDetector(
+                                                      //                       onTap: () {
+                                                      //                         model.listOfAddedLocation.remove(
+                                                      //                           o,
+                                                      //                         );
+                                                      //                         setState(
+                                                      //                           () {},
+                                                      //                         );
+                                                      //                         model.notifyListeners();
+                                                      //                       },
+                                                      //                       child: SvgPicture.asset(
+                                                      //                         AppImage.delete,
+                                                      //                         height: 20.h,
+                                                      //                         width: 20.h,
+                                                      //                       ),
+                                                      //                     ),
+                                                      //                   ],
+                                                      //                 ),
+                                                      //               ],
+                                                      //             ),
+                                                      //           ),
+                                                      //         ),
+                                                          
+                                                      //     ],
+                                                      //   ),
                                                     ],
                                                   )
                                                 : SizedBox.shrink(),
@@ -5778,6 +6942,629 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                 ),
                                                               ),
                                                             ),
+
+                                                      // if (model
+                                                      //         .getDistributorKycResponseModel!
+                                                      //         .data!
+                                                      //         .level2 !=
+                                                      //     null)
+                                                      //   Row(
+                                                      //     mainAxisAlignment:
+                                                      //         MainAxisAlignment
+                                                      //             .spaceBetween,
+                                                      //     children: [
+                                                      //       Row(
+                                                      //         children: [
+                                                      //           TextView(
+                                                      //             text:
+                                                      //                 'Area/Location ',
+                                                      //             textStyle: TextStyle(
+                                                      //               fontSize:
+                                                      //                   15.86
+                                                      //                       .sp,
+                                                      //               fontWeight:
+                                                      //                   FontWeight
+                                                      //                       .w600,
+                                                      //               color: AppColors
+                                                      //                   .reminder1,
+                                                      //               fontFamily:
+                                                      //                   'DMSans',
+                                                      //             ),
+                                                      //           ),
+                                                      //           SizedBox(
+                                                      //             width: 6.10.w,
+                                                      //           ),
+                                                      //           Container(
+                                                      //             padding: EdgeInsets.symmetric(
+                                                      //               horizontal:
+                                                      //                   6.2.w,
+                                                      //             ),
+                                                      //             decoration: BoxDecoration(
+                                                      //               borderRadius:
+                                                      //                   BorderRadius.circular(
+                                                      //                     22,
+                                                      //                   ),
+                                                      //               border: Border.all(
+                                                      //                 color: AppColors
+                                                      //                     .primary1,
+                                                      //               ),
+                                                      //             ),
+                                                      //             child: TextView(
+                                                      //               text:
+                                                      //                   '${model.getDistributorKycResponseModel!.data!.level2!.distributor!.coverageAreas!.length}',
+                                                      //               textStyle: TextStyle(
+                                                      //                 fontSize:
+                                                      //                     12.6.sp,
+                                                      //                 fontWeight:
+                                                      //                     FontWeight
+                                                      //                         .w300,
+                                                      //                 color: AppColors
+                                                      //                     .primary1,
+                                                      //                 fontFamily:
+                                                      //                     'DMSans',
+                                                      //               ),
+                                                      //             ),
+                                                      //           ),
+                                                      //         ],
+                                                      //       ),
+                                                      //       IconButton(
+                                                      //         onPressed: () {
+                                                      //           model
+                                                      //               .stateController
+                                                      //               .clear();
+                                                      //           model
+                                                      //               .lgaListCopy
+                                                      //               .clear();
+                                                      //           model
+                                                      //               .showLGAAndStateDialog(
+                                                      //                 context,
+                                                      //               );
+                                                      //         },
+                                                      //         icon: Icon(
+                                                      //           Icons.add,
+                                                      //           color: AppColors
+                                                      //               .reminder1,
+                                                      //           size: 22.sp,
+                                                      //         ),
+                                                      //       ),
+                                                      //     ],
+                                                      //   ),
+                                                      // Divider(
+                                                      //   color: AppColors.f1,
+                                                      // ),
+                                                      // if (model.getDistributorKycResponseModel !=
+                                                      //         null &&
+                                                      //     model
+                                                      //             .getDistributorKycResponseModel!
+                                                      //             .data!
+                                                      //             .level2 !=
+                                                      //         null &&
+                                                      //     model
+                                                      //         .getDistributorKycResponseModel!
+                                                      //         .data!
+                                                      //         .level2!
+                                                      //         .distributor!
+                                                      //         .coverageAreas!
+                                                      //         .isNotEmpty)
+                                                      //   ...model.getDistributorKycResponseModel!.data!.level2!.distributor!.coverageAreas!.map(
+                                                      //     (o) => Container(
+                                                      //       width:
+                                                      //           double.infinity,
+                                                      //       margin:
+                                                      //           EdgeInsets.only(
+                                                      //             bottom: 12.w,
+                                                      //           ),
+                                                      //       padding:
+                                                      //           EdgeInsets.all(
+                                                      //             16.w,
+                                                      //           ),
+                                                      //       decoration:
+                                                      //           BoxDecoration(
+                                                      //             borderRadius:
+                                                      //                 BorderRadius.circular(
+                                                      //                   12,
+                                                      //                 ),
+                                                      //             color:
+                                                      //                 AppColors
+                                                      //                     .grey,
+                                                      //           ),
+                                                      //       child: Column(
+                                                      //         crossAxisAlignment:
+                                                      //             CrossAxisAlignment
+                                                      //                 .start,
+                                                      //         children: [
+                                                      //           TextView(
+                                                      //             text:
+                                                      //                 o.state
+                                                      //                     ?.capitalize() ??
+                                                      //                 '',
+                                                      //             textStyle: TextStyle(
+                                                      //               fontSize:
+                                                      //                   13.86
+                                                      //                       .sp,
+                                                      //               fontWeight:
+                                                      //                   FontWeight
+                                                      //                       .w600,
+                                                      //               color: AppColors
+                                                      //                   .reminder1,
+                                                      //               fontFamily:
+                                                      //                   'DMSans',
+                                                      //             ),
+                                                      //           ),
+                                                      //           SizedBox(
+                                                      //             height: 7.2.h,
+                                                      //           ),
+
+                                                      //           AnimatedSize(
+                                                      //             duration:
+                                                      //                 const Duration(
+                                                      //                   milliseconds:
+                                                      //                       300,
+                                                      //                 ),
+                                                      //             curve: Curves
+                                                      //                 .easeInOut,
+                                                      //             child:
+                                                      //                 model.coverageAreas ==
+                                                      //                     o
+                                                      //                 ? Wrap(
+                                                      //                     children: [
+                                                      //                       ...o.lgas!.map(
+                                                      //                         (
+                                                      //                           e,
+                                                      //                         ) => TextView(
+                                                      //                           text: '$e, ',
+                                                      //                           textStyle: TextStyle(
+                                                      //                             fontSize: 13.86.sp,
+                                                      //                             fontWeight: FontWeight.w200,
+                                                      //                             color: AppColors.infoGrey,
+                                                      //                             fontFamily: 'DMSans',
+                                                      //                           ),
+                                                      //                         ),
+                                                      //                       ),
+                                                      //                     ],
+                                                      //                   )
+                                                      //                 : Text(
+                                                      //                     o.lgas!
+                                                      //                         .map(
+                                                      //                           (
+                                                      //                             e,
+                                                      //                           ) => '$e,',
+                                                      //                         )
+                                                      //                         .join(
+                                                      //                           ' ',
+                                                      //                         ),
+                                                      //                     maxLines:
+                                                      //                         1,
+                                                      //                     overflow:
+                                                      //                         TextOverflow.ellipsis,
+                                                      //                     style: TextStyle(
+                                                      //                       fontSize:
+                                                      //                           13.86.sp,
+                                                      //                       fontWeight:
+                                                      //                           FontWeight.w200,
+                                                      //                       color:
+                                                      //                           AppColors.infoGrey,
+                                                      //                       fontFamily:
+                                                      //                           'DMSans',
+                                                      //                     ),
+                                                      //                   ),
+                                                      //           ),
+                                                      //           SizedBox(
+                                                      //             height: 10.h,
+                                                      //           ),
+                                                      //           GestureDetector(
+                                                      //             onTap: () {
+                                                      //               if (model
+                                                      //                       .coverageAreas ==
+                                                      //                   o) {
+                                                      //                 model.coverageAreas =
+                                                      //                     null;
+                                                      //               } else {
+                                                      //                 model.coverageAreas =
+                                                      //                     o;
+                                                      //               }
+                                                      //               model
+                                                      //                   .notifyListeners();
+                                                      //             },
+                                                      //             child: TextView(
+                                                      //               text:
+                                                      //                   model.coverageAreas ==
+                                                      //                       o
+                                                      //                   ? 'Hide'
+                                                      //                   : 'See all',
+                                                      //               textStyle: TextStyle(
+                                                      //                 decoration:
+                                                      //                     TextDecoration
+                                                      //                         .underline,
+                                                      //                 decorationColor:
+                                                      //                     model.coverageAreas ==
+                                                      //                         o
+                                                      //                     ? AppColors.primary
+                                                      //                     : AppColors.reminder1,
+                                                      //                 fontSize:
+                                                      //                     12.86
+                                                      //                         .sp,
+                                                      //                 fontWeight:
+                                                      //                     FontWeight
+                                                      //                         .w500,
+                                                      //                 color:
+                                                      //                     model.coverageAreas ==
+                                                      //                         o
+                                                      //                     ? AppColors.primary
+                                                      //                     : AppColors.reminder1,
+                                                      //                 fontFamily:
+                                                      //                     'DMSans',
+                                                      //               ),
+                                                      //             ),
+                                                      //           ),
+                                                      //           SizedBox(
+                                                      //             height: 10.h,
+                                                      //           ),
+                                                      //           Row(
+                                                      //             mainAxisAlignment:
+                                                      //                 MainAxisAlignment
+                                                      //                     .end,
+                                                      //             children: [
+                                                      //               GestureDetector(
+                                                      //                 onTap: () {
+                                                      //                   model.stateController.text =
+                                                      //                       o.state ??
+                                                      //                       '';
+                                                      //                   model.showLGAAndStateDialog(
+                                                      //                     context,
+                                                      //                     isEdit:
+                                                      //                         true,
+                                                      //                     editState:
+                                                      //                         o.state,
+                                                      //                     editLgas:
+                                                      //                         o.lgas,
+                                                      //                   );
+                                                      //                   model
+                                                      //                       .notifyListeners();
+                                                      //                 },
+                                                      //                 child: SvgPicture.asset(
+                                                      //                   AppImage
+                                                      //                       .round_edit,
+                                                      //                   height:
+                                                      //                       22.h,
+                                                      //                   width:
+                                                      //                       22.h,
+                                                      //                 ),
+                                                      //               ),
+                                                      //               SizedBox(
+                                                      //                 width:
+                                                      //                     10.h,
+                                                      //               ),
+                                                      //               GestureDetector(
+                                                      //                 onTap: () {
+                                                      //                   model
+                                                      //                       .getDistributorKycResponseModel!
+                                                      //                       .data!
+                                                      //                       .level2!
+                                                      //                       .distributor!
+                                                      //                       .coverageAreas!
+                                                      //                       .remove(
+                                                      //                         o,
+                                                      //                       );
+                                                      //                   setState(
+                                                      //                     () {},
+                                                      //                   );
+                                                      //                   model
+                                                      //                       .notifyListeners();
+                                                      //                 },
+                                                      //                 child: SvgPicture.asset(
+                                                      //                   AppImage
+                                                      //                       .delete,
+                                                      //                   height:
+                                                      //                       20.h,
+                                                      //                   width:
+                                                      //                       20.h,
+                                                      //                 ),
+                                                      //               ),
+                                                      //             ],
+                                                      //           ),
+                                                      //         ],
+                                                      //       ),
+                                                      //     ),
+                                                      //   ),
+
+                                                      // if (model
+                                                      //                 .getDistributorKycResponseModel!
+                                                      //                 .data!
+                                                      //                 .level2 ==
+                                                      //             null &&
+                                                      //         model.coverageAreaIndex ==
+                                                      //             3 ||
+                                                      //     model
+                                                      //                 .getDistributorKycResponseModel!
+                                                      //                 .data!
+                                                      //                 .level2 ==
+                                                      //             null &&
+                                                      //         model.coverageAreaIndex ==
+                                                      //             null)
+                                                      //   Column(
+                                                      //     children: [
+                                                      //       Row(
+                                                      //         mainAxisAlignment:
+                                                      //             MainAxisAlignment
+                                                      //                 .spaceBetween,
+                                                      //         children: [
+                                                      //           Row(
+                                                      //             children: [
+                                                      //               TextView(
+                                                      //                 text:
+                                                      //                     'Area/Location ',
+                                                      //                 textStyle: TextStyle(
+                                                      //                   fontSize:
+                                                      //                       15.86.sp,
+                                                      //                   fontWeight:
+                                                      //                       FontWeight.w600,
+                                                      //                   color: AppColors
+                                                      //                       .reminder1,
+                                                      //                   fontFamily:
+                                                      //                       'DMSans',
+                                                      //                 ),
+                                                      //               ),
+                                                      //               SizedBox(
+                                                      //                 width:
+                                                      //                     6.10.w,
+                                                      //               ),
+                                                      //               Container(
+                                                      //                 padding: EdgeInsets.symmetric(
+                                                      //                   horizontal:
+                                                      //                       6.2.w,
+                                                      //                 ),
+                                                      //                 decoration: BoxDecoration(
+                                                      //                   borderRadius:
+                                                      //                       BorderRadius.circular(
+                                                      //                         22,
+                                                      //                       ),
+                                                      //                   border: Border.all(
+                                                      //                     color:
+                                                      //                         AppColors.primary1,
+                                                      //                   ),
+                                                      //                 ),
+                                                      //                 child: TextView(
+                                                      //                   text:
+                                                      //                       '${model.listOfAddedLocation.length}',
+                                                      //                   textStyle: TextStyle(
+                                                      //                     fontSize:
+                                                      //                         12.6.sp,
+                                                      //                     fontWeight:
+                                                      //                         FontWeight.w300,
+                                                      //                     color:
+                                                      //                         AppColors.primary1,
+                                                      //                     fontFamily:
+                                                      //                         'DMSans',
+                                                      //                   ),
+                                                      //                 ),
+                                                      //               ),
+                                                      //             ],
+                                                      //           ),
+                                                      //           IconButton(
+                                                      //             onPressed: () {
+                                                      //               model
+                                                      //                   .stateController
+                                                      //                   .clear();
+                                                      //               model
+                                                      //                   .lgaListCopy
+                                                      //                   .clear();
+                                                      //               model.showLGAAndStateDialog(
+                                                      //                 context,
+                                                      //                 covAreaIndex:
+                                                      //                     3,
+                                                      //               );
+                                                      //             },
+                                                      //             icon: Icon(
+                                                      //               Icons.add,
+                                                      //               color: AppColors
+                                                      //                   .reminder1,
+                                                      //               size: 22.sp,
+                                                      //             ),
+                                                      //           ),
+                                                      //         ],
+                                                      //       ),
+                                                      //       Divider(
+                                                      //         color:
+                                                      //             AppColors.f1,
+                                                      //       ),
+                                                      //       if (model
+                                                      //           .listOfAddedLocation
+                                                      //           .isNotEmpty)
+                                                      //         ...model.listOfAddedLocation.map(
+                                                      //           (
+                                                      //             o,
+                                                      //           ) => Container(
+                                                      //             width: double
+                                                      //                 .infinity,
+                                                      //             margin:
+                                                      //                 EdgeInsets.only(
+                                                      //                   bottom:
+                                                      //                       12.w,
+                                                      //                 ),
+                                                      //             padding:
+                                                      //                 EdgeInsets.all(
+                                                      //                   16.w,
+                                                      //                 ),
+                                                      //             decoration: BoxDecoration(
+                                                      //               borderRadius:
+                                                      //                   BorderRadius.circular(
+                                                      //                     12,
+                                                      //                   ),
+                                                      //               color:
+                                                      //                   AppColors
+                                                      //                       .grey,
+                                                      //             ),
+                                                      //             child: Column(
+                                                      //               crossAxisAlignment:
+                                                      //                   CrossAxisAlignment
+                                                      //                       .start,
+                                                      //               children: [
+                                                      //                 TextView(
+                                                      //                   text: o
+                                                      //                       .keys
+                                                      //                       .first,
+                                                      //                   textStyle: TextStyle(
+                                                      //                     fontSize:
+                                                      //                         13.86.sp,
+                                                      //                     fontWeight:
+                                                      //                         FontWeight.w600,
+                                                      //                     color:
+                                                      //                         AppColors.reminder1,
+                                                      //                     fontFamily:
+                                                      //                         'DMSans',
+                                                      //                   ),
+                                                      //                 ),
+                                                      //                 SizedBox(
+                                                      //                   height:
+                                                      //                       7.2.h,
+                                                      //                 ),
+
+                                                      //                 AnimatedSize(
+                                                      //                   duration: const Duration(
+                                                      //                     milliseconds:
+                                                      //                         300,
+                                                      //                   ),
+                                                      //                   curve: Curves
+                                                      //                       .easeInOut,
+                                                      //                   child:
+                                                      //                       model.coverageAreasMap ==
+                                                      //                           o
+                                                      //                       ? Wrap(
+                                                      //                           children: [
+                                                      //                             ...o.values.first.map(
+                                                      //                               (
+                                                      //                                 e,
+                                                      //                               ) => TextView(
+                                                      //                                 text: '$e, ',
+                                                      //                                 textStyle: TextStyle(
+                                                      //                                   fontSize: 13.86.sp,
+                                                      //                                   fontWeight: FontWeight.w200,
+                                                      //                                   color: AppColors.infoGrey,
+                                                      //                                   fontFamily: 'DMSans',
+                                                      //                                 ),
+                                                      //                               ),
+                                                      //                             ),
+                                                      //                           ],
+                                                      //                         )
+                                                      //                       : Text(
+                                                      //                           o.values.first
+                                                      //                               .map(
+                                                      //                                 (
+                                                      //                                   e,
+                                                      //                                 ) => e.toString(),
+                                                      //                               )
+                                                      //                               .join(
+                                                      //                                 ', ',
+                                                      //                               ),
+                                                      //                           maxLines: 1,
+                                                      //                           overflow: TextOverflow.ellipsis,
+                                                      //                           style: TextStyle(
+                                                      //                             fontSize: 13.86.sp,
+                                                      //                             fontWeight: FontWeight.w200,
+                                                      //                             color: AppColors.infoGrey,
+                                                      //                             fontFamily: 'DMSans',
+                                                      //                           ),
+                                                      //                         ),
+                                                      //                 ),
+                                                      //                 SizedBox(
+                                                      //                   height:
+                                                      //                       10.h,
+                                                      //                 ),
+                                                      //                 GestureDetector(
+                                                      //                   onTap: () {
+                                                      //                     if (model.coverageAreasMap ==
+                                                      //                         o) {
+                                                      //                       model.coverageAreasMap =
+                                                      //                           null;
+                                                      //                     } else {
+                                                      //                       model.coverageAreasMap =
+                                                      //                           o;
+                                                      //                     }
+                                                      //                     model
+                                                      //                         .notifyListeners();
+                                                      //                   },
+                                                      //                   child: TextView(
+                                                      //                     text:
+                                                      //                         model.coverageAreasMap ==
+                                                      //                             o
+                                                      //                         ? 'Hide'
+                                                      //                         : 'See all',
+                                                      //                     textStyle: TextStyle(
+                                                      //                       decoration:
+                                                      //                           TextDecoration.underline,
+                                                      //                       decorationColor:
+                                                      //                           model.coverageAreasMap ==
+                                                      //                               o
+                                                      //                           ? AppColors.primary
+                                                      //                           : AppColors.reminder1,
+                                                      //                       fontSize:
+                                                      //                           12.86.sp,
+                                                      //                       fontWeight:
+                                                      //                           FontWeight.w500,
+                                                      //                       color:
+                                                      //                           model.coverageAreasMap ==
+                                                      //                               o
+                                                      //                           ? AppColors.primary
+                                                      //                           : AppColors.reminder1,
+                                                      //                       fontFamily:
+                                                      //                           'DMSans',
+                                                      //                     ),
+                                                      //                   ),
+                                                      //                 ),
+                                                      //                 SizedBox(
+                                                      //                   height:
+                                                      //                       10.h,
+                                                      //                 ),
+                                                      //                 Row(
+                                                      //                   mainAxisAlignment:
+                                                      //                       MainAxisAlignment.end,
+                                                      //                   children: [
+                                                      //                     GestureDetector(
+                                                      //                       onTap: () {
+                                                      //                         model.stateController.text = o.keys.first;
+                                                      //                         model.showLGAAndStateDialog(
+                                                      //                           context,
+                                                      //                           isEdit: true,
+                                                      //                           editState: o.keys.first,
+                                                      //                           editLgas: o.values.first,
+                                                      //                         );
+                                                      //                         model.notifyListeners();
+                                                      //                       },
+                                                      //                       child: SvgPicture.asset(
+                                                      //                         AppImage.round_edit,
+                                                      //                         height: 22.h,
+                                                      //                         width: 22.h,
+                                                      //                       ),
+                                                      //                     ),
+                                                      //                     SizedBox(
+                                                      //                       width:
+                                                      //                           10.h,
+                                                      //                     ),
+                                                      //                     GestureDetector(
+                                                      //                       onTap: () {
+                                                      //                         model.listOfAddedLocation.remove(
+                                                      //                           o,
+                                                      //                         );
+                                                      //                         setState(
+                                                      //                           () {},
+                                                      //                         );
+                                                      //                         model.notifyListeners();
+                                                      //                       },
+                                                      //                       child: SvgPicture.asset(
+                                                      //                         AppImage.delete,
+                                                      //                         height: 20.h,
+                                                      //                         width: 20.h,
+                                                      //                       ),
+                                                      //                     ),
+                                                      //                   ],
+                                                      //                 ),
+                                                      //               ],
+                                                      //             ),
+                                                      //           ),
+                                                      //         ),
+                                                      //     ],
+                                                      //   ),
                                                     ],
                                                   )
                                                 : SizedBox.shrink(),
@@ -5882,7 +7669,9 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                               documents: Documents(
                                                                 cacCertificate:
                                                                     model.secondLevelDistributorKycEntityModelCAC ==
-                                                                        null
+                                                                        null || model
+                                                                          .secondLevelDistributorKycEntityModelCAC!
+                                                                          .distributor==null
                                                                     ? null
                                                                     : model
                                                                           .secondLevelDistributorKycEntityModelCAC!
@@ -5891,7 +7680,9 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                           .cacCertificate!,
                                                                 pharmaceuticalDistributionLicense:
                                                                     model.secondLevelDistributorKycEntityModelPharmLin ==
-                                                                        null
+                                                                        null || model
+                                                                          .secondLevelDistributorKycEntityModelPharmLin!
+                                                                          .distributor==null
                                                                     ? null
                                                                     : model
                                                                           .secondLevelDistributorKycEntityModelPharmLin!
@@ -5900,7 +7691,9 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                           .pharmaceuticalDistributionLicense!,
                                                                 nafdacPermit:
                                                                     model.secondLevelDistributorKycEntityModelNAF ==
-                                                                        null
+                                                                        null || model
+                                                                          .secondLevelDistributorKycEntityModelNAF!
+                                                                          .distributor==null
                                                                     ? null
                                                                     : model
                                                                           .secondLevelDistributorKycEntityModelNAF!
@@ -5909,7 +7702,9 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                           .nafdacPermit!,
                                                                 pharmacyCouncilLicense:
                                                                     model.secondLevelDistributorKycEntityModelPharmCouncilLin ==
-                                                                        null
+                                                                        null || model
+                                                                          .secondLevelDistributorKycEntityModelPharmCouncilLin!
+                                                                          .distributor==null
                                                                     ? null
                                                                     : model
                                                                           .secondLevelDistributorKycEntityModelPharmCouncilLin!
@@ -5918,7 +7713,9 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                           .pharmacyCouncilLicense!,
                                                                 companyLogo:
                                                                     model.secondLevelDistributorKycEntityModelLogo ==
-                                                                        null
+                                                                        null || model
+                                                                          .secondLevelDistributorKycEntityModelLogo!
+                                                                          .distributor==null
                                                                     ? null
                                                                     : model
                                                                           .secondLevelDistributorKycEntityModelLogo!
@@ -5926,6 +7723,15 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                           .documents!
                                                                           .companyLogo!,
                                                               ),
+                                                              coverageAreas: model
+                                                                  .listOfAddedLocation
+                                                                  // .map(
+                                                                  //   (e) =>
+                                                                  //       CoverageAreas.fromJson(
+                                                                  //         e,
+                                                                  //       ),
+                                                                  // )
+                                                                  // .toList(),
                                                             ),
                                                       manufacturer:
                                                           !isSwitchedManufaturer
@@ -5989,8 +7795,10 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                               ),
                                                               documents: Documents(
                                                                 cacCertificate:
-                                                                    model.secondLevelDistributorKycEntityModelManCAC ==
-                                                                        null
+                                                                    model.secondLevelDistributorKycEntityModelManCAC == 
+                                                                        null || model
+                                                                          .secondLevelDistributorKycEntityModelManCAC!
+                                                                          .manufacturer==null
                                                                     ? null
                                                                     : model
                                                                           .secondLevelDistributorKycEntityModelManCAC!
@@ -5999,7 +7807,9 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                           .cacCertificate!,
                                                                 gmpCertificate:
                                                                     model.secondLevelDistributorKycEntityModelManGMP ==
-                                                                        null
+                                                                        null || model
+                                                                          .secondLevelDistributorKycEntityModelManGMP!
+                                                                          .manufacturer==null
                                                                     ? null
                                                                     : model
                                                                           .secondLevelDistributorKycEntityModelManGMP!
@@ -6008,7 +7818,9 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                           .gmpCertificate!,
                                                                 nafdacManufacturingLicense:
                                                                     model.secondLevelDistributorKycEntityModelManNAF ==
-                                                                        null
+                                                                        null || model
+                                                                          .secondLevelDistributorKycEntityModelManNAF!
+                                                                          .manufacturer==null
                                                                     ? null
                                                                     : model
                                                                           .secondLevelDistributorKycEntityModelManNAF!
@@ -6017,7 +7829,9 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                           .nafdacManufacturingLicense!,
                                                                 productRegistrationEvidence:
                                                                     model.secondLevelDistributorKycEntityModelManProd ==
-                                                                        null
+                                                                        null || model
+                                                                          .secondLevelDistributorKycEntityModelManProd!
+                                                                          .manufacturer==null
                                                                     ? null
                                                                     : model
                                                                           .secondLevelDistributorKycEntityModelManProd!
@@ -6026,7 +7840,9 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                           .productRegistrationEvidence!,
                                                                 companyLogo:
                                                                     model.secondLevelDistributorKycEntityModelManLogo ==
-                                                                        null
+                                                                        null || model
+                                                                          .secondLevelDistributorKycEntityModelManLogo!
+                                                                          .manufacturer==null
                                                                     ? null
                                                                     : model
                                                                           .secondLevelDistributorKycEntityModelManLogo!
@@ -6094,7 +7910,9 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                               documents: Documents(
                                                                 cacCertificate:
                                                                     model.secondLevelDistributorKycEntityModelImpCAC ==
-                                                                        null
+                                                                        null || model
+                                                                          .secondLevelDistributorKycEntityModelImpCAC!
+                                                                          .importer==null
                                                                     ? null
                                                                     : model
                                                                           .secondLevelDistributorKycEntityModelImpCAC!
@@ -6103,7 +7921,9 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                           .cacCertificate!,
                                                                 importPermit:
                                                                     model.secondLevelDistributorKycEntityModelImpPermit ==
-                                                                        null
+                                                                        null || model
+                                                                          .secondLevelDistributorKycEntityModelImpPermit!
+                                                                          .importer==null
                                                                     ? null
                                                                     : model
                                                                           .secondLevelDistributorKycEntityModelImpPermit!
@@ -6112,7 +7932,9 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                           .importPermit!,
                                                                 manufacturerAuthorizationLetter:
                                                                     model.secondLevelDistributorKycEntityModelImpManAuthLetter ==
-                                                                        null
+                                                                        null|| model
+                                                                          .secondLevelDistributorKycEntityModelImpManAuthLetter!
+                                                                          .importer==null
                                                                     ? null
                                                                     : model
                                                                           .secondLevelDistributorKycEntityModelImpManAuthLetter!
@@ -6121,7 +7943,9 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                           .manufacturerAuthorizationLetter!,
                                                                 companyLogo:
                                                                     model.secondLevelDistributorKycEntityModelImpLogo ==
-                                                                        null
+                                                                        null|| model
+                                                                          .secondLevelDistributorKycEntityModelImpLogo!
+                                                                          .importer==null
                                                                     ? null
                                                                     : model
                                                                           .secondLevelDistributorKycEntityModelImpLogo!
@@ -6130,6 +7954,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                           .companyLogo!,
                                                               ),
                                                             ),
+                                                    
                                                     ),
                                                   ),
                                                 ),
@@ -6211,6 +8036,10 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                         null,
                                                                   ),
                                                                   documents: Documents(
+                                                                    gmpCertificate: null,
+                                                                    nafdacManufacturingLicense: null,
+                                                                    productRegistrationEvidence: null,
+                                                                    importPermit: null,
                                                                     cacCertificate:
                                                                         model.secondLevelDistributorKycEntityModelCAC ==
                                                                             null
@@ -6257,6 +8086,15 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                               .documents!
                                                                               .companyLogo!,
                                                                   ),
+                                                                  coverageAreas: model
+                                                                      .listOfAddedLocation
+                                                                      // .map(
+                                                                      //   (e) =>
+                                                                      //       CoverageAreas.fromJson(
+                                                                      //         e,
+                                                                      //       ),
+                                                                      // )
+                                                                      // .toList(),
                                                                 ),
                                                           manufacturer:
                                                               !isSwitchedManufaturer

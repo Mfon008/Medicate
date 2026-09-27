@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use, use_build_context_synchronously, strict_top_level_inference, public_member_api_docs, sort_constructors_first
+// ignore_for_file: unnecessary_null_comparison, deprecated_member_use, use_build_context_synchronously, strict_top_level_inference, public_member_api_docs, sort_constructors_first
 import 'dart:async';
 import 'dart:io';
 import 'package:dio/dio.dart';
@@ -81,6 +81,8 @@ import 'package:medicate_app/core/connect_end/model/create_distributor_product_e
     as iml;
 import 'package:medicate_app/core/connect_end/model/get_single_product_response_model/image.dart'
     as im;
+import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/coverage_areas.dart'
+    as cov;
 
 class ManufacturerViewModel extends BaseViewModel {
   final BuildContext? context;
@@ -283,10 +285,11 @@ class ManufacturerViewModel extends BaseViewModel {
   List<String> lgaList = [];
   List<String> lgaListCopy = [];
   List<String> lgaAddedList = [];
-  List<Map<String, dynamic>> listOfAddedLocation = [];
+  List<cov.CoverageAreas> listOfAddedLocation = [];
   // List<BusinessAddresses> listOfAddedAddress = [];
   BusinessAddresses? selectedLocation;
   CoverageAreas? coverageAreas;
+  cov.CoverageAreas? coverageAreasMap;
 
   SecondLevelDistributorKycEntityModel
   _secondLevelDistributorKycEntityModelCAC =
@@ -390,6 +393,8 @@ class ManufacturerViewModel extends BaseViewModel {
   bool isSeeMore = false;
 
   BusinessAddresses? profileUpdate;
+
+  int? coverageAreaIndex;
 
   void pickImage(BuildContext context) {
     try {
@@ -4046,6 +4051,7 @@ class ManufacturerViewModel extends BaseViewModel {
       );
       if (v['statusCode'] == 200 || v['statusCode'] == 201) {
         await AppUtils.snackbar(context, message: v['message']);
+        // navigate.back();
         getManAndDistributorKyc(context);
       }
       _isLoading = false;
@@ -4080,60 +4086,66 @@ class ManufacturerViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  String kycStatusText(status) {
-    if (status.toLowerCase() == 'UNDER_REVIEW'.toLowerCase()) {
-      return 'Your KYC is submitted and under '
-          'review. We’ll notify you once it’s '
-          'verified.';
-    }
-    if (status.toLowerCase() == 'NOT_SUBMITTED'.toLowerCase()) {
-      return 'Kindly upload and submit KYC for '
-          'verification to obtain some access '
-          'to platform features.';
-    }
-    if (status.toLowerCase() == 'REJECTED'.toLowerCase()) {
-      return 'Your KYC couldn’t be verified. '
-          'Please review your details and '
-          'resubmit the required documents.';
-    }
-    if (status.toLowerCase() == 'APPROVED'.toLowerCase()) {
-      return 'Your KYC has been successfully '
-          'verified. You can now access '
-          'some services.';
+  String kycStatusText(String status) {
+    if (status != '' || status != null) {
+      if (status.toLowerCase() == 'UNDER_REVIEW'.toLowerCase()) {
+        return 'Your KYC is submitted and under '
+            'review. We’ll notify you once it’s '
+            'verified.';
+      }
+      if (status.toLowerCase() == 'NOT_SUBMITTED'.toLowerCase()) {
+        return 'Kindly upload and submit KYC for '
+            'verification to obtain some access '
+            'to platform features.';
+      }
+      if (status.toLowerCase() == 'REJECTED'.toLowerCase()) {
+        return 'Your KYC couldn’t be verified. '
+            'Please review your details and '
+            'resubmit the required documents.';
+      }
+      if (status.toLowerCase() == 'APPROVED'.toLowerCase()) {
+        return 'Your KYC has been successfully '
+            'verified. You can now access '
+            'some services.';
+      }
     }
     return 'Kindly upload and submit KYC for '
         'verification to obtain some access '
         'to platform features.';
   }
 
-  Color kycStatusColor(status) {
-    if (status.toLowerCase() == 'UNDER_REVIEW'.toLowerCase()) {
-      return AppColors.fadedyellow;
-    }
-    if (status.toLowerCase() == 'NOT_SUBMITTED'.toLowerCase()) {
-      return AppColors.fadedyellow;
-    }
-    if (status.toLowerCase() == 'REJECTED'.toLowerCase()) {
-      return AppColors.red_bar_faded;
-    }
-    if (status.toLowerCase() == 'APPROVED'.toLowerCase()) {
-      return AppColors.app_green_light;
+  Color kycStatusColor(String status) {
+    if (status != '' || status != null) {
+      if (status.toLowerCase() == 'UNDER_REVIEW'.toLowerCase()) {
+        return AppColors.fadedyellow;
+      }
+      if (status.toLowerCase() == 'NOT_SUBMITTED'.toLowerCase()) {
+        return AppColors.fadedyellow;
+      }
+      if (status.toLowerCase() == 'REJECTED'.toLowerCase()) {
+        return AppColors.red_bar_faded;
+      }
+      if (status.toLowerCase() == 'APPROVED'.toLowerCase()) {
+        return AppColors.app_green_light;
+      }
     }
     return AppColors.fadedyellow;
   }
 
-  Color kycStatusColorIcon(status) {
-    if (status.toLowerCase() == 'UNDER_REVIEW'.toLowerCase()) {
-      return AppColors.yellow;
-    }
-    if (status.toLowerCase() == 'NOT_SUBMITTED'.toLowerCase()) {
-      return AppColors.yellow;
-    }
-    if (status.toLowerCase() == 'REJECTED'.toLowerCase()) {
-      return AppColors.red_bar;
-    }
-    if (status.toLowerCase() == 'APPROVED'.toLowerCase()) {
-      return AppColors.app_green;
+  Color kycStatusColorIcon(String status) {
+    if (status != '' || status != null) {
+      if (status.toLowerCase() == 'UNDER_REVIEW'.toLowerCase()) {
+        return AppColors.yellow;
+      }
+      if (status.toLowerCase() == 'NOT_SUBMITTED'.toLowerCase()) {
+        return AppColors.yellow;
+      }
+      if (status.toLowerCase() == 'REJECTED'.toLowerCase()) {
+        return AppColors.red_bar;
+      }
+      if (status.toLowerCase() == 'APPROVED'.toLowerCase()) {
+        return AppColors.app_green;
+      }
     }
     return AppColors.yellow;
   }
@@ -4165,7 +4177,8 @@ class ManufacturerViewModel extends BaseViewModel {
         throwException: true,
       );
       if (v['statusCode'] == 200 || v['statusCode'] == 201) {
-        getUserDetails(context);
+        Navigator.pop(context, true);
+        // getUserDetails(context);
       }
       _isLoading = false;
     } catch (e) {
@@ -4852,6 +4865,7 @@ class ManufacturerViewModel extends BaseViewModel {
   void showLGAAndStateDialog(
     BuildContext context, {
     bool isEdit = false,
+    int? covAreaIndex,
     String? editState,
     List<String>? editLgas,
   }) {
@@ -5235,14 +5249,16 @@ class ManufacturerViewModel extends BaseViewModel {
                               ),
                               SizedBox(width: 20.w),
                               Expanded(
-                                flex: !isEdit ?1:2,
+                                flex: !isEdit ? 1 : 2,
                                 child: ButtonWidget(
                                   border: 100.r,
                                   buttonColor: AppColors.primary,
                                   buttonText: !isEdit ? 'Add' : 'Save Changes',
                                   color: AppColors.white,
                                   buttonBorderColor: AppColors.transparent,
+                                  isLoading: _isLoading,
                                   onPressed: () async {
+                                    _isLoading = true;
                                     final state = stateController.text.trim();
 
                                     if (state.isEmpty) {
@@ -5251,7 +5267,7 @@ class ManufacturerViewModel extends BaseViewModel {
 
                                     final stateIndex = listOfAddedLocation
                                         .indexWhere(
-                                          (location) => location.keys.any(
+                                          (location) => location.lgas!.any(
                                             (key) =>
                                                 key.trim().toLowerCase() ==
                                                 state.toLowerCase(),
@@ -5261,26 +5277,37 @@ class ManufacturerViewModel extends BaseViewModel {
                                     if (isEdit) {
                                       // EDIT EXISTING STATE
                                       if (stateIndex != -1) {
-                                        listOfAddedLocation[stateIndex] = {
-                                          state: List<String>.from(
-                                            lgaAddedList,
-                                          ),
-                                        };
+                                        listOfAddedLocation[stateIndex] = cov.CoverageAreas(lgas: lgaAddedList,state: stateController.text.trim());
+                                        // {
+                                        //   state: List<String>.from(
+                                        //     lgaAddedList,
+                                        //   ),
+                                        // };
                                       } else {
                                         // In case the state was changed during editing
-                                        listOfAddedLocation.add({
-                                          state: List<String>.from(
-                                            lgaAddedList,
-                                          ),
-                                        });
+                                        listOfAddedLocation.add(
+                                          cov.CoverageAreas(lgas: lgaAddedList,state: stateController.text.trim())
+                                        //   {
+                                        //   state: List<String>.from(
+                                        //     lgaAddedList,
+                                        //   ),
+                                        // }
+                                        );
                                       }
                                     } else {
                                       // ADD NEW STATE
-                                      listOfAddedLocation.add({
-                                        state: List<String>.from(lgaAddedList),
-                                      });
+                                      listOfAddedLocation.add(
+                                        cov.CoverageAreas(lgas: lgaAddedList,state: stateController.text.trim())
+                                      //   {
+                                      //   state: List<String>.from(lgaAddedList),
+                                      // }
+                                      );
                                       // }
                                     }
+                                    if (covAreaIndex != null) {
+                                      coverageAreaIndex = covAreaIndex;
+                                    }
+                                    _isLoading = false;
                                     await Future.delayed(Duration(seconds: 1));
                                     lgaListCopy.clear();
                                     setModalState(() {});
@@ -5304,7 +5331,7 @@ class ManufacturerViewModel extends BaseViewModel {
     );
   }
 
-  void showBusinessAreaLGAAndStateCountryDialog(
+  Future<bool?> showBusinessAreaLGAAndStateCountryDialog(
     BuildContext context, {
     bool isEdit = false,
     BusinessAddresses? busAddress,
@@ -5320,7 +5347,7 @@ class ManufacturerViewModel extends BaseViewModel {
       lgaController.text = busAddress?.lga?.toString() ?? '';
     }
 
-    showDialog(
+    return showDialog<bool?>(
       context: context,
       barrierDismissible: false,
       builder: (context) {
@@ -5900,64 +5927,34 @@ class ManufacturerViewModel extends BaseViewModel {
                                                 ),
                                             id: busAddress?.id,
                                           );
-
-                                          // listOfAddedAddress[editIndex] =
-                                          //     BusinessAddresses(
-                                          //       state: stateController.text
-                                          //           .trim(),
-                                          //       lga: lgaController.text.trim(),
-                                          //       country: countryController.text
-                                          //           .trim(),
-                                          //       businessAddress:
-                                          //           businessAddController.text
-                                          //               .trim(),
-                                          //     );
-                                          // }
                                         } else {
                                           // ADD NEW STATE
-                                          if (getDistributorDetailsResponseModel!
-                                                  .data!
-                                                  .businessAddresses!
-                                                  .length <
-                                              3) {
-                                            model.addBusinessAddresses(
-                                              context: context,
-                                              businessAddresses:
-                                                  BusinessAddressesEntity(
-                                                    state: stateController.text
-                                                        .trim(),
-                                                    lga: lgaController.text
-                                                        .trim(),
-                                                    country: countryController
-                                                        .text
-                                                        .trim(),
-                                                    businessAddress:
-                                                        businessAddController
-                                                            .text
-                                                            .trim(),
-                                                  ),
-                                            );
-
-                                            // listOfAddedAddress.add(
-                                            //   BusinessAddresses(
-                                            //     state: stateController.text.trim(),
-                                            //     lga: lgaController.text.trim(),
-                                            //     country: countryController.text
-                                            //         .trim(),
-                                            //     businessAddress:
-                                            //         businessAddController.text
-                                            //             .trim(),
-                                            //   ),
-                                            // );
-                                          }
+                                          // if (getDistributorDetailsResponseModel!
+                                          //         .data!
+                                          //         .businessAddresses!
+                                          //         .length <
+                                          //     3) {
+                                          model.addBusinessAddresses(
+                                            context: context,
+                                            businessAddresses:
+                                                BusinessAddressesEntity(
+                                                  state: stateController.text
+                                                      .trim(),
+                                                  lga: lgaController.text
+                                                      .trim(),
+                                                  country: countryController
+                                                      .text
+                                                      .trim(),
+                                                  businessAddress:
+                                                      businessAddController.text
+                                                          .trim(),
+                                                ),
+                                          );
                                         }
-                                        // }
-                                        // await Future.delayed(
-                                        //   Duration(seconds: 1),
-                                        // );
-                                        // lgaListCopy.clear();
-                                        // setModalState(() {});
-                                        Navigator.pop(context);
+                                        await Future.delayed(
+                                          Duration(seconds: 1),
+                                        );
+                                        lgaListCopy.clear();
                                         model.notifyListeners();
                                       },
                                     ),

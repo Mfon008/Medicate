@@ -2,8 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:medicate_app/core/config/colors.dart';
 import 'package:medicate_app/ui/widget/text.dart';
+import '../../../../../core/app_assets/image.dart';
 import '../../../../../core/connect_end/view_model/manufacturer_view_model.dart';
 import '../../../../widget/info_item_widget.dart';
 import '../dashed_border_painter.dart';
@@ -66,6 +68,14 @@ class _LevelOneCardState extends State<LevelOneCard> {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
+                           widget.model!
+                                                .getDistributorKycResponseModel
+                                                ?.data
+                                                ?.kycLevels?[0]
+                                                .status
+                                                ?.toLowerCase() ==
+                                            'approved'
+                                        ?
                           Container(
                             width: 14.w,
                             height: 14.w,
@@ -78,7 +88,7 @@ class _LevelOneCardState extends State<LevelOneCard> {
                               size: 9.sp,
                               color: Colors.white,
                             ),
-                          ),
+                          ):SvgPicture.asset(AppImage.open_padlock),
 
                           SizedBox(width: 8.w),
 
@@ -146,56 +156,135 @@ class _LevelOneCardState extends State<LevelOneCard> {
                           // ==================================
                           // KYC MESSAGE
                           // ==================================
+                          
                           Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 14.w,
-                              vertical: 12.h,
-                            ),
-                            margin: EdgeInsets.symmetric(
-                              horizontal: 14.w,
-                              vertical: 22.h,
-                            ),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFE8FAF0),
-                              borderRadius: BorderRadius.circular(10.r),
-                            ),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  width: 14.w,
-                                  height: 14.w,
-                                  margin: EdgeInsets.only(top: 1.h),
-                                  decoration: const BoxDecoration(
-                                    color: Color(0xFF58C58A),
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: Icon(
-                                    Icons.check,
-                                    size: 9.sp,
-                                    color: Colors.white,
-                                  ),
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 14.w,
+                                  vertical: 12.h,
                                 ),
+                                margin: EdgeInsets.symmetric(
+                                  horizontal: 14.w,
+                                  vertical: 22.h,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: widget.model!.kycStatusColor(
+                                    widget.model!
+                                        .getDistributorKycResponseModel
+                                        ?.data
+                                        ?.kycLevels?[0]
+                                        .status??'',
+                                  ),
+                                  borderRadius: BorderRadius.circular(10.r),
+                                ),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    widget.model!
+                                                .getDistributorKycResponseModel
+                                                ?.data
+                                                ?.kycLevels?[0]
+                                                .status
+                                                ?.toLowerCase() ==
+                                            'approved'
+                                        ? Container(
+                                            width: 14.w,
+                                            height: 14.w,
+                                            margin: EdgeInsets.only(top: 1.h),
+                                            decoration: const BoxDecoration(
+                                              color: Color(0xFF58C58A),
+                                              shape: BoxShape.circle,
+                                            ),
+                                            child: Icon(
+                                              Icons.check,
+                                              size: 9.sp,
+                                              color: Colors.white,
+                                            ),
+                                          )
+                                        : Icon(
+                                            Icons.info_outline,
+                                            size: 18.90.sp,
+                                            color: widget.model!.kycStatusColorIcon(
+                                              widget.model!
+                                                  .getDistributorKycResponseModel
+                                                  ?.data
+                                                  ?.kycLevels?[0]
+                                                  .status??'',
+                                            ),
+                                          ),
 
-                                SizedBox(width: 8.w),
-
-                                Expanded(
-                                  child: Text(
-                                    'Your KYC has been successfully '
-                                    'verified. You can now access '
-                                    'some services.',
-                                    style: TextStyle(
-                                      fontSize: 12.5.sp,
-                                      height: 1.35,
-                                      fontWeight: FontWeight.w400,
-                                      color: const Color(0xFF252525),
-                                      fontFamily: 'DMSans',
+                                    SizedBox(width: 8.w),
+                                    Expanded(
+                                      child: Text(
+                                        widget.model!.kycStatusText(
+                                          widget.model
+                                              ?.getDistributorKycResponseModel
+                                              ?.data
+                                              ?.kycLevels?[0]
+                                              .status??'',
+                                        ),
+                                        style: TextStyle(
+                                          fontSize: 12.5.sp,
+                                          height: 1.35,
+                                          fontWeight: FontWeight.w400,
+                                          color: const Color(0xFF252525),
+                                          fontFamily: 'DMSans',
+                                        ),
+                                      ),
                                     ),
-                                  ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                          ),
+                              ),
+                        
+                          // Container(
+                          //   padding: EdgeInsets.symmetric(
+                          //     horizontal: 14.w,
+                          //     vertical: 12.h,
+                          //   ),
+                          //   margin: EdgeInsets.symmetric(
+                          //     horizontal: 14.w,
+                          //     vertical: 22.h,
+                          //   ),
+                          //   decoration: BoxDecoration(
+                          //     color: const Color(0xFFE8FAF0),
+                          //     borderRadius: BorderRadius.circular(10.r),
+                          //   ),
+                          //   child: Row(
+                          //     crossAxisAlignment: CrossAxisAlignment.start,
+                          //     children: [
+                          //       Container(
+                          //         width: 14.w,
+                          //         height: 14.w,
+                          //         margin: EdgeInsets.only(top: 1.h),
+                          //         decoration: const BoxDecoration(
+                          //           color: Color(0xFF58C58A),
+                          //           shape: BoxShape.circle,
+                          //         ),
+                          //         child: Icon(
+                          //           Icons.check,
+                          //           size: 9.sp,
+                          //           color: Colors.white,
+                          //         ),
+                          //       ),
+
+                          //       SizedBox(width: 8.w),
+
+                          //       Expanded(
+                          //         child: Text(
+                          //           'Your KYC has been successfully '
+                          //           'verified. You can now access '
+                          //           'some services.',
+                          //           style: TextStyle(
+                          //             fontSize: 12.5.sp,
+                          //             height: 1.35,
+                          //             fontWeight: FontWeight.w400,
+                          //             color: const Color(0xFF252525),
+                          //             fontFamily: 'DMSans',
+                          //           ),
+                          //         ),
+                          //       ),
+                          //     ],
+                          //   ),
+                          // ),
 
                           // ==================================
                           // INFORMATION
