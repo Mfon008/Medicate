@@ -18,6 +18,9 @@ Product _$ProductFromJson(Map<String, dynamic> json) => Product(
   categorySlug: json['categorySlug'] as String?,
   manufacturerName: json['manufacturerName'] as String?,
   sku: json['sku'] as String?,
+  suggestedRetailPrice: json['suggestedRetailPrice'] as String?,
+  additionalResourceDescription: json['additionalResourceDescription'] as String?,
+  additionalResourceUrl: json['additionalResourceUrl'] as String?,
   packSize: (json['packSize'] as num?)?.toInt(),
   unit: json['unit'] as String?,
   minimumOrderQuantity: (json['minimumOrderQuantity'] as num?)?.toInt(),
@@ -108,4 +111,7 @@ Map<String, dynamic> _$ProductToJson(Product instance) => <String, dynamic>{
   'enlistedPricePerUnit': instance.enlistedPricePerUnit,
   'displayPricePerUnit': instance.displayPricePerUnit,
   'priceDetails': instance.priceDetails,
+  'additionalResourceDescription': instance.additionalResourceDescription,
+  'suggestedRetailPrice': instance.suggestedRetailPrice,
+  'additionalResourceUrl': instance.additionalResourceUrl,
 };

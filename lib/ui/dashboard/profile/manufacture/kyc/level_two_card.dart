@@ -390,7 +390,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
      model.listOfAddedLocation = 
     (model.getDistributorKycResponseModel?.data?.level2?.distributor?.coverageAreas ?? [])
         .map<CoverageAreas>(
-          (e) => CoverageAreas.fromJson(e as Map<String, dynamic>),
+          (e) => CoverageAreas.fromJson(e.toJson()),
         )
         .toList();
     await Future.delayed(Duration(seconds: 1));
@@ -7932,7 +7932,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                           .importPermit!,
                                                                 manufacturerAuthorizationLetter:
                                                                     model.secondLevelDistributorKycEntityModelImpManAuthLetter ==
-                                                                        null|| model
+                                                                        null || model
                                                                           .secondLevelDistributorKycEntityModelImpManAuthLetter!
                                                                           .importer==null
                                                                     ? null
@@ -7943,7 +7943,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                           .manufacturerAuthorizationLetter!,
                                                                 companyLogo:
                                                                     model.secondLevelDistributorKycEntityModelImpLogo ==
-                                                                        null|| model
+                                                                        null || model
                                                                           .secondLevelDistributorKycEntityModelImpLogo!
                                                                           .importer==null
                                                                     ? null
@@ -8042,7 +8042,9 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                     importPermit: null,
                                                                     cacCertificate:
                                                                         model.secondLevelDistributorKycEntityModelCAC ==
-                                                                            null
+                                                                            null || model
+                                                                          .secondLevelDistributorKycEntityModelCAC!
+                                                                          .distributor==null
                                                                         ? null
                                                                         : model
                                                                               .secondLevelDistributorKycEntityModelCAC!
@@ -8051,7 +8053,9 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                               .cacCertificate!,
                                                                     pharmaceuticalDistributionLicense:
                                                                         model.secondLevelDistributorKycEntityModelPharmLin ==
-                                                                            null
+                                                                            null || model
+                                                                          .secondLevelDistributorKycEntityModelPharmLin!
+                                                                          .distributor==null
                                                                         ? null
                                                                         : model
                                                                               .secondLevelDistributorKycEntityModelPharmLin!
@@ -8060,7 +8064,9 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                               .pharmaceuticalDistributionLicense!,
                                                                     nafdacPermit:
                                                                         model.secondLevelDistributorKycEntityModelNAF ==
-                                                                            null
+                                                                            null || model
+                                                                          .secondLevelDistributorKycEntityModelNAF!
+                                                                          .distributor==null
                                                                         ? null
                                                                         : model
                                                                               .secondLevelDistributorKycEntityModelNAF!
@@ -8069,7 +8075,9 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                               .nafdacPermit!,
                                                                     pharmacyCouncilLicense:
                                                                         model.secondLevelDistributorKycEntityModelPharmCouncilLin ==
-                                                                            null
+                                                                            null || model
+                                                                          .secondLevelDistributorKycEntityModelPharmCouncilLin!
+                                                                          .distributor==null
                                                                         ? null
                                                                         : model
                                                                               .secondLevelDistributorKycEntityModelPharmCouncilLin!
@@ -8078,7 +8086,9 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                               .pharmacyCouncilLicense!,
                                                                     companyLogo:
                                                                         model.secondLevelDistributorKycEntityModelLogo ==
-                                                                            null
+                                                                            null || model
+                                                                          .secondLevelDistributorKycEntityModelLogo!
+                                                                          .distributor==null
                                                                         ? null
                                                                         : model
                                                                               .secondLevelDistributorKycEntityModelLogo!
@@ -8148,7 +8158,9 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                   documents: Documents(
                                                                     cacCertificate:
                                                                         model.secondLevelDistributorKycEntityModelManCAC ==
-                                                                            null
+                                                                            null || model
+                                                                          .secondLevelDistributorKycEntityModelManCAC!
+                                                                          .manufacturer==null
                                                                         ? null
                                                                         : model
                                                                               .secondLevelDistributorKycEntityModelManCAC!
@@ -8157,7 +8169,9 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                               .cacCertificate!,
                                                                     gmpCertificate:
                                                                         model.secondLevelDistributorKycEntityModelManGMP ==
-                                                                            null
+                                                                            null || model
+                                                                          .secondLevelDistributorKycEntityModelManGMP!
+                                                                          .manufacturer==null
                                                                         ? null
                                                                         : model
                                                                               .secondLevelDistributorKycEntityModelManGMP!
@@ -8166,7 +8180,9 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                               .gmpCertificate!,
                                                                     nafdacManufacturingLicense:
                                                                         model.secondLevelDistributorKycEntityModelManNAF ==
-                                                                            null
+                                                                            null || model
+                                                                          .secondLevelDistributorKycEntityModelManNAF!
+                                                                          .manufacturer==null
                                                                         ? null
                                                                         : model
                                                                               .secondLevelDistributorKycEntityModelManNAF!
@@ -8175,7 +8191,9 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                               .nafdacManufacturingLicense!,
                                                                     productRegistrationEvidence:
                                                                         model.secondLevelDistributorKycEntityModelManProd ==
-                                                                            null
+                                                                            null || model
+                                                                          .secondLevelDistributorKycEntityModelManProd!
+                                                                          .manufacturer==null
                                                                         ? null
                                                                         : model
                                                                               .secondLevelDistributorKycEntityModelManProd!
@@ -8184,7 +8202,9 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                               .productRegistrationEvidence!,
                                                                     companyLogo:
                                                                         model.secondLevelDistributorKycEntityModelManLogo ==
-                                                                            null
+                                                                            null || model
+                                                                          .secondLevelDistributorKycEntityModelManLogo!
+                                                                          .manufacturer==null
                                                                         ? null
                                                                         : model
                                                                               .secondLevelDistributorKycEntityModelManLogo!
@@ -8258,7 +8278,9 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                   documents: Documents(
                                                                     cacCertificate:
                                                                         model.secondLevelDistributorKycEntityModelImpCAC ==
-                                                                            null
+                                                                            null || model
+                                                                          .secondLevelDistributorKycEntityModelImpCAC!
+                                                                          .importer==null
                                                                         ? null
                                                                         : model
                                                                               .secondLevelDistributorKycEntityModelImpCAC!
@@ -8267,7 +8289,9 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                               .cacCertificate!,
                                                                     importPermit:
                                                                         model.secondLevelDistributorKycEntityModelImpPermit ==
-                                                                            null
+                                                                            null || model
+                                                                          .secondLevelDistributorKycEntityModelImpPermit!
+                                                                          .importer==null
                                                                         ? null
                                                                         : model
                                                                               .secondLevelDistributorKycEntityModelImpPermit!
@@ -8276,7 +8300,9 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                               .importPermit!,
                                                                     manufacturerAuthorizationLetter:
                                                                         model.secondLevelDistributorKycEntityModelImpManAuthLetter ==
-                                                                            null
+                                                                            null || model
+                                                                          .secondLevelDistributorKycEntityModelImpManAuthLetter!
+                                                                          .importer==null
                                                                         ? null
                                                                         : model
                                                                               .secondLevelDistributorKycEntityModelImpManAuthLetter!
@@ -8285,7 +8311,9 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                               .manufacturerAuthorizationLetter!,
                                                                     companyLogo:
                                                                         model.secondLevelDistributorKycEntityModelImpLogo ==
-                                                                            null
+                                                                            null || model
+                                                                          .secondLevelDistributorKycEntityModelImpLogo!
+                                                                          .importer==null
                                                                         ? null
                                                                         : model
                                                                               .secondLevelDistributorKycEntityModelImpLogo!

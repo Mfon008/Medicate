@@ -1,5 +1,7 @@
 // ignore_for_file: strict_top_level_inference
 
+import 'dart:typed_data';
+
 import 'package:dio/dio.dart';
 import 'package:medicate_app/core/connect_end/model/get_user_details_response_model/get_user_details_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/manufacturer_signup_entity_model.dart';
@@ -366,6 +368,16 @@ class ManufacturerRepoImpl {
 
   Future<dynamic> updatePrimaryBusinessAddress(String id) async {
     final response = await _contract.updatePrimaryBusinessAddress(id);
+    return response;
+  }
+
+  Future<dynamic> uploadProductCsv(MultipartFile file) async {
+    final response = await _contract.uploadProductCsv(file);
+    return response;
+  }
+
+  Future<Uint8List> downloadProductCsv() async {
+    final response = await _contract.downloadProductCsv();
     return response;
   }
 }

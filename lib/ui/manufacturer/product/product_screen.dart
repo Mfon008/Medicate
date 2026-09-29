@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously, strict_top_level_inference, deprecated_member_use
 
+import 'package:dio/dio.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -777,200 +778,213 @@ class _ProductScreenState extends State<ProductScreen> {
       context: context,
       backgroundColor: AppColors.white,
       builder: (BuildContext bc) {
-        return Container(
-          padding: EdgeInsets.all(22.6.w),
-          child: Column(
-            mainAxisSize: MainAxisSize.min, // Keeps sheet height minimal
-            children: [
-              Stack(
+        return ViewModelBuilder<ManufacturerViewModel>.reactive(
+          viewModelBuilder: () => ManufacturerViewModel(),
+          onViewModelReady: (model) {},
+          disposeViewModel: false,
+          onDispose: (viewModel) {},
+          builder: (_, ManufacturerViewModel model, _) {
+            return Container(
+              padding: EdgeInsets.all(22.6.w),
+              child: Column(
+                mainAxisSize: MainAxisSize.min, // Keeps sheet height minimal
                 children: [
-                  Align(
-                    alignment: Alignment.topCenter,
-                    child: TextView(
-                      text: 'Select Option',
-                      color: AppColors.deep,
-                      fontWeight: FontWeight.w700,
-                      textStyle: TextStyle(
-                        fontFamily: 'GoogleSans',
-                        fontSize: 15.60.sp,
-                        color: AppColors.deep,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: GestureDetector(
-                      onTap: () => Navigator.pop(context), // Closes the sheet
-                      child: Padding(
-                        padding: EdgeInsets.only(top: 5.0.w),
-                        child: SvgPicture.asset(
-                          AppImage.cancel,
-                          height: 14.20.h,
-                          width: 14.20.w,
-                          color: AppColors.black,
+                  Stack(
+                    children: [
+                      Align(
+                        alignment: Alignment.topCenter,
+                        child: TextView(
+                          text: 'Select Option',
+                          color: AppColors.deep,
+                          fontWeight: FontWeight.w700,
+                          textStyle: TextStyle(
+                            fontFamily: 'GoogleSans',
+                            fontSize: 15.60.sp,
+                            color: AppColors.deep,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 40.h),
-              GestureDetector(
-                onTap: () {
-                  Navigator.pop(context);
-                  navigate.navigateTo(
-                    Routes.addProductScreen,
-                    arguments: AddProductScreenArguments(isEdit: false),
-                  );
-                },
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                    vertical: 10.30.w,
-                    horizontal: 12.w,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.primary,
-                    borderRadius: BorderRadius.circular(40.r),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Icon(Icons.add, color: AppColors.white, size: 24.sp),
-                      SizedBox(width: 10.w),
-                      TextView(
-                        text: 'Add Manually',
-                        textStyle: TextStyle(
-                          fontFamily: 'DMSans',
-                          fontSize: 16.90.sp,
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.white,
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: GestureDetector(
+                          onTap: () =>
+                              Navigator.pop(context), // Closes the sheet
+                          child: Padding(
+                            padding: EdgeInsets.only(top: 5.0.w),
+                            child: SvgPicture.asset(
+                              AppImage.cancel,
+                              height: 14.20.h,
+                              width: 14.20.w,
+                              color: AppColors.black,
+                            ),
+                          ),
                         ),
                       ),
                     ],
                   ),
-                ),
-              ),
-              SizedBox(height: 20.h),
-              GestureDetector(
-                onTap: () {
-                  bulkUploadShowDialog(
-                    context: context,
-                    model: ManufacturerViewModel(),
-                  );
-                  // Navigator.pop(context);
-                },
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                    vertical: 10.30.w,
-                    horizontal: 12.w,
-                  ),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: AppColors.primary),
-                    borderRadius: BorderRadius.circular(40.r),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset(
-                        AppImage.upload_icon,
-                        width: 20.w,
-                        height: 17.20.h,
+                  SizedBox(height: 40.h),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                      navigate.navigateTo(
+                        Routes.addProductScreen,
+                        arguments: AddProductScreenArguments(isEdit: false),
+                      );
+                    },
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        vertical: 10.30.w,
+                        horizontal: 12.w,
+                      ),
+                      decoration: BoxDecoration(
                         color: AppColors.primary,
+                        borderRadius: BorderRadius.circular(40.r),
                       ),
-                      SizedBox(width: 10.w),
-                      TextView(
-                        text: 'Bulk upload',
-                        textStyle: TextStyle(
-                          fontFamily: 'DMSans',
-                          fontSize: 16.90.sp,
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.primary,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Icon(Icons.add, color: AppColors.white, size: 24.sp),
+                          SizedBox(width: 10.w),
+                          TextView(
+                            text: 'Add Manually',
+                            textStyle: TextStyle(
+                              fontFamily: 'DMSans',
+                              fontSize: 16.90.sp,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20.h),
+                  GestureDetector(
+                    onTap: () {
+                      bulkUploadShowDialog(
+                        context: context,
+                        model: ManufacturerViewModel(),
+                      );
+                      // Navigator.pop(context);
+                    },
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        vertical: 10.30.w,
+                        horizontal: 12.w,
+                      ),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: AppColors.primary),
+                        borderRadius: BorderRadius.circular(40.r),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SvgPicture.asset(
+                            AppImage.upload_icon,
+                            width: 20.w,
+                            height: 17.20.h,
+                            color: AppColors.primary,
+                          ),
+                          SizedBox(width: 10.w),
+                          TextView(
+                            text: 'Bulk upload',
+                            textStyle: TextStyle(
+                              fontFamily: 'DMSans',
+                              fontSize: 16.90.sp,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.primary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20.h),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () =>
+                              model.downloadloadBulkCsvProduct(context),
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                              vertical: 10.30.w,
+                              horizontal: 10.w,
+                            ),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: AppColors.primary),
+                              borderRadius: BorderRadius.circular(40.r),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                SvgPicture.asset(
+                                  AppImage.download_icon,
+                                  width: 12.20.w,
+                                  height: 14.20.h,
+                                  color: AppColors.primary,
+                                ),
+                                SizedBox(width: 10.w),
+                                TextView(
+                                  text: 'CSV Template',
+                                  textStyle: TextStyle(
+                                    fontFamily: 'DMSans',
+                                    fontSize: 14.90.sp,
+                                    fontWeight: FontWeight.w400,
+                                    color: AppColors.primary,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 14.46.w),
+                      Expanded(
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            vertical: 10.30.w,
+                            horizontal: 5.10.w,
+                          ),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: AppColors.primary),
+                            borderRadius: BorderRadius.circular(40.r),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              SvgPicture.asset(
+                                AppImage.download_icon,
+                                width: 12.20.w,
+                                height: 14.20.h,
+                                color: AppColors.primary,
+                              ),
+                              SizedBox(width: 10.w),
+                              TextView(
+                                text: 'Export Products',
+                                textStyle: TextStyle(
+                                  fontFamily: 'DMSans',
+                                  fontSize: 14.90.sp,
+                                  fontWeight: FontWeight.w400,
+                                  color: AppColors.primary,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ],
                   ),
-                ),
-              ),
-              SizedBox(height: 20.h),
-              Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                        vertical: 10.30.w,
-                        horizontal: 10.w,
-                      ),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: AppColors.primary),
-                        borderRadius: BorderRadius.circular(40.r),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SvgPicture.asset(
-                            AppImage.download_icon,
-                            width: 12.20.w,
-                            height: 14.20.h,
-                            color: AppColors.primary,
-                          ),
-                          SizedBox(width: 10.w),
-                          TextView(
-                            text: 'CSV Template',
-                            textStyle: TextStyle(
-                              fontFamily: 'DMSans',
-                              fontSize: 14.90.sp,
-                              fontWeight: FontWeight.w400,
-                              color: AppColors.primary,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 14.46.w),
-                  Expanded(
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                        vertical: 10.30.w,
-                        horizontal: 5.10.w,
-                      ),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: AppColors.primary),
-                        borderRadius: BorderRadius.circular(40.r),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SvgPicture.asset(
-                            AppImage.download_icon,
-                            width: 12.20.w,
-                            height: 14.20.h,
-                            color: AppColors.primary,
-                          ),
-                          SizedBox(width: 10.w),
-                          TextView(
-                            text: 'Export Products',
-                            textStyle: TextStyle(
-                              fontFamily: 'DMSans',
-                              fontSize: 14.90.sp,
-                              fontWeight: FontWeight.w400,
-                              color: AppColors.primary,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                  SizedBox(height: 30.h),
                 ],
               ),
-              SizedBox(height: 30.h),
-            ],
-          ),
+            );
+          },
         );
       },
     );
@@ -1047,71 +1061,148 @@ class _ProductScreenState extends State<ProductScreen> {
                               ),
                             ),
                             SizedBox(height: 12.h),
-                            SizedBox(
-                              width: double.infinity,
-                              child: DottedBorder(
-                                options: RoundedRectDottedBorderOptions(
-                                  dashPattern: [20, 20],
-                                  strokeWidth: .94,
-                                  radius: Radius.circular(10),
-                                  color: AppColors.grey,
-                                ),
-                                child: GestureDetector(
-                                  // onTap: () => model.pickImageMeansIdPractitioner(context),
-                                  child: Container(
-                                    width: double.infinity,
-                                    padding: EdgeInsets.symmetric(
-                                      vertical: 24.30.w,
-                                      horizontal: 20.w,
-                                    ),
+                            model.fileImageDocument != null
+                                ? Container(
+                                    padding: EdgeInsets.all(10.w),
                                     decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10.r),
-                                      color: AppColors.grey,
+                                      border: Border.all(
+                                        color: AppColors.tintColor,
+                                      ),
+                                      borderRadius: BorderRadius.circular(12),
                                     ),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                    child: Row(
                                       children: [
-                                        SvgPicture.asset(
-                                          AppImage.upload_doc,
-                                          height: 24.0.h,
-                                          width: 24.0.h,
-                                        ),
-                                        SizedBox(height: 10.h),
-                                        TextView(
-                                          text:
-                                              'Click to upload or drag and drop CSV file',
-                                          textAlign: TextAlign.center,
-                                          textStyle: TextStyle(
-                                            fontFamily: 'DMSans',
-                                            fontSize: 14.2.sp,
-                                            fontWeight: FontWeight.w500,
-                                            color: AppColors.reminder,
-                                          ),
-                                        ),
-                                        SizedBox(height: 2.0.h),
+                                        SvgPicture.asset(AppImage.kyc_file),
+                                        SizedBox(width: 14.20.w),
                                         SizedBox(
-                                          width: 220.w,
+                                          width: 80.w,
                                           child: TextView(
-                                            text: 'Support format: CSV',
-                                            textAlign: TextAlign.center,
+                                            text: model.fileImageDocument ?? '',
+                                            maxLines: 1,
+                                            textOverflow: TextOverflow.ellipsis,
                                             textStyle: TextStyle(
-                                              fontFamily: 'DMSans',
-                                              fontSize: 13.6.sp,
+                                              fontFamily: 'Arial',
+                                              fontSize: 13.2.sp,
                                               fontWeight: FontWeight.w400,
-                                              color: AppColors.fineGrey,
+                                              color: AppColors.black,
                                             ),
                                           ),
                                         ),
-                                        SizedBox(height: 2.0.h),
+                                        Spacer(),
+                                        model.fileImageDocument != null
+                                            ? GestureDetector(
+                                                onTap: () =>
+                                                    model.pickCsvFile(context),
+                                                child: model.isLoadingCAC
+                                                    ? SizedBox(
+                                                        width: 10.w,
+                                                        height: 10.h,
+                                                        child:
+                                                            CircularProgressIndicator(
+                                                              color: AppColors
+                                                                  .primary,
+                                                              strokeWidth: 2.w,
+                                                            ),
+                                                      )
+                                                    : SvgPicture.asset(
+                                                        AppImage.upload_arr_up,
+                                                      ),
+                                              )
+                                            : SizedBox.shrink(),
+                                        SizedBox(width: 8.10.w),
+                                        model.fileImageDocument != null
+                                            ? GestureDetector(
+                                                onTap: () {
+                                                  model.fileImageDocument =
+                                                      null;
+                                                  model.notifyListeners();
+                                                },
+                                                child: SvgPicture.asset(
+                                                  AppImage.delete,
+                                                ),
+                                              )
+                                            : SizedBox.shrink(),
                                       ],
                                     ),
+                                  )
+                                : SizedBox(
+                                    width: double.infinity,
+                                    child: DottedBorder(
+                                      options: RoundedRectDottedBorderOptions(
+                                        dashPattern: [20, 20],
+                                        strokeWidth: .94,
+                                        radius: Radius.circular(10),
+                                        color: AppColors.grey,
+                                      ),
+                                      child: GestureDetector(
+                                        onTap: () => model.pickCsvFile(context),
+                                        child: Container(
+                                          width: double.infinity,
+                                          padding: EdgeInsets.symmetric(
+                                            vertical: 24.30.w,
+                                            horizontal: 20.w,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(
+                                              10.r,
+                                            ),
+                                            color: AppColors.grey,
+                                          ),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              model.isLoading
+                                                  ? SizedBox(
+                                                      width: 20.w,
+                                                      height: 20.h,
+                                                      child:
+                                                          CircularProgressIndicator(
+                                                            color: AppColors
+                                                                .primary,
+                                                            strokeWidth: 2.w,
+                                                          ),
+                                                    )
+                                                  : SvgPicture.asset(
+                                                      AppImage.upload_doc,
+                                                      height: 24.0.h,
+                                                      width: 24.0.h,
+                                                    ),
+                                              SizedBox(height: 10.h),
+                                              TextView(
+                                                text:
+                                                    'Click to upload or drag and drop CSV file',
+                                                textAlign: TextAlign.center,
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'DMSans',
+                                                  fontSize: 14.2.sp,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: AppColors.reminder,
+                                                ),
+                                              ),
+                                              SizedBox(height: 2.0.h),
+                                              SizedBox(
+                                                width: 220.w,
+                                                child: TextView(
+                                                  text: 'Support format: CSV',
+                                                  textAlign: TextAlign.center,
+                                                  textStyle: TextStyle(
+                                                    fontFamily: 'DMSans',
+                                                    fontSize: 13.6.sp,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: AppColors.fineGrey,
+                                                  ),
+                                                ),
+                                              ),
+                                              SizedBox(height: 2.0.h),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ),
-                            ),
                             SizedBox(height: 12.50.h),
                             TextView(
                               text:
@@ -1160,7 +1251,19 @@ class _ProductScreenState extends State<ProductScreen> {
                                 SizedBox(width: 20.w),
                                 Expanded(
                                   child: ElevatedButton(
-                                    onPressed: () {},
+                                    onPressed: () => model.uploadBulkCsvProduct(
+                                      context: context,
+                                      file: MultipartFile.fromBytes(
+                                        model
+                                            .formartFileImage(
+                                              model.imageDocument,
+                                            )
+                                            .readAsBytesSync(),
+                                        filename: model.imageDocument!.path
+                                            .split("/")
+                                            .last,
+                                      ),
+                                    ),
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: AppColors.primary,
                                       padding: EdgeInsets.symmetric(

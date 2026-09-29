@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:medicate_app/core/config/colors.dart';
@@ -73,44 +75,40 @@ class WebViewScreen extends StatefulWidget {
 }
 
 class _WebViewScreenState extends State<WebViewScreen> {
-  late final WebViewController controller;
+   WebViewController? _controller;
+
+  void setupWebViewWithPlatform() {
+    if (Platform.isAndroid) {
+      _controller = WebViewController()
+        ..setJavaScriptMode(JavaScriptMode.unrestricted)
+        ..setNavigationDelegate(
+          NavigationDelegate(
+            onProgress: (int progress) {
+              // Update loading bar.
+            },
+            onPageStarted: (String url) {},
+            onPageFinished: (String url) {},
+            onHttpError: (HttpResponseError error) {},
+            onWebResourceError: (WebResourceError error) {},
+            onNavigationRequest: (NavigationRequest request) {
+              if (request.url.startsWith(widget.imageUrl)) {
+                return NavigationDecision.prevent;
+              }
+              return NavigationDecision.navigate;
+            },
+          ),
+        )
+        ..loadRequest(Uri.parse(widget.imageUrl));
+    } else {
+      _controller = WebViewController()..loadRequest(Uri.parse(widget.imageUrl));
+    }
+  }
 
   @override
   void initState() {
+    setupWebViewWithPlatform();
     super.initState();
-
-    controller = WebViewController()
-      ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..loadHtmlString(_html(widget.imageUrl));
   }
-
-  String _html(String url) {
-    return '''
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <style>
-          body {
-            margin: 0;
-            background: black;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-          }
-          img {
-            max-width: 100%;
-            max-height: 100%;
-          }
-        </style>
-      </head>
-      <body>
-        <img src="$url" />
-      </body>
-    </html>
-    ''';
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -130,7 +128,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
       ),
       body: SizedBox(
         height: double.infinity,
-        child: WebViewWidget(controller: controller),
+        child: WebViewWidget(controller: _controller!),
       ),
     );
   }

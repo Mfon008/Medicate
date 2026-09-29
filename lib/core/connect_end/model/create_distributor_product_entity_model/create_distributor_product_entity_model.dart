@@ -19,6 +19,9 @@ class CreateDistributorProductEntityModel {
   List<VolumePricing>? volumePricing;
   String? serialNumber;
   String? manufacturerName;
+  String? suggestedRetailPrice;
+  String? additionalResourceDescription;
+  String? additionalResourceUrl;
 
   CreateDistributorProductEntityModel({
     this.productName,
@@ -38,6 +41,9 @@ class CreateDistributorProductEntityModel {
     this.images,
     this.volumePricing,
     this.serialNumber,
+    this.suggestedRetailPrice,
+    this.additionalResourceDescription,
+    this.additionalResourceUrl,
   });
 
   factory CreateDistributorProductEntityModel.fromJson(
@@ -65,6 +71,9 @@ class CreateDistributorProductEntityModel {
           ?.map((e) => VolumePricing.fromJson(e as Map<String, dynamic>))
           .toList(),
       serialNumber: json['serialNumber'] as String?,
+      suggestedRetailPrice: json['suggestedRetailPrice'] as String?,
+      additionalResourceDescription: json['additionalResourceDescription'] as String?,
+      additionalResourceUrl: json['additionalResourceUrl'] as String?,
     );
   }
 
@@ -86,5 +95,8 @@ class CreateDistributorProductEntityModel {
     'images': images?.map((e) => e.toJson()).toList(),
     'volumePricing': volumePricing?.map((e) => e.toJson()).toList(),
     'serialNumber': serialNumber,
+    'suggestedRetailPrice': suggestedRetailPrice,
+    'additionalResourceDescription': additionalResourceDescription,
+    'additionalResourceUrl': additionalResourceUrl,
   };
 }

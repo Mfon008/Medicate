@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:dio/dio.dart';
 import 'package:medicate_app/core/connect_end/model/get_distributor_profile_response_model/get_distributor_profile_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/manufacturer_signup_entity_model.dart';
@@ -197,4 +199,8 @@ class ManufacturerContractImpl {
       await _api.deletebusinessAddress(id);
   Future<dynamic> updatePrimaryBusinessAddress(String id) async =>
       await _api.updatePrimaryBusinessAddress(id);
+  Future<dynamic> uploadProductCsv(MultipartFile file) async =>
+      await _api.uploadProductCsv(file);
+  Future<Uint8List> downloadProductCsv() async =>
+      await _api.downloadProductCsv();
 }

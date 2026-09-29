@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:dio/dio.dart';
 import 'package:medicate_app/core/connect_end/model/distributor_wholesale_category_model/distributor_wholesale_category_model.dart';
 import 'package:medicate_app/core/connect_end/model/get_all_product_list_response_model/get_all_product_list_response_model.dart';
@@ -721,6 +723,34 @@ class ManufacturerApi {
       final response = await _service.call(
         '${UrlConfig.auth_tenants_profile_addresses}/$id/primary',
         RequestMethod.patch,
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<Uint8List> downloadProductCsv() async {
+    try {
+      final response = await _service.call(
+        UrlConfig.wholesale_products_bulk_download_template,
+        RequestMethod.get,options: Options(responseType: ResponseType.bytes),
+      );
+      logger.d(response.data);
+      return Uint8List.fromList(List<int>.from(response.data));
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> uploadProductCsv(MultipartFile file) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.wholesale_products_bulk_download_template,
+        RequestMethod.post,formData: FormData.fromMap({'file': file})
       );
       logger.d(response.data);
       return response.data;

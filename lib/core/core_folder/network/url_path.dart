@@ -124,4 +124,8 @@ class UrlConfig {
       'auth/distributor/profile/addresses';
   static const String auth_tenants_profile_addresses =
       'auth/tenant/profile/addresses';
+  static const String wholesale_products_bulk_download_template =
+      'wholesale/products/bulk-upload/template';
+  static const String wholesale_products_bulk_upload =
+      'wholesale/products/bulk-upload';
 }

@@ -325,6 +325,69 @@ class ManufacturerViewProductScreen extends StatelessWidget {
                                         ),
                                       )
                                     : SizedBox.shrink(),
+
+                            model
+                                            .getSingleProductResponseModel!
+                                            .data!
+                                            .product!
+                                            .additionalResourceDescription !=
+                                        '' ||
+                                    model
+                                            .getSingleProductResponseModel!
+                                            .data!
+                                            .product!
+                                            .additionalResourceUrl !=
+                                        ''
+                                ? GestureDetector(
+                                    onTap: () => model.additionalResourceInfo(
+                                      context,
+                                      des: model
+                                          .getSingleProductResponseModel!
+                                          .data!
+                                          .product!
+                                          .additionalResourceDescription,
+                                      desLink: model
+                                          .getSingleProductResponseModel!
+                                          .data!
+                                          .product!
+                                          .additionalResourceUrl,
+                                    ),
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: 2.60.w,
+                                        horizontal: 10.8.w,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: AppColors.skyBlue,
+                                        borderRadius: BorderRadius.circular(
+                                          20.r,
+                                        ),
+                                        border: Border.all(
+                                          color: AppColors.cool_blue,
+                                          width: 1.2,
+                                        ),
+                                      ),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          SvgPicture.asset(
+                                            AppImage.additional_info,
+                                          ),
+                                          SizedBox(width: 4.2.w),
+                                          TextView(
+                                            text: 'Additional Resource Info',
+                                            textStyle: TextStyle(
+                                              fontFamily: 'DMSans',
+                                              fontSize: 14.20.sp,
+                                              fontWeight: FontWeight.w500,
+                                              color: AppColors.primary,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                                : SizedBox.shrink(),
                               ],
                             ),
                             SizedBox(height: 10.h),
@@ -730,8 +793,7 @@ class ManufacturerViewProductScreen extends StatelessWidget {
                                           ? SizedBox(
                                               height: 70.h,
                                               child: TextView(
-                                                text:
-                                                    'Recommended retail benchmark for pharmacies and healthcare facilities is ₦24,100 per carton (~₦241 per carton). Reselling at this suggested price offers an estimated 23% gross margin (+₦5,600 per carton) based on current B2B wholesale pricing.',
+                                                text:model.getSingleProductResponseModel?.data?.product?.suggestedRetailPrice??'',
                                                 maxLines: 4,
                                                 textOverflow:
                                                     TextOverflow.ellipsis,
@@ -744,8 +806,7 @@ class ManufacturerViewProductScreen extends StatelessWidget {
                                               ),
                                             )
                                           : TextView(
-                                              text:
-                                                  'Recommended retail benchmark for pharmacies and healthcare facilities is ₦24,100 per carton (~₦241 per carton). Reselling at this suggested price offers an estimated 23% gross margin (+₦5,600 per carton) based on current B2B wholesale pricing.',
+                                              text:model.getSingleProductResponseModel?.data?.product?.suggestedRetailPrice??'',
                                               textStyle: TextStyle(
                                                 fontFamily: 'DMSans',
                                                 fontSize: 14.90.sp,
@@ -1053,8 +1114,7 @@ class ManufacturerViewProductScreen extends StatelessWidget {
                                             Divider(color: AppColors.infoGrey1),
                                             SizedBox(height: 5.10.h),
                                             TextView(
-                                              text:
-                                                  'Broad-spectrum antibiotic capsules. Effective against a wide range of gram-positive and gram-negative bacterial infections.',
+                                              text:model.getSingleProductResponseModel?.data?.product?.description??'',
                                               textAlign: TextAlign.start,
                                               textStyle: TextStyle(
                                                 fontFamily: 'DMSans',

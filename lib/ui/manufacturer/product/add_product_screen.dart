@@ -122,6 +122,27 @@ class _AddProductScreenState extends State<AddProductScreen> {
               '';
           unit.text =
               model.getSingleProductResponseModel?.data?.product?.unit ?? '';
+          suggestedPriceDescription.text =
+              model
+                  .getSingleProductResponseModel
+                  ?.data
+                  ?.product
+                  ?.suggestedRetailPrice ??
+              '';
+          additionalDescription.text =
+              model
+                  .getSingleProductResponseModel
+                  ?.data
+                  ?.product
+                  ?.additionalResourceDescription ??
+              '';
+          enterLink.text =
+              model
+                  .getSingleProductResponseModel
+                  ?.data
+                  ?.product
+                  ?.additionalResourceUrl ??
+              '';
 
           model.c = Category(
             id: model
@@ -348,7 +369,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                           padding: EdgeInsets.all(14.48.w),
                           child: GestureDetector(
                             onTap: () => model.showCategoryMenu(context),
-                            child: SvgPicture.asset(AppImage.arrow_down),
+                            child: SvgPicture.asset(AppImage.arrow_down,height: 11.0.h,width: 12.w,),
                           ),
                         ),
                       ),
@@ -656,7 +677,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       isFilled: true,
                       controller: enterLink,
                       validator: AppValidator.validateString(),
-                      keyboardType: TextInputType.number,
+                      keyboardType: TextInputType.text,
                       onChange: (p0) {},
                     ),
                     SizedBox(height: 30.h),
@@ -1493,6 +1514,16 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                             pricePerUnit: int.parse(
                                               priceUnit.text.trim(),
                                             ),
+
+                                            suggestedRetailPrice:
+                                                suggestedPriceDescription.text
+                                                    .trim(),
+                                            additionalResourceDescription:
+                                                additionalDescription.text
+                                                    .trim(),
+                                            additionalResourceUrl: enterLink
+                                                .text
+                                                .trim(),
                                             stock: int.parse(stock.text.trim()),
                                             batchNumber: batchNo.text.trim(),
                                             serialNumber: serialNo.text.trim(),
@@ -1580,6 +1611,13 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                         productName: productName.text.trim(),
                                         description: description.text.trim(),
                                         categoryId: model.c!.id,
+                                        suggestedRetailPrice:
+                                            suggestedPriceDescription.text
+                                                .trim(),
+                                        additionalResourceDescription:
+                                            additionalDescription.text.trim(),
+                                        additionalResourceUrl: enterLink.text
+                                            .trim(),
                                         sku: sku.text.trim(),
                                         packSize: int.parse(
                                           packSize.text.trim(),

@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:medicate_app/core/app_assets/constant.dart';
 import 'package:medicate_app/core/connect_end/model/create_tenant_reminder_entity_model/patient_details.dart';
 import 'package:medicate_app/core/connect_end/model/get_reminder_for_tenant_response_model/get_reminder_for_tenant_response_model.dart';
+import 'package:medicate_app/core/connect_end/model/get_single_market_product_response_model/product.dart';
 import 'package:medicate_app/core/connect_end/model/place_order_accelerate_entity_model/delivery_details.dart';
 import 'package:medicate_app/core/connect_end/model/submit_level_two_kyc_entity_model/cac_certificate.dart';
 import 'package:medicate_app/core/connect_end/model/submit_level_two_kyc_entity_model/pharmacy_license.dart';
@@ -756,6 +757,18 @@ class PharmViewModel extends BaseViewModel {
       SubmitLevelTwoKycEntityModel();
   SubmitLevelTwoKycEntityModel? get submitLevelTwoKycEntityModelTIN =>
       _submitLevelTwoKycEntityModelTIN;
+
+  bool getStatusOFKycStatus(model) {
+    if (model.getPharmacyKycResponseModel?.data?.kycLevels?[1].status
+                ?.toLowerCase() ==
+            'approved' ||
+        model.getPharmacyKycResponseModel?.data?.kycLevels?[1].status
+                ?.toLowerCase() ==
+            'UNDER_REVIEW'.toLowerCase()) {
+      return true;
+    }
+    return false;
+  }
 
   orderStatusColorConfirmed(bool? completed) {
     if (completed == true) {
@@ -2590,9 +2603,9 @@ class PharmViewModel extends BaseViewModel {
         throwException: true,
       );
 
-      logger.d('Invoice response type: ${invoiceBytes.runtimeType}');
+      // logger.d('Invoice response type: ${invoiceBytes.runtimeType}');
 
-      logger.d('Invoice size: ${invoiceBytes.length} bytes');
+      // logger.d('Invoice size: ${invoiceBytes.length} bytes');
 
       final dir = await getTemporaryDirectory();
 
@@ -19529,13 +19542,23 @@ class PharmViewModel extends BaseViewModel {
                           SizedBox(
                             width: double.infinity,
                             child: ElevatedButton(
-                              onPressed: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) =>
-                                      WebViewScreen(imageUrl: desLink ?? ''),
-                                ),
-                              ),
+                              onPressed: () {
+                                if (desLink != null) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) =>
+                                          WebViewScreen(imageUrl: desLink),
+                                    ),
+                                  );
+                                } else {
+                                  AppUtils.snackbar(
+                                    context,
+                                    message: 'No available link',
+                                    error: true,
+                                  );
+                                }
+                              },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.primary,
                                 padding: EdgeInsets.symmetric(vertical: 16),
@@ -21846,5 +21869,36 @@ class PharmViewModel extends BaseViewModel {
         );
       },
     );
+  }
+
+  double getLineTotal(Product product) {
+    final int quantity = product.minimumOrderQuantity ?? 1;
+
+    // Normal enlisted price
+    double applicablePrice =
+        double.tryParse(product.enlistedPricePerUnit.toString()) ?? 0;
+
+    final pricingList = List.from(product.volumePricing ?? []);
+
+    // Highest volume tier first
+    pricingList.sort(
+      (a, b) => (b['quantity'] ?? 0).compareTo(a['quantity'] ?? 0),
+    );
+
+    // Find the applicable volume price
+    for (final pricing in pricingList) {
+      final int pricingQuantity =
+          int.tryParse(pricing['quantity'].toString()) ?? 0;
+
+      if (quantity >= pricingQuantity) {
+        applicablePrice =
+            double.tryParse(pricing['enlistedPricePerUnit'].toString()) ??
+            applicablePrice;
+
+        break;
+      }
+    }
+
+    return quantity * applicablePrice;
   }
 }

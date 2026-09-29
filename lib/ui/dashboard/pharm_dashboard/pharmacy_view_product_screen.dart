@@ -436,7 +436,7 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                       ?.data
                                       ?.product
                                       ?.productName
-                                      ?.capitalize() ??
+                                      ?.capitalizeWords() ??
                                   '',
                               textStyle: TextStyle(
                                 fontFamily: 'DMSans',
@@ -1369,16 +1369,12 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                   ),
                                   TextView(
                                     text: formatNaira(
-                                      model
-                                              .getSingleMarketProductResponseModel!
-                                              .data!
-                                              .product!
-                                              .displayPricePerUnit! *
-                                          model
-                                              .getSingleMarketProductResponseModel!
-                                              .data!
-                                              .product!
-                                              .minimumOrderQuantity!,
+                                      model.getLineTotal(
+                                        model
+                                            .getSingleMarketProductResponseModel!
+                                            .data!
+                                            .product!,
+                                      ),
                                     ),
                                     textStyle: TextStyle(
                                       fontFamily: 'GoogleSans',
@@ -1547,7 +1543,478 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            SizedBox(height: 10.h),
+                            SizedBox(height: 20.h),
+                            if (model
+                                .getSingleMarketProductResponseModel!
+                                .data!
+                                .similarProducts!
+                                .isNotEmpty)
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  TextView(
+                                    text: 'Similar Products',
+                                    textStyle: TextStyle(
+                                      fontFamily: 'DMSans',
+                                      fontSize: 15.80.sp,
+                                      fontWeight: FontWeight.w500,
+                                      color: AppColors.reminder,
+                                    ),
+                                  ),
+                                  SizedBox(height: 12.20.h),
+                                  LayoutBuilder(
+                                    builder: (context, constraints) {
+                                      final screenWidth = constraints.maxWidth;
+
+                                      // Responsive card width.
+                                      // On smaller phones, cards occupy more of the screen.
+                                      // On larger devices, they don't become excessively wide.
+                                      final cardWidth = screenWidth < 360
+                                          ? screenWidth * 0.86
+                                          : screenWidth < 600
+                                          ? screenWidth * 0.78
+                                          : screenWidth * 0.45;
+
+                                      // Responsive image width.
+                                      final imageSize = screenWidth < 360
+                                          ? 52.w
+                                          : screenWidth < 600
+                                          ? 60.w
+                                          : 70.w;
+
+                                      return SingleChildScrollView(
+                                        scrollDirection: Axis.horizontal,
+                                        physics: const BouncingScrollPhysics(),
+                                        padding: EdgeInsets.only(
+                                          // left: 16.w,
+                                          right: 12.w,
+                                          bottom: 10.h,
+                                        ),
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            ...model.getSingleMarketProductResponseModel!.data!.similarProducts!.map(
+                                              (m) => GestureDetector(
+                                                onTap: () {
+                                                  navigate.navigateTo(
+                                                    Routes
+                                                        .pharmacyViewProductScreen,
+                                                    arguments:
+                                                        PharmacyViewProductScreenArguments(
+                                                          wholeSaleProductId:
+                                                              m.id,
+                                                        ),
+                                                  );
+                                                },
+                                                child: IntrinsicHeight(
+                                                  child: Container(
+                                                    width: cardWidth,
+                                                    height: 120.h,
+                                                    margin: EdgeInsets.only(
+                                                      right: 12.w,
+                                                    ),
+                                                    padding: EdgeInsets.all(
+                                                      screenWidth < 360
+                                                          ? 10.w
+                                                          : 13.60.w,
+                                                    ),
+                                                    decoration: BoxDecoration(
+                                                      color: AppColors.white,
+                                                      border: Border.all(
+                                                        color:
+                                                            AppColors.infoGrey1,
+                                                      ),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            12.r,
+                                                          ),
+                                                    ),
+                                                    child: Row(
+                                                      // IMPORTANT:
+                                                      // Makes the image area stretch to the
+                                                      // same height as the product information.
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .stretch,
+                                                      children: [
+                                                        // --------------------------------
+                                                        // PRODUCT IMAGE
+                                                        // --------------------------------
+                                                        SizedBox(
+                                                          width:
+                                                              imageSize * 1.50,
+                                                          child: Stack(
+                                                            fit:
+                                                                StackFit.expand,
+                                                            clipBehavior:
+                                                                Clip.none,
+                                                            children: [
+                                                              Container(
+                                                                decoration: BoxDecoration(
+                                                                  color:
+                                                                      AppColors
+                                                                          .white,
+                                                                  borderRadius:
+                                                                      BorderRadius.circular(
+                                                                        10.r,
+                                                                      ),
+                                                                  border: Border.all(
+                                                                    color:
+                                                                        const Color.fromARGB(
+                                                                          255,
+                                                                          236,
+                                                                          237,
+                                                                          237,
+                                                                        ),
+                                                                  ),
+                                                                ),
+                                                                child: ClipRRect(
+                                                                  borderRadius:
+                                                                      BorderRadius.circular(
+                                                                        4.r,
+                                                                      ),
+                                                                  child: CachedNetworkImage(
+                                                                    imageUrl:
+                                                                        m.images?.isNotEmpty ==
+                                                                            true
+                                                                        ? m.images!.first.url ??
+                                                                              ''
+                                                                        : '',
+                                                                    fit: BoxFit
+                                                                        .cover,
+                                                                    placeholder:
+                                                                        (
+                                                                          context,
+                                                                          url,
+                                                                        ) => Center(
+                                                                          child: SpinKitRipple(
+                                                                            color:
+                                                                                AppColors.primary,
+                                                                            size:
+                                                                                28.sp,
+                                                                          ),
+                                                                        ),
+                                                                    errorWidget:
+                                                                        (
+                                                                          context,
+                                                                          url,
+                                                                          error,
+                                                                        ) => Icon(
+                                                                          Icons
+                                                                              .image_not_supported_outlined,
+                                                                          size:
+                                                                              22.sp,
+                                                                          color:
+                                                                              AppColors.infoGrey,
+                                                                        ),
+                                                                  ),
+                                                                ),
+                                                              ),
+
+                                                              // --------------------------------
+                                                              // IMAGE INDICATORS
+                                                              // --------------------------------
+                                                              if (m.images?.isNotEmpty ==
+                                                                      true &&
+                                                                  m.images!.length >
+                                                                      1)
+                                                                Positioned(
+                                                                  left: 1,
+                                                                  bottom: 1,
+                                                                  child: Container(
+                                                                    padding: EdgeInsets.symmetric(
+                                                                      horizontal:
+                                                                          5.w,
+                                                                      vertical:
+                                                                          3.h,
+                                                                    ),
+                                                                    decoration: BoxDecoration(
+                                                                      color: Colors
+                                                                          .grey
+                                                                          .shade200,
+                                                                      borderRadius: BorderRadius.only(
+                                                                        topRight:
+                                                                            Radius.circular(
+                                                                              6.r,
+                                                                            ),
+                                                                        bottomLeft:
+                                                                            Radius.circular(
+                                                                              4.r,
+                                                                            ),
+                                                                      ),
+                                                                    ),
+                                                                    child: Row(
+                                                                      mainAxisSize:
+                                                                          MainAxisSize
+                                                                              .min,
+                                                                      children: List.generate(
+                                                                        m
+                                                                            .images!
+                                                                            .length,
+                                                                        (
+                                                                          index,
+                                                                        ) => AnimatedContainer(
+                                                                          duration: const Duration(
+                                                                            milliseconds:
+                                                                                300,
+                                                                          ),
+                                                                          margin: EdgeInsets.symmetric(
+                                                                            horizontal:
+                                                                                2.w,
+                                                                          ),
+                                                                          width:
+                                                                              5.w,
+                                                                          height:
+                                                                              5.w,
+                                                                          decoration: BoxDecoration(
+                                                                            color:
+                                                                                index ==
+                                                                                    0
+                                                                                ? AppColors.primary
+                                                                                : AppColors.infoGrey,
+                                                                            shape:
+                                                                                BoxShape.circle,
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              if (m
+                                                                      .images
+                                                                      ?.isNotEmpty ==
+                                                                  true)
+                                                                Positioned(
+                                                                  left: 1,
+                                                                  bottom: 1,
+                                                                  child: Container(
+                                                                    padding: EdgeInsets.symmetric(
+                                                                      horizontal:
+                                                                          5.w,
+                                                                      vertical:
+                                                                          3.h,
+                                                                    ),
+                                                                    decoration: BoxDecoration(
+                                                                      color: Colors
+                                                                          .grey
+                                                                          .shade200,
+                                                                      borderRadius: BorderRadius.only(
+                                                                        topRight:
+                                                                            Radius.circular(
+                                                                              6.r,
+                                                                            ),
+                                                                        bottomLeft:
+                                                                            Radius.circular(
+                                                                              4.r,
+                                                                            ),
+                                                                      ),
+                                                                    ),
+                                                                    child: Row(
+                                                                      mainAxisSize:
+                                                                          MainAxisSize
+                                                                              .min,
+                                                                      children: List.generate(
+                                                                        m
+                                                                            .images!
+                                                                            .length,
+                                                                        (
+                                                                          index,
+                                                                        ) => AnimatedContainer(
+                                                                          duration: const Duration(
+                                                                            milliseconds:
+                                                                                300,
+                                                                          ),
+                                                                          margin: EdgeInsets.symmetric(
+                                                                            horizontal:
+                                                                                2.w,
+                                                                          ),
+                                                                          width:
+                                                                              5.w,
+                                                                          height:
+                                                                              5.w,
+                                                                          decoration: BoxDecoration(
+                                                                            color:
+                                                                                index ==
+                                                                                    0
+                                                                                ? AppColors.primary
+                                                                                : AppColors.infoGrey,
+                                                                            shape:
+                                                                                BoxShape.circle,
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                            ],
+                                                          ),
+                                                        ),
+
+                                                        SizedBox(
+                                                          width:
+                                                              screenWidth < 360
+                                                              ? 10.w
+                                                              : 12.w,
+                                                        ),
+
+                                                        // --------------------------------
+                                                        // PRODUCT INFORMATION
+                                                        // --------------------------------
+                                                        Expanded(
+                                                          child: Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .min,
+                                                            children: [
+                                                              TextView(
+                                                                text:
+                                                                    m.productName ??
+                                                                    '',
+                                                                maxLines: 2,
+                                                                textOverflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                                textStyle: TextStyle(
+                                                                  fontFamily:
+                                                                      'DMSans',
+                                                                  fontSize:
+                                                                      14.sp,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400,
+                                                                  color: AppColors
+                                                                      .reminder,
+                                                                ),
+                                                              ),
+
+                                                              SizedBox(
+                                                                height: 3.60.h,
+                                                              ),
+
+                                                              Divider(
+                                                                color: AppColors
+                                                                    .infoGrey1,
+                                                                height: 1,
+                                                              ),
+
+                                                              SizedBox(
+                                                                height: 3.60.h,
+                                                              ),
+
+                                                              Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceBetween,
+                                                                children: [
+                                                                  Column(
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .start,
+                                                                    children: [
+                                                                      TextView(
+                                                                        text: formatNaira(
+                                                                          m.displayPricePerUnit ??
+                                                                              0,
+                                                                        ),
+                                                                        maxLines:
+                                                                            2,
+                                                                        textOverflow:
+                                                                            TextOverflow.ellipsis,
+                                                                        textStyle: TextStyle(
+                                                                          fontFamily:
+                                                                              'DMSans',
+                                                                          fontSize:
+                                                                              screenWidth <
+                                                                                  360
+                                                                              ? 14.sp
+                                                                              : 14.sp,
+                                                                          fontWeight:
+                                                                              FontWeight.w500,
+                                                                          color:
+                                                                              AppColors.reminder,
+                                                                        ),
+                                                                      ),
+
+                                                                      TextView(
+                                                                        text:
+                                                                            '/${m.unit}',
+                                                                        textStyle: TextStyle(
+                                                                          fontFamily:
+                                                                              'DMSans',
+                                                                          fontSize:
+                                                                              14.80.sp,
+                                                                          fontWeight:
+                                                                              FontWeight.w500,
+                                                                          color:
+                                                                              AppColors.infoGrey,
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                  GestureDetector(
+                                                                    onTap: () {
+                                                                      model.addWholesaleProductToCart(
+                                                                        context,
+                                                                        wholesaleAddToCart: WholesaleAddToCartEntityModel(
+                                                                          productId:
+                                                                              m.id,
+                                                                          quantity:
+                                                                              m.minimumOrderQuantity,
+                                                                        ),
+                                                                      );
+                                                                      model
+                                                                          .notifyListeners();
+                                                                    },
+                                                                    child: Container(
+                                                                      padding: EdgeInsets.symmetric(
+                                                                        vertical:
+                                                                            2.50.w,
+                                                                        horizontal:
+                                                                            6.0.w,
+                                                                      ),
+                                                                      decoration: BoxDecoration(
+                                                                        color: AppColors
+                                                                            .primary,
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(
+                                                                              22,
+                                                                            ),
+                                                                      ),
+                                                                      child: Icon(
+                                                                        Icons
+                                                                            .add,
+                                                                        size: 16.80
+                                                                            .sp,
+                                                                        color: AppColors
+                                                                            .white,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ],
+                              ),
                           ],
                         ),
                       ],

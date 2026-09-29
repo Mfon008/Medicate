@@ -478,7 +478,6 @@ class _PharmacyWholesaleScreenState extends State<PharmacyWholesaleScreen> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  //(Carton of ${m.packSize} packs)
                                   TextView(
                                     text: m.productName?.capitalize() ?? '',
                                     textStyle: TextStyle(
@@ -657,10 +656,11 @@ class _PharmacyWholesaleScreenState extends State<PharmacyWholesaleScreen> {
                                         ),
                                       ),
                                       SizedBox(
-                                        width: 170.w,
+                                        width: 200.w,
                                         child: TextView(
                                           text: m.manufacturerName ?? '',
                                           maxLines: 1,
+                                          textAlign: TextAlign.end,
                                           textOverflow: TextOverflow.ellipsis,
                                           textStyle: TextStyle(
                                             fontFamily: 'DMSans',
@@ -827,7 +827,7 @@ class _PharmacyWholesaleScreenState extends State<PharmacyWholesaleScreen> {
                                       ),
                                       Spacer(),
                                       Container(
-                                        height: 30.h,
+                                        // height: 40.h,
                                         decoration: BoxDecoration(
                                           borderRadius: BorderRadius.circular(
                                             7.92.r,

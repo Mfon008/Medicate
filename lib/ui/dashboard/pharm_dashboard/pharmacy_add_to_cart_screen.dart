@@ -334,7 +334,7 @@ class PharmacyAddToCartScreen extends StatelessWidget {
                                                                 .spaceBetween,
                                                         children: [
                                                           Container(
-                                                            height: 30.h,
+                                                            // height: 40.h,
                                                             decoration: BoxDecoration(
                                                               borderRadius:
                                                                   BorderRadius.circular(

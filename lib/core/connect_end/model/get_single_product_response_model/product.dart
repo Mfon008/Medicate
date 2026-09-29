@@ -49,6 +49,9 @@ class Product {
   int? enlistedPricePerUnit;
   int? displayPricePerUnit;
   PriceDetails? priceDetails;
+  String? suggestedRetailPrice;
+  String? additionalResourceDescription;
+  String? additionalResourceUrl;
 
   Product({
     this.id,
@@ -88,6 +91,9 @@ class Product {
     this.enlistedPricePerUnit,
     this.displayPricePerUnit,
     this.priceDetails,
+    this.suggestedRetailPrice,
+    this.additionalResourceDescription,
+    this.additionalResourceUrl,
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {

@@ -483,13 +483,21 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                       .kyc_eye,
                                                                 ),
                                                           ),
-                                                          SizedBox(
-                                                            width: 8.10.w,
-                                                          ),
-                                                          model
-                                                                      .submitLevelTwoKycEntityModelMeansOfId
-                                                                      ?.meansOfIdDocument !=
-                                                                  null
+                                                          model.getStatusOFKycStatus(
+                                                                model,
+                                                              )
+                                                              ? SizedBox.shrink()
+                                                              : SizedBox(
+                                                                  width: 8.10.w,
+                                                                ),
+                                                          model.getStatusOFKycStatus(
+                                                                model,
+                                                              )
+                                                              ? SizedBox.shrink()
+                                                              : model
+                                                                        .submitLevelTwoKycEntityModelMeansOfId
+                                                                        ?.meansOfIdDocument !=
+                                                                    null
                                                               ? GestureDetector(
                                                                   onTap: () => model
                                                                       .pickImageMeansId(
@@ -519,10 +527,14 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                           SizedBox(
                                                             width: 8.10.w,
                                                           ),
-                                                          model
-                                                                      .submitLevelTwoKycEntityModelMeansOfId
-                                                                      ?.meansOfIdDocument !=
-                                                                  null
+                                                          model.getStatusOFKycStatus(
+                                                                model,
+                                                              )
+                                                              ? SizedBox.shrink()
+                                                              : model
+                                                                        .submitLevelTwoKycEntityModelMeansOfId
+                                                                        ?.meansOfIdDocument !=
+                                                                    null
                                                               ? GestureDetector(
                                                                   onTap: () {
                                                                     model
@@ -818,13 +830,21 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                       .kyc_eye,
                                                                 ),
                                                           ),
-                                                          SizedBox(
-                                                            width: 8.10.w,
-                                                          ),
-                                                          model
-                                                                      .submitLevelTwoKycEntityModelCAC
-                                                                      ?.cacCertificate !=
-                                                                  null
+                                                          model.getStatusOFKycStatus(
+                                                                model,
+                                                              )
+                                                              ? SizedBox.shrink()
+                                                              : SizedBox(
+                                                                  width: 8.10.w,
+                                                                ),
+                                                          model.getStatusOFKycStatus(
+                                                                model,
+                                                              )
+                                                              ? SizedBox.shrink()
+                                                              : model
+                                                                        .submitLevelTwoKycEntityModelCAC
+                                                                        ?.cacCertificate !=
+                                                                    null
                                                               ? GestureDetector(
                                                                   onTap: () => model
                                                                       .pickImageCAC(
@@ -851,13 +871,21 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                         ),
                                                                 )
                                                               : SizedBox.shrink(),
-                                                          SizedBox(
-                                                            width: 8.10.w,
-                                                          ),
-                                                          model
-                                                                      .submitLevelTwoKycEntityModelCAC
-                                                                      ?.cacCertificate !=
-                                                                  null
+                                                          model.getStatusOFKycStatus(
+                                                                model,
+                                                              )
+                                                              ? SizedBox.shrink()
+                                                              : SizedBox(
+                                                                  width: 8.10.w,
+                                                                ),
+                                                          model.getStatusOFKycStatus(
+                                                                model,
+                                                              )
+                                                              ? SizedBox.shrink()
+                                                              : model
+                                                                        .submitLevelTwoKycEntityModelCAC
+                                                                        ?.cacCertificate !=
+                                                                    null
                                                               ? GestureDetector(
                                                                   onTap: () {
                                                                     model
@@ -1113,13 +1141,21 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                       .kyc_eye,
                                                                 ),
                                                           ),
-                                                          SizedBox(
-                                                            width: 8.10.w,
-                                                          ),
-                                                          model
-                                                                      .submitLevelTwoKycEntityModelLin
-                                                                      ?.pharmacyLicense !=
-                                                                  null
+                                                          model.getStatusOFKycStatus(
+                                                                model,
+                                                              )
+                                                              ? SizedBox.shrink()
+                                                              : SizedBox(
+                                                                  width: 8.10.w,
+                                                                ),
+                                                          model.getStatusOFKycStatus(
+                                                                model,
+                                                              )
+                                                              ? SizedBox.shrink()
+                                                              : model
+                                                                        .submitLevelTwoKycEntityModelLin
+                                                                        ?.pharmacyLicense !=
+                                                                    null
                                                               ? GestureDetector(
                                                                   onTap: () => model
                                                                       .pickImagePharmLicense(
@@ -1146,13 +1182,21 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                         ),
                                                                 )
                                                               : SizedBox.shrink(),
-                                                          SizedBox(
-                                                            width: 8.10.w,
-                                                          ),
-                                                          model
-                                                                      .submitLevelTwoKycEntityModelLin
-                                                                      ?.pharmacyLicense !=
-                                                                  null
+                                                          model.getStatusOFKycStatus(
+                                                                model,
+                                                              )
+                                                              ? SizedBox.shrink()
+                                                              : SizedBox(
+                                                                  width: 8.10.w,
+                                                                ),
+                                                          model.getStatusOFKycStatus(
+                                                                model,
+                                                              )
+                                                              ? SizedBox.shrink()
+                                                              : model
+                                                                        .submitLevelTwoKycEntityModelLin
+                                                                        ?.pharmacyLicense !=
+                                                                    null
                                                               ? GestureDetector(
                                                                   onTap: () {
                                                                     model
@@ -1410,13 +1454,21 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                       .kyc_eye,
                                                                 ),
                                                           ),
-                                                          SizedBox(
-                                                            width: 8.10.w,
-                                                          ),
-                                                          model
-                                                                      .submitLevelTwoKycEntityModelTIN
-                                                                      ?.taxIdentificationNumberDocument !=
-                                                                  null
+                                                          model.getStatusOFKycStatus(
+                                                                model,
+                                                              )
+                                                              ? SizedBox.shrink()
+                                                              : SizedBox(
+                                                                  width: 8.10.w,
+                                                                ),
+                                                          model.getStatusOFKycStatus(
+                                                                model,
+                                                              )
+                                                              ? SizedBox.shrink()
+                                                              : model
+                                                                        .submitLevelTwoKycEntityModelTIN
+                                                                        ?.taxIdentificationNumberDocument !=
+                                                                    null
                                                               ? GestureDetector(
                                                                   onTap: () => model
                                                                       .pickImageTIN(
@@ -1443,13 +1495,21 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                         ),
                                                                 )
                                                               : SizedBox.shrink(),
-                                                          SizedBox(
-                                                            width: 8.10.w,
-                                                          ),
-                                                          model
-                                                                      .submitLevelTwoKycEntityModelTIN
-                                                                      ?.taxIdentificationNumberDocument !=
-                                                                  null
+                                                          model.getStatusOFKycStatus(
+                                                                model,
+                                                              )
+                                                              ? SizedBox.shrink()
+                                                              : SizedBox(
+                                                                  width: 8.10.w,
+                                                                ),
+                                                          model.getStatusOFKycStatus(
+                                                                model,
+                                                              )
+                                                              ? SizedBox.shrink()
+                                                              : model
+                                                                        .submitLevelTwoKycEntityModelTIN
+                                                                        ?.taxIdentificationNumberDocument !=
+                                                                    null
                                                               ? GestureDetector(
                                                                   onTap: () {
                                                                     model
@@ -1592,20 +1652,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                       ),
                                     ),
 
-                                    model
-                                                    .getPharmacyKycResponseModel
-                                                    ?.data
-                                                    ?.kycLevels?[1]
-                                                    .status
-                                                    ?.toLowerCase() ==
-                                                'approved' ||
-                                            model
-                                                    .getPharmacyKycResponseModel
-                                                    ?.data
-                                                    ?.kycLevels?[1]
-                                                    .status
-                                                    ?.toLowerCase() ==
-                                                'UNDER_REVIEW'.toLowerCase()
+                                    model.getStatusOFKycStatus(model)
                                         ? SizedBox.shrink()
                                         : Column(
                                             children: [

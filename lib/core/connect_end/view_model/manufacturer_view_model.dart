@@ -1,9 +1,14 @@
 // ignore_for_file: unnecessary_null_comparison, deprecated_member_use, use_build_context_synchronously, strict_top_level_inference, public_member_api_docs, sort_constructors_first
 import 'dart:async';
 import 'dart:io';
+import 'dart:convert';
+import 'dart:typed_data';
+import 'package:csv/csv.dart';
+import 'package:file_picker/file_picker.dart' as fi;
 import 'package:dio/dio.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
@@ -23,9 +28,11 @@ import 'package:medicate_app/core/connect_end/model/sign_up_phamary_response_mod
 import 'package:medicate_app/core/connect_end/model/update_distributor_profile_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/update_product_management_entity_model/update_product_management_entity_model.dart';
 import 'package:medicate_app/main.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:pinput/pinput.dart';
 import 'package:stacked/stacked.dart';
 import '../../../ui/widget/button.dart';
+import '../../../ui/widget/kyc_url_view.dart';
 import '../../../ui/widget/text.dart';
 import '../../../ui/widget/text_form_widget.dart';
 import '../../app_assets/app_utils.dart';
@@ -245,6 +252,11 @@ class ManufacturerViewModel extends BaseViewModel {
   int? minimumOrderQuantity;
   File? imageCAC;
   String? filenameCAC;
+
+  List<List<dynamic>> _csvData = [];
+  String? _filePath;
+  File? imageDocument;
+  String? fileImageDocument;
 
   GlobalKey<FormState> formKeyValidate2 = GlobalKey<FormState>();
   GlobalKey<FormState> formKeyValidateCancelOrder = GlobalKey<FormState>();
@@ -2234,6 +2246,131 @@ class ManufacturerViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  void additionalResourceInfo(context, {String? des, String? desLink}) {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // prevent closing by tapping outside
+      builder: (BuildContext context) {
+        return ViewModelBuilder<ManufacturerViewModel>.reactive(
+          viewModelBuilder: () => ManufacturerViewModel(),
+          onViewModelReady: (model) async {},
+          disposeViewModel: false,
+          onDispose: (viewModel) {},
+          builder: (_, ManufacturerViewModel model, _) {
+            return Container(
+              color: AppColors.transparent,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: TextButton.icon(
+                      onPressed: () => Navigator.pop(context),
+                      icon: Icon(Icons.close, color: Colors.white, size: 18),
+                      label: Text(
+                        "Close",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      style: TextButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 10.w,
+                          vertical: 4.w,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 6.10.h),
+                  Dialog(
+                    insetPadding: EdgeInsets.all(16.20.w),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    backgroundColor: AppColors.white,
+                    child: Padding(
+                      padding: EdgeInsets.all(20.w),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          TextView(
+                            text: 'Additional Resource Info',
+                            textStyle: TextStyle(
+                              fontFamily: 'DMSans',
+                              color: AppColors.black,
+                              fontSize: 16.20.sp,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          SizedBox(height: 8.0.h),
+                          Divider(color: AppColors.infoGrey1),
+                          SizedBox(height: 10.h),
+                          TextView(
+                            text: des ?? '',
+                            textStyle: TextStyle(
+                              fontFamily: 'DMSans',
+                              color: AppColors.black,
+                              fontSize: 13.20.sp,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                          SizedBox(height: 20.h),
+
+                          // 🔹 Save button
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) =>
+                                      WebViewScreen(imageUrl: desLink ?? ''),
+                                ),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.primary,
+                                padding: EdgeInsets.symmetric(vertical: 16),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  SvgPicture.asset(AppImage.open_link),
+                                  SizedBox(width: 4.w),
+
+                                  Text(
+                                    "Open Link",
+                                    style: TextStyle(
+                                      fontSize: 18.0,
+                                      fontFamily: 'DMSans',
+                                      color: AppColors.white,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+  
   void createProduct(
     context, {
     CreateDistributorProductEntityModel? createproduct,
@@ -6928,4 +7065,105 @@ class ManufacturerViewModel extends BaseViewModel {
       },
     );
   }
+
+  Future<void> pickCsvFile(BuildContext? context,) async {
+    // 1. Pick the file
+    dynamic result = await fi.FilePicker.pickFiles(
+      type: fi.FileType.custom,
+      allowedExtensions: ['csv'],
+      // allowMultiple: false,
+    );
+
+    if (result != null) {
+      // 2. Get the file path
+      String path = result.files.first.path!;
+      _filePath = path;
+      notifyListeners();
+
+      // 3. Read and parse the file
+      await _parseCsv(
+        path: path,
+      );
+    } else {
+      // User canceled the picker
+    }
+  }
+
+  Future<void> _parseCsv({
+    String? path,
+  }) async {
+    try {
+      _isLoading = true;
+      final input = File(path!).openRead();
+      final fields = await input
+          .transform(utf8.decoder)
+          .transform(csv.decoder)
+          .toList();
+      _csvData = fields;
+      imageDocument = File(path);
+      fileImageDocument = imageDocument!.path.split("/").last;
+     
+      _isLoading = false;
+      // logger.d('CSV Data: $_csvData');
+      logger.d('input .CSV File Data: $input');
+      notifyListeners();
+    } catch (e) {
+      // print("Error parsing CSV: $e");
+    }
+  }
+
+  Future<void> uploadBulkCsvProduct({context, MultipartFile? file}) async {
+    try {
+      _isLoading = true;
+       await runBusyFuture(
+        repositoryImply.uploadProductCsv(file!),
+        throwException: true,
+      );
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> downloadloadBulkCsvProduct(context) async {
+     final scaffoldMessenger = ScaffoldMessenger.of(context);
+    try {
+      _isLoading = true;
+       final Uint8List downloadCSV = await runBusyFuture(
+        repositoryImply.downloadProductCsv(),
+        throwException: true,
+      );
+      _isLoading = false;
+       final dir = await getTemporaryDirectory();
+
+      final filename =
+          '${dir.path}/CSV_${DateTime.now().millisecondsSinceEpoch}.pdf';
+
+      final file = File(filename);
+
+      await file.writeAsBytes(downloadCSV, flush: true);
+
+      final params = SaveFileDialogParams(sourceFilePath: file.path);
+
+      final finalPath = await FlutterFileDialog.saveFile(params: params);
+
+      if (finalPath != null) {
+        scaffoldMessenger.showSnackBar(
+          const SnackBar(
+            content: Text('Invoice saved successfully'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
 }

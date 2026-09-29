@@ -19,6 +19,9 @@ class UpdateProductManagementEntityModel {
   String? expiryDate;
   List<Image>? images;
   List<VolumePricing>? volumePricing;
+  String? suggestedRetailPrice;
+  String? additionalResourceDescription;
+  String? additionalResourceUrl;
 
   UpdateProductManagementEntityModel({
     this.productName,
@@ -38,6 +41,9 @@ class UpdateProductManagementEntityModel {
     this.expiryDate,
     this.images,
     this.volumePricing,
+    this.suggestedRetailPrice,
+    this.additionalResourceDescription,
+    this.additionalResourceUrl,
   });
 
   factory UpdateProductManagementEntityModel.fromJson(
@@ -65,13 +71,15 @@ class UpdateProductManagementEntityModel {
       volumePricing: (json['volumePricing'] as List<dynamic>?)
           ?.map((e) => VolumePricing.fromJson(e as Map<String, dynamic>))
           .toList(),
+      suggestedRetailPrice: json['suggestedRetailPrice'] as String?,
+      additionalResourceDescription: json['additionalResourceDescription'] as String?,
+      additionalResourceUrl: json['additionalResourceUrl'] as String?,
     );
   }
 
   Map<String, dynamic> toJson() => {
     'productName': productName,
     'description': description,
-    // 'distributorId': distributorId,
     'categoryId': categoryId,
     'sku': sku,
     'packSize': packSize,
@@ -86,5 +94,8 @@ class UpdateProductManagementEntityModel {
     'expiryDate': expiryDate,
     'images': images?.map((e) => e.toJson()).toList(),
     'volumePricing': volumePricing?.map((e) => e.toJson()).toList(),
+    'suggestedRetailPrice': suggestedRetailPrice,
+    'additionalResourceDescription': additionalResourceDescription,
+    'additionalResourceUrl': additionalResourceUrl,
   };
 }
