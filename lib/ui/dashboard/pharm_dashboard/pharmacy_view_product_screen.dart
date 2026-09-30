@@ -1908,40 +1908,40 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                                                 height: 3.60.h,
                                                               ),
 
-                                                              Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .spaceBetween,
+                                                              Column(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
                                                                 children: [
-                                                                  Column(
-                                                                    crossAxisAlignment:
-                                                                        CrossAxisAlignment
-                                                                            .start,
-                                                                    children: [
-                                                                      TextView(
-                                                                        text: formatNaira(
-                                                                          m.displayPricePerUnit ??
-                                                                              0,
-                                                                        ),
-                                                                        maxLines:
-                                                                            2,
-                                                                        textOverflow:
-                                                                            TextOverflow.ellipsis,
-                                                                        textStyle: TextStyle(
-                                                                          fontFamily:
-                                                                              'DMSans',
-                                                                          fontSize:
-                                                                              screenWidth <
-                                                                                  360
-                                                                              ? 14.sp
-                                                                              : 14.sp,
-                                                                          fontWeight:
-                                                                              FontWeight.w500,
-                                                                          color:
-                                                                              AppColors.reminder,
-                                                                        ),
+                                                                  SizedBox(
+                                                                    width: 120.w,
+                                                                    child: TextView(
+                                                                      text: formatNaira(
+                                                                        m.displayPricePerUnit ??
+                                                                            0,
                                                                       ),
-
+                                                                      maxLines:1,
+                                                                      textOverflow:
+                                                                          TextOverflow.ellipsis,
+                                                                      textStyle: TextStyle(
+                                                                        fontFamily:
+                                                                            'DMSans',
+                                                                        fontSize:
+                                                                            screenWidth <
+                                                                                360
+                                                                            ? 14.sp
+                                                                            : 14.sp,
+                                                                        fontWeight:
+                                                                            FontWeight.w500,
+                                                                        color:
+                                                                            AppColors.reminder,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                              
+                                                                  Row(
+                                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                    children: [
                                                                       TextView(
                                                                         text:
                                                                             '/${m.unit}',
@@ -1949,15 +1949,14 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                                                           fontFamily:
                                                                               'DMSans',
                                                                           fontSize:
-                                                                              14.80.sp,
+                                                                              12.90.sp,
                                                                           fontWeight:
                                                                               FontWeight.w500,
                                                                           color:
                                                                               AppColors.infoGrey,
                                                                         ),
                                                                       ),
-                                                                    ],
-                                                                  ),
+                                                                      
                                                                   GestureDetector(
                                                                     onTap: () {
                                                                       model.addWholesaleProductToCart(
@@ -1996,6 +1995,8 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                                                             .white,
                                                                       ),
                                                                     ),
+                                                                  ),
+                                                                    ],
                                                                   ),
                                                                 ],
                                                               ),

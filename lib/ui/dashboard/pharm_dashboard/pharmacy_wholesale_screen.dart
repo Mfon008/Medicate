@@ -843,10 +843,7 @@ class _PharmacyWholesaleScreenState extends State<PharmacyWholesaleScreen> {
                                         ),
                                         child: Row(
                                           mainAxisSize: MainAxisSize.min,
-                                          crossAxisAlignment:
-                                              editingQuantityProductId == m.id!
-                                              ? CrossAxisAlignment.end
-                                              : CrossAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
                                           children: [
                                             IconButton(
                                               onPressed:
@@ -873,7 +870,7 @@ class _PharmacyWholesaleScreenState extends State<PharmacyWholesaleScreen> {
                                             editingQuantityProductId == m.id!
                                                 ? SizedBox(
                                                     width: 35.w,
-                                                    height: 25.h,
+                                                    height: 22.h,
                                                     child: Form(
                                                       key: model
                                                           .quantityValueFormKey,
