@@ -6,7 +6,7 @@ import 'status_counts.dart';
 part 'order.g.dart';
 
 @JsonSerializable()
-class Order {
+class  Order {
   String? id;
   String? orderNumber;
   DateTime? placedAt;

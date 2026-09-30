@@ -1785,6 +1785,13 @@ class PharmacyOrderScreen extends StatelessWidget {
                                   ),
                                 ),
                                 model
+                                            .getWholesaleOrderResponseModel!
+                                            .data!
+                                            .order!
+                                            .badgeText!
+                                            .toLowerCase()
+                                            .contains('pending') ||
+                                        model
                                                 .getWholesaleOrderResponseModel!
                                                 .data!
                                                 .order!
@@ -1796,6 +1803,7 @@ class PharmacyOrderScreen extends StatelessWidget {
                                             .data!
                                             .order!
                                             .badgeText!
+                                            .toLowerCase()
                                             .contains('failed')
                                     ? Padding(
                                         padding: EdgeInsets.only(
@@ -1904,38 +1912,61 @@ class PharmacyOrderScreen extends StatelessWidget {
                                             SizedBox(width: 7.10.h),
                                             Expanded(
                                               flex: 2,
-                                              child: Container(
-                                                padding: EdgeInsets.symmetric(
-                                                  vertical: 10.w,
-                                                  horizontal: 20.w,
-                                                ),
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                        100.r,
-                                                      ),
-                                                  color: AppColors.primary,
-                                                ),
-                                                child: Row(
-                                                  children: [
-                                                    SvgPicture.asset(
-                                                      AppImage.infinity_arrow,
-                                                      height: 18.20.h,
-                                                      width: 18.20.w,
-                                                      color: AppColors.white,
-                                                    ),
-                                                    SizedBox(width: 6.72.w),
-                                                    TextView(
-                                                      text: 'Re-order',
-                                                      textStyle: TextStyle(
-                                                        fontFamily: 'DMSans',
-                                                        fontSize: 17.2.sp,
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        color: AppColors.white,
-                                                      ),
-                                                    ),
-                                                  ],
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  model.retryPayment(
+                                                    context: context,
+                                                    wholesaleOrderId: e.id,
+                                                  );
+                                                },
+                                                child: Container(
+                                                  padding: EdgeInsets.symmetric(
+                                                    vertical: 10.w,
+                                                    horizontal: 20.w,
+                                                  ),
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          100.r,
+                                                        ),
+                                                    color: AppColors.primary,
+                                                  ),
+                                                  child: model.isLoading
+                                                      ? SpinKitRing(
+                                                          color:
+                                                              AppColors.white,
+                                                          size: 30.sp,
+                                                          lineWidth: 4,
+                                                        )
+                                                      : Row(
+                                                          children: [
+                                                            SvgPicture.asset(
+                                                              AppImage
+                                                                  .infinity_arrow,
+                                                              height: 18.20.h,
+                                                              width: 18.20.w,
+                                                              color: AppColors
+                                                                  .white,
+                                                            ),
+                                                            SizedBox(
+                                                              width: 6.72.w,
+                                                            ),
+                                                            TextView(
+                                                              text: 'Re-order',
+                                                              textStyle: TextStyle(
+                                                                fontFamily:
+                                                                    'DMSans',
+                                                                fontSize:
+                                                                    17.2.sp,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400,
+                                                                color: AppColors
+                                                                    .white,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
                                                 ),
                                               ),
                                             ),

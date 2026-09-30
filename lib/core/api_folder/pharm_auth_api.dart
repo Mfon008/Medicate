@@ -1151,6 +1151,25 @@ class PharmApi {
     }
   }
 
+  Future<dynamic> retryPayment(String? wholesaleOrderId) async {
+    try {
+      final response = await _service.call(
+        '${UrlConfig.wholesale_orders}/$wholesaleOrderId/payment/retry',
+        RequestMethod.post,
+        data: {
+          "paymentMethod": "ACCELERATE",
+          "callbackUrl":
+              "https://app.medicate.health/wholesale/orders/payment-callback",
+        },
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
   Future<GetCheckoutDeliveryOptionResponseModel> checkoutDeliveryOption(
     CheckoutDeliveryOptionEntityModel checkoutDeliveryOption,
   ) async {

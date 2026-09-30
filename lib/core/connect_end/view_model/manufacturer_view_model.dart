@@ -1,4 +1,4 @@
-// ignore_for_file: unnecessary_null_comparison, deprecated_member_use, use_build_context_synchronously, strict_top_level_inference, public_member_api_docs, sort_constructors_first
+// ignore_for_file: unused_field, unnecessary_null_comparison, deprecated_member_use, use_build_context_synchronously, strict_top_level_inference, public_member_api_docs, sort_constructors_first
 import 'dart:async';
 import 'dart:io';
 import 'dart:convert';

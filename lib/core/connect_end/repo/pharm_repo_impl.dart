@@ -611,6 +611,11 @@ class PharmRepoImpl {
     return response;
   }
 
+  Future<dynamic> retryPayment(String? wholesaleOrderId) async {
+    final response = await _contract.retryPayment(wholesaleOrderId);
+    return response;
+  }
+
   void _chache(data) {
     if (data != null) {
       _session.authToken = data.data.accessToken;

@@ -323,4 +323,6 @@ class PharmContractsImpl {
       await _api.downloadInvoice(id);
   Future<Uint8List> shareInvoice(String id) async =>
       await _api.shareInvoice(id);
+  Future<dynamic> retryPayment(String? wholesaleOrderId) async =>
+      await _api.retryPayment(wholesaleOrderId);
 }

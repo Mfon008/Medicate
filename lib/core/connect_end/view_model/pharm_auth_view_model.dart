@@ -20168,6 +20168,43 @@ class PharmViewModel extends BaseViewModel {
     }
     notifyListeners();
   }
+  
+  Future<void> retryPayment({
+    String? wholesaleOrderId,
+    required BuildContext context,
+  }) async {
+    try {
+      _isLoading = true;
+      var v = await runBusyFuture(
+        repositoryImply.retryPayment(wholesaleOrderId),
+        throwException: true,
+      );
+      _isLoading = false;
+      if (v['statusCode'] == 201||v['statusCode'] == 200) {
+        await AppUtils.snackbar(
+          context,
+          message: v['message'] ?? '',
+        );
+         navigate.navigateTo(
+          Routes.acceleratePaymentViewPharmacy,
+          arguments: AcceleratePaymentViewPharmacyArguments(
+            url:v['data']['payment']['redirectUrl'],
+          ),
+        );
+      } else {
+        AppUtils.snackbar(
+          context,
+          message: 'Unable to make transaction.',
+          error: true,
+        );
+      }
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
 
   Future<void> createPaymentProduct(
     BuildContext context, {
