@@ -20180,7 +20180,7 @@ class PharmViewModel extends BaseViewModel {
         throwException: true,
       );
       _isLoading = false;
-      if (v['statusCode'] == 201||v['statusCode'] == 200) {
+      if (v['statusCode'] == 201 || v['statusCode'] == 200) {
         await AppUtils.snackbar(
           context,
           message: v['message'] ?? '',
