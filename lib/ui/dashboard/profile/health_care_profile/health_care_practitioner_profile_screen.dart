@@ -23,6 +23,7 @@ class HealthCarePractitionerProfileScreen extends StatelessWidget {
       onViewModelReady: (model) {
         WidgetsBinding.instance.addPostFrameCallback((_) async {
           await model.getTenant(context);
+          await model.getHealthCarePractitionerKyc(context);
           model.getUserDetails(
             context: context,
             phoneNo:
@@ -159,7 +160,7 @@ class HealthCarePractitionerProfileScreen extends StatelessWidget {
                   profileContainer(
                     icon: AppImage.profile,
                     text: 'Profile Information',
-                    isactive: model.returnBool(),
+                    isactive: model.returnBoolPractitioner(),
                     topLeft: 12,
                     topRight: 12,
                     onTap: () => navigate.navigateTo(
@@ -169,10 +170,11 @@ class HealthCarePractitionerProfileScreen extends StatelessWidget {
                   SizedBox(height: 1.0.h),
                   profileContainer(
                     icon: AppImage.key,
-                    isactive: model.returnBoolKyc(),
+                    isactive: model.returnBoolKycPractitioner(),
                     text: 'KYC',
-                    onTap: () =>
-                        navigate.navigateTo(Routes.healthCareKycScreen),
+                    onTap: () => navigate.navigateTo(
+                      Routes.kycHealthcarePractitionersScreen,
+                    ),
                   ),
                   SizedBox(height: 1.0.h),
                   profileContainer(

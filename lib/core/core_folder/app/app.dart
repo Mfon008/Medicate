@@ -1,4 +1,5 @@
 import 'package:medicate_app/ui/dashboard/healthcare_provider_dashboard/specialists/specialists_providers_more_screen.dart';
+import 'package:medicate_app/ui/dashboard/profile/hmo/kyc/kyc_screen.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -85,6 +86,7 @@ import '../../../ui/dashboard/pharm_dashboard/pharmacy_view_product_screen.dart'
 import '../../../ui/dashboard/pharm_dashboard/pharmacy_whole_sale_checkout.dart';
 import '../../../ui/dashboard/pharm_dashboard/pharmacy_wholesale_category_screen.dart';
 import '../../../ui/dashboard/pharm_dashboard/pharmacy_wholesale_screen.dart';
+import '../../../ui/dashboard/profile/health_care_profile/kyc_healthcare_provider/kyc_screen.dart';
 import '../../../ui/dashboard/profile/hmo/hmo_create_tiers_plan_management_screen.dart';
 import '../../../ui/dashboard/profile/hmo/hmo_plan_tiers_management_screen.dart';
 import '../../../ui/dashboard/profile/hmo/hmo_two_factor_auth_screen.dart';
@@ -112,13 +114,12 @@ import '../../../ui/dashboard/profile/health_care_profile/health_care_profile_in
 import '../../../ui/dashboard/profile/health_care_profile/health_care_profile_screen.dart';
 import '../../../ui/dashboard/profile/health_care_profile/health_care_reset_pin_pad_screen.dart';
 import '../../../ui/dashboard/profile/health_care_profile/health_care_setting_screen.dart';
-import '../../../ui/dashboard/profile/health_care_profile/kyc/kyc_screen.dart';
+import '../../../ui/dashboard/profile/health_care_profile/kyc_healthcare_practitioner/kyc_screen.dart';
 import '../../../ui/dashboard/profile/health_care_profile/roles_and_permission_screen.dart';
 import '../../../ui/dashboard/profile/hmo/hmo_profile_info_screen.dart';
 import '../../../ui/dashboard/profile/hmo/hmo_profile_screen.dart';
 import '../../../ui/dashboard/profile/hmo/hmo_reset_pin_pad_screen.dart';
 import '../../../ui/dashboard/profile/hmo/hmo_setting_screen.dart';
-import '../../../ui/dashboard/profile/hmo/kyc/hmo_kyc_screen.dart';
 import '../../../ui/dashboard/profile/hmo/roles_and_permission_screen.dart';
 import '../../../ui/dashboard/profile/hmo/users_screen.dart';
 import '../../../ui/dashboard/profile/pharmacy_profile/kyc/kyc_screen.dart';
@@ -216,7 +217,8 @@ import '../network/support_network_service.dart';
     MaterialRoute(page: PharmacyWelcomeScreen),
     MaterialRoute(page: KycScreen),
     MaterialRoute(page: HMOKycScreen),
-    MaterialRoute(page: HealthCareKycScreen),
+    MaterialRoute(page: KycHealthcarePractitionersScreen),
+    MaterialRoute(page: KycHealthcareProvidersScreen),
     MaterialRoute(page: PharmacySettingScreen),
     MaterialRoute(page: PharmResetSuccessScreen),
     MaterialRoute(page: UsersScreen),

@@ -369,7 +369,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
                           padding: EdgeInsets.all(14.48.w),
                           child: GestureDetector(
                             onTap: () => model.showCategoryMenu(context),
-                            child: SvgPicture.asset(AppImage.arrow_down,height: 11.0.h,width: 12.w,),
+                            child: SvgPicture.asset(
+                              AppImage.arrow_down,
+                              height: 11.0.h,
+                              width: 12.w,
+                            ),
                           ),
                         ),
                       ),

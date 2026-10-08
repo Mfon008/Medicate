@@ -5,6 +5,7 @@ import 'package:medicate_app/core/connect_end/model/sign_up_healthcare_provider_
 
 import '../../api_folder/healthcare_api.dart';
 import '../../core_folder/app/app.locator.dart';
+import '../model/business_addresses_entity.dart';
 import '../model/create_payment_wallet_entity_model.dart';
 import '../model/create_payment_wallet_model/create_payment_wallet_model.dart';
 import '../model/create_reminder_response_model/create_reminder_response_model.dart';
@@ -13,7 +14,8 @@ import '../model/create_user_entity_model.dart';
 import '../model/distributor_wholesale_category_model/distributor_wholesale_category_model.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
 import '../model/get_created_user_response_model/get_created_user_response_model.dart';
-import '../model/get_pharmacy_kyc_response_model/get_pharmacy_kyc_response_model.dart';
+import '../model/get_healthcare_practitioner_kyc_response_model/get_healthcare_practitioner_kyc_response_model.dart';
+import '../model/get_healthcare_provider_kyc_response_model/get_healthcare_provider_kyc_response_model.dart';
 import '../model/get_reminder_by_id/get_reminder_by_id.dart';
 import '../model/get_reminder_for_tenant_response_model/get_reminder_for_tenant_response_model.dart';
 import '../model/get_roles_response_model/get_roles_response_model.dart';
@@ -37,6 +39,7 @@ import '../model/roles_entity_model.dart';
 import '../model/set_pin_entity_model.dart';
 import '../model/set_pin_pharm_response_model/set_pin_pharm_response_model.dart';
 import '../model/sign_up_phamary_response_model/sign_up_phamary_response_model.dart';
+import '../model/submit_healthcare_level_two_kyc_entity_model/submit_healthcare_level_two_kyc_entity_model.dart';
 import '../model/update_business_owner_profile_entity_model/update_business_owner_profile_entity_model.dart';
 import '../model/update_business_owner_profile_response_model/update_business_owner_profile_response_model.dart';
 import '../model/update_doses_status_model/update_doses_status_model.dart';
@@ -129,11 +132,28 @@ class HealthcareContractsImpl {
     UpdatePractitionerProfileEntityModel? updatePractitioner,
   ) async => await _api.updateHealthCarePractitioner(updatePractitioner);
 
-  Future<GetPharmacyKycResponseModel> getHealthCareKyc() async =>
-      await _api.getHealthCareKyc();
-  // Future<dynamic> updateHealthCareKyc(
-  //   UpdatePharmacyKycEntityModel updateKyc,
-  // ) async => await _api.updateHealthCareKyc(updateKyc);
+  Future<GetHealthcarePractitionerKycResponseModel>
+  getHealthCarePractitionerKyc() async =>
+      await _api.getHealthCarePractitionerKyc();
+
+  Future<GetHealthcareProviderKycResponseModel>
+  getHealthCareProviderKyc() async => await _api.getHealthCareProviderKyc();
+
+  Future<dynamic> updateHealthCareProviderKycSave(
+    SubmitHealthcareLevelTwoKycEntityModel updateKyc,
+  ) async => await _api.updateHealthCareProviderKycSave(updateKyc);
+
+  Future<dynamic> updateHealthCarePractitionerKycSave(
+    SubmitHealthcareLevelTwoKycEntityModel updateKyc,
+  ) async => await _api.updateHealthCarePractitionerKycSave(updateKyc);
+
+  Future<dynamic> updateHealthCareProviderKycSubmit(
+    SubmitHealthcareLevelTwoKycEntityModel updateKyc,
+  ) async => await _api.updateHealthCareProviderKycSubmit(updateKyc);
+
+  Future<dynamic> updateHealthCarePractitionerKycSubmit(
+    SubmitHealthcareLevelTwoKycEntityModel updateKyc,
+  ) async => await _api.updateHealthCarePractitionerKycSubmit(updateKyc);
 
   Future<dynamic> addDoctor(CreateUserEntityModel createEntity) async =>
       await _api.addDoctor(createEntity);
@@ -269,4 +289,19 @@ class HealthcareContractsImpl {
   Future<GetSingleMarketProductResponseModel> getSingleMarketPlaceProduct({
     String? productIds,
   }) async => await _api.getSingleMarketPlaceProduct(productIds: productIds);
+
+  Future<dynamic> updatePrimaryBusinessAddress(String id) async =>
+      await _api.updatePrimaryBusinessAddress(id);
+  Future<dynamic> addBusinessAddresses(
+    BusinessAddressesEntity businessAddresses,
+  ) async => await _api.addBusinessAddresses(businessAddresses);
+  Future<dynamic> updateBusinessAddress({
+    BusinessAddressesEntity? businessAddresses,
+    String? id,
+  }) async => await _api.updateBusinessAddress(
+    businessAddresses: businessAddresses,
+    id: id,
+  );
+  Future<dynamic> deleteBusinessAddress(String id) async =>
+      await _api.deletebusinessAddress(id);
 }

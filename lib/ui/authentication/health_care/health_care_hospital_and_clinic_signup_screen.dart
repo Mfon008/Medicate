@@ -322,7 +322,7 @@ class _HealthCareHospitalAndClinicSignUpScreenState
                           hint: 'State',
                           label: 'Select State',
                           hintColor: AppColors.reminder,
-                          hintSize: Platform.isAndroid ? 14.sp : 13.46.sp,
+                          hintSize: Platform.isAndroid ? 16.sp : 15.46.sp,
                           borderColor: AppColors.transparent,
                           borderTopLeft: 10.r,
                           borderTopRight: 10.r,
@@ -453,7 +453,7 @@ class _HealthCareHospitalAndClinicSignUpScreenState
                           hint: 'LGA',
                           label: '-Select-',
                           hintColor: AppColors.reminder,
-                          hintSize: Platform.isAndroid ? 14.sp : 12.sp,
+                          hintSize: Platform.isAndroid ? 16.sp : 15.2.sp,
                           borderColor: AppColors.transparent,
                           borderTopLeft: 10.r,
                           borderTopRight: 10.r,
@@ -666,12 +666,7 @@ class _HealthCareHospitalAndClinicSignUpScreenState
                     color: AppColors.white,
                     isLoading: model.isLoading,
                     buttonBorderColor: AppColors.transparent,
-                    onPressed:
-                        !isPassed(
-                          isPhone: isPhone,
-                          // isName: isName,
-                          isChecked: isChecked,
-                        )
+                    onPressed: !isPassed(isPhone: isPhone, isChecked: isChecked)
                         ? () {}
                         : () {
                             if (formKey.currentState!.validate()) {
@@ -690,6 +685,11 @@ class _HealthCareHospitalAndClinicSignUpScreenState
                                               .toUpperCase(),
                                       healthcareFacilityName:
                                           facilityNameController.text.trim(),
+                                      businessAddress: businessAddressController
+                                          .text
+                                          .trim(),
+                                      lga: lgaController.text.trim(),
+                                      state: stateController.text.trim(),
                                     ),
                               );
                             }

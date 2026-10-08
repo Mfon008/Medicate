@@ -6,6 +6,8 @@ class HmoSignUpEntityModel {
   String? designation;
   String? businessEmail;
   String? businessAddress;
+  String? state;
+  String? lga;
 
   HmoSignUpEntityModel({
     this.phone,
@@ -15,6 +17,8 @@ class HmoSignUpEntityModel {
     this.designation,
     this.businessEmail,
     this.businessAddress,
+    this.state,
+    this.lga,
   });
 
   factory HmoSignUpEntityModel.fromJson(Map<String, dynamic> json) {
@@ -26,6 +30,8 @@ class HmoSignUpEntityModel {
       designation: json['designation'] as String?,
       businessEmail: json['businessEmail'] as String?,
       businessAddress: json['businessAddress'] as String?,
+      state: json['state'] as String?,
+      lga: json['lga'] as String?,
     );
   }
 
@@ -37,5 +43,7 @@ class HmoSignUpEntityModel {
     'designation': designation,
     'businessEmail': businessEmail,
     'businessAddress': businessAddress,
+    'state': state,
+    'lga': lga,
   };
 }

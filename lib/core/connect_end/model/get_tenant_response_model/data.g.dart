@@ -43,6 +43,7 @@ Data _$DataFromJson(Map<String, dynamic> json) => Data(
   lga: json['lga'] as String?,
   registrationNumber: json['registrationNumber'] as String?,
   country: json['country'] as String?,
+  kycStatus: json['kycStatus'] as String?,
   authorizedRepInfo: json['authorizedRepInfo'] == null
       ? null
       : AuthorizedRepInfo.fromJson(
@@ -74,6 +75,7 @@ Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
   'bio': instance.bio,
   'country': instance.country,
   'lga': instance.lga,
+  'kycStatus': instance.kycStatus,
   'healthcareFacilityName': instance.healthcareFacilityName,
   'website': instance.website,
   'registrationNumber': instance.registrationNumber,

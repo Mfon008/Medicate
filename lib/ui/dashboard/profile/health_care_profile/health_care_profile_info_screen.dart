@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,8 +10,8 @@ import 'package:medicate_app/main.dart';
 import 'package:stacked/stacked.dart';
 import '../../../../core/app_assets/app_validation.dart';
 import '../../../../core/app_assets/image.dart';
+import '../../../../core/app_assets/state_lga_format.dart';
 import '../../../../core/config/colors.dart';
-import '../../../../core/connect_end/model/update_business_owner_profile_entity_model/bank_detail.dart';
 import '../../../../core/connect_end/model/update_business_owner_profile_entity_model/update_business_owner_profile_entity_model.dart';
 import '../../../../core/connect_end/model/update_business_owner_profile_entity_model/upload_means_of_id.dart';
 import '../../../../core/connect_end/view_model/health_care_view_model.dart';
@@ -40,9 +42,6 @@ class _HealthCareProfileInfoScreenState
   TextEditingController businessEmailController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController countryController = TextEditingController();
-  TextEditingController bankNameController = TextEditingController();
-  TextEditingController bankAccountNameController = TextEditingController();
-  TextEditingController bankNoController = TextEditingController();
   TextEditingController websiteController = TextEditingController();
 
   bool isPhone = false;
@@ -77,6 +76,7 @@ class _HealthCareProfileInfoScreenState
           onViewModelReady: (model) async {
             WidgetsBinding.instance.addPostFrameCallback((_) async {
               await model.getTenant(context);
+              await model.getHealthCareProviderKyc(context);
               nameController.text =
                   model.getTetantResponseModel?.data?.name ?? '';
               phoneController.text = SharedPreferencesService
@@ -91,20 +91,6 @@ class _HealthCareProfileInfoScreenState
                   model.getTetantResponseModel?.data?.businessAddress ?? '';
               businessEmailController.text =
                   model.getTetantResponseModel?.data?.businessEmail ?? '';
-              bankNameController.text =
-                  model
-                      .getTetantResponseModel
-                      ?.data
-                      ?.bankDetails?[0]
-                      .bankName ??
-                  "";
-              bankNoController.text =
-                  model
-                      .getTetantResponseModel
-                      ?.data
-                      ?.bankDetails?[0]
-                      .accountNumber ??
-                  '';
               emailController.text =
                   model.getTetantResponseModel?.data?.email ?? '';
               model.countryController.text =
@@ -116,20 +102,6 @@ class _HealthCareProfileInfoScreenState
                   model.getTetantResponseModel?.data?.lga?.capitalize() ?? '';
               model.selectService =
                   model.getTetantResponseModel?.data?.servicesOffered ?? [];
-              bankAccountNameController.text =
-                  model
-                      .getTetantResponseModel
-                      ?.data
-                      ?.bankDetails?[0]
-                      .accountName ??
-                  '';
-              bankNoController.text =
-                  model
-                      .getTetantResponseModel
-                      ?.data
-                      ?.bankDetails?[0]
-                      .accountNumber ??
-                  '';
               websiteController.text =
                   model.getTetantResponseModel?.data?.website ?? '';
               authFullNameController.text =
@@ -183,43 +155,7 @@ class _HealthCareProfileInfoScreenState
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        bankNameController.text.isEmpty ||
-                                bankNoController.text.isEmpty
-                            ? Container(
-                                padding: EdgeInsets.symmetric(
-                                  vertical: 12.w,
-                                  horizontal: 12.w,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: AppColors.fadedyellow,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Row(
-                                  children: [
-                                    SvgPicture.asset(AppImage.info),
-                                    SizedBox(width: 10.w),
-                                    TextView(
-                                      text:
-                                          'Complete your profile by updating the\nremaining fields.',
-                                      textStyle: TextStyle(
-                                        fontFamily: 'Arial',
-                                        fontSize: 12.sp,
-                                        fontWeight: FontWeight.w400,
-                                        color: AppColors.black,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )
-                            : SizedBox.shrink(),
-                        SizedBox(
-                          height:
-                              bankNameController.text.isEmpty ||
-                                  bankNoController.text.isEmpty
-                              ? 0.h
-                              : 16.8.h,
-                        ),
-                        SizedBox(height: 9.8.h),
+                        SizedBox(height: 16.8.h),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -478,6 +414,149 @@ class _HealthCareProfileInfoScreenState
                                 readOnly: model.isProfileUpdated,
                                 controller: model.stateController,
                                 validator: AppValidator.validateString(),
+                                suffixWidget: Builder(
+                                  builder: (context) {
+                                    return GestureDetector(
+                                      onTap: () async {
+                                        final RenderBox button =
+                                            context.findRenderObject()
+                                                as RenderBox;
+
+                                        final RenderBox overlay =
+                                            Overlay.of(
+                                                  context,
+                                                ).context.findRenderObject()
+                                                as RenderBox;
+
+                                        final Offset buttonPosition = button
+                                            .localToGlobal(
+                                              Offset.zero,
+                                              ancestor: overlay,
+                                            );
+
+                                        final Size buttonSize = button.size;
+
+                                        final selectedState =
+                                            await showMenu<String>(
+                                              context: context,
+
+                                              position: RelativeRect.fromLTRB(
+                                                buttonPosition.dx,
+                                                buttonPosition.dy +
+                                                    buttonSize.height +
+                                                    5.h,
+                                                overlay.size.width -
+                                                    buttonPosition.dx -
+                                                    buttonSize.width,
+                                                0,
+                                              ),
+
+                                              constraints: BoxConstraints(
+                                                minWidth: 200.w,
+                                                maxWidth: 250.w,
+                                                minHeight: 150.h,
+                                                maxHeight: 450.h,
+                                              ),
+
+                                              color: AppColors.white,
+
+                                              elevation: 4,
+
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10.r),
+                                              ),
+
+                                              items: stateLgaFormat
+                                                  .map<PopupMenuEntry<String>>((
+                                                    s,
+                                                  ) {
+                                                    final String state =
+                                                        s['state']
+                                                            ?.toString() ??
+                                                        '';
+
+                                                    return PopupMenuItem<
+                                                      String
+                                                    >(
+                                                      value: state,
+                                                      height: 38.h,
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                            horizontal: 14.w,
+                                                          ),
+                                                      child: TextView(
+                                                        text: state,
+                                                        textStyle: TextStyle(
+                                                          fontFamily:
+                                                              'GoogleSans',
+                                                          fontSize: 13.70.sp,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          color:
+                                                              AppColors.black,
+                                                        ),
+                                                      ),
+                                                    );
+                                                  })
+                                                  .toList(),
+                                            );
+
+                                        if (selectedState != null) {
+                                          model.stateController.text =
+                                              selectedState;
+                                          final selectedStateLga =
+                                              stateLgaFormat.firstWhere(
+                                                (state) =>
+                                                    state['state']
+                                                        .toString()
+                                                        .trim()
+                                                        .toLowerCase() ==
+                                                    model.stateController.text
+                                                        .trim()
+                                                        .toLowerCase(),
+                                                orElse: () => <String, dynamic>{
+                                                  'state': '',
+                                                  'lgas': <String>[],
+                                                },
+                                              );
+
+                                          final selectedLgas =
+                                              List<String>.from(
+                                                selectedStateLga['lgas'] ??
+                                                    <String>[],
+                                              );
+
+                                          model.lgaList = List<String>.from(
+                                            selectedLgas,
+                                          );
+                                          model.lgaListCopy = List<String>.from(
+                                            selectedLgas,
+                                          );
+
+                                          // Optional: reset previously selected LGAs
+                                          model.lgaAddedList.clear();
+                                        }
+                                        setState(() {});
+                                        model.notifyListeners();
+                                      },
+
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 8.w,
+                                        ),
+                                        child: Icon(
+                                          Icons.keyboard_arrow_down,
+                                          color: AppColors.grey1,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+
+                                onChange: (p0) {
+                                  setState(() {});
+                                },
                               ),
                             ),
                             SizedBox(width: 12.w),
@@ -502,6 +581,131 @@ class _HealthCareProfileInfoScreenState
                                 readOnly: model.isProfileUpdated,
                                 controller: model.lgaController,
                                 validator: AppValidator.validateString(),
+                                suffixWidget: Builder(
+                                  builder: (context) {
+                                    return GestureDetector(
+                                      onTap: () async {
+                                        final RenderBox button =
+                                            context.findRenderObject()
+                                                as RenderBox;
+
+                                        final RenderBox overlay =
+                                            Overlay.of(
+                                                  context,
+                                                ).context.findRenderObject()
+                                                as RenderBox;
+
+                                        final Offset buttonPosition = button
+                                            .localToGlobal(
+                                              Offset.zero,
+                                              ancestor: overlay,
+                                            );
+
+                                        final Size buttonSize = button.size;
+
+                                        final selectedState = stateLgaFormat
+                                            .firstWhere(
+                                              (state) =>
+                                                  state['state']
+                                                      .toString()
+                                                      .trim()
+                                                      .toLowerCase() ==
+                                                  model.stateController.text
+                                                      .trim()
+                                                      .toLowerCase(),
+                                              orElse: () => <String, dynamic>{
+                                                'state': '',
+                                                'lgas': <String>[],
+                                              },
+                                            );
+
+                                        final List<dynamic> lgas =
+                                            selectedState['lgas'] ?? [];
+
+                                        if (lgas.isEmpty) {
+                                          return;
+                                        }
+
+                                        final selectedLga =
+                                            await showMenu<String>(
+                                              context: context,
+
+                                              position: RelativeRect.fromLTRB(
+                                                buttonPosition.dx,
+                                                buttonPosition.dy +
+                                                    buttonSize.height +
+                                                    5.h,
+                                                overlay.size.width -
+                                                    buttonPosition.dx -
+                                                    buttonSize.width,
+                                                0,
+                                              ),
+
+                                              constraints: BoxConstraints(
+                                                minWidth: 200.w,
+                                                maxWidth: 250.w,
+                                                minHeight: 110.h,
+                                                maxHeight: 420.h,
+                                              ),
+
+                                              color: AppColors.white,
+
+                                              elevation: 4,
+
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10.r),
+                                              ),
+
+                                              items: lgas
+                                                  .map<PopupMenuEntry<String>>((
+                                                    lga,
+                                                  ) {
+                                                    return PopupMenuItem<
+                                                      String
+                                                    >(
+                                                      value: lga.toString(),
+                                                      height: 38.h,
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                            horizontal: 14.w,
+                                                          ),
+                                                      child: TextView(
+                                                        text: lga.toString(),
+                                                        textStyle: TextStyle(
+                                                          fontFamily:
+                                                              'GoogleSans',
+                                                          fontSize: 13.70.sp,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          color:
+                                                              AppColors.black,
+                                                        ),
+                                                      ),
+                                                    );
+                                                  })
+                                                  .toList(),
+                                            );
+
+                                        if (selectedLga != null) {
+                                          model.lgaController.text =
+                                              selectedLga;
+                                          model.notifyListeners();
+                                        }
+                                      },
+
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 8.w,
+                                        ),
+                                        child: Icon(
+                                          Icons.keyboard_arrow_down,
+                                          color: AppColors.grey1,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
                               ),
                             ),
                           ],
@@ -532,6 +736,7 @@ class _HealthCareProfileInfoScreenState
                           },
                         ),
                         SizedBox(height: 20.h),
+
                         TextView(
                           text: 'Select service',
                           textStyle: TextStyle(
@@ -541,6 +746,7 @@ class _HealthCareProfileInfoScreenState
                             color: AppColors.black,
                           ),
                         ),
+
                         SizedBox(height: 20.h),
                         ...List.generate(model.services.length, (index) {
                           return model.chooseNotChannelWidget(
@@ -566,6 +772,179 @@ class _HealthCareProfileInfoScreenState
                             },
                           );
                         }),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            TextView(
+                              text: 'Addresses',
+                              textStyle: TextStyle(
+                                fontSize: 15.86.sp,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.reminder1,
+                                fontFamily: 'DMSans',
+                              ),
+                            ),
+                            IconButton(
+                              onPressed:
+                                  model.getTetantResponseModel != null &&
+                                      model
+                                              .getTetantResponseModel!
+                                              .data!
+                                              .businessAddresses!
+                                              .length <
+                                          3
+                                  ? () async {
+                                      model.stateBusController.clear();
+                                      model.lgaBusController.clear();
+                                      model.businessAddController.clear();
+                                      model.countryBusController.clear();
+                                      final result = await model
+                                          .showBusinessAreaLGAAndStateCountryDialog(
+                                            context,
+                                          );
+                                      if (result == true) {
+                                        model.getTenant(context);
+                                      }
+                                    }
+                                  : () {},
+                              icon: Icon(
+                                Icons.add,
+                                color: AppColors.reminder1,
+                                size: 22.sp,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Divider(color: AppColors.f1),
+                        if (model.getTetantResponseModel != null &&
+                            model
+                                .getTetantResponseModel!
+                                .data!
+                                .businessAddresses!
+                                .isNotEmpty)
+                          ...model
+                              .getTetantResponseModel!
+                              .data!
+                              .businessAddresses!
+                              .asMap()
+                              .entries
+                              .map((entry) {
+                                // final index = entry.key;
+                                final o = entry.value;
+
+                                return Container(
+                                  width: double.infinity,
+                                  margin: EdgeInsets.only(bottom: 12.w),
+                                  padding: EdgeInsets.all(16.w),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12),
+                                    color: AppColors.grey,
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      o.isPrimary!
+                                          ? Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Container(
+                                                  width: 14.w,
+                                                  height: 14.w,
+                                                  margin: EdgeInsets.only(
+                                                    top: 1.h,
+                                                  ),
+                                                  decoration: BoxDecoration(
+                                                    color: AppColors.app_green,
+                                                    shape: BoxShape.circle,
+                                                  ),
+                                                  child: Icon(
+                                                    Icons.check,
+                                                    size: 9.sp,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                                SizedBox(width: 4.w),
+                                                TextView(
+                                                  text: 'Primary',
+                                                  textStyle: TextStyle(
+                                                    fontSize: 13.86.sp,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: AppColors.reminder,
+                                                    fontFamily: 'DMSans',
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                          : GestureDetector(
+                                              onTap: () {
+                                                model.profileUpdate = o;
+                                                model
+                                                    .updatePrimaryBusinessAddress(
+                                                      context: context,
+                                                      id: o.id,
+                                                    );
+                                                model.notifyListeners();
+                                              },
+                                              child:
+                                                  model.isLoading &&
+                                                      model.profileUpdate == o
+                                                  ? SizedBox(
+                                                      height: 20.h,
+                                                      width: 20.w,
+                                                      child: SpinKitRing(
+                                                        color:
+                                                            AppColors.primary,
+                                                        lineWidth: 2,
+                                                      ),
+                                                    )
+                                                  : TextView(
+                                                      text: 'Make Primary',
+                                                      textStyle: TextStyle(
+                                                        fontSize: 14.96.sp,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color:
+                                                            AppColors.primary,
+                                                        decorationColor:
+                                                            AppColors.primary,
+                                                        decoration:
+                                                            TextDecoration
+                                                                .underline,
+                                                        decorationThickness:
+                                                            1.42,
+                                                        fontFamily: 'DMSans',
+                                                      ),
+                                                    ),
+                                            ),
+                                      SizedBox(height: 6.2.h),
+                                      TextView(
+                                        text: o.businessAddress ?? '',
+                                        textStyle: TextStyle(
+                                          fontSize: 13.86.sp,
+                                          fontWeight: FontWeight.w600,
+                                          color: AppColors.reminder1,
+                                          fontFamily: 'DMSans',
+                                        ),
+                                      ),
+                                      SizedBox(height: 5.2.h),
+                                      TextView(
+                                        text:
+                                            '${o.lga}, ${o.state} State, ${o.country}',
+                                        textStyle: TextStyle(
+                                          fontSize: 12.86.sp,
+                                          fontWeight: FontWeight.w400,
+                                          color: AppColors.infoGrey,
+                                          fontFamily: 'DMSans',
+                                        ),
+                                      ),
+
+                                      SizedBox(height: 10.h),
+                                    ],
+                                  ),
+                                );
+                              }),
+
                         SizedBox(height: 30.h),
                         TextView(
                           text: 'Contact Details',
@@ -621,92 +1000,8 @@ class _HealthCareProfileInfoScreenState
                           isFilled: true,
                           controller: businessEmailController,
                           readOnly: model.isProfileUpdated,
-                          // inputFormatters: <TextInputFormatter>[
-                          //   FilteringTextInputFormatter.allow(RegExp("[a-z]")),
-                          // ],
                         ),
-                        SizedBox(height: 30.h),
-                        TextView(
-                          text: 'Bank Information',
-                          textStyle: TextStyle(
-                            fontSize: 16.2.sp,
-                            fontWeight: FontWeight.w700,
-                            color: AppColors.black,
-                          ),
-                        ),
-                        SizedBox(height: 6.h),
-                        Divider(
-                          color: const Color.fromARGB(255, 227, 227, 228),
-                        ),
-                        SizedBox(height: 6.h),
-                        TextFormWidget(
-                          hint: 'Bank name',
-                          hintSize: 14,
-                          borderColor: AppColors.transparent,
-                          borderTopLeft: 10.r,
-                          borderTopRight: 10.r,
-                          borderBottomLeft: 10.r,
-                          borderBottomRight: 10.r,
-                          keyboardType: TextInputType.text,
-                          labelStyle: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontFamily: 'Arial',
-                            fontSize: 14.2.sp,
-                            color: AppColors.infoGrey,
-                          ),
-                          fillColor: AppColors.grey,
-                          isFilled: true,
-                          readOnly: model.isProfileUpdated,
-                          controller: bankNameController,
-                          validator: AppValidator.validateString(),
-                        ),
-                        SizedBox(height: 20.h),
-                        TextFormWidget(
-                          hint: 'Account name',
-                          hintSize: 14,
-                          borderColor: AppColors.transparent,
-                          borderTopLeft: 10.r,
-                          borderTopRight: 10.r,
-                          borderBottomLeft: 10.r,
-                          borderBottomRight: 10.r,
-                          keyboardType: TextInputType.text,
-                          labelStyle: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontFamily: 'Arial',
-                            fontSize: 14.2.sp,
-                            color: AppColors.infoGrey,
-                          ),
-                          fillColor: AppColors.grey,
-                          isFilled: true,
-                          readOnly: model.isProfileUpdated,
-                          controller: bankAccountNameController,
-                          validator: AppValidator.validateString(),
-                        ),
-                        SizedBox(height: 20.h),
-                        TextFormWidget(
-                          hint: 'Account number',
-                          hintSize: 14,
-                          borderColor: AppColors.transparent,
-                          borderTopLeft: 10.r,
-                          borderTopRight: 10.r,
-                          borderBottomLeft: 10.r,
-                          borderBottomRight: 10.r,
-                          label: 'Enter account number',
-                          keyboardType: TextInputType.number,
-                          labelStyle: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontFamily: 'Arial',
-                            fontSize: 14.2.sp,
-                            color: AppColors.infoGrey,
-                          ),
-                          fillColor: AppColors.grey,
-                          isFilled: true,
-                          readOnly: model.isProfileUpdated,
-                          controller: bankNoController,
-                          validator: AppValidator.validateString(),
-                          // ),
-                        ),
-
+                        
                         SizedBox(height: 30.h),
                         TextView(
                           text: 'Authorized Representative Information',
@@ -1018,84 +1313,87 @@ class _HealthCareProfileInfoScreenState
                                         if (formKey.currentState!.validate()) {
                                           model.updateHealthCareBusinessOwner(
                                             context,
-                                            updateBusinessOwner: UpdateBusinessOwnerProfileEntityModel(
-                                              logo: null,
-                                              typeOfHealthcareProvider:
-                                                  'HOSPITAL',
-                                              healthcareFacilityName:
-                                                  nameController.text.trim(),
-                                              registrationNumber:
-                                                  registrationNoController.text
+                                            updateBusinessOwner:
+                                                UpdateBusinessOwnerProfileEntityModel(
+                                                  logo: null,
+                                                  typeOfHealthcareProvider:
+                                                      'HOSPITAL',
+                                                  healthcareFacilityName:
+                                                      nameController.text
+                                                          .trim(),
+                                                  registrationNumber:
+                                                      registrationNoController
+                                                          .text
+                                                          .trim(),
+                                                  country: model
+                                                      .countryController
+                                                      .text
                                                       .trim(),
-                                              country: model
-                                                  .countryController
-                                                  .text
-                                                  .trim(),
-                                              state: model.stateController.text
-                                                  .trim(),
-                                              lga: model.lgaController.text
-                                                  .trim(),
-                                              website: websiteController.text
-                                                  .trim(),
-                                              servicesOffered:
-                                                  model.selectService,
-                                              businessAddress:
-                                                  businessAddController.text
+                                                  state: model
+                                                      .stateController
+                                                      .text
                                                       .trim(),
-                                              businessEmail:
-                                                  businessEmailController.text
+                                                  lga: model.lgaController.text
                                                       .trim(),
-                                              bankDetails: [
-                                                BankDetail(
-                                                  bankName:
-                                                      bankNameController.text,
-                                                  accountName:
-                                                      bankAccountNameController
-                                                          .text,
-                                                  accountNumber:
-                                                      bankNoController.text,
+                                                  website: websiteController
+                                                      .text
+                                                      .trim(),
+                                                  servicesOffered:
+                                                      model.selectService,
+                                                  businessAddress:
+                                                      businessAddController.text
+                                                          .trim(),
+                                                  businessEmail:
+                                                      businessEmailController
+                                                          .text
+                                                          .trim(),
+                                                  fullName:
+                                                      authFullNameController
+                                                          .text
+                                                          .trim(),
+                                                  phoneNumber:
+                                                      authPhoneNoController.text
+                                                          .trim(),
+                                                  email: authEmailController
+                                                      .text
+                                                      .trim(),
+                                                  meansOfId: model
+                                                      .getMeansOFIDAppReverse(
+                                                        model
+                                                            .meansIdController
+                                                            .text,
+                                                      ),
+                                                  uploadMeansOfId:
+                                                      model
+                                                          .authDocumentsList
+                                                          .isEmpty
+                                                      ? null
+                                                      : UploadMeansOfId.fromJson(
+                                                          model
+                                                              .authDocumentsList[0]
+                                                              .toJson(),
+                                                        ),
+                                                  // UploadMeansOfId(
+                                                  //     url: model
+                                                  //         .authDocumentsList[0]
+                                                  //         .url,
+                                                  //     mimeType: model
+                                                  //         .authDocumentsList[0]
+                                                  //         .mimeType,
+                                                  //     width: model
+                                                  //         .authDocumentsList[0]
+                                                  //         .width,
+                                                  //     size: model
+                                                  //         .authDocumentsList[0]
+                                                  //         .size,
+                                                  //     height: model
+                                                  //         .authDocumentsList[0]
+                                                  //         .height,
+                                                  //     format: model
+                                                  //         .authDocumentsList[0]
+                                                  //         .format,
+                                                  //   ),
                                                 ),
-                                              ],
-                                              fullName: authFullNameController
-                                                  .text
-                                                  .trim(),
-                                              phoneNumber: authPhoneNoController
-                                                  .text
-                                                  .trim(),
-                                              email: authEmailController.text
-                                                  .trim(),
-                                              meansOfId: model
-                                                  .getMeansOFIDAppReverse(
-                                                    model
-                                                        .meansIdController
-                                                        .text,
-                                                  ),
-                                              uploadMeansOfId:
-                                                  model
-                                                      .authDocumentsList
-                                                      .isEmpty
-                                                  ? null
-                                                  : UploadMeansOfId(
-                                                      url: model
-                                                          .authDocumentsList[0]
-                                                          .url,
-                                                      mimeType: model
-                                                          .authDocumentsList[0]
-                                                          .mimeType,
-                                                      width: model
-                                                          .authDocumentsList[0]
-                                                          .width,
-                                                      size: model
-                                                          .authDocumentsList[0]
-                                                          .size,
-                                                      height: model
-                                                          .authDocumentsList[0]
-                                                          .height,
-                                                      format: model
-                                                          .authDocumentsList[0]
-                                                          .format,
-                                                    ),
-                                            ),
                                           );
                                         }
                                       },

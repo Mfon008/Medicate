@@ -29,6 +29,9 @@ SubmitLevelTwoKycEntityModel _$SubmitLevelTwoKycEntityModelFromJson(
       : TaxIdentificationNumberDocument.fromJson(
           json['taxIdentificationNumberDocument'] as Map<String, dynamic>,
         ),
+  bankDetails: json['bankDetails'] == null
+      ? null
+      : BankDetails.fromJson(json['bankDetails'] as Map<String, dynamic>),
 );
 
 Map<String, dynamic> _$SubmitLevelTwoKycEntityModelToJson(
@@ -39,4 +42,5 @@ Map<String, dynamic> _$SubmitLevelTwoKycEntityModelToJson(
   'cacCertificate': instance.cacCertificate,
   'pharmacyLicense': instance.pharmacyLicense,
   'taxIdentificationNumberDocument': instance.taxIdentificationNumberDocument,
+  'bankDetails': instance.bankDetails,
 };

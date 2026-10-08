@@ -1,4 +1,3 @@
-import 'bank_detail.dart';
 import 'logo.dart';
 import 'upload_means_of_id.dart';
 
@@ -14,7 +13,6 @@ class UpdateBusinessOwnerProfileEntityModel {
   List<String>? servicesOffered;
   String? businessAddress;
   String? businessEmail;
-  List<BankDetail>? bankDetails;
   String? fullName;
   String? phoneNumber;
   String? designation;
@@ -34,7 +32,6 @@ class UpdateBusinessOwnerProfileEntityModel {
     this.servicesOffered,
     this.businessAddress,
     this.businessEmail,
-    this.bankDetails,
     this.fullName,
     this.phoneNumber,
     this.designation,
@@ -60,9 +57,6 @@ class UpdateBusinessOwnerProfileEntityModel {
       servicesOffered: json['servicesOffered'] as List<String>?,
       businessAddress: json['businessAddress'] as String?,
       businessEmail: json['businessEmail'] as String?,
-      bankDetails: (json['bankDetails'] as List<dynamic>?)
-          ?.map((e) => BankDetail.fromJson(e as Map<String, dynamic>))
-          .toList(),
       fullName: json['fullName'] as String?,
       phoneNumber: json['phoneNumber'] as String?,
       designation: json['designation'] as String?,
@@ -88,7 +82,6 @@ class UpdateBusinessOwnerProfileEntityModel {
     'servicesOffered': servicesOffered,
     'businessAddress': businessAddress,
     'businessEmail': businessEmail,
-    'bankDetails': bankDetails?.map((e) => e.toJson()).toList(),
     'fullName': fullName,
     'phoneNumber': phoneNumber,
     'designation': designation,

@@ -14,7 +14,7 @@ import '../model/create_user_entity_model.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
 import '../model/get_all_listed_plan_types_response_model/get_all_listed_plan_types_response_model.dart';
 import '../model/get_created_user_response_model/get_created_user_response_model.dart';
-import '../model/get_hmo_kyc_response_model/get_hmo_kyc_response_model.dart';
+import '../model/get_hmo_kyc_new_response_model/get_hmo_kyc_new_response_model.dart';
 import '../model/get_hospital_by_id_response_model/get_hospital_by_id_response_model.dart';
 import '../model/get_list_of_hospital_response_model/get_list_of_hospital_response_model.dart';
 import '../model/get_listed_plan_tiers_response_model/get_listed_plan_tiers_response_model.dart';
@@ -35,10 +35,10 @@ import '../model/set_pin_entity_model.dart';
 import '../model/set_pin_pharm_response_model/set_pin_pharm_response_model.dart';
 import '../model/sign_up_phamary_response_model/sign_up_phamary_response_model.dart';
 import '../model/update_hmo_kyc_entity_model/update_hmo_kyc_entity_model.dart';
+import '../model/update_hmo_kyc_third_level_entity_model/update_hmo_kyc_third_level_entity_model.dart';
 import '../model/update_hmo_plan_entity_model/update_hmo_plan_entity_model.dart';
 import '../model/update_plan_tiers_entity_model.dart';
 import '../model/update_role_entity_model.dart';
-import '../model/update_third_hmo_kyc_entity_model/update_third_hmo_kyc_entity_model.dart';
 import '../model/update_user_entity_model.dart';
 import '../model/upload_image_response_model/upload_image_response_model.dart';
 import '../model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
@@ -90,12 +90,17 @@ class HMOContractsImpl {
     SetPinEntityModel setPinEntity,
   ) async => await _api.setPin(setPinEntity);
   Future<GetTenantResponseModel> getTenant() async => await _api.getTenant();
-  Future<GetHmoKycResponseModel> getHMOKyc() async => await _api.getHMOKyc();
-  Future<dynamic> updateHMOKyc(UpdateHmoKycEntityModel updateKyc) async =>
-      await _api.updateHMOKyc(updateKyc);
-  Future<dynamic> updateThirdHMOKyc(
-    UpdateThirdHmoKycEntityModel updateKyc,
-  ) async => await _api.updateThirdHMOKyc(updateKyc);
+  Future<GetHmoKycNewResponseModel> getHMOKyc() async => await _api.getHMOKyc();
+  Future<dynamic> updateHMOKycSubmit(UpdateHmoKycEntityModel updateKyc) async =>
+      await _api.updateHMOKycSubmit(updateKyc);
+  Future<dynamic> updateHMOKycSave(UpdateHmoKycEntityModel updateKyc) async =>
+      await _api.updateHMOKycSave(updateKyc);
+  Future<dynamic> updateThirdHMOKycSave(
+    UpdateHmoKycThirdLevelEntityModel updateKyc,
+  ) async => await _api.updateThirdHMOKycSave(updateKyc);
+  Future<dynamic> updateThirdHMOKycSubmit(
+    UpdateHmoKycThirdLevelEntityModel updateKyc,
+  ) async => await _api.updateThirdHMOKycSubmit(updateKyc);
   Future<GetAllListedPlanTypesResponseModel> getListedPlanTypesForHMO() async =>
       await _api.getListedPlanTypesForHMO();
   Future<GetListedPlanTiersResponseModel> getListedPlanTiersForHMO() async =>

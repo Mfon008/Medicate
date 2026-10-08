@@ -644,6 +644,8 @@ class BusinessProviderWholeSaleCheckout extends StatelessWidget {
                           child: SvgPicture.asset(
                             AppImage.phone,
                             color: AppColors.infoGrey,
+                            height: 14.0.h,
+                            width: 14.0.w,
                           ),
                         ),
                         validator: AppValidator.validateString(),

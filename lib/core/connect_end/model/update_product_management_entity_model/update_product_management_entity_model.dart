@@ -72,7 +72,8 @@ class UpdateProductManagementEntityModel {
           ?.map((e) => VolumePricing.fromJson(e as Map<String, dynamic>))
           .toList(),
       suggestedRetailPrice: json['suggestedRetailPrice'] as String?,
-      additionalResourceDescription: json['additionalResourceDescription'] as String?,
+      additionalResourceDescription:
+          json['additionalResourceDescription'] as String?,
       additionalResourceUrl: json['additionalResourceUrl'] as String?,
     );
   }

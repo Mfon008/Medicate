@@ -141,7 +141,7 @@ class HMOProfileScreen extends StatelessWidget {
                   profileContainer(
                     icon: AppImage.profile,
                     text: 'Profile Information',
-                    isactive: false,
+                    isactive: model.returnBool(),
                     topLeft: 12,
                     topRight: 12,
                     onTap: () =>
@@ -150,7 +150,7 @@ class HMOProfileScreen extends StatelessWidget {
                   SizedBox(height: 1.0.h),
                   profileContainer(
                     icon: AppImage.key,
-                    isactive: model.getHmoIsActiveStatus(model),
+                    isactive: model.returnBoolKyc(),
                     text: 'KYC',
                     onTap: () => navigate.navigateTo(Routes.hMOKycScreen),
                   ),

@@ -1133,7 +1133,7 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                       ),
                                     ),
                                     child: TextView(
-                                      text: 'Product description',
+                                      text: 'Product Description',
                                       textStyle: TextStyle(
                                         fontFamily: 'GoogleSans',
                                         fontSize: 14.90.sp,
@@ -1914,15 +1914,18 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                                                         .start,
                                                                 children: [
                                                                   SizedBox(
-                                                                    width: 120.w,
+                                                                    width:
+                                                                        120.w,
                                                                     child: TextView(
                                                                       text: formatNaira(
                                                                         m.displayPricePerUnit ??
                                                                             0,
                                                                       ),
-                                                                      maxLines:1,
+                                                                      maxLines:
+                                                                          1,
                                                                       textOverflow:
-                                                                          TextOverflow.ellipsis,
+                                                                          TextOverflow
+                                                                              .ellipsis,
                                                                       textStyle: TextStyle(
                                                                         fontFamily:
                                                                             'DMSans',
@@ -1933,14 +1936,16 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                                                             : 14.sp,
                                                                         fontWeight:
                                                                             FontWeight.w500,
-                                                                        color:
-                                                                            AppColors.reminder,
+                                                                        color: AppColors
+                                                                            .reminder,
                                                                       ),
                                                                     ),
                                                                   ),
-                                                              
+
                                                                   Row(
-                                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .spaceBetween,
                                                                     children: [
                                                                       TextView(
                                                                         text:
@@ -1956,46 +1961,42 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                                                               AppColors.infoGrey,
                                                                         ),
                                                                       ),
-                                                                      
-                                                                  GestureDetector(
-                                                                    onTap: () {
-                                                                      model.addWholesaleProductToCart(
-                                                                        context,
-                                                                        wholesaleAddToCart: WholesaleAddToCartEntityModel(
-                                                                          productId:
-                                                                              m.id,
-                                                                          quantity:
-                                                                              m.minimumOrderQuantity,
-                                                                        ),
-                                                                      );
-                                                                      model
-                                                                          .notifyListeners();
-                                                                    },
-                                                                    child: Container(
-                                                                      padding: EdgeInsets.symmetric(
-                                                                        vertical:
-                                                                            2.50.w,
-                                                                        horizontal:
-                                                                            6.0.w,
-                                                                      ),
-                                                                      decoration: BoxDecoration(
-                                                                        color: AppColors
-                                                                            .primary,
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(
+
+                                                                      GestureDetector(
+                                                                        onTap: () {
+                                                                          model.addWholesaleProductToCart(
+                                                                            context,
+                                                                            wholesaleAddToCart: WholesaleAddToCartEntityModel(
+                                                                              productId: m.id,
+                                                                              quantity: m.minimumOrderQuantity,
+                                                                            ),
+                                                                          );
+                                                                          model
+                                                                              .notifyListeners();
+                                                                        },
+                                                                        child: Container(
+                                                                          padding: EdgeInsets.symmetric(
+                                                                            vertical:
+                                                                                2.50.w,
+                                                                            horizontal:
+                                                                                6.0.w,
+                                                                          ),
+                                                                          decoration: BoxDecoration(
+                                                                            color:
+                                                                                AppColors.primary,
+                                                                            borderRadius: BorderRadius.circular(
                                                                               22,
                                                                             ),
+                                                                          ),
+                                                                          child: Icon(
+                                                                            Icons.add,
+                                                                            size:
+                                                                                16.80.sp,
+                                                                            color:
+                                                                                AppColors.white,
+                                                                          ),
+                                                                        ),
                                                                       ),
-                                                                      child: Icon(
-                                                                        Icons
-                                                                            .add,
-                                                                        size: 16.80
-                                                                            .sp,
-                                                                        color: AppColors
-                                                                            .white,
-                                                                      ),
-                                                                    ),
-                                                                  ),
                                                                     ],
                                                                   ),
                                                                 ],

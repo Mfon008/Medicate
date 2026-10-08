@@ -68,27 +68,28 @@ class _LevelOneCardState extends State<LevelOneCard> {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                           widget.model!
-                                                .getDistributorKycResponseModel
-                                                ?.data
-                                                ?.kycLevels?[0]
-                                                .status
-                                                ?.toLowerCase() ==
-                                            'approved'
-                                        ?
-                          Container(
-                            width: 14.w,
-                            height: 14.w,
-                            decoration: const BoxDecoration(
-                              color: Color(0xFF58C58A),
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(
-                              Icons.check,
-                              size: 9.sp,
-                              color: Colors.white,
-                            ),
-                          ):SvgPicture.asset(AppImage.open_padlock),
+                          widget
+                                      .model!
+                                      .getDistributorKycResponseModel
+                                      ?.data
+                                      ?.kycLevels?[0]
+                                      .status
+                                      ?.toLowerCase() ==
+                                  'approved'
+                              ? Container(
+                                  width: 14.w,
+                                  height: 14.w,
+                                  decoration: const BoxDecoration(
+                                    color: Color(0xFF58C58A),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    Icons.check,
+                                    size: 9.sp,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : SvgPicture.asset(AppImage.open_padlock),
 
                           SizedBox(width: 8.w),
 
@@ -156,85 +157,92 @@ class _LevelOneCardState extends State<LevelOneCard> {
                           // ==================================
                           // KYC MESSAGE
                           // ==================================
-                          
+
                           Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 14.w,
-                                  vertical: 12.h,
-                                ),
-                                margin: EdgeInsets.symmetric(
-                                  horizontal: 14.w,
-                                  vertical: 22.h,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: widget.model!.kycStatusColor(
-                                    widget.model!
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 14.w,
+                              vertical: 12.h,
+                            ),
+                            margin: EdgeInsets.symmetric(
+                              horizontal: 14.w,
+                              vertical: 22.h,
+                            ),
+                            decoration: BoxDecoration(
+                              color: widget.model!.kycStatusColor(
+                                widget
+                                        .model!
                                         .getDistributorKycResponseModel
                                         ?.data
                                         ?.kycLevels?[0]
-                                        .status??'',
-                                  ),
-                                  borderRadius: BorderRadius.circular(10.r),
-                                ),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    widget.model!
-                                                .getDistributorKycResponseModel
-                                                ?.data
-                                                ?.kycLevels?[0]
-                                                .status
-                                                ?.toLowerCase() ==
-                                            'approved'
-                                        ? Container(
-                                            width: 14.w,
-                                            height: 14.w,
-                                            margin: EdgeInsets.only(top: 1.h),
-                                            decoration: const BoxDecoration(
-                                              color: Color(0xFF58C58A),
-                                              shape: BoxShape.circle,
-                                            ),
-                                            child: Icon(
-                                              Icons.check,
-                                              size: 9.sp,
-                                              color: Colors.white,
-                                            ),
-                                          )
-                                        : Icon(
-                                            Icons.info_outline,
-                                            size: 18.90.sp,
-                                            color: widget.model!.kycStatusColorIcon(
-                                              widget.model!
+                                        .status ??
+                                    '',
+                              ),
+                              borderRadius: BorderRadius.circular(10.r),
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                widget
+                                            .model!
+                                            .getDistributorKycResponseModel
+                                            ?.data
+                                            ?.kycLevels?[0]
+                                            .status
+                                            ?.toLowerCase() ==
+                                        'approved'
+                                    ? Container(
+                                        width: 14.w,
+                                        height: 14.w,
+                                        margin: EdgeInsets.only(top: 1.h),
+                                        decoration: const BoxDecoration(
+                                          color: Color(0xFF58C58A),
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: Icon(
+                                          Icons.check,
+                                          size: 9.sp,
+                                          color: Colors.white,
+                                        ),
+                                      )
+                                    : Icon(
+                                        Icons.info_outline,
+                                        size: 18.90.sp,
+                                        color: widget.model!.kycStatusColorIcon(
+                                          widget
+                                                  .model!
                                                   .getDistributorKycResponseModel
                                                   ?.data
                                                   ?.kycLevels?[0]
-                                                  .status??'',
-                                            ),
-                                          ),
+                                                  .status ??
+                                              '',
+                                        ),
+                                      ),
 
-                                    SizedBox(width: 8.w),
-                                    Expanded(
-                                      child: Text(
-                                        widget.model!.kycStatusText(
-                                          widget.model
+                                SizedBox(width: 8.w),
+                                Expanded(
+                                  child: Text(
+                                    widget.model!.kycStatusText(
+                                      widget
+                                              .model
                                               ?.getDistributorKycResponseModel
                                               ?.data
                                               ?.kycLevels?[0]
-                                              .status??'',
-                                        ),
-                                        style: TextStyle(
-                                          fontSize: 12.5.sp,
-                                          height: 1.35,
-                                          fontWeight: FontWeight.w400,
-                                          color: const Color(0xFF252525),
-                                          fontFamily: 'DMSans',
-                                        ),
-                                      ),
+                                              .status ??
+                                          '',
                                     ),
-                                  ],
+                                    style: TextStyle(
+                                      fontSize: 12.5.sp,
+                                      height: 1.35,
+                                      fontWeight: FontWeight.w400,
+                                      color: const Color(0xFF252525),
+                                      fontFamily: 'DMSans',
+                                    ),
+                                  ),
                                 ),
-                              ),
-                        
+                              ],
+                            ),
+                          ),
+
                           // Container(
                           //   padding: EdgeInsets.symmetric(
                           //     horizontal: 14.w,
@@ -346,7 +354,9 @@ class _LevelOneCardState extends State<LevelOneCard> {
                                 ),
 
                                 Divider(color: AppColors.f1),
-                                if (widget.model!.getDistributorKycResponseModel !=
+                                if (widget
+                                            .model!
+                                            .getDistributorKycResponseModel !=
                                         null &&
                                     widget
                                         .model!
@@ -406,7 +416,8 @@ class _LevelOneCardState extends State<LevelOneCard> {
                                             ],
                                           ),
                                         );
-                                      }),                              ],
+                                      }),
+                              ],
                             ),
                           ),
                         ],

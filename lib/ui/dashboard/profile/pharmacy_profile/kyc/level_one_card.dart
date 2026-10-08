@@ -450,7 +450,7 @@ class _LevelOneCardState extends State<LevelOneCard> {
                                   ),
                                 ),
 
-                                SizedBox(height: 22.h),
+                                SizedBox(height: 18.22.h),
                                 TextView(
                                   text: 'Contact Details',
                                   textStyle: TextStyle(
@@ -462,7 +462,7 @@ class _LevelOneCardState extends State<LevelOneCard> {
                                 ),
 
                                 Divider(color: AppColors.f1),
-                                SizedBox(height: 22.h),
+                                SizedBox(height: 18.22.h),
                                 InfoItem(
                                   title: 'Contact person name',
                                   value:
@@ -475,7 +475,7 @@ class _LevelOneCardState extends State<LevelOneCard> {
                                       '--',
                                 ),
 
-                                SizedBox(height: 22.h),
+                                SizedBox(height: 14.22.h),
                                 InfoItem(
                                   title: 'Contact person email',
                                   value:
@@ -487,46 +487,7 @@ class _LevelOneCardState extends State<LevelOneCard> {
                                           ?.contactEmail ??
                                       '--',
                                 ),
-
-                                SizedBox(height: 22.h),
-                                TextView(
-                                  text: 'Bank Information',
-                                  textStyle: TextStyle(
-                                    fontSize: 15.86.sp,
-                                    fontWeight: FontWeight.w600,
-                                    color: AppColors.reminder1,
-                                    fontFamily: 'DMSans',
-                                  ),
-                                ),
-
-                                Divider(color: AppColors.f1),
-                                SizedBox(height: 22.h),
-                                InfoItem(
-                                  title: 'Bank name',
-                                  value:
-                                      widget
-                                          .model
-                                          ?.getPharmacyKycResponseModel
-                                          ?.data
-                                          ?.level1
-                                          ?.bankName ??
-                                      '--',
-                                ),
-
-                                SizedBox(height: 22.h),
-                                InfoItem(
-                                  title: 'Account name',
-                                  value:
-                                      widget
-                                          .model
-                                          ?.getPharmacyKycResponseModel
-                                          ?.data
-                                          ?.level1
-                                          ?.accountName ??
-                                      '--',
-                                ),
-
-                                SizedBox(height: 22.h),
+                                SizedBox(height: 18.22.h),
                               ],
                             ),
                           ),

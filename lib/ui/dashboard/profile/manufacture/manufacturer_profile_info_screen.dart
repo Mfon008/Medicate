@@ -402,11 +402,12 @@ class _ManufacturerProfileInfoScreenState
                                 model.lgaController.clear();
                                 model.businessAddController.clear();
                                 model.countryController.clear();
-                                final result = await model.showBusinessAreaLGAAndStateCountryDialog(
-                                  context,
-                                );
-                                if(result == true){
-                                   model.getUserDetails(context);
+                                final result = await model
+                                    .showBusinessAreaLGAAndStateCountryDialog(
+                                      context,
+                                    );
+                                if (result == true) {
+                                  model.getUserDetails(context);
                                 }
                               },
                               icon: Icon(

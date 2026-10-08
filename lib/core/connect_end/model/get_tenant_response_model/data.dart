@@ -27,6 +27,7 @@ class Data {
   String? bio;
   String? country;
   String? lga;
+  String? kycStatus;
   String? healthcareFacilityName;
   String? website;
   String? registrationNumber;
@@ -67,6 +68,7 @@ class Data {
     this.lga,
     this.registrationNumber,
     this.country,
+    this.kycStatus,
     this.authorizedRepInfo,
     this.website,
     this.educationalExperience,

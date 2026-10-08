@@ -736,7 +736,8 @@ class ManufacturerApi {
     try {
       final response = await _service.call(
         UrlConfig.wholesale_products_bulk_download_template,
-        RequestMethod.get,options: Options(responseType: ResponseType.bytes),
+        RequestMethod.get,
+        options: Options(responseType: ResponseType.bytes),
       );
       logger.d(response.data);
       return Uint8List.fromList(List<int>.from(response.data));
@@ -750,7 +751,8 @@ class ManufacturerApi {
     try {
       final response = await _service.call(
         UrlConfig.wholesale_products_bulk_download_template,
-        RequestMethod.post,formData: FormData.fromMap({'file': file})
+        RequestMethod.post,
+        formData: FormData.fromMap({'file': file}),
       );
       logger.d(response.data);
       return response.data;

@@ -2370,7 +2370,7 @@ class ManufacturerViewModel extends BaseViewModel {
       },
     );
   }
-  
+
   void createProduct(
     context, {
     CreateDistributorProductEntityModel? createproduct,
@@ -5414,7 +5414,12 @@ class ManufacturerViewModel extends BaseViewModel {
                                     if (isEdit) {
                                       // EDIT EXISTING STATE
                                       if (stateIndex != -1) {
-                                        listOfAddedLocation[stateIndex] = cov.CoverageAreas(lgas: lgaAddedList,state: stateController.text.trim());
+                                        listOfAddedLocation[stateIndex] =
+                                            cov.CoverageAreas(
+                                              lgas: lgaAddedList,
+                                              state: stateController.text
+                                                  .trim(),
+                                            );
                                         // {
                                         //   state: List<String>.from(
                                         //     lgaAddedList,
@@ -5423,21 +5428,27 @@ class ManufacturerViewModel extends BaseViewModel {
                                       } else {
                                         // In case the state was changed during editing
                                         listOfAddedLocation.add(
-                                          cov.CoverageAreas(lgas: lgaAddedList,state: stateController.text.trim())
-                                        //   {
-                                        //   state: List<String>.from(
-                                        //     lgaAddedList,
-                                        //   ),
-                                        // }
+                                          cov.CoverageAreas(
+                                            lgas: lgaAddedList,
+                                            state: stateController.text.trim(),
+                                          ),
+                                          //   {
+                                          //   state: List<String>.from(
+                                          //     lgaAddedList,
+                                          //   ),
+                                          // }
                                         );
                                       }
                                     } else {
                                       // ADD NEW STATE
                                       listOfAddedLocation.add(
-                                        cov.CoverageAreas(lgas: lgaAddedList,state: stateController.text.trim())
-                                      //   {
-                                      //   state: List<String>.from(lgaAddedList),
-                                      // }
+                                        cov.CoverageAreas(
+                                          lgas: lgaAddedList,
+                                          state: stateController.text.trim(),
+                                        ),
+                                        //   {
+                                        //   state: List<String>.from(lgaAddedList),
+                                        // }
                                       );
                                       // }
                                     }
@@ -7066,7 +7077,7 @@ class ManufacturerViewModel extends BaseViewModel {
     );
   }
 
-  Future<void> pickCsvFile(BuildContext? context,) async {
+  Future<void> pickCsvFile(BuildContext? context) async {
     // 1. Pick the file
     dynamic result = await fi.FilePicker.pickFiles(
       type: fi.FileType.custom,
@@ -7081,17 +7092,13 @@ class ManufacturerViewModel extends BaseViewModel {
       notifyListeners();
 
       // 3. Read and parse the file
-      await _parseCsv(
-        path: path,
-      );
+      await _parseCsv(path: path);
     } else {
       // User canceled the picker
     }
   }
 
-  Future<void> _parseCsv({
-    String? path,
-  }) async {
+  Future<void> _parseCsv({String? path}) async {
     try {
       _isLoading = true;
       final input = File(path!).openRead();
@@ -7102,7 +7109,7 @@ class ManufacturerViewModel extends BaseViewModel {
       _csvData = fields;
       imageDocument = File(path);
       fileImageDocument = imageDocument!.path.split("/").last;
-     
+
       _isLoading = false;
       // logger.d('CSV Data: $_csvData');
       logger.d('input .CSV File Data: $input');
@@ -7115,7 +7122,7 @@ class ManufacturerViewModel extends BaseViewModel {
   Future<void> uploadBulkCsvProduct({context, MultipartFile? file}) async {
     try {
       _isLoading = true;
-       await runBusyFuture(
+      await runBusyFuture(
         repositoryImply.uploadProductCsv(file!),
         throwException: true,
       );
@@ -7129,15 +7136,15 @@ class ManufacturerViewModel extends BaseViewModel {
   }
 
   Future<void> downloadloadBulkCsvProduct(context) async {
-     final scaffoldMessenger = ScaffoldMessenger.of(context);
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
     try {
       _isLoading = true;
-       final Uint8List downloadCSV = await runBusyFuture(
+      final Uint8List downloadCSV = await runBusyFuture(
         repositoryImply.downloadProductCsv(),
         throwException: true,
       );
       _isLoading = false;
-       final dir = await getTemporaryDirectory();
+      final dir = await getTemporaryDirectory();
 
       final filename =
           '${dir.path}/CSV_${DateTime.now().millisecondsSinceEpoch}.pdf';
@@ -7165,5 +7172,4 @@ class ManufacturerViewModel extends BaseViewModel {
     }
     notifyListeners();
   }
-
 }

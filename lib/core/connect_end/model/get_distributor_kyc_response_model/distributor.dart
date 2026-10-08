@@ -12,7 +12,7 @@ class Distributor {
   Documents? documents;
   List<CoverageAreas>? coverageAreas;
 
-  Distributor({this.businessDetails, this.documents,this.coverageAreas});
+  Distributor({this.businessDetails, this.documents, this.coverageAreas});
 
   factory Distributor.fromJson(Map<String, dynamic> json) {
     return _$DistributorFromJson(json);

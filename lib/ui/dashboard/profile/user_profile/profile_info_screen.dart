@@ -573,10 +573,6 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
                           isFilled: true,
                           controller: weightController,
                           validator: AppValidator.validateString(),
-                          // suffixWidget: Padding(
-                          //   padding: EdgeInsets.all(14.20.w),
-                          //   child: SvgPicture.asset(AppImage.arrow_down),
-                          // ),
                         ),
                       ],
                     ),
@@ -612,7 +608,6 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
                                 context: context,
                                 userEntity: UpdateUserProfileEntity(
                                   dateOfBirth: dobController.text.trim(),
-                                  // age: int.parse(ageController.text.trim()),
                                   gender: genderController.text
                                       .trim()
                                       .toUpperCase(),

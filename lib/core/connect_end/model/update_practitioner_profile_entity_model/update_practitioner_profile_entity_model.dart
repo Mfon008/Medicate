@@ -1,4 +1,4 @@
-import 'bank_detail.dart';
+// import 'bank_detail.dart';
 import 'educational_experience.dart';
 import 'logo.dart';
 import 'means_of_id.dart';
@@ -19,7 +19,6 @@ class UpdatePractitionerProfileEntityModel {
   String? businessAddress;
   String? businessEmail;
   List<EducationalExperience>? educationalExperience;
-  List<BankDetail>? bankDetails;
 
   UpdatePractitionerProfileEntityModel({
     this.logo,
@@ -37,7 +36,6 @@ class UpdatePractitionerProfileEntityModel {
     this.businessAddress,
     this.businessEmail,
     this.educationalExperience,
-    this.bankDetails,
   });
 
   factory UpdatePractitionerProfileEntityModel.fromJson(
@@ -67,9 +65,6 @@ class UpdatePractitionerProfileEntityModel {
             (e) => EducationalExperience.fromJson(e as Map<String, dynamic>),
           )
           .toList(),
-      bankDetails: (json['bankDetails'] as List<dynamic>?)
-          ?.map((e) => BankDetail.fromJson(e as Map<String, dynamic>))
-          .toList(),
     );
   }
 
@@ -91,6 +86,5 @@ class UpdatePractitionerProfileEntityModel {
     'educationalExperience': educationalExperience
         ?.map((e) => e.toJson())
         .toList(),
-    'bankDetails': bankDetails?.map((e) => e.toJson()).toList(),
   };
 }

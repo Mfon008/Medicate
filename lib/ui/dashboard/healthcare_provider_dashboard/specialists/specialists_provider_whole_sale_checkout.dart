@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use
+// ignore_for_file: must_be_immutable, deprecated_member_use
 
 import 'dart:io';
 
@@ -19,7 +19,8 @@ import '../../../widget/text_form_widget.dart';
 import '../business_owners/business_provider_whole_sale_checkout.dart';
 
 class SpecialistsProviderWholeSaleCheckout extends StatelessWidget {
-  const SpecialistsProviderWholeSaleCheckout({super.key});
+  SpecialistsProviderWholeSaleCheckout({super.key});
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -647,6 +648,8 @@ class SpecialistsProviderWholeSaleCheckout extends StatelessWidget {
                           child: SvgPicture.asset(
                             AppImage.phone,
                             color: AppColors.infoGrey,
+                            height: 14.0.h,
+                            width: 14.0.w,
                           ),
                         ),
                         validator: AppValidator.validateString(),

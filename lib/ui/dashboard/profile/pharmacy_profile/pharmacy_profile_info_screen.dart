@@ -1,13 +1,11 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: unnecessary_import, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:medicate_app/core/connect_end/model/update_pharmacy_profile_entity_model/bank_detail.dart';
 import 'package:medicate_app/core/connect_end/model/update_pharmacy_profile_entity_model/update_pharmacy_profile_entity_model.dart';
-// import 'package:intl/intl.dart';
 import 'package:medicate_app/core/connect_end/view_model/pharm_auth_view_model.dart';
 import 'package:medicate_app/main.dart';
 import 'package:stacked/stacked.dart';
@@ -36,6 +34,7 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
   TextEditingController licenceNoController = TextEditingController();
   TextEditingController businessAddController = TextEditingController();
   TextEditingController emailController = TextEditingController();
+  TextEditingController emailContactController = TextEditingController();
   TextEditingController countryController = TextEditingController();
   TextEditingController contactDetailsController = TextEditingController();
   TextEditingController bankNameController = TextEditingController();
@@ -75,6 +74,7 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
           onViewModelReady: (model) async {
             WidgetsBinding.instance.addPostFrameCallback((_) async {
               await model.getTenant(context);
+              await model.getPharmacyKyc(context);
               nameController.text =
                   model.getTetantResponseModel?.data?.name ?? '';
               phoneController.text = SharedPreferencesService
@@ -87,20 +87,6 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                   model.getTetantResponseModel?.data?.licenseNumber ?? '';
               businessAddController.text =
                   model.getTetantResponseModel?.data?.businessAddress ?? '';
-              bankNameController.text =
-                  model
-                      .getTetantResponseModel
-                      ?.data
-                      ?.bankDetails?[0]
-                      .bankName ??
-                  "";
-              bankNoController.text =
-                  model
-                      .getTetantResponseModel
-                      ?.data
-                      ?.bankDetails?[0]
-                      .accountNumber ??
-                  '';
               emailController.text =
                   model.getTetantResponseModel?.data?.email ?? '';
               model.countryController.text =
@@ -113,24 +99,17 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                   model.getTetantResponseModel?.data?.servicesOffered ?? [];
               contactDetailsController.text =
                   model
-                      .getTetantResponseModel
+                      .getPharmacyKycResponseModel
                       ?.data
-                      ?.bankDetails?[0]
-                      .accountName ??
+                      ?.level1
+                      ?.contactPersonName ??
                   '';
-              bankNameController.text =
+              emailContactController.text =
                   model
-                      .getTetantResponseModel
+                      .getPharmacyKycResponseModel
                       ?.data
-                      ?.bankDetails?[0]
-                      .bankName ??
-                  '';
-              bankNoController.text =
-                  model
-                      .getTetantResponseModel
-                      ?.data
-                      ?.bankDetails?[0]
-                      .accountNumber ??
+                      ?.level1
+                      ?.contactEmail ??
                   '';
             });
           },
@@ -1119,69 +1098,8 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                           ),
                           fillColor: AppColors.grey,
                           isFilled: true,
-                          controller: emailController,
-                          inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.allow(RegExp("[a-z]")),
-                          ],
-                          // validator: AppValidator.validateString(),
-                        ),
-                        SizedBox(height: 30.h),
-                        TextView(
-                          text: 'Bank Information',
-                          textStyle: TextStyle(
-                            fontSize: 16.2.sp,
-                            fontWeight: FontWeight.w700,
-                            color: AppColors.black,
-                          ),
-                        ),
-                        SizedBox(height: 6.h),
-                        Divider(
-                          color: const Color.fromARGB(255, 227, 227, 228),
-                        ),
-                        SizedBox(height: 6.h),
-
-                        TextFormWidget(
-                          hint: 'Bank name',
-                          hintSize: 14,
-                          borderColor: AppColors.transparent,
-                          borderTopLeft: 10.r,
-                          borderTopRight: 10.r,
-                          borderBottomLeft: 10.r,
-                          borderBottomRight: 10.r,
-                          keyboardType: TextInputType.text,
-                          labelStyle: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontFamily: 'Arial',
-                            fontSize: 14.2.sp,
-                            color: AppColors.infoGrey,
-                          ),
-                          fillColor: AppColors.grey,
-                          isFilled: true,
-                          controller: bankNameController,
+                          controller: emailContactController,
                           validator: AppValidator.validateString(),
-                        ),
-                        SizedBox(height: 20.h),
-                        TextFormWidget(
-                          hint: 'Account number',
-                          hintSize: 14,
-                          borderColor: AppColors.transparent,
-                          borderTopLeft: 10.r,
-                          borderTopRight: 10.r,
-                          borderBottomLeft: 10.r,
-                          borderBottomRight: 10.r,
-                          label: 'Enter account number',
-                          keyboardType: TextInputType.number,
-                          labelStyle: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontFamily: 'Arial',
-                            fontSize: 14.2.sp,
-                            color: AppColors.infoGrey,
-                          ),
-                          fillColor: AppColors.grey,
-                          isFilled: true,
-                          controller: bankNoController,
-                          validator: AppValidator.validateString(),
-                          // ),
                         ),
                       ],
                     ),
@@ -1225,15 +1143,8 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                                   servicesOffered: model.selectService,
                                   contactPersonName:
                                       contactDetailsController.text,
-                                  contactEmail: emailController.text,
-                                  bankDetails: [
-                                    BankDetail(
-                                      bankName: bankNameController.text,
-                                      accountName:
-                                          contactDetailsController.text,
-                                      accountNumber: bankNoController.text,
-                                    ),
-                                  ],
+                                  email: emailController.text,
+                                  contactEmail: emailContactController.text,
                                 ),
                               );
                             }

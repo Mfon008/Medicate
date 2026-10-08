@@ -1,9 +1,12 @@
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
+import 'package:medicate_app/core/connect_end/model/get_healthcare_practitioner_kyc_response_model/get_healthcare_practitioner_kyc_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/get_single_market_product_response_model/get_single_market_product_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/sign_up_healthcare_business_owner_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/sign_up_healthcare_provider_practitioner_entity_model.dart';
+import 'package:medicate_app/core/connect_end/model/submit_healthcare_level_two_kyc_entity_model/submit_healthcare_level_two_kyc_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/update_business_owner_profile_response_model/update_business_owner_profile_response_model.dart';
+import '../connect_end/model/business_addresses_entity.dart';
 import '../connect_end/model/create_payment_wallet_entity_model.dart';
 import '../connect_end/model/create_payment_wallet_model/create_payment_wallet_model.dart';
 import '../connect_end/model/create_reminder_response_model/create_reminder_response_model.dart';
@@ -12,7 +15,7 @@ import '../connect_end/model/create_user_entity_model.dart';
 import '../connect_end/model/distributor_wholesale_category_model/distributor_wholesale_category_model.dart';
 import '../connect_end/model/forgot_password_response_model/forgot_password_response_model.dart';
 import '../connect_end/model/get_created_user_response_model/get_created_user_response_model.dart';
-import '../connect_end/model/get_pharmacy_kyc_response_model/get_pharmacy_kyc_response_model.dart';
+import '../connect_end/model/get_healthcare_provider_kyc_response_model/get_healthcare_provider_kyc_response_model.dart';
 import '../connect_end/model/get_reminder_by_id/get_reminder_by_id.dart';
 import '../connect_end/model/get_reminder_for_tenant_response_model/get_reminder_for_tenant_response_model.dart';
 import '../connect_end/model/get_roles_response_model/get_roles_response_model.dart';
@@ -433,36 +436,103 @@ class HealthcareApi {
     }
   }
 
-  Future<GetPharmacyKycResponseModel> getHealthCareKyc() async {
+  Future<GetHealthcarePractitionerKycResponseModel>
+  getHealthCarePractitionerKyc() async {
     try {
       final response = await _service.call(
-        UrlConfig.get_kyc,
+        UrlConfig.auth_healthcare_practitioner_kyc_status,
         RequestMethod.get,
       );
       logger.d(response.data);
-      return GetPharmacyKycResponseModel.fromJson(response.data);
+      return GetHealthcarePractitionerKycResponseModel.fromJson(response.data);
     } catch (e) {
       logger.d("response:$e");
       rethrow;
     }
   }
 
-  // Future<dynamic> updateHealthCareKyc(
-  //   UpdatePharmacyKycEntityModel updateKyc,
-  // ) async {
-  //   try {
-  //     final response = await _service.call(
-  //       UrlConfig.update_pharm_kyc,
-  //       RequestMethod.patch,
-  //       data: updateKyc.toJson(),
-  //     );
-  //     logger.d(response.data);
-  //     return response.data;
-  //   } catch (e) {
-  //     logger.d("response:$e");
-  //     rethrow;
-  //   }
-  // }
+  Future<GetHealthcareProviderKycResponseModel>
+  getHealthCareProviderKyc() async {
+    try {
+      final response = await _service.call(
+        UrlConfig.auth_healthcare_provider_kyc_status,
+        RequestMethod.get,
+      );
+      logger.d(response.data);
+      return GetHealthcareProviderKycResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> updateHealthCareProviderKycSave(
+    SubmitHealthcareLevelTwoKycEntityModel updateKyc,
+  ) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.auth_healthcare_provider_kyc_level_save,
+        RequestMethod.patch,
+        data: updateKyc.toJson(),
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> updateHealthCareProviderKycSubmit(
+    SubmitHealthcareLevelTwoKycEntityModel updateKyc,
+  ) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.auth_healthcare_provider_kyc_level_submit,
+        RequestMethod.post,
+        data: updateKyc.toJson(),
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> updateHealthCarePractitionerKycSave(
+    SubmitHealthcareLevelTwoKycEntityModel updateKyc,
+  ) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.auth_healthcare_practitioner_kyc_level_save,
+        RequestMethod.patch,
+        data: updateKyc.toJson(),
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> updateHealthCarePractitionerKycSubmit(
+    SubmitHealthcareLevelTwoKycEntityModel updateKyc,
+  ) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.auth_healthcare_practitioner_kyc_level_submit,
+        RequestMethod.post,
+        data: updateKyc.toJson(),
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
 
   Future<dynamic> addDoctor(CreateUserEntityModel createEntity) async {
     try {
@@ -926,6 +996,69 @@ class HealthcareApi {
       );
       logger.d(response.data);
       return DistributorWholesaleCategoryModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> addBusinessAddresses(
+    BusinessAddressesEntity businessAddresses,
+  ) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.auth_tenants_profile_addresses,
+        RequestMethod.post,
+        data: businessAddresses.toJson(),
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> updateBusinessAddress({
+    BusinessAddressesEntity? businessAddresses,
+    String? id,
+  }) async {
+    try {
+      final response = await _service.call(
+        '${UrlConfig.auth_tenants_profile_addresses}/$id',
+        RequestMethod.patch,
+        data: businessAddresses?.toJson(),
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> updatePrimaryBusinessAddress(String id) async {
+    try {
+      final response = await _service.call(
+        '${UrlConfig.auth_tenants_profile_addresses}/$id/primary',
+        RequestMethod.patch,
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> deletebusinessAddress(String? id) async {
+    try {
+      final response = await _service.call(
+        '${UrlConfig.auth_tenants_profile_addresses}/$id',
+        RequestMethod.delete,
+      );
+      logger.d(response.data);
+      return response.data;
     } catch (e) {
       logger.d("response:$e");
       rethrow;

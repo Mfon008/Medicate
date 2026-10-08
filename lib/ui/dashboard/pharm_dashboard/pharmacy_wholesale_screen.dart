@@ -843,7 +843,8 @@ class _PharmacyWholesaleScreenState extends State<PharmacyWholesaleScreen> {
                                         ),
                                         child: Row(
                                           mainAxisSize: MainAxisSize.min,
-                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
                                           children: [
                                             IconButton(
                                               onPressed:

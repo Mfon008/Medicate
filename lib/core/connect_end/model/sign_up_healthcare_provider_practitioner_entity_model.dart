@@ -4,6 +4,9 @@ class SignUpHealthcareProviderPractitionerEntityModel {
   List<String>? areaOfExpertise;
   String? registrationNumber;
   String? healthcareFacilityName;
+  String? businessAddress;
+  String? state;
+  String? lga;
 
   SignUpHealthcareProviderPractitionerEntityModel({
     this.phone,
@@ -11,6 +14,9 @@ class SignUpHealthcareProviderPractitionerEntityModel {
     this.areaOfExpertise,
     this.registrationNumber,
     this.healthcareFacilityName,
+    this.businessAddress,
+    this.state,
+    this.lga,
   });
 
   factory SignUpHealthcareProviderPractitionerEntityModel.fromJson(
@@ -22,6 +28,9 @@ class SignUpHealthcareProviderPractitionerEntityModel {
       areaOfExpertise: json['areaOfExpertise'] as List<String>?,
       registrationNumber: json['registrationNumber'] as String?,
       healthcareFacilityName: json['healthcareFacilityName'] as String?,
+      businessAddress: json['businessAddress'] as String?,
+      state: json['state'] as String?,
+      lga: json['lga'] as String?,
     );
   }
 
@@ -31,5 +40,8 @@ class SignUpHealthcareProviderPractitionerEntityModel {
     'areaOfExpertise': areaOfExpertise,
     'registrationNumber': registrationNumber,
     'healthcareFacilityName': healthcareFacilityName,
+    'businessAddress': businessAddress,
+    'state': state,
+    'lga': lga,
   };
 }

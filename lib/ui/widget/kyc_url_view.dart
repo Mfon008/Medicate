@@ -75,7 +75,7 @@ class WebViewScreen extends StatefulWidget {
 }
 
 class _WebViewScreenState extends State<WebViewScreen> {
-   WebViewController? _controller;
+  WebViewController? _controller;
 
   void setupWebViewWithPlatform() {
     if (Platform.isAndroid) {
@@ -100,7 +100,8 @@ class _WebViewScreenState extends State<WebViewScreen> {
         )
         ..loadRequest(Uri.parse(widget.imageUrl));
     } else {
-      _controller = WebViewController()..loadRequest(Uri.parse(widget.imageUrl));
+      _controller = WebViewController()
+        ..loadRequest(Uri.parse(widget.imageUrl));
     }
   }
 
@@ -109,6 +110,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
     setupWebViewWithPlatform();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

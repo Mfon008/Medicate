@@ -3,12 +3,18 @@ class SignUpHealthcareBusinessOwnerEntityModel {
   String? healthcareProviderType;
   String? healthcareFacilityName;
   String? registrationNumber;
+  String? businessAddress;
+  String? state;
+  String? lga;
 
   SignUpHealthcareBusinessOwnerEntityModel({
     this.phone,
     this.healthcareProviderType,
     this.healthcareFacilityName,
     this.registrationNumber,
+    this.businessAddress,
+    this.state,
+    this.lga,
   });
 
   factory SignUpHealthcareBusinessOwnerEntityModel.fromJson(
@@ -19,6 +25,9 @@ class SignUpHealthcareBusinessOwnerEntityModel {
       healthcareProviderType: json['healthcareProviderType'] as String?,
       healthcareFacilityName: json['healthcareFacilityName'] as String?,
       registrationNumber: json['registrationNumber'] as String?,
+      businessAddress: json['businessAddress'] as String?,
+      state: json['state'] as String?,
+      lga: json['lga'] as String?,
     );
   }
 
@@ -27,5 +36,8 @@ class SignUpHealthcareBusinessOwnerEntityModel {
     'healthcareProviderType': healthcareProviderType,
     'healthcareFacilityName': healthcareFacilityName,
     'registrationNumber': registrationNumber,
+    'businessAddress': businessAddress,
+    'state': state,
+    'lga': lga,
   };
 }

@@ -72,7 +72,8 @@ class CreateDistributorProductEntityModel {
           .toList(),
       serialNumber: json['serialNumber'] as String?,
       suggestedRetailPrice: json['suggestedRetailPrice'] as String?,
-      additionalResourceDescription: json['additionalResourceDescription'] as String?,
+      additionalResourceDescription:
+          json['additionalResourceDescription'] as String?,
       additionalResourceUrl: json['additionalResourceUrl'] as String?,
     );
   }

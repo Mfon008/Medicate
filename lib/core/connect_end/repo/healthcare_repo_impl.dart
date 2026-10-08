@@ -5,6 +5,7 @@ import 'package:medicate_app/core/connect_end/model/sign_up_healthcare_provider_
 import '../../core_folder/app/app.locator.dart';
 import '../../core_folder/manager/shared_preference.dart';
 import '../contrast/healthcare_contract_impl.dart';
+import '../model/business_addresses_entity.dart';
 import '../model/create_payment_wallet_entity_model.dart';
 import '../model/create_payment_wallet_model/create_payment_wallet_model.dart';
 import '../model/create_reminder_response_model/create_reminder_response_model.dart';
@@ -13,7 +14,8 @@ import '../model/create_user_entity_model.dart';
 import '../model/distributor_wholesale_category_model/distributor_wholesale_category_model.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
 import '../model/get_created_user_response_model/get_created_user_response_model.dart';
-import '../model/get_pharmacy_kyc_response_model/get_pharmacy_kyc_response_model.dart';
+import '../model/get_healthcare_practitioner_kyc_response_model/get_healthcare_practitioner_kyc_response_model.dart';
+import '../model/get_healthcare_provider_kyc_response_model/get_healthcare_provider_kyc_response_model.dart';
 import '../model/get_reminder_by_id/get_reminder_by_id.dart';
 import '../model/get_reminder_for_tenant_response_model/get_reminder_for_tenant_response_model.dart';
 import '../model/get_roles_response_model/get_roles_response_model.dart';
@@ -37,6 +39,7 @@ import '../model/roles_entity_model.dart';
 import '../model/set_pin_entity_model.dart';
 import '../model/set_pin_pharm_response_model/set_pin_pharm_response_model.dart';
 import '../model/sign_up_phamary_response_model/sign_up_phamary_response_model.dart';
+import '../model/submit_healthcare_level_two_kyc_entity_model/submit_healthcare_level_two_kyc_entity_model.dart';
 import '../model/update_business_owner_profile_entity_model/update_business_owner_profile_entity_model.dart';
 import '../model/update_business_owner_profile_response_model/update_business_owner_profile_response_model.dart';
 import '../model/update_doses_status_model/update_doses_status_model.dart';
@@ -216,17 +219,51 @@ class HealthcareRepoImpl {
     return response;
   }
 
-  Future<GetPharmacyKycResponseModel> getHealthCareKyc() async {
-    final response = await _contract.getHealthCareKyc();
+  Future<GetHealthcarePractitionerKycResponseModel>
+  getHealthCarePractitionerKyc() async {
+    final response = await _contract.getHealthCarePractitionerKyc();
     return response;
   }
 
-  // Future<dynamic> updateHealthCareKyc(
-  //   UpdatePharmacyKycEntityModel updateKyc,
-  // ) async {
-  //   final response = await _contract.updateHealthCareKyc(updateKyc);
-  //   return response;
-  // }
+  Future<GetHealthcareProviderKycResponseModel>
+  getHealthCareProviderKyc() async {
+    final response = await _contract.getHealthCareProviderKyc();
+    return response;
+  }
+
+  Future<dynamic> updateHealthCareProviderKycSave(
+    SubmitHealthcareLevelTwoKycEntityModel updateKyc,
+  ) async {
+    final response = await _contract.updateHealthCareProviderKycSave(updateKyc);
+    return response;
+  }
+
+  Future<dynamic> updateHealthCarePractitionerKycSave(
+    SubmitHealthcareLevelTwoKycEntityModel updateKyc,
+  ) async {
+    final response = await _contract.updateHealthCarePractitionerKycSave(
+      updateKyc,
+    );
+    return response;
+  }
+
+  Future<dynamic> updateHealthCareProviderKycSubmit(
+    SubmitHealthcareLevelTwoKycEntityModel updateKyc,
+  ) async {
+    final response = await _contract.updateHealthCareProviderKycSubmit(
+      updateKyc,
+    );
+    return response;
+  }
+
+  Future<dynamic> updateHealthCarePractitionerKycSubmit(
+    SubmitHealthcareLevelTwoKycEntityModel updateKyc,
+  ) async {
+    final response = await _contract.updateHealthCarePractitionerKycSubmit(
+      updateKyc,
+    );
+    return response;
+  }
 
   Future<dynamic> addUser(CreateUserEntityModel createEntity) async {
     final response = await _contract.addDoctor(createEntity);
@@ -468,8 +505,35 @@ class HealthcareRepoImpl {
     return response;
   }
 
+  Future<dynamic> addBusinessAddresses(
+    BusinessAddressesEntity businessAddresses,
+  ) async {
+    final response = await _contract.addBusinessAddresses(businessAddresses);
+    return response;
+  }
+
+  Future<dynamic> updatePrimaryBusinessAddress(String id) async {
+    final response = await _contract.updatePrimaryBusinessAddress(id);
+    return response;
+  }
+
+  Future<dynamic> updateBusinessAddress({
+    BusinessAddressesEntity? businessAddresses,
+    String? id,
+  }) async {
+    final response = await _contract.updateBusinessAddress(
+      businessAddresses: businessAddresses,
+      id: id,
+    );
+    return response;
+  }
+
+  Future<dynamic> deleteBusinessAddress(String id) async {
+    final response = await _contract.deleteBusinessAddress(id);
+    return response;
+  }
+
   void _chache(data) {
-    print('print me lemme helath see ${data.data.toJson()}');
     if (data != null) {
       _session.authToken = data.data.accessToken;
       _session.authRefreshToken = data.data.refreshToken;

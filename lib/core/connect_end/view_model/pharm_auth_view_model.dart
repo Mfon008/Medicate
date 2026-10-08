@@ -2603,10 +2603,6 @@ class PharmViewModel extends BaseViewModel {
         throwException: true,
       );
 
-      // logger.d('Invoice response type: ${invoiceBytes.runtimeType}');
-
-      // logger.d('Invoice size: ${invoiceBytes.length} bytes');
-
       final dir = await getTemporaryDirectory();
 
       final filename =
@@ -2727,22 +2723,6 @@ class PharmViewModel extends BaseViewModel {
       print('File not found');
     }
   }
-
-  // Future<void> shareInvoice(context, {String? wholeSaleOrderId}) async {
-  //   try {
-  //     _isLoadingInvoiceShare = true;
-  //     var v = await runBusyFuture(
-  //       repositoryImply.shareInvoice(wholeSaleOrderId!),
-  //       throwException: true,
-  //     );
-  //     logger.d(v);
-  //     _isLoadingInvoiceShare = false;
-  //   } catch (e) {
-  //     _isLoadingInvoiceShare = false;
-  //     logger.d(e);
-  //   }
-  //   notifyListeners();
-  // }
 
   Future<void> getTenant(context) async {
     try {
@@ -2920,14 +2900,15 @@ class PharmViewModel extends BaseViewModel {
       _isLoading = false;
       logger.d(e);
       vdeactivateErrorMessage = e.toString();
-      // AppUtils.snackbar(context, message: e.toString(), error: true);
     }
     notifyListeners();
   }
 
   bool returnBool() {
-    if (_getTetantResponseModel == null ||
-        _getTetantResponseModel!.data!.bankDetails == null) {
+    if (_getPharmacyKycResponseModel == null ||
+        _getPharmacyKycResponseModel?.data?.kycLevels?[0].status
+                ?.toLowerCase() !=
+            'approved') {
       return true;
     }
     return false;
@@ -2963,7 +2944,7 @@ class PharmViewModel extends BaseViewModel {
         AppUtils.snackbar(context, message: v['message']);
         getPharmacyKyc(context);
       } else {
-        AppUtils.snackbar(context, message: v['message'], error: true);
+        AppUtils.snackbar(context, message: v['message']);
       }
       _isLoading = false;
     } catch (e) {
@@ -6702,45 +6683,6 @@ class PharmViewModel extends BaseViewModel {
     model.medicationClassList[index].dosageMap = dosageMap;
     model.notifyListeners();
   }
-
-  // Future<void> buildCustomDosageMap({
-  //   PharmViewModel? model,
-  //   int? index,
-  //   int? day,
-  // }) async {
-  //   final duration = int.tryParse(
-  //     model!.medicationClassList[index!].duration ?? '',
-  //   );
-  //   if (duration == null) return;
-
-  //   final startDate = DateFormat(
-  //     'dd MMM, yyyy hh:mm a',
-  //   ).parse(model.startDateUpdateControllers[index].text);
-
-  //   final currentDate = startDate.add(Duration(days: day! - 1));
-
-  //   List<Map<String, String>> doses = [];
-  //   if (model.medicationClassList[index].dosageMap[day - 1]['day'] == day &&
-  //       model.medicationClassList[index].dosageMap[day - 1]['doses'].any(
-  //         (e) => e['time'] == model.selectedTimePerDay[day - 1],
-  //       )) {
-  //     return;
-  //   } else {
-  //     final combined = combineDateAndTime(
-  //       date: currentDate,
-  //       time: selectedTimePerDay[day - 1]!,
-  //     );
-  //     doses.add({
-  //       'time': selectedTimePerDay[day - 1]!,
-  //       'date': DateFormat('yyyy-MM-dd').format(currentDate),
-  //       'isoDate': combined.toUtc().toIso8601String(),
-  //     });
-  //     model.medicationClassList[index].dosageMap[day - 1]['doses'].add(
-  //       doses[0],
-  //     );
-  //   }
-  //   model.notifyListeners();
-  // }
 
   void removeTimeAt({
     required int medicationIndex,
@@ -20168,7 +20110,7 @@ class PharmViewModel extends BaseViewModel {
     }
     notifyListeners();
   }
-  
+
   Future<void> retryPayment({
     String? wholesaleOrderId,
     required BuildContext context,
@@ -20181,14 +20123,11 @@ class PharmViewModel extends BaseViewModel {
       );
       _isLoading = false;
       if (v['statusCode'] == 201 || v['statusCode'] == 200) {
-        await AppUtils.snackbar(
-          context,
-          message: v['message'] ?? '',
-        );
-         navigate.navigateTo(
+        await AppUtils.snackbar(context, message: v['message'] ?? '');
+        navigate.navigateTo(
           Routes.acceleratePaymentViewPharmacy,
           arguments: AcceleratePaymentViewPharmacyArguments(
-            url:v['data']['payment']['redirectUrl'],
+            url: v['data']['payment']['redirectUrl'],
           ),
         );
       } else {

@@ -16,6 +16,8 @@ import 'package:medicate_app/core/connect_end/model/create_tenant_reminder_entit
 import 'package:medicate_app/core/connect_end/model/roles_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/sign_up_healthcare_business_owner_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/sign_up_healthcare_provider_practitioner_entity_model.dart';
+import 'package:medicate_app/core/connect_end/model/submit_healthcare_level_two_kyc_entity_model/medical_license_certificate.dart';
+import 'package:medicate_app/core/connect_end/model/submit_healthcare_level_two_kyc_entity_model/proof_of_physical_address.dart';
 import 'package:pinput/pinput.dart';
 import 'package:stacked/stacked.dart';
 import '../../../main.dart';
@@ -28,6 +30,7 @@ import '../../../ui/widget/add_doctors_modal_widget.dart';
 import '../../../ui/widget/add_education_experience.dart';
 import '../../../ui/widget/add_role_modal_health_care_widget.dart';
 import '../../../ui/widget/button.dart';
+import '../../../ui/widget/delete_business_address_widget.dart';
 import '../../../ui/widget/delete_role_modal_widget.dart';
 import '../../../ui/widget/health_care_deactivate_user_modal_widget.dart';
 import '../../../ui/widget/text.dart';
@@ -39,11 +42,13 @@ import '../../app_assets/country_code_format.dart';
 import '../../app_assets/decouncer_class.dart';
 import '../../app_assets/image.dart';
 import '../../app_assets/image_picker.dart';
+import '../../app_assets/state_lga_format.dart';
 import '../../config/colors.dart';
 import '../../core_folder/app/app.locator.dart';
 import '../../core_folder/app/app.logger.dart';
 import '../../core_folder/app/app.router.dart';
 import '../../core_folder/manager/shared_preference.dart';
+import '../model/business_addresses_entity.dart';
 import '../model/change_phone_no_response_model/change_phone_no_response_model.dart';
 import '../model/create_payment_wallet_entity_model.dart';
 import '../model/create_payment_wallet_model/create_payment_wallet_model.dart';
@@ -58,7 +63,8 @@ import '../model/distributor_wholesale_category_model/distributor_wholesale_cate
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
 import '../model/get_created_user_response_model/get_created_user_response_model.dart';
 import '../model/get_created_user_response_model/staff.dart';
-import '../model/get_pharmacy_kyc_response_model/get_pharmacy_kyc_response_model.dart';
+import '../model/get_healthcare_practitioner_kyc_response_model/get_healthcare_practitioner_kyc_response_model.dart';
+import '../model/get_healthcare_provider_kyc_response_model/get_healthcare_provider_kyc_response_model.dart';
 import '../model/get_reminder_by_id/get_reminder_by_id.dart';
 import '../model/get_reminder_for_tenant_response_model/get_reminder_for_tenant_response_model.dart';
 import '../model/get_roles_response_model/get_roles_response_model.dart';
@@ -82,6 +88,8 @@ import '../model/reset_password_entity_model.dart';
 import '../model/set_pin_entity_model.dart';
 import '../model/set_pin_pharm_response_model/set_pin_pharm_response_model.dart';
 import '../model/sign_up_phamary_response_model/sign_up_phamary_response_model.dart';
+import '../model/submit_healthcare_level_two_kyc_entity_model/submit_healthcare_level_two_kyc_entity_model.dart';
+import '../model/submit_healthcare_level_two_kyc_entity_model/tax_identification_number_document.dart';
 import '../model/update_business_owner_profile_entity_model/update_business_owner_profile_entity_model.dart';
 import '../model/update_business_owner_profile_entity_model/upload_means_of_id.dart';
 import '../model/update_business_owner_profile_response_model/update_business_owner_profile_response_model.dart';
@@ -122,6 +130,8 @@ import 'package:medicate_app/core/connect_end/model/get_reminder_by_id/data.dart
     as getReminderId;
 import 'package:medicate_app/core/connect_end/model/get_single_market_product_response_model/image.dart'
     as singImg;
+import 'package:medicate_app/core/connect_end/model/get_tenant_response_model/business_addresses.dart'
+    as gT;
 
 class HealthCareViewModel extends BaseViewModel {
   String? pinInput;
@@ -190,9 +200,15 @@ class HealthCareViewModel extends BaseViewModel {
   VerifyPassOtpRespnseModel? _verifyPassOtpRespnseModel;
   VerifyPassOtpRespnseModel? get verifyPassOtpRespnseModel =>
       _verifyPassOtpRespnseModel;
-  GetPharmacyKycResponseModel? get getPharmacyKycResponseModel =>
-      _getPharmacyKycResponseModel;
-  GetPharmacyKycResponseModel? _getPharmacyKycResponseModel;
+  GetHealthcarePractitionerKycResponseModel?
+  get getHealthcarePractitionerKycResponseModel =>
+      _getHealthcarePractitionerKycResponseModel;
+  GetHealthcarePractitionerKycResponseModel?
+  _getHealthcarePractitionerKycResponseModel;
+  GetHealthcareProviderKycResponseModel?
+  get getHealthcareProviderKycResponseModel =>
+      _getHealthcareProviderKycResponseModel;
+  GetHealthcareProviderKycResponseModel? _getHealthcareProviderKycResponseModel;
 
   GetRolesResponseModel? _getRolesResponseModel;
   GetRolesResponseModel? get getRolesResponseModel => _getRolesResponseModel;
@@ -278,6 +294,24 @@ class HealthCareViewModel extends BaseViewModel {
   String startDateIso = '';
   singImg.Image? images;
   int inImage = 0;
+
+  SubmitHealthcareLevelTwoKycEntityModel _submitLevelTwoKycEntityModelCAC =
+      SubmitHealthcareLevelTwoKycEntityModel();
+  SubmitHealthcareLevelTwoKycEntityModel? get submitLevelTwoKycEntityModelCAC =>
+      _submitLevelTwoKycEntityModelCAC;
+  SubmitHealthcareLevelTwoKycEntityModel _submitLevelTwoKycEntityModelTIN =
+      SubmitHealthcareLevelTwoKycEntityModel();
+  SubmitHealthcareLevelTwoKycEntityModel? get submitLevelTwoKycEntityModelTIN =>
+      _submitLevelTwoKycEntityModelTIN;
+  SubmitHealthcareLevelTwoKycEntityModel _submitLevelTwoKycEntityModelProof =
+      SubmitHealthcareLevelTwoKycEntityModel();
+  SubmitHealthcareLevelTwoKycEntityModel?
+  get submitLevelTwoKycEntityModelProof => _submitLevelTwoKycEntityModelProof;
+
+  TextEditingController businessAddController = TextEditingController();
+  TextEditingController stateBusController = TextEditingController();
+  TextEditingController lgaBusController = TextEditingController();
+  TextEditingController countryBusController = TextEditingController();
 
   List<MedicationClass> medicationClassList = [];
   List<dynamic> medTypeUpdateIcon = [];
@@ -544,6 +578,10 @@ class HealthCareViewModel extends BaseViewModel {
   TextEditingController lgaController = TextEditingController();
   TextEditingController meansIdController = TextEditingController();
 
+  List<String> lgaList = [];
+  List<String> lgaListCopy = [];
+  List<String> lgaAddedList = [];
+
   TextEditingController schoolController = TextEditingController();
   TextEditingController degreeController = TextEditingController();
   TextEditingController startYearController = TextEditingController();
@@ -559,6 +597,8 @@ class HealthCareViewModel extends BaseViewModel {
 
   List<UploadMeansOfId> authDocumentsList = [];
   List<MeansOfId> pracAuthDocumentsList = [];
+
+  gT.BusinessAddresses? profileUpdate;
 
   List services = [
     'Appointment scheduling',
@@ -1603,9 +1643,6 @@ class HealthCareViewModel extends BaseViewModel {
     } else if (linIndex == 3) {
       return 'Make Payment';
     }
-    // else if (linIndex == 4) {
-    //   return 'Make Payment';
-    // }
     return 'Add Medication';
   }
 
@@ -2174,29 +2211,6 @@ class HealthCareViewModel extends BaseViewModel {
           return false;
         }).toList();
       });
-
-      // for (var med in model.medicationClassList) {
-      //   final dosageMap = med.dosageMap ?? [];
-
-      //   // Map through the day-level list
-      //   final controllersPerDay = dosageMap.map<List<TextEditingController>>((
-      //     dayItem,
-      //   ) {
-      //     final doses = (dayItem['doses'] ?? []) as List;
-
-      //     // Create controllers for each dose
-      //     final doseControllers = doses.map<TextEditingController>((dose) {
-      //       final timeValue = dose['time']?.toString() ?? '';
-      //       return TextEditingController(text: timeValue);
-      //     }).toList();
-
-      //     return doseControllers;
-      //   }).toList();
-
-      //   doseAfterControllers =
-      //       controllersPerDay; // assign per medication if you're looping
-      //   // If you want to store for multiple meds: use a parent list like List<List<List<TextEditingController>>>>
-      // }
 
       model.notifyListeners();
     });
@@ -16256,17 +16270,42 @@ class HealthCareViewModel extends BaseViewModel {
   }
 
   bool returnBool() {
-    if (_getTetantResponseModel == null ||
-        _getTetantResponseModel!.data!.bankDetails == null) {
+    if (_getHealthcareProviderKycResponseModel == null ||
+        _getHealthcareProviderKycResponseModel!.data!.kycLevels?[0].status
+                ?.toLowerCase() !=
+            'approved') {
       return true;
     }
     return false;
   }
 
   bool returnBoolKyc() {
-    if (_getTetantResponseModel == null ||
-        _getTetantResponseModel!.data == null ||
-        _getTetantResponseModel!.data!.kycDocuments == null) {
+    if (_getHealthcareProviderKycResponseModel == null ||
+        _getHealthcareProviderKycResponseModel != null &&
+            _getHealthcareProviderKycResponseModel!.data!.kycStatus!
+                    .toLowerCase() ==
+                'APPROVED'.toLowerCase()) {
+      return true;
+    }
+    return false;
+  }
+
+  bool returnBoolPractitioner() {
+    if (_getHealthcarePractitionerKycResponseModel == null ||
+        _getHealthcarePractitionerKycResponseModel!.data!.kycLevels?[0].status
+                ?.toLowerCase() !=
+            'approved') {
+      return true;
+    }
+    return false;
+  }
+
+  bool returnBoolKycPractitioner() {
+    if (_getHealthcarePractitionerKycResponseModel == null ||
+        _getHealthcarePractitionerKycResponseModel != null &&
+            _getHealthcarePractitionerKycResponseModel!.data!.kycStatus!
+                    .toLowerCase() ==
+                'APPROVED'.toLowerCase()) {
       return true;
     }
     return false;
@@ -18496,11 +18535,11 @@ class HealthCareViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Future<void> getHealthCareKyc(context) async {
+  Future<void> getHealthCarePractitionerKyc(context) async {
     try {
       _isLoading = true;
-      _getPharmacyKycResponseModel = await runBusyFuture(
-        repositoryImply.getHealthCareKyc(),
+      _getHealthcarePractitionerKycResponseModel = await runBusyFuture(
+        repositoryImply.getHealthCarePractitionerKyc(),
         throwException: true,
       );
       _isLoading = false;
@@ -18512,30 +18551,121 @@ class HealthCareViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  // void updateHealthCareKyc(
-  //   context, {
-  //   UpdatePharmacyKycEntityModel? updateKyc,
-  // }) async {
-  //   try {
-  //     _isLoading = true;
-  //     var v = await runBusyFuture(
-  //       repositoryImply.updateHealthCareKyc(updateKyc!),
-  //       throwException: true,
-  //     );
-  //     if (v['statusCode'] == 200) {
-  //       AppUtils.snackbar(context, message: v['message']);
-  //       getHealthCareKyc(context);
-  //     } else {
-  //       AppUtils.snackbar(context, message: v['message'], error: true);
-  //     }
-  //     _isLoading = false;
-  //   } catch (e) {
-  //     _isLoading = false;
-  //     logger.d(e);
-  //     AppUtils.snackbar(context, message: e.toString(), error: true);
-  //   }
-  //   notifyListeners();
-  // }
+  Future<void> getHealthCareProviderKyc(context) async {
+    try {
+      _isLoading = true;
+      _getHealthcareProviderKycResponseModel = await runBusyFuture(
+        repositoryImply.getHealthCareProviderKyc(),
+        throwException: true,
+      );
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  void updateHealthCarePractitionerKycSave(
+    context, {
+    SubmitHealthcareLevelTwoKycEntityModel? updateKyc,
+  }) async {
+    try {
+      _isLoading = true;
+      var v = await runBusyFuture(
+        repositoryImply.updateHealthCarePractitionerKycSave(updateKyc!),
+        throwException: true,
+      );
+      if (v['statusCode'] == 200 || v['statusCode'] == 201) {
+        AppUtils.snackbar(context, message: v['message']);
+        getHealthCarePractitionerKyc(context);
+      } else {
+        AppUtils.snackbar(context, message: v['message'], error: true);
+      }
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  void updateHealthCarePractitionerKycSubmit(
+    context, {
+    SubmitHealthcareLevelTwoKycEntityModel? updateKyc,
+  }) async {
+    try {
+      _isLoading = true;
+      var v = await runBusyFuture(
+        repositoryImply.updateHealthCarePractitionerKycSubmit(updateKyc!),
+        throwException: true,
+      );
+      if (v['statusCode'] == 200 || v['statusCode'] == 201) {
+        AppUtils.snackbar(context, message: v['message']);
+        getHealthCarePractitionerKyc(context);
+      } else {
+        AppUtils.snackbar(context, message: v['message'], error: true);
+      }
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  void updateHealthCareProviderKycSave(
+    context, {
+    SubmitHealthcareLevelTwoKycEntityModel? updateKyc,
+  }) async {
+    try {
+      _isLoading = true;
+      var v = await runBusyFuture(
+        repositoryImply.updateHealthCareProviderKycSave(updateKyc!),
+        throwException: true,
+      );
+      if (v['statusCode'] == 200 || v['statusCode'] == 201) {
+        AppUtils.snackbar(context, message: v['message']);
+        getHealthCareProviderKyc(context);
+      } else {
+        AppUtils.snackbar(context, message: v['message'], error: true);
+      }
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  void updateHealthCareProviderKycSubmit(
+    context, {
+    SubmitHealthcareLevelTwoKycEntityModel? updateKyc,
+  }) async {
+    try {
+      _isLoading = true;
+      var v = await runBusyFuture(
+        repositoryImply.updateHealthCareProviderKycSubmit(updateKyc!),
+        throwException: true,
+      );
+      if (v['statusCode'] == 200 || v['statusCode'] == 201) {
+        AppUtils.snackbar(context, message: v['message']);
+        getHealthCareProviderKyc(context);
+      } else {
+        AppUtils.snackbar(context, message: v['message'], error: true);
+      }
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
 
   String getKycStatus({id, cac, license, tin}) {
     if (id == 'PENDING' ||
@@ -18590,19 +18720,17 @@ class HealthCareViewModel extends BaseViewModel {
           );
           _isLoadingCAC = _isLoading;
           _uploadImageResponseModelCAC = _uploadImageResponseModel;
-          // kycDocumentsList.add(
-          //   Document(
-          //     documentType: 'CAC_DOCUMENT',
-          //     file: ph.File(
-          //       width: _uploadImageResponseModelCAC!.data!.width,
-          //       height: _uploadImageResponseModelCAC!.data!.height,
-          //       format: _uploadImageResponseModelCAC!.data!.format,
-          //       url: _uploadImageResponseModelCAC!.data!.url!,
-          //       mimeType: _uploadImageResponseModelCAC!.data!.mimeType,
-          //       size: _uploadImageResponseModelCAC!.data!.size,
-          //     ),
-          //   ),
-          // );
+          _submitLevelTwoKycEntityModelCAC =
+              SubmitHealthcareLevelTwoKycEntityModel(
+                medicalLicenseCertificate: MedicalLicenseCertificate(
+                  width: _uploadImageResponseModelCAC!.data!.width,
+                  height: _uploadImageResponseModelCAC!.data!.height,
+                  format: _uploadImageResponseModelCAC!.data!.format,
+                  url: _uploadImageResponseModelCAC!.data!.url!,
+                  mimeType: _uploadImageResponseModelCAC!.data!.mimeType,
+                  size: _uploadImageResponseModelCAC!.data!.size,
+                ),
+              );
           _uploadImageResponseModel = null;
           notifyListeners();
         },
@@ -18612,7 +18740,7 @@ class HealthCareViewModel extends BaseViewModel {
     }
   }
 
-  void pickImagePharmLicense(BuildContext context) {
+  void pickImageProofAdd(BuildContext context) {
     try {
       _pickImage.pickImage(
         context: context,
@@ -18629,20 +18757,18 @@ class HealthCareViewModel extends BaseViewModel {
           );
           _isLoadingLicense = _isLoading;
           _uploadImageResponseModelPharmLicense = _uploadImageResponseModel;
-
-          // kycDocumentsList.add(
-          // Document(
-          //   documentType: 'PHARMACY_LICENSE',
-          //   file: ph.File(
-          //     width: _uploadImageResponseModelPharmLicense!.data!.width,
-          //     height: _uploadImageResponseModelPharmLicense!.data!.height,
-          //     format: _uploadImageResponseModelPharmLicense!.data!.format,
-          //     url: _uploadImageResponseModelPharmLicense!.data!.url!,
-          //     mimeType: _uploadImageResponseModelPharmLicense!.data!.mimeType,
-          //     size: _uploadImageResponseModelPharmLicense!.data!.size,
-          //   ),
-          // ),
-          // );
+          _submitLevelTwoKycEntityModelProof =
+              SubmitHealthcareLevelTwoKycEntityModel(
+                proofOfPhysicalAddress: ProofOfPhysicalAddress(
+                  width: _uploadImageResponseModelPharmLicense!.data!.width,
+                  height: _uploadImageResponseModelPharmLicense!.data!.height,
+                  format: _uploadImageResponseModelPharmLicense!.data!.format,
+                  url: _uploadImageResponseModelPharmLicense!.data!.url!,
+                  mimeType:
+                      _uploadImageResponseModelPharmLicense!.data!.mimeType,
+                  size: _uploadImageResponseModelPharmLicense!.data!.size,
+                ),
+              );
           _uploadImageResponseModel = null;
           notifyListeners();
         },
@@ -18669,20 +18795,19 @@ class HealthCareViewModel extends BaseViewModel {
           );
           _isLoadingTIN = _isLoading;
           _uploadImageResponseModelTIN = _uploadImageResponseModel;
+          _submitLevelTwoKycEntityModelTIN =
+              SubmitHealthcareLevelTwoKycEntityModel(
+                taxIdentificationNumberDocument:
+                    TaxIdentificationNumberDocument(
+                      width: _uploadImageResponseModelTIN!.data!.width,
+                      height: _uploadImageResponseModelTIN!.data!.height,
+                      format: _uploadImageResponseModelTIN!.data!.format,
+                      url: _uploadImageResponseModelTIN!.data!.url!,
+                      mimeType: _uploadImageResponseModelTIN!.data!.mimeType,
+                      size: _uploadImageResponseModelTIN!.data!.size,
+                    ),
+              );
           _uploadImageResponseModel = null;
-          // kycDocumentsList.add(
-          //   Document(
-          //     documentType: 'TAX_IDENTIFICATION_NUMBER',
-          //     file: ph.File(
-          //       width: _uploadImageResponseModelTIN!.data!.width,
-          //       height: _uploadImageResponseModelTIN!.data!.height,
-          //       format: _uploadImageResponseModelTIN!.data!.format,
-          //       url: _uploadImageResponseModelTIN!.data!.url!,
-          //       mimeType: _uploadImageResponseModelTIN!.data!.mimeType,
-          //       size: _uploadImageResponseModelTIN!.data!.size,
-          //     ),
-          //   ),
-          // );
           notifyListeners();
         },
       );
@@ -18872,5 +18997,914 @@ class HealthCareViewModel extends BaseViewModel {
         );
       },
     );
+  }
+
+  Future<bool?> showRemoveBusinessAddressDialog({
+    context,
+    String? businessAddressId,
+  }) {
+    return showDialog<bool>(
+      context: context,
+      barrierDismissible: false, // prevent closing by tapping outside
+      builder: (BuildContext context) {
+        return DeleteBusinessAddressWidgetModalWidget(
+          businessAddressId: businessAddressId,
+          parentContext: context,
+          onSuccess: () {
+            Navigator.of(context).pop(true);
+          },
+          onFailed: () {
+            Navigator.of(context).pop(false);
+          },
+        );
+      },
+    );
+  }
+
+  Future<bool?> showBusinessAreaLGAAndStateCountryDialog(
+    BuildContext context, {
+    bool isEdit = false,
+    int? editIndex,
+    gT.BusinessAddresses? businessAddresses,
+  }) {
+    return showDialog<bool?>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return ViewModelBuilder<HealthCareViewModel>.reactive(
+              viewModelBuilder: () => HealthCareViewModel(),
+              onViewModelReady: (model) async {
+                model.getTenant(context);
+                if (isEdit && editIndex != null) {
+                  businessAddController.text =
+                      businessAddresses?.businessAddress?.toString() ?? '';
+
+                  countryBusController.text =
+                      businessAddresses?.country?.toString() ?? '';
+
+                  stateBusController.text =
+                      businessAddresses?.state?.toString() ?? '';
+
+                  lgaBusController.text =
+                      businessAddresses?.lga?.toString() ?? '';
+                }
+              },
+              disposeViewModel: false,
+              onDispose: (viewModel) {},
+              builder: (_, HealthCareViewModel model, _) {
+                return SafeArea(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Align(
+                        alignment: Alignment.topCenter,
+                        child: TextButton.icon(
+                          onPressed: () => Navigator.pop(context),
+                          icon: Icon(
+                            Icons.close,
+                            color: Colors.white,
+                            size: 18,
+                          ),
+                          label: Text(
+                            "Close",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          style: TextButton.styleFrom(
+                            backgroundColor: AppColors.primary,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 10.w,
+                              vertical: 4.w,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 6.10.h),
+                      Flexible(
+                        child: Dialog(
+                          insetPadding: EdgeInsets.symmetric(
+                            horizontal: 16.20.w,
+                            vertical: 16.20.h,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          backgroundColor: AppColors.white,
+                          child: Padding(
+                            padding: EdgeInsets.all(21.4.w),
+                            child: SingleChildScrollView(
+                              keyboardDismissBehavior:
+                                  ScrollViewKeyboardDismissBehavior.onDrag,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  TextView(
+                                    text: !isEdit
+                                        ? 'Add Address'
+                                        : 'Edit Address',
+                                    textStyle: TextStyle(
+                                      fontSize: 17.6.sp,
+                                      fontWeight: FontWeight.w500,
+                                      color: AppColors.reminder1,
+                                      fontFamily: 'DMSans',
+                                    ),
+                                  ),
+                                  SizedBox(height: 16.2.h),
+                                  TextFormWidget(
+                                    hint: 'Business address',
+                                    hintSize: 16,
+                                    borderColor: AppColors.transparent,
+                                    borderTopLeft: 10.r,
+                                    borderTopRight: 10.r,
+                                    borderBottomLeft: 10.r,
+                                    borderBottomRight: 10.r,
+                                    labelStyle: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: 'Arial',
+                                      fontSize: 14.2.sp,
+                                      color: AppColors.infoGrey,
+                                    ),
+                                    fillColor: AppColors.grey,
+                                    isFilled: true,
+                                    controller: businessAddController,
+                                    validator: AppValidator.validateString(),
+                                    onChange: (p0) {},
+                                  ),
+                                  SizedBox(height: 20.h),
+                                  TextFormWidget(
+                                    hint: 'Country',
+                                    hintSize: 16,
+                                    borderColor: AppColors.transparent,
+                                    borderTopLeft: 10.r,
+                                    borderTopRight: 10.r,
+                                    borderBottomLeft: 10.r,
+                                    borderBottomRight: 10.r,
+                                    label: '--Select--',
+                                    readOnly: true,
+                                    labelStyle: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: 'Arial',
+                                      fontSize: 14.2.sp,
+                                      color: AppColors.infoGrey,
+                                    ),
+                                    fillColor: AppColors.grey,
+                                    isFilled: true,
+                                    controller: countryBusController,
+                                    validator: AppValidator.validateString(),
+                                    suffixWidget: Builder(
+                                      builder: (context) {
+                                        return GestureDetector(
+                                          onTap: () async {
+                                            final RenderBox button =
+                                                context.findRenderObject()
+                                                    as RenderBox;
+
+                                            final RenderBox overlay =
+                                                Overlay.of(
+                                                      context,
+                                                    ).context.findRenderObject()
+                                                    as RenderBox;
+
+                                            final Offset buttonPosition = button
+                                                .localToGlobal(
+                                                  Offset.zero,
+                                                  ancestor: overlay,
+                                                );
+
+                                            final Size buttonSize = button.size;
+
+                                            final selectedState =
+                                                await showMenu<String>(
+                                                  context: context,
+
+                                                  position:
+                                                      RelativeRect.fromLTRB(
+                                                        buttonPosition.dx,
+                                                        buttonPosition.dy +
+                                                            buttonSize.height +
+                                                            5.h,
+                                                        overlay.size.width -
+                                                            buttonPosition.dx -
+                                                            buttonSize.width,
+                                                        0,
+                                                      ),
+
+                                                  constraints: BoxConstraints(
+                                                    minWidth: 200.w,
+                                                    maxWidth: 250.w,
+                                                    minHeight: 60.h,
+                                                    maxHeight: 450.h,
+                                                  ),
+
+                                                  color: AppColors.white,
+
+                                                  elevation: 4,
+
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          10.r,
+                                                        ),
+                                                  ),
+
+                                                  items: ['Nigeria']
+                                                      .map<
+                                                        PopupMenuEntry<String>
+                                                      >((s) {
+                                                        final String country =
+                                                            s;
+
+                                                        return PopupMenuItem<
+                                                          String
+                                                        >(
+                                                          value: country,
+                                                          height: 38.h,
+                                                          padding:
+                                                              EdgeInsets.symmetric(
+                                                                horizontal:
+                                                                    14.w,
+                                                              ),
+                                                          child: TextView(
+                                                            text: country,
+                                                            textStyle: TextStyle(
+                                                              fontFamily:
+                                                                  'GoogleSans',
+                                                              fontSize:
+                                                                  13.70.sp,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                              color: AppColors
+                                                                  .black,
+                                                            ),
+                                                          ),
+                                                        );
+                                                      })
+                                                      .toList(),
+                                                );
+
+                                            if (selectedState != null) {
+                                              countryBusController.text =
+                                                  selectedState;
+
+                                              // Reset LGA whenever state changes
+                                              lgaController.clear();
+                                              model.notifyListeners();
+                                            }
+                                          },
+
+                                          child: Padding(
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 8.w,
+                                            ),
+                                            child: Icon(
+                                              Icons.keyboard_arrow_down,
+                                              color: AppColors.grey1,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+
+                                  SizedBox(height: 16.2.h),
+                                  TextFormWidget(
+                                    hint: 'State',
+                                    label: '--Select--',
+                                    rightPos: -14,
+                                    hintSize: 16,
+                                    borderColor: AppColors.transparent,
+                                    borderTopLeft: 10.r,
+                                    borderTopRight: 10.r,
+                                    borderBottomLeft: 10.r,
+                                    borderBottomRight: 10.r,
+                                    labelStyle: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: 'Arial',
+                                      fontSize: 14.2.sp,
+                                      color: AppColors.infoGrey,
+                                    ),
+                                    fillColor: AppColors.grey,
+                                    isFilled: true,
+                                    readOnly: true,
+                                    controller: stateBusController,
+                                    suffixWidget: Builder(
+                                      builder: (context) {
+                                        return GestureDetector(
+                                          onTap: () async {
+                                            final RenderBox button =
+                                                context.findRenderObject()
+                                                    as RenderBox;
+
+                                            final RenderBox overlay =
+                                                Overlay.of(
+                                                      context,
+                                                    ).context.findRenderObject()
+                                                    as RenderBox;
+
+                                            final Offset buttonPosition = button
+                                                .localToGlobal(
+                                                  Offset.zero,
+                                                  ancestor: overlay,
+                                                );
+
+                                            final Size buttonSize = button.size;
+
+                                            final selectedState =
+                                                await showMenu<String>(
+                                                  context: context,
+
+                                                  position:
+                                                      RelativeRect.fromLTRB(
+                                                        buttonPosition.dx,
+                                                        buttonPosition.dy +
+                                                            buttonSize.height +
+                                                            5.h,
+                                                        overlay.size.width -
+                                                            buttonPosition.dx -
+                                                            buttonSize.width,
+                                                        0,
+                                                      ),
+
+                                                  constraints: BoxConstraints(
+                                                    minWidth: 200.w,
+                                                    maxWidth: 250.w,
+                                                    minHeight: 150.h,
+                                                    maxHeight: 450.h,
+                                                  ),
+
+                                                  color: AppColors.white,
+
+                                                  elevation: 4,
+
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          10.r,
+                                                        ),
+                                                  ),
+
+                                                  items: stateLgaFormat
+                                                      .map<
+                                                        PopupMenuEntry<String>
+                                                      >((s) {
+                                                        final String state =
+                                                            s['state']
+                                                                ?.toString() ??
+                                                            '';
+
+                                                        return PopupMenuItem<
+                                                          String
+                                                        >(
+                                                          value: state,
+                                                          height: 38.h,
+                                                          padding:
+                                                              EdgeInsets.symmetric(
+                                                                horizontal:
+                                                                    14.w,
+                                                              ),
+                                                          child: TextView(
+                                                            text: state,
+                                                            textStyle: TextStyle(
+                                                              fontFamily:
+                                                                  'GoogleSans',
+                                                              fontSize:
+                                                                  13.70.sp,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                              color: AppColors
+                                                                  .black,
+                                                            ),
+                                                          ),
+                                                        );
+                                                      })
+                                                      .toList(),
+                                                );
+
+                                            if (selectedState != null) {
+                                              stateBusController.text =
+                                                  selectedState;
+                                              final selectedStateLga =
+                                                  stateLgaFormat.firstWhere(
+                                                    (state) =>
+                                                        state['state']
+                                                            .toString()
+                                                            .trim()
+                                                            .toLowerCase() ==
+                                                        stateController.text
+                                                            .trim()
+                                                            .toLowerCase(),
+                                                    orElse: () =>
+                                                        <String, dynamic>{
+                                                          'state': '',
+                                                          'lgas': <String>[],
+                                                        },
+                                                  );
+
+                                              final selectedLgas =
+                                                  List<String>.from(
+                                                    selectedStateLga['lgas'] ??
+                                                        <String>[],
+                                                  );
+
+                                              lgaList = List<String>.from(
+                                                selectedLgas,
+                                              );
+                                              lgaListCopy = List<String>.from(
+                                                selectedLgas,
+                                              );
+
+                                              // Optional: reset previously selected LGAs
+                                              lgaAddedList.clear();
+                                            }
+                                            setModalState(() {});
+                                            model.notifyListeners();
+                                          },
+
+                                          child: Padding(
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 8.w,
+                                            ),
+                                            child: Icon(
+                                              Icons.keyboard_arrow_down,
+                                              color: isEdit
+                                                  ? AppColors.greygreyer
+                                                  : AppColors.grey1,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                    validator: AppValidator.validateString(),
+                                  ),
+                                  SizedBox(height: 12.30.h),
+                                  TextFormWidget(
+                                    hint: 'LGA',
+                                    label: '-Select-',
+                                    hintColor: AppColors.reminder,
+                                    hintSize: Platform.isAndroid
+                                        ? 16.sp
+                                        : 14.sp,
+                                    borderColor: AppColors.transparent,
+                                    borderTopLeft: 10.r,
+                                    borderTopRight: 10.r,
+                                    borderBottomLeft: 10.r,
+                                    borderBottomRight: 10.r,
+                                    fillColor: AppColors.grey,
+                                    isFilled: true,
+                                    readOnly: true,
+                                    controller: lgaBusController,
+                                    suffixWidget: Builder(
+                                      builder: (context) {
+                                        return GestureDetector(
+                                          onTap: () async {
+                                            final RenderBox button =
+                                                context.findRenderObject()
+                                                    as RenderBox;
+
+                                            final RenderBox overlay =
+                                                Overlay.of(
+                                                      context,
+                                                    ).context.findRenderObject()
+                                                    as RenderBox;
+
+                                            final Offset buttonPosition = button
+                                                .localToGlobal(
+                                                  Offset.zero,
+                                                  ancestor: overlay,
+                                                );
+
+                                            final Size buttonSize = button.size;
+
+                                            final selectedState = stateLgaFormat
+                                                .firstWhere(
+                                                  (state) =>
+                                                      state['state']
+                                                          .toString()
+                                                          .trim()
+                                                          .toLowerCase() ==
+                                                      stateBusController.text
+                                                          .trim()
+                                                          .toLowerCase(),
+                                                  orElse: () =>
+                                                      <String, dynamic>{
+                                                        'state': '',
+                                                        'lgas': <String>[],
+                                                      },
+                                                );
+
+                                            final List<dynamic> lgas =
+                                                selectedState['lgas'] ?? [];
+
+                                            if (lgas.isEmpty) {
+                                              return;
+                                            }
+
+                                            final selectedLga =
+                                                await showMenu<String>(
+                                                  context: context,
+
+                                                  position:
+                                                      RelativeRect.fromLTRB(
+                                                        buttonPosition.dx,
+                                                        buttonPosition.dy +
+                                                            buttonSize.height +
+                                                            5.h,
+                                                        overlay.size.width -
+                                                            buttonPosition.dx -
+                                                            buttonSize.width,
+                                                        0,
+                                                      ),
+
+                                                  constraints: BoxConstraints(
+                                                    minWidth: 200.w,
+                                                    maxWidth: 250.w,
+                                                    minHeight: 110.h,
+                                                    maxHeight: 420.h,
+                                                  ),
+
+                                                  color: AppColors.white,
+
+                                                  elevation: 4,
+
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          10.r,
+                                                        ),
+                                                  ),
+
+                                                  items: lgas
+                                                      .map<
+                                                        PopupMenuEntry<String>
+                                                      >((lga) {
+                                                        return PopupMenuItem<
+                                                          String
+                                                        >(
+                                                          value: lga.toString(),
+                                                          height: 38.h,
+                                                          padding:
+                                                              EdgeInsets.symmetric(
+                                                                horizontal:
+                                                                    14.w,
+                                                              ),
+                                                          child: TextView(
+                                                            text: lga
+                                                                .toString(),
+                                                            textStyle: TextStyle(
+                                                              fontFamily:
+                                                                  'GoogleSans',
+                                                              fontSize:
+                                                                  13.70.sp,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                              color: AppColors
+                                                                  .black,
+                                                            ),
+                                                          ),
+                                                        );
+                                                      })
+                                                      .toList(),
+                                                );
+
+                                            if (selectedLga != null) {
+                                              lgaBusController.text =
+                                                  selectedLga;
+                                              model.notifyListeners();
+                                            }
+                                          },
+
+                                          child: Padding(
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 8.w,
+                                            ),
+                                            child: Icon(
+                                              Icons.keyboard_arrow_down,
+                                              color: AppColors.grey1,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                    validator: AppValidator.validateString(),
+                                    style: TextStyle(
+                                      fontSize: 16.20.sp,
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: 'DMSans',
+                                    ),
+
+                                    labelStyle: TextStyle(
+                                      fontSize: 15.20.sp,
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: 'DMSans',
+                                      color: AppColors.faintedGrey,
+                                    ),
+                                  ),
+                                  SizedBox(height: 30.h),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        flex: 2,
+                                        child: ButtonWidget(
+                                          border: 100.r,
+                                          buttonColor: AppColors.grey,
+                                          buttonText: 'Cancel',
+                                          color: AppColors.reminder1,
+                                          buttonBorderColor:
+                                              AppColors.transparent,
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                            notifyListeners();
+                                          },
+                                        ),
+                                      ),
+                                      SizedBox(width: 20.w),
+                                      Expanded(
+                                        flex: 3,
+                                        child: ButtonWidget(
+                                          border: 100.r,
+                                          buttonColor: AppColors.primary,
+                                          buttonText: !isEdit
+                                              ? 'Add'
+                                              : 'Save Changes',
+                                          isLoading: model.isLoading,
+                                          color: AppColors.white,
+                                          buttonBorderColor:
+                                              AppColors.transparent,
+                                          onPressed: () async {
+                                            if (isEdit) {
+                                              model.updateBusinessAddress(
+                                                context: context,
+                                                businessAddress:
+                                                    BusinessAddressesEntity(
+                                                      state: stateBusController
+                                                          .text
+                                                          .trim(),
+                                                      lga: lgaBusController.text
+                                                          .trim(),
+                                                      country:
+                                                          countryBusController
+                                                              .text
+                                                              .trim(),
+                                                      businessAddress:
+                                                          businessAddController
+                                                              .text
+                                                              .trim(),
+                                                    ),
+                                                id: businessAddresses!.id,
+                                              );
+                                              // }
+                                            } else {
+                                              // ADD NEW STATE
+                                              if (model
+                                                      .getTetantResponseModel!
+                                                      .data!
+                                                      .businessAddresses!
+                                                      .length <
+                                                  3) {
+                                                model.addBusinessAddresses(
+                                                  context: context,
+                                                  businessAddresses:
+                                                      BusinessAddressesEntity(
+                                                        state:
+                                                            stateBusController
+                                                                .text
+                                                                .trim(),
+                                                        lga: lgaBusController
+                                                            .text
+                                                            .trim(),
+                                                        country:
+                                                            countryBusController
+                                                                .text
+                                                                .trim(),
+                                                        businessAddress:
+                                                            businessAddController
+                                                                .text
+                                                                .trim(),
+                                                      ),
+                                                );
+                                              }
+                                            }
+                                            // }
+                                            await Future.delayed(
+                                              Duration(seconds: 1),
+                                            );
+                                            lgaListCopy.clear();
+                                            model.notifyListeners();
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Future<void> addBusinessAddresses({
+    context,
+    BusinessAddressesEntity? businessAddresses,
+  }) async {
+    try {
+      _isLoading = true;
+      var v = await runBusyFuture(
+        repositoryImply.addBusinessAddresses(businessAddresses!),
+        throwException: true,
+      );
+      if (v['statusCode'] == 200 || v['statusCode'] == 201) {
+        Navigator.pop(context, true);
+      }
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> updatePrimaryBusinessAddress({
+    context,
+    String? id,
+    isCheckout = false,
+    isOnHomePage = false,
+  }) async {
+    try {
+      _isLoading = true;
+      var v = await runBusyFuture(
+        repositoryImply.updatePrimaryBusinessAddress(id!),
+        throwException: true,
+      );
+      if (!isCheckout) {
+        if (v['statusCode'] == 200 || v['statusCode'] == 201) {
+          await getTenant(context);
+        }
+      }
+      if (isOnHomePage) {
+        Navigator.pop(context);
+      }
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> updateBusinessAddress({
+    context,
+    BusinessAddressesEntity? businessAddress,
+    String? id,
+  }) async {
+    try {
+      _isLoading = true;
+      var v = await runBusyFuture(
+        repositoryImply.updateBusinessAddress(
+          businessAddresses: businessAddress!,
+          id: id,
+        ),
+        throwException: true,
+      );
+      if (v['statusCode'] == 200 || v['statusCode'] == 201) {
+        Navigator.pop(context, true);
+      }
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> deleteBusinessAddress(
+    context, {
+    String? businessAddressId,
+  }) async {
+    try {
+      _isLoading = true;
+      vdelete = await runBusyFuture(
+        repositoryImply.deleteBusinessAddress(businessAddressId!),
+        throwException: true,
+      );
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      vdeleteErrorMessage = e.toString();
+    }
+    notifyListeners();
+  }
+
+  String kycStatusText(status) {
+    if (status.toLowerCase() == 'UNDER_REVIEW'.toLowerCase()) {
+      return 'Your KYC is submitted and under '
+          'review. We’ll notify you once it’s '
+          'verified.';
+    }
+    if (status.toLowerCase() == 'NOT_SUBMITTED'.toLowerCase()) {
+      return 'Kindly upload and submit KYC for '
+          'verification to obtain some access '
+          'to platform features.';
+    }
+    if (status.toLowerCase() == 'REJECTED'.toLowerCase()) {
+      return 'Your KYC couldn’t be verified. '
+          'Please review your details and '
+          'resubmit the required documents.';
+    }
+    if (status.toLowerCase() == 'APPROVED'.toLowerCase()) {
+      return 'Your KYC has been successfully '
+          'verified. You can now access '
+          'some services.';
+    }
+    return 'Kindly upload and submit KYC for '
+        'verification to obtain some access '
+        'to platform features.';
+  }
+
+  Color kycStatusColor(status) {
+    if (status.toLowerCase() == 'UNDER_REVIEW'.toLowerCase()) {
+      return AppColors.fadedyellow;
+    }
+    if (status.toLowerCase() == 'NOT_SUBMITTED'.toLowerCase()) {
+      return AppColors.fadedyellow;
+    }
+    if (status.toLowerCase() == 'REJECTED'.toLowerCase()) {
+      return AppColors.red_bar_faded;
+    }
+    if (status.toLowerCase() == 'APPROVED'.toLowerCase()) {
+      return AppColors.app_green_light;
+    }
+    return AppColors.fadedyellow;
+  }
+
+  Color kycStatusColorIcon(status) {
+    if (status.toLowerCase() == 'UNDER_REVIEW'.toLowerCase()) {
+      return AppColors.yellow;
+    }
+    if (status.toLowerCase() == 'NOT_SUBMITTED'.toLowerCase()) {
+      return AppColors.yellow;
+    }
+    if (status.toLowerCase() == 'REJECTED'.toLowerCase()) {
+      return AppColors.red_bar;
+    }
+    if (status.toLowerCase() == 'APPROVED'.toLowerCase()) {
+      return AppColors.app_green;
+    }
+    return AppColors.yellow;
+  }
+
+  bool getStatusOFKycProviderStatus(model) {
+    if (model.getHealthcareProviderKycResponseModel?.data?.kycLevels?[1].status
+                ?.toLowerCase() ==
+            'approved' ||
+        model.getHealthcareProviderKycResponseModel?.data?.kycLevels?[1].status
+                ?.toLowerCase() ==
+            'UNDER_REVIEW'.toLowerCase()) {
+      return true;
+    }
+    return false;
+  }
+
+  bool getStatusOFKycPractitionerStatus(model) {
+    if (model
+                .getHealthcarePractitionerKycResponseModel
+                ?.data
+                ?.kycLevels?[1]
+                .status
+                ?.toLowerCase() ==
+            'approved' ||
+        model
+                .getHealthcarePractitionerKycResponseModel
+                ?.data
+                ?.kycLevels?[1]
+                .status
+                ?.toLowerCase() ==
+            'UNDER_REVIEW'.toLowerCase()) {
+      return true;
+    }
+    return false;
   }
 }

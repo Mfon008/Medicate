@@ -15,7 +15,7 @@ import '../model/create_user_entity_model.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
 import '../model/get_all_listed_plan_types_response_model/get_all_listed_plan_types_response_model.dart';
 import '../model/get_created_user_response_model/get_created_user_response_model.dart';
-import '../model/get_hmo_kyc_response_model/get_hmo_kyc_response_model.dart';
+import '../model/get_hmo_kyc_new_response_model/get_hmo_kyc_new_response_model.dart';
 import '../model/get_hospital_by_id_response_model/get_hospital_by_id_response_model.dart';
 import '../model/get_list_of_hospital_response_model/get_list_of_hospital_response_model.dart';
 import '../model/get_listed_plan_tiers_response_model/get_listed_plan_tiers_response_model.dart';
@@ -36,10 +36,10 @@ import '../model/set_pin_entity_model.dart';
 import '../model/set_pin_pharm_response_model/set_pin_pharm_response_model.dart';
 import '../model/sign_up_phamary_response_model/sign_up_phamary_response_model.dart';
 import '../model/update_hmo_kyc_entity_model/update_hmo_kyc_entity_model.dart';
+import '../model/update_hmo_kyc_third_level_entity_model/update_hmo_kyc_third_level_entity_model.dart';
 import '../model/update_hmo_plan_entity_model/update_hmo_plan_entity_model.dart';
 import '../model/update_plan_tiers_entity_model.dart';
 import '../model/update_role_entity_model.dart';
-import '../model/update_third_hmo_kyc_entity_model/update_third_hmo_kyc_entity_model.dart';
 import '../model/update_user_entity_model.dart';
 import '../model/upload_image_response_model/upload_image_response_model.dart';
 import '../model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
@@ -152,20 +152,32 @@ class HMORepoImpl {
     return response;
   }
 
-  Future<GetHmoKycResponseModel> getHMOKyc() async {
+  Future<GetHmoKycNewResponseModel> getHMOKyc() async {
     final response = await _contract.getHMOKyc();
     return response;
   }
 
-  Future<dynamic> updateHMOKyc(UpdateHmoKycEntityModel updateKyc) async {
-    final response = await _contract.updateHMOKyc(updateKyc);
+  Future<dynamic> updateHMOKycSubmit(UpdateHmoKycEntityModel updateKyc) async {
+    final response = await _contract.updateHMOKycSubmit(updateKyc);
     return response;
   }
 
-  Future<dynamic> updateThirdHMOKyc(
-    UpdateThirdHmoKycEntityModel updateKyc,
+  Future<dynamic> updateHMOKycSave(UpdateHmoKycEntityModel updateKyc) async {
+    final response = await _contract.updateHMOKycSave(updateKyc);
+    return response;
+  }
+
+  Future<dynamic> updateThirdHMOKycSave(
+    UpdateHmoKycThirdLevelEntityModel updateKyc,
   ) async {
-    final response = await _contract.updateThirdHMOKyc(updateKyc);
+    final response = await _contract.updateThirdHMOKycSave(updateKyc);
+    return response;
+  }
+
+  Future<dynamic> updateThirdHMOKycSubmit(
+    UpdateHmoKycThirdLevelEntityModel updateKyc,
+  ) async {
+    final response = await _contract.updateThirdHMOKycSubmit(updateKyc);
     return response;
   }
 

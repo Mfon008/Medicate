@@ -857,9 +857,6 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                                                   (time) => GestureDetector(
                                                     onTap: () async {
                                                       model.time = time;
-                                                      print(
-                                                        'model.timemo::${model.time?.name}',
-                                                      );
                                                       model.notifyListeners();
                                                     },
                                                     child: Container(
@@ -997,6 +994,8 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                             child: SvgPicture.asset(
                               AppImage.phone,
                               color: AppColors.infoGrey,
+                              height: Platform.isAndroid ? 10.h : 14.h,
+                              width: Platform.isAndroid ? 10.w : 14.w,
                             ),
                           ),
                           validator: AppValidator.validateString(),
@@ -1029,7 +1028,6 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                           isFilled: true,
                           controller: model.orderNotesController,
                           maxline: 4,
-                          // validator: AppValidator.validateString(),
                           style: TextStyle(
                             fontSize: 16.20.sp,
                             fontWeight: FontWeight.w400,

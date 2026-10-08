@@ -1,7 +1,5 @@
 import 'package:medicate_app/core/connect_end/model/update_pharmacy_profile_entity_model/logo.dart';
 
-import 'bank_detail.dart';
-
 class UpdatePharmacyProfileEntityModel {
   String? country;
   String? state;
@@ -10,7 +8,7 @@ class UpdatePharmacyProfileEntityModel {
   List<String>? servicesOffered;
   String? contactPersonName;
   String? contactEmail;
-  List<BankDetail>? bankDetails;
+  String? email;
   Logo? logo;
 
   UpdatePharmacyProfileEntityModel({
@@ -21,7 +19,7 @@ class UpdatePharmacyProfileEntityModel {
     this.servicesOffered,
     this.contactPersonName,
     this.contactEmail,
-    this.bankDetails,
+    this.email,
     this.logo,
   });
 
@@ -37,9 +35,7 @@ class UpdatePharmacyProfileEntityModel {
       servicesOffered: json['servicesOffered'] as List<String>?,
       contactPersonName: json['contactPersonName'] as String?,
       contactEmail: json['contactEmail'] as String?,
-      bankDetails: (json['bankDetails'] as List<dynamic>?)
-          ?.map((e) => BankDetail.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      email: json['email'] as String?,
     );
   }
 
@@ -51,7 +47,7 @@ class UpdatePharmacyProfileEntityModel {
     'servicesOffered': servicesOffered,
     'contactPersonName': contactPersonName,
     'contactEmail': contactEmail,
-    'bankDetails': bankDetails?.map((e) => e.toJson()).toList(),
+    'email': email,
     'logo': logo?.toJson(),
   };
 }

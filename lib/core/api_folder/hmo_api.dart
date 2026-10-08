@@ -17,7 +17,7 @@ import '../connect_end/model/create_user_entity_model.dart';
 import '../connect_end/model/forgot_password_response_model/forgot_password_response_model.dart';
 import '../connect_end/model/get_all_listed_plan_types_response_model/get_all_listed_plan_types_response_model.dart';
 import '../connect_end/model/get_created_user_response_model/get_created_user_response_model.dart';
-import '../connect_end/model/get_hmo_kyc_response_model/get_hmo_kyc_response_model.dart';
+import '../connect_end/model/get_hmo_kyc_new_response_model/get_hmo_kyc_new_response_model.dart';
 import '../connect_end/model/get_listed_plan_tiers_response_model/get_listed_plan_tiers_response_model.dart';
 import '../connect_end/model/get_roles_response_model/get_roles_response_model.dart';
 import '../connect_end/model/get_tenant_response_model/get_tenant_response_model.dart';
@@ -33,9 +33,9 @@ import '../connect_end/model/set_pin_entity_model.dart';
 import '../connect_end/model/set_pin_pharm_response_model/set_pin_pharm_response_model.dart';
 import '../connect_end/model/sign_up_phamary_response_model/sign_up_phamary_response_model.dart';
 import '../connect_end/model/update_hmo_kyc_entity_model/update_hmo_kyc_entity_model.dart';
+import '../connect_end/model/update_hmo_kyc_third_level_entity_model/update_hmo_kyc_third_level_entity_model.dart';
 import '../connect_end/model/update_hmo_plan_entity_model/update_hmo_plan_entity_model.dart';
 import '../connect_end/model/update_role_entity_model.dart';
-import '../connect_end/model/update_third_hmo_kyc_entity_model/update_third_hmo_kyc_entity_model.dart';
 import '../connect_end/model/update_user_entity_model.dart';
 import '../connect_end/model/upload_image_response_model/upload_image_response_model.dart';
 import '../connect_end/model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
@@ -303,21 +303,21 @@ class HMOApi {
     }
   }
 
-  Future<GetHmoKycResponseModel> getHMOKyc() async {
+  Future<GetHmoKycNewResponseModel> getHMOKyc() async {
     try {
       final response = await _service.call(
         UrlConfig.get_hmo_kyc,
         RequestMethod.get,
       );
       logger.d(response.data);
-      return GetHmoKycResponseModel.fromJson(response.data);
+      return GetHmoKycNewResponseModel.fromJson(response.data);
     } catch (e) {
       logger.d("response:$e");
       rethrow;
     }
   }
 
-  Future<dynamic> updateHMOKyc(UpdateHmoKycEntityModel updateKyc) async {
+  Future<dynamic> updateHMOKycSubmit(UpdateHmoKycEntityModel updateKyc) async {
     try {
       final response = await _service.call(
         UrlConfig.update_hmo_kyc_two,
@@ -332,13 +332,45 @@ class HMOApi {
     }
   }
 
-  Future<dynamic> updateThirdHMOKyc(
-    UpdateThirdHmoKycEntityModel updateKyc,
+  Future<dynamic> updateHMOKycSave(UpdateHmoKycEntityModel updateKyc) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.update_hmo_kyc_two_save,
+        RequestMethod.patch,
+        data: updateKyc.toJson(),
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> updateThirdHMOKycSubmit(
+    UpdateHmoKycThirdLevelEntityModel updateKyc,
   ) async {
     try {
       final response = await _service.call(
         UrlConfig.update_third_hmo_kyc_two,
         RequestMethod.post,
+        data: updateKyc.toJson(),
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> updateThirdHMOKycSave(
+    UpdateHmoKycThirdLevelEntityModel updateKyc,
+  ) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.update_third_hmo_kyc_two_save,
+        RequestMethod.patch,
         data: updateKyc.toJson(),
       );
       logger.d(response.data);

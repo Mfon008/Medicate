@@ -65,7 +65,7 @@ class KycScreen extends StatelessWidget {
                           children: [
                             TextView(
                               text:
-                                  'Level ${model.getPharmacyKycResponseModel?.data?.currentLevel ?? ''} of 3',
+                                  'Level ${model.getPharmacyKycResponseModel?.data?.currentLevel ?? ''} of 2',
                               textStyle: TextStyle(
                                 fontSize: 15.06.sp,
                                 fontWeight: FontWeight.w500,

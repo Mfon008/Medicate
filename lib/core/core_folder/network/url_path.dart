@@ -61,7 +61,10 @@ class UrlConfig {
   static const String update_pharm_kyc_save = 'auth/pharmacy/kyc/level-2/save';
   static const String update_pharm_kyc = 'auth/pharmacy/kyc/level-2/submit';
   static const String update_hmo_kyc_two = 'auth/hmo/kyc/level-2/submit';
+  static const String update_hmo_kyc_two_save = 'auth/hmo/kyc/level-2/save';
   static const String update_third_hmo_kyc_two = 'auth/hmo/kyc/level-3/submit';
+  static const String update_third_hmo_kyc_two_save =
+      'auth/hmo/kyc/level-3/save';
   static const String listed_plan_types_hmo =
       'hmo/settings/plan-types/available';
   static const String listed_plan_tiers_hmo = 'hmo/settings/plan-tiers';
@@ -124,8 +127,20 @@ class UrlConfig {
       'auth/distributor/profile/addresses';
   static const String auth_tenants_profile_addresses =
       'auth/tenant/profile/addresses';
+  static const String auth_healthcare_practitioner_kyc_level_submit =
+      'auth/healthcare-practitioner/kyc/level-2/submit';
+  static const String auth_healthcare_provider_kyc_level_submit =
+      'auth/healthcare-provider/kyc/level-2/submit';
+  static const String auth_healthcare_practitioner_kyc_level_save =
+      'auth/healthcare-practitioner/kyc/level-2/save';
+  static const String auth_healthcare_provider_kyc_level_save =
+      'auth/healthcare-provider/kyc/level-2/save';
   static const String wholesale_products_bulk_download_template =
       'wholesale/products/bulk-upload/template';
   static const String wholesale_products_bulk_upload =
       'wholesale/products/bulk-upload';
+  static const String auth_healthcare_practitioner_kyc_status =
+      'auth/healthcare-practitioner/kyc/status';
+  static const String auth_healthcare_provider_kyc_status =
+      'auth/healthcare-provider/kyc/status';
 }

@@ -27,6 +27,9 @@ Level2 _$Level2FromJson(Map<String, dynamic> json) => Level2(
       : TaxIdentificationNumberDocument.fromJson(
           json['taxIdentificationNumberDocument'] as Map<String, dynamic>,
         ),
+  bankDetails: json['bankDetails'] == null
+      ? null
+      : BankDetails.fromJson(json['bankDetails'] as Map<String, dynamic>),
 );
 
 Map<String, dynamic> _$Level2ToJson(Level2 instance) => <String, dynamic>{
@@ -35,4 +38,5 @@ Map<String, dynamic> _$Level2ToJson(Level2 instance) => <String, dynamic>{
   'cacCertificate': instance.cacCertificate,
   'pharmacyLicense': instance.pharmacyLicense,
   'taxIdentificationNumberDocument': instance.taxIdentificationNumberDocument,
+  'bankDetails': instance.bankDetails,
 };

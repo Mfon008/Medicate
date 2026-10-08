@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import 'bank_details.dart';
 import 'cac_certificate.dart';
 import 'means_of_id_document.dart';
 import 'pharmacy_license.dart';
@@ -14,6 +15,7 @@ class SubmitLevelTwoKycEntityModel {
   CacCertificate? cacCertificate;
   PharmacyLicense? pharmacyLicense;
   TaxIdentificationNumberDocument? taxIdentificationNumberDocument;
+  BankDetails? bankDetails;
 
   SubmitLevelTwoKycEntityModel({
     this.meansOfIdType,
@@ -21,6 +23,7 @@ class SubmitLevelTwoKycEntityModel {
     this.cacCertificate,
     this.pharmacyLicense,
     this.taxIdentificationNumberDocument,
+    this.bankDetails,
   });
 
   factory SubmitLevelTwoKycEntityModel.fromJson(Map<String, dynamic> json) {

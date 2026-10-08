@@ -1,8 +1,7 @@
-// ignore_for_file: use_build_context_synchronously, strict_top_level_inference, prefer_typing_uninitialized_variables, deprecated_member_use, unrelated_type_equality_checks, non_constant_identifier_names, collection_methods_unrelated_type
+// ignore_for_file: unnecessary_null_comparison, use_build_context_synchronously, strict_top_level_inference, prefer_typing_uninitialized_variables, deprecated_member_use, unrelated_type_equality_checks, non_constant_identifier_names, collection_methods_unrelated_type
 import 'dart:async';
 import 'dart:io';
 import 'package:dio/dio.dart';
-import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -15,6 +14,10 @@ import 'package:medicate_app/core/connect_end/model/create_plan_tier_entity_mode
 import 'package:medicate_app/core/connect_end/model/get_hospital_by_id_response_model/get_hospital_by_id_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/hmo_sign_up_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/hospital_network_entity_model.dart';
+import 'package:medicate_app/core/connect_end/model/update_hmo_kyc_entity_model/hmo_accreditation.dart';
+import 'package:medicate_app/core/connect_end/model/update_hmo_kyc_entity_model/tax_id_certificate.dart';
+import 'package:medicate_app/core/connect_end/model/update_hmo_kyc_third_level_entity_model/list_of_hospitals.dart';
+import 'package:medicate_app/core/connect_end/model/update_hmo_kyc_third_level_entity_model/schedule_of_plans.dart';
 import 'package:medicate_app/core/connect_end/model/update_hmo_profile_entity_model/update_hmo_profile_entity_model.dart';
 import 'package:pinput/pinput.dart';
 import 'package:stacked/stacked.dart';
@@ -25,8 +28,6 @@ import '../../../ui/widget/delete_role_modal_widget.dart';
 import '../../../ui/widget/hmo_add_role_modal_widget.dart';
 import '../../../ui/widget/hmo_add_user_modal_widget.dart';
 import '../../../ui/widget/hmo_deactivate_user_modal_widget.dart';
-import '../../../ui/widget/info_item_widget.dart';
-import '../../../ui/widget/kyc_url_view.dart';
 import '../../../ui/widget/text.dart';
 import '../../../ui/widget/text_form_widget.dart';
 import '../../app_assets/app_utils.dart';
@@ -46,7 +47,7 @@ import '../model/forgot_password_response_model/forgot_password_response_model.d
 import '../model/get_all_listed_plan_types_response_model/get_all_listed_plan_types_response_model.dart';
 import '../model/get_created_user_response_model/get_created_user_response_model.dart';
 import '../model/get_created_user_response_model/staff.dart';
-import '../model/get_hmo_kyc_response_model/get_hmo_kyc_response_model.dart';
+import '../model/get_hmo_kyc_new_response_model/get_hmo_kyc_new_response_model.dart';
 import '../model/get_list_of_hospital_response_model/get_list_of_hospital_response_model.dart';
 import '../model/get_listed_plan_tiers_response_model/get_listed_plan_tiers_response_model.dart';
 import '../model/get_listed_plan_tiers_response_model/plan_tier.dart';
@@ -65,12 +66,13 @@ import '../model/roles_entity_model.dart';
 import '../model/set_pin_entity_model.dart';
 import '../model/set_pin_pharm_response_model/set_pin_pharm_response_model.dart';
 import '../model/sign_up_phamary_response_model/sign_up_phamary_response_model.dart';
+import '../model/update_hmo_kyc_entity_model/cac_certificate.dart';
 import '../model/update_hmo_kyc_entity_model/update_hmo_kyc_entity_model.dart';
+import '../model/update_hmo_kyc_third_level_entity_model/update_hmo_kyc_third_level_entity_model.dart';
 import '../model/update_hmo_plan_entity_model/update_hmo_plan_entity_model.dart';
 import '../model/update_hmo_profile_entity_model/logo.dart';
 import '../model/update_plan_tiers_entity_model.dart';
 import '../model/update_role_entity_model.dart';
-import '../model/update_third_hmo_kyc_entity_model/update_third_hmo_kyc_entity_model.dart';
 import '../model/update_user_entity_model.dart';
 import '../model/upload_image_response_model/upload_image_response_model.dart';
 import '../model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
@@ -78,6 +80,10 @@ import '../model/verify_pharmacy_otp_model/verify_pharmacy_otp_model.dart';
 import '../model/verify_phone_entity_model.dart';
 import '../repo/hmo_repo_impl.dart';
 import 'package:medicate_app/core/connect_end/model/get_my_hmo_plan_response_model/plan.dart';
+import 'package:medicate_app/core/connect_end/model/update_hmo_kyc_entity_model/logo.dart'
+    as lg;
+import 'package:medicate_app/core/connect_end/model/update_hmo_kyc_third_level_entity_model/application_form.dart'
+    as app;
 
 class HMOViewModel extends BaseViewModel {
   final BuildContext? context;
@@ -113,6 +119,7 @@ class HMOViewModel extends BaseViewModel {
   String? filename;
   String? pinInput;
   int _start = 60;
+  bool isNotReadable2 = false;
 
   String querySignUpCountry = '';
   String errorUser = '';
@@ -211,8 +218,9 @@ class HMOViewModel extends BaseViewModel {
       _getAllListedPlanTiersResponseModel;
   GetRolesResponseModel? _getRolesResponseModel;
   GetRolesResponseModel? get getRolesResponseModel => _getRolesResponseModel;
-  GetHmoKycResponseModel? get getHmoKycResponseModel => _getHmoKycResponseModel;
-  GetHmoKycResponseModel? _getHmoKycResponseModel;
+  GetHmoKycNewResponseModel? get getHmoKycResponseModel =>
+      _getHmoKycResponseModel;
+  GetHmoKycNewResponseModel? _getHmoKycResponseModel;
   SetPinPharmResponseModel? _setPinPharmResponseModel;
   SetPinPharmResponseModel? get setPinPharmResponseModel =>
       _setPinPharmResponseModel;
@@ -352,6 +360,36 @@ class HMOViewModel extends BaseViewModel {
   final groupedPlans = <String, List<Plan>>{};
 
   String searchedPlansTiers = '';
+
+  UpdateHmoKycEntityModel _secondLevelHmoKycEntityModelLogo =
+      UpdateHmoKycEntityModel();
+  UpdateHmoKycEntityModel? get secondLevelHmoKycEntityModelLogo =>
+      _secondLevelHmoKycEntityModelLogo;
+  UpdateHmoKycEntityModel _secondLevelHmoKycEntityModelNHIS =
+      UpdateHmoKycEntityModel();
+  UpdateHmoKycEntityModel? get secondLevelHmoKycEntityModelNHIS =>
+      _secondLevelHmoKycEntityModelNHIS;
+  UpdateHmoKycEntityModel _secondLevelHmoKycEntityModelTax =
+      UpdateHmoKycEntityModel();
+  UpdateHmoKycEntityModel? get secondLevelHmoKycEntityModelTax =>
+      _secondLevelHmoKycEntityModelTax;
+  UpdateHmoKycEntityModel _secondLevelHmoKycEntityModelCAC =
+      UpdateHmoKycEntityModel();
+  UpdateHmoKycEntityModel? get secondLevelHmoKycEntityModelCAC =>
+      _secondLevelHmoKycEntityModelCAC;
+
+  UpdateHmoKycThirdLevelEntityModel _thirdLevelHmoKycEntityModelAppForm =
+      UpdateHmoKycThirdLevelEntityModel();
+  UpdateHmoKycThirdLevelEntityModel? get thirdLevelHmoKycEntityModelAppForm =>
+      _thirdLevelHmoKycEntityModelAppForm;
+  UpdateHmoKycThirdLevelEntityModel _thirdLevelHmoKycEntityModelAvPlans =
+      UpdateHmoKycThirdLevelEntityModel();
+  UpdateHmoKycThirdLevelEntityModel? get thirdLevelHmoKycEntityModelAvPlans =>
+      _thirdLevelHmoKycEntityModelAvPlans;
+  UpdateHmoKycThirdLevelEntityModel _thirdLevelHmoKycEntityModelAssClinic =
+      UpdateHmoKycThirdLevelEntityModel();
+  UpdateHmoKycThirdLevelEntityModel? get thirdLevelHmoKycEntityModelAssClinic =>
+      _thirdLevelHmoKycEntityModelAssClinic;
 
   groupByPlanType(context, HMOViewModel model, String selectedType) async {
     filterPlanTypes = selectedType;
@@ -2378,8 +2416,19 @@ class HMOViewModel extends BaseViewModel {
   }
 
   bool returnBool() {
-    if (_getTetantResponseModel == null ||
-        _getTetantResponseModel!.data!.bankDetails == null) {
+    if (_getHmoKycResponseModel == null ||
+        _getHmoKycResponseModel!.data!.kycLevels?[0].status?.toLowerCase() !=
+            'approved') {
+      return true;
+    }
+    return false;
+  }
+
+  bool returnBoolKyc() {
+    if (_getHmoKycResponseModel == null ||
+        _getHmoKycResponseModel != null &&
+            _getHmoKycResponseModel!.data!.kycStatus!.toLowerCase() ==
+                'APPROVED'.toLowerCase()) {
       return true;
     }
     return false;
@@ -2401,17 +2450,16 @@ class HMOViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void updateHMOKyc(context, {UpdateHmoKycEntityModel? updateKyc}) async {
+  void updateHMOKycSubmit(context, {UpdateHmoKycEntityModel? updateKyc}) async {
     try {
       _isLoading = true;
       var v = await runBusyFuture(
-        repositoryImply.updateHMOKyc(updateKyc!),
+        repositoryImply.updateHMOKycSubmit(updateKyc!),
         throwException: true,
       );
-      if (v['statusCode'] == 201) {
+      if (v['statusCode'] == 201||v['statusCode'] == 200) {
         AppUtils.snackbar(context, message: v['message']);
         getHMOKyc(context);
-        // kycDocumentsList.clear();
       } else {
         AppUtils.snackbar(context, message: v['message'], error: true);
       }
@@ -2424,20 +2472,66 @@ class HMOViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void updateThirdHMOKyc(
+  void updateHMOKycSave(context, {UpdateHmoKycEntityModel? updateKyc}) async {
+    try {
+      _isLoading = true;
+      var v = await runBusyFuture(
+        repositoryImply.updateHMOKycSave(updateKyc!),
+        throwException: true,
+      );
+      if (v['statusCode'] == 201||v['statusCode'] == 200) {
+        AppUtils.snackbar(context, message: v['message']);
+        getHMOKyc(context);
+      } else {
+        AppUtils.snackbar(context, message: v['message'], error: true);
+      }
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  void updateThirdHMOKycSubmit(
     context, {
-    UpdateThirdHmoKycEntityModel? updateKyc,
+    UpdateHmoKycThirdLevelEntityModel? updateKyc,
   }) async {
     try {
       _isLoading = true;
       var v = await runBusyFuture(
-        repositoryImply.updateThirdHMOKyc(updateKyc!),
+        repositoryImply.updateThirdHMOKycSubmit(updateKyc!),
         throwException: true,
       );
-      if (v['statusCode'] == 201) {
+      if (v['statusCode'] == 201||v['statusCode'] == 200) {
         AppUtils.snackbar(context, message: v['message']);
         getHMOKyc(context);
-        // kycDocumentsList.clear();
+      } else {
+        AppUtils.snackbar(context, message: v['message'], error: true);
+      }
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  void updateThirdHMOKycSave(
+    context, {
+    UpdateHmoKycThirdLevelEntityModel? updateKyc,
+  }) async {
+    try {
+      _isLoading = true;
+      var v = await runBusyFuture(
+        repositoryImply.updateThirdHMOKycSave(updateKyc!),
+        throwException: true,
+      );
+      if (v['statusCode'] == 201||v['statusCode'] == 200) {
+        AppUtils.snackbar(context, message: v['message']);
+        getHMOKyc(context);
       } else {
         AppUtils.snackbar(context, message: v['message'], error: true);
       }
@@ -3566,6 +3660,18 @@ class HMOViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  bool getStatusOFKycProviderStatus(model) {
+    if (model.getHmoKycResponseModel?.data?.kycLevels?[2].status
+                ?.toLowerCase() ==
+            'approved' ||
+        model.getHmoKycResponseModel?.data?.kycLevels?[2].status
+                ?.toLowerCase() ==
+            'UNDER_REVIEW'.toLowerCase()) {
+      return true;
+    }
+    return false;
+  }
+
   void pickImageLogo(BuildContext context) {
     try {
       _pickImage.pickImage(
@@ -3583,19 +3689,14 @@ class HMOViewModel extends BaseViewModel {
           );
           _isLoadingLogo = _isLoading;
           _uploadImageResponseModelLogo = _uploadImageResponseModel;
-          // kycDocumentsList.add(
-          //   Document(
-          //     documentType: 'HMO_LOGO',
-          //     file: ph.File(
-          //       width: _uploadImageResponseModelLogo!.data!.width,
-          //       height: _uploadImageResponseModelLogo!.data!.height,
-          //       format: _uploadImageResponseModelLogo!.data!.format,
-          //       url: _uploadImageResponseModelLogo!.data!.url!,
-          //       mimeType: _uploadImageResponseModelLogo!.data!.mimeType,
-          //       size: _uploadImageResponseModelLogo!.data!.size,
-          //     ),
-          //   ),
-          // );
+          _secondLevelHmoKycEntityModelLogo = UpdateHmoKycEntityModel(
+            logo: lg.Logo(
+              format: _uploadImageResponseModelLogo!.data!.format,
+              url: _uploadImageResponseModelLogo!.data!.url!,
+              mimeType: _uploadImageResponseModelLogo!.data!.mimeType,
+              size: _uploadImageResponseModelLogo!.data!.size,
+            ),
+          );
           _uploadImageResponseModel = null;
           notifyListeners();
         },
@@ -3622,19 +3723,14 @@ class HMOViewModel extends BaseViewModel {
           );
           _isLoadingCAC = _isLoading;
           _uploadImageResponseModelCAC = _uploadImageResponseModel;
-          // kycDocumentsList.add(
-          //   Document(
-          //     documentType: 'CAC_REGISTRATION_CERTIFICATE',
-          //     file: ph.File(
-          //       width: _uploadImageResponseModelCAC!.data!.width,
-          //       height: _uploadImageResponseModelCAC!.data!.height,
-          //       format: _uploadImageResponseModelCAC!.data!.format,
-          //       url: _uploadImageResponseModelCAC!.data!.url!,
-          //       mimeType: _uploadImageResponseModelCAC!.data!.mimeType,
-          //       size: _uploadImageResponseModelCAC!.data!.size,
-          //     ),
-          //   ),
-          // );
+          _secondLevelHmoKycEntityModelCAC = UpdateHmoKycEntityModel(
+            cacCertificate: CacCertificate(
+              format: _uploadImageResponseModelCAC!.data!.format,
+              url: _uploadImageResponseModelCAC!.data!.url!,
+              mimeType: _uploadImageResponseModelCAC!.data!.mimeType,
+              size: _uploadImageResponseModelCAC!.data!.size,
+            ),
+          );
           _uploadImageResponseModel = null;
           notifyListeners();
         },
@@ -3661,20 +3757,16 @@ class HMOViewModel extends BaseViewModel {
           );
           _isLoadingTIN = _isLoading;
           _uploadImageResponseModelTIN = _uploadImageResponseModel;
+          _secondLevelHmoKycEntityModelTax = UpdateHmoKycEntityModel(
+            taxIdCertificate: TaxIdCertificate(
+              format: _uploadImageResponseModelTIN!.data!.format,
+              url: _uploadImageResponseModelTIN!.data!.url!,
+              mimeType: _uploadImageResponseModelTIN!.data!.mimeType,
+              size: _uploadImageResponseModelTIN!.data!.size,
+            ),
+          );
+
           _uploadImageResponseModel = null;
-          // kycDocumentsList.add(
-          //   Document(
-          //     documentType: 'TAX_IDENTIFICATION_NUMBER',
-          //     file: ph.File(
-          //       width: _uploadImageResponseModelTIN!.data!.width,
-          //       height: _uploadImageResponseModelTIN!.data!.height,
-          //       format: _uploadImageResponseModelTIN!.data!.format,
-          //       url: _uploadImageResponseModelTIN!.data!.url!,
-          //       mimeType: _uploadImageResponseModelTIN!.data!.mimeType,
-          //       size: _uploadImageResponseModelTIN!.data!.size,
-          //     ),
-          //   ),
-          // );
           notifyListeners();
         },
       );
@@ -3700,20 +3792,14 @@ class HMOViewModel extends BaseViewModel {
           );
           _isLoadingLicense = _isLoading;
           _uploadImageResponseModelNHISLicense = _uploadImageResponseModel;
-
-          // kycDocumentsList.add(
-          //   Document(
-          //     documentType: 'NHIS_LICENSE',
-          //     file: ph.File(
-          //       width: _uploadImageResponseModelNHISLicense!.data!.width,
-          //       height: _uploadImageResponseModelNHISLicense!.data!.height,
-          //       format: _uploadImageResponseModelNHISLicense!.data!.format,
-          //       url: _uploadImageResponseModelNHISLicense!.data!.url!,
-          //       mimeType: _uploadImageResponseModelNHISLicense!.data!.mimeType,
-          //       size: _uploadImageResponseModelNHISLicense!.data!.size,
-          //     ),
-          //   ),
-          // );
+          _secondLevelHmoKycEntityModelNHIS = UpdateHmoKycEntityModel(
+            hmoAccreditation: HmoAccreditation(
+              format: _uploadImageResponseModelNHISLicense!.data!.format,
+              url: _uploadImageResponseModelNHISLicense!.data!.url!,
+              mimeType: _uploadImageResponseModelNHISLicense!.data!.mimeType,
+              size: _uploadImageResponseModelNHISLicense!.data!.size,
+            ),
+          );
           _uploadImageResponseModel = null;
           notifyListeners();
         },
@@ -3740,19 +3826,15 @@ class HMOViewModel extends BaseViewModel {
           );
           _isLoadingAppForm = _isLoading;
           _uploadImageResponseModelAppForm = _uploadImageResponseModel;
-          // kycDocumentsList.add(
-          //   Document(
-          //     documentType: 'APPLICATION_FORM',
-          //     file: ph.File(
-          //       width: _uploadImageResponseModelAppForm!.data!.width,
-          //       height: _uploadImageResponseModelAppForm!.data!.height,
-          //       format: _uploadImageResponseModelAppForm!.data!.format,
-          //       url: _uploadImageResponseModelAppForm!.data!.url!,
-          //       mimeType: _uploadImageResponseModelAppForm!.data!.mimeType,
-          //       size: _uploadImageResponseModelAppForm!.data!.size,
-          //     ),
-          //   ),
-          // );
+          _thirdLevelHmoKycEntityModelAppForm =
+              UpdateHmoKycThirdLevelEntityModel(
+                applicationForm: app.ApplicationForm(
+                  format: _uploadImageResponseModelAppForm!.data!.format,
+                  url: _uploadImageResponseModelAppForm!.data!.url!,
+                  mimeType: _uploadImageResponseModelAppForm!.data!.mimeType,
+                  size: _uploadImageResponseModelAppForm!.data!.size,
+                ),
+              );
           _uploadImageResponseModel = null;
           notifyListeners();
         },
@@ -3779,20 +3861,17 @@ class HMOViewModel extends BaseViewModel {
           );
           _isLoadingPlan = _isLoading;
           _uploadImageResponseModelPlan = _uploadImageResponseModel;
+          _thirdLevelHmoKycEntityModelAvPlans =
+              UpdateHmoKycThirdLevelEntityModel(
+                scheduleOfPlans: ScheduleOfPlans(
+                  format: _uploadImageResponseModelPlan!.data!.format,
+                  url: _uploadImageResponseModelPlan!.data!.url!,
+                  mimeType: _uploadImageResponseModelPlan!.data!.mimeType,
+                  size: _uploadImageResponseModelPlan!.data!.size,
+                ),
+              );
           _uploadImageResponseModel = null;
-          // kycDocumentsList.add(
-          //   Document(
-          //     documentType: 'AVAILABLE_PLAN',
-          //     file: ph.File(
-          //       width: _uploadImageResponseModelPlan!.data!.width,
-          //       height: _uploadImageResponseModelPlan!.data!.height,
-          //       format: _uploadImageResponseModelPlan!.data!.format,
-          //       url: _uploadImageResponseModelPlan!.data!.url!,
-          //       mimeType: _uploadImageResponseModelPlan!.data!.mimeType,
-          //       size: _uploadImageResponseModelPlan!.data!.size,
-          //     ),
-          //   ),
-          // );
+
           notifyListeners();
         },
       );
@@ -3817,21 +3896,16 @@ class HMOViewModel extends BaseViewModel {
             ),
           );
           _isLoadingAss = _isLoading;
-          _uploadImageResponseModelAss = _uploadImageResponseModel;
-
-          // kycDocumentsList.add(
-          //   Document(
-          //     documentType: 'ASSOCIATED_CLINIC',
-          //     file: ph.File(
-          //       width: _uploadImageResponseModelAss!.data!.width,
-          //       height: _uploadImageResponseModelAss!.data!.height,
-          //       format: _uploadImageResponseModelAss!.data!.format,
-          //       url: _uploadImageResponseModelAss!.data!.url!,
-          //       mimeType: _uploadImageResponseModelAss!.data!.mimeType,
-          //       size: _uploadImageResponseModelAss!.data!.size,
-          //     ),
-          //   ),
-          // );
+          _uploadImageResponseModelPlan = _uploadImageResponseModel;
+          _thirdLevelHmoKycEntityModelAssClinic =
+              UpdateHmoKycThirdLevelEntityModel(
+                listOfHospitals: ListOfHospitals(
+                  format: _uploadImageResponseModelAss!.data!.format,
+                  url: _uploadImageResponseModelAss!.data!.url!,
+                  mimeType: _uploadImageResponseModelAss!.data!.mimeType,
+                  size: _uploadImageResponseModelAss!.data!.size,
+                ),
+              );
           _uploadImageResponseModel = null;
           notifyListeners();
         },
@@ -3854,17 +3928,17 @@ class HMOViewModel extends BaseViewModel {
     return 'Kindly upload and submit KYC for\nverification to obtain full access to\nplatform features.';
   }
 
-  bool getHmoIsActiveStatus(model) {
-    if (model.getHmoKycResponseModel != null &&
-        model.getHmoKycResponseModel!.data!.kycLevels!.isNotEmpty) {
-      return model.getKycStatusBoolSecond(
-        kyc1: model.getHmoKycResponseModel?.data?.kycLevels?[0].status ?? '',
-        kyc2: model.getHmoKycResponseModel?.data?.kycLevels?[1].status ?? '',
-        kyc3: model.getHmoKycResponseModel?.data?.kycLevels?[2].status ?? '',
-      );
-    }
-    return true;
-  }
+  // bool getHmoIsActiveStatus(model) {
+  //   if (model.getHmoKycResponseModel != null &&
+  //       model.getHmoKycResponseModel!.data!.kycLevels!.isNotEmpty) {
+  //     return model.getKycStatusBoolSecond(
+  //       kyc1: model.getHmoKycResponseModel?.data?.kycLevels?[0].status ?? '',
+  //       kyc2: model.getHmoKycResponseModel?.data?.kycLevels?[1].status ?? '',
+  //       kyc3: model.getHmoKycResponseModel?.data?.kycLevels?[2].status ?? '',
+  //     );
+  //   }
+  //   return true;
+  // }
 
   // hmoKycStatus() {
   //   if (getHmoKycResponseModel!.data != {} &&
@@ -3977,6 +4051,70 @@ class HMOViewModel extends BaseViewModel {
     return false;
   }
 
+  String kycStatusText(String status) {
+    if (status != '' || status != null) {
+      if (status.toLowerCase() == 'UNDER_REVIEW'.toLowerCase()) {
+        return 'Your KYC is submitted and under '
+            'review. We’ll notify you once it’s '
+            'verified.';
+      }
+      if (status.toLowerCase() == 'NOT_SUBMITTED'.toLowerCase()) {
+        return 'Kindly upload and submit KYC for '
+            'verification to obtain some access '
+            'to platform features.';
+      }
+      if (status.toLowerCase() == 'REJECTED'.toLowerCase()) {
+        return 'Your KYC couldn’t be verified. '
+            'Please review your details and '
+            'resubmit the required documents.';
+      }
+      if (status.toLowerCase() == 'APPROVED'.toLowerCase()) {
+        return 'Your KYC has been successfully '
+            'verified. You can now access '
+            'some services.';
+      }
+    }
+    return 'Kindly upload and submit KYC for '
+        'verification to obtain some access '
+        'to platform features.';
+  }
+
+  Color kycStatusColor(String status) {
+    if (status != '' || status != null) {
+      if (status.toLowerCase() == 'UNDER_REVIEW'.toLowerCase()) {
+        return AppColors.fadedyellow;
+      }
+      if (status.toLowerCase() == 'NOT_SUBMITTED'.toLowerCase()) {
+        return AppColors.fadedyellow;
+      }
+      if (status.toLowerCase() == 'REJECTED'.toLowerCase()) {
+        return AppColors.red_bar_faded;
+      }
+      if (status.toLowerCase() == 'APPROVED'.toLowerCase()) {
+        return AppColors.app_green_light;
+      }
+    }
+    return AppColors.fadedyellow;
+  }
+
+  Color kycStatusColorIcon(String status) {
+    if (status != '' || status != null) {
+      if (status.toLowerCase() == 'UNDER_REVIEW'.toLowerCase()) {
+        return AppColors.yellow;
+      }
+      if (status.toLowerCase() == 'NOT_SUBMITTED'.toLowerCase()) {
+        return AppColors.yellow;
+      }
+      if (status.toLowerCase() == 'REJECTED'.toLowerCase()) {
+        return AppColors.red_bar;
+      }
+      if (status.toLowerCase() == 'APPROVED'.toLowerCase()) {
+        return AppColors.app_green;
+      }
+    }
+    return AppColors.yellow;
+  }
+
   // String getKycStatusSecond({form, plans, ass}) {
   //   if (form == 'PENDING' || plans == 'PENDING' || ass == 'PENDING') {
   //     return 'Your KYC is submitted and under\nreview. We’ll notify you once it’s\nverified.';
@@ -3997,2062 +4135,2062 @@ class HMOViewModel extends BaseViewModel {
   //   return AppColors.fadedyellow;
   // }
 
-  bool getKycStatusBoolSecond({kyc1, kyc2, kyc3}) {
-    if (kyc1 == 'UNDER_REVIEW' ||
-        kyc2 == 'UNDER_REVIEW' ||
-        kyc3 == 'UNDER_REVIEW') {
-      return true;
-    }
-    if (kyc1 == 'APPROVED' && kyc2 == 'APPROVED' && kyc3 == 'APPROVED') {
-      return false;
-    }
-    return false;
-  }
+  // bool getKycStatusBoolSecond({kyc1, kyc2, kyc3}) {
+  //   if (kyc1 == 'UNDER_REVIEW' ||
+  //       kyc2 == 'UNDER_REVIEW' ||
+  //       kyc3 == 'UNDER_REVIEW') {
+  //     return true;
+  //   }
+  //   if (kyc1 == 'APPROVED' && kyc2 == 'APPROVED' && kyc3 == 'APPROVED') {
+  //     return false;
+  //   }
+  //   return false;
+  // }
 
-  kycLevelWidget({String? level, Function()? onTap, BuildContext? contxt}) =>
-      GestureDetector(
-        onTap: onTap,
-        child: int.parse(level!) == levelKyc
-            ? KycWidget(level: level, contxxt: contxt)
-            : Container(
-                width: double.infinity,
-                padding: EdgeInsets.symmetric(vertical: 14.w, horizontal: 16.w),
-                margin: EdgeInsets.only(bottom: 16.0.w),
-                decoration: BoxDecoration(
-                  color: AppColors.grey,
-                  borderRadius: BorderRadius.circular(8.r),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    TextView(
-                      text: 'Level $level',
-                      textStyle: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 15.6.sp,
-                        fontWeight: FontWeight.w400,
-                        color: AppColors.reminder,
-                      ),
-                    ),
-                    int.parse(level) == 1
-                        ? Container(
-                            padding: EdgeInsets.all(3.4),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: AppColors.app_green,
-                            ),
-                            child: Icon(
-                              Icons.check,
-                              color: AppColors.white,
-                              size: 10.sp,
-                            ),
-                          )
-                        : checkHMOKYCStatus(level)
-                        ? Container(
-                            padding: EdgeInsets.all(3.4),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: AppColors.app_green,
-                            ),
-                            child: Icon(
-                              Icons.check,
-                              color: AppColors.white,
-                              size: 10.sp,
-                            ),
-                          )
-                        : Icon(
-                            int.parse(level) == levelKyc
-                                ? Icons.keyboard_arrow_up_rounded
-                                : Icons.keyboard_arrow_down_rounded,
-                            size: 21.0.sp,
-                            color: AppColors.reminder,
-                          ),
-                  ],
-                ),
-              ),
-      );
+  // kycLevelWidget({String? level, Function()? onTap, BuildContext? contxt}) =>
+  //     GestureDetector(
+  //       onTap: onTap,
+  //       child: int.parse(level!) == levelKyc
+  //           ? KycWidget(level: level, contxxt: contxt)
+  //           : Container(
+  //               width: double.infinity,
+  //               padding: EdgeInsets.symmetric(vertical: 14.w, horizontal: 16.w),
+  //               margin: EdgeInsets.only(bottom: 16.0.w),
+  //               decoration: BoxDecoration(
+  //                 color: AppColors.grey,
+  //                 borderRadius: BorderRadius.circular(8.r),
+  //               ),
+  //               child: Row(
+  //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                 children: [
+  //                   TextView(
+  //                     text: 'Level $level',
+  //                     textStyle: TextStyle(
+  //                       fontFamily: 'Arial',
+  //                       fontSize: 15.6.sp,
+  //                       fontWeight: FontWeight.w400,
+  //                       color: AppColors.reminder,
+  //                     ),
+  //                   ),
+  //                   int.parse(level) == 1
+  //                       ? Container(
+  //                           padding: EdgeInsets.all(3.4),
+  //                           decoration: BoxDecoration(
+  //                             shape: BoxShape.circle,
+  //                             color: AppColors.app_green,
+  //                           ),
+  //                           child: Icon(
+  //                             Icons.check,
+  //                             color: AppColors.white,
+  //                             size: 10.sp,
+  //                           ),
+  //                         )
+  //                       : checkHMOKYCStatus(level)
+  //                       ? Container(
+  //                           padding: EdgeInsets.all(3.4),
+  //                           decoration: BoxDecoration(
+  //                             shape: BoxShape.circle,
+  //                             color: AppColors.app_green,
+  //                           ),
+  //                           child: Icon(
+  //                             Icons.check,
+  //                             color: AppColors.white,
+  //                             size: 10.sp,
+  //                           ),
+  //                         )
+  //                       : Icon(
+  //                           int.parse(level) == levelKyc
+  //                               ? Icons.keyboard_arrow_up_rounded
+  //                               : Icons.keyboard_arrow_down_rounded,
+  //                           size: 21.0.sp,
+  //                           color: AppColors.reminder,
+  //                         ),
+  //                 ],
+  //               ),
+  //             ),
+  //     );
 
-  checkHMOKYCStatus(level) {
-    if (getHmoKycResponseModel != null &&
-        getHmoKycResponseModel!.data!.kycLevels != null &&
-        getHmoKycResponseModel!.data!.kycLevels!.isNotEmpty &&
-        getHmoKycResponseModel!.data!.kycLevels![int.parse(level) - 1].status ==
-            'APPROVED') {
-      return true;
-    } else {
-      return false;
-    }
-  }
+  // checkHMOKYCStatus(level) {
+  //   if (getHmoKycResponseModel != null &&
+  //       getHmoKycResponseModel!.data!.kycLevels != null &&
+  //       getHmoKycResponseModel!.data!.kycLevels!.isNotEmpty &&
+  //       getHmoKycResponseModel!.data!.kycLevels![int.parse(level) - 1].status ==
+  //           'APPROVED') {
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
+  // }
 
-  KycWidget({String? level, BuildContext? contxxt}) => Container(
-    width: double.infinity,
-    margin: EdgeInsets.only(bottom: 16.w),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(8),
-      border: Border.all(color: AppColors.grey),
-      boxShadow: [
-        BoxShadow(
-          color: AppColors.grey,
-          blurRadius: 6,
-          offset: const Offset(0, 2),
-        ),
-      ],
-    ),
-    clipBehavior: Clip.antiAlias, // VERY IMPORTANT
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        GestureDetector(
-          onTap: () {
-            levelKyc = 0;
-            notifyListeners();
-          },
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 16.w),
-            color: Color(0xFFF5F6F8), // light grey header
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                TextView(
-                  text: 'Level $level',
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 15.6.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.reminder,
-                  ),
-                ),
-                int.parse(level!) == 1
-                    ? Container(
-                        padding: EdgeInsets.all(3.4),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: AppColors.app_green,
-                        ),
-                        child: Icon(
-                          Icons.check,
-                          color: AppColors.white,
-                          size: 10.sp,
-                        ),
-                      )
-                    : Icon(
-                        int.parse(level) == levelKyc
-                            ? Icons.keyboard_arrow_up_rounded
-                            : Icons.keyboard_arrow_down_rounded,
-                        size: 21.0.sp,
-                        color: AppColors.reminder,
-                      ),
-              ],
-            ),
-          ),
-        ),
-        // 🔹 BODY
-        levelKyc == 1
-            ? Padding(
-                padding: EdgeInsets.all(16.4.w),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    InfoItem(
-                      title: "Phone Number",
-                      value: SharedPreferencesService
-                          .instance
-                          .usersData['user']['phone']
-                          .toString()
-                          .substring(4),
-                    ),
-                    InfoItem(
-                      title: "HMO Name",
-                      value: getTetantResponseModel?.data?.name ?? '',
-                    ),
-                    InfoItem(
-                      title: "Business Address",
-                      value:
-                          getTetantResponseModel?.data?.businessAddress ?? '',
-                    ),
-                    InfoItem(
-                      title: "Business email",
-                      value: getTetantResponseModel?.data?.businessEmail ?? '',
-                    ),
-                    InfoItem(
-                      title: "First Name (Contact Person)",
-                      value:
-                          getTetantResponseModel
-                              ?.data
-                              ?.contactPersonFirstName ??
-                          '',
-                    ),
-                    InfoItem(
-                      title: "Last Name (Contact Person)",
-                      value:
-                          getTetantResponseModel?.data?.contactPersonLastName ??
-                          '',
-                    ),
-                    InfoItem(
-                      title: "Designation",
-                      value:
-                          getTetantResponseModel
-                              ?.data
-                              ?.contactPersonDesignation ??
-                          '',
-                    ),
-                  ],
-                ),
-              )
-            : levelKyc == 2
-            ? Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 12.8.w,
-                  vertical: 12.6.w,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        vertical: 12.w,
-                        horizontal: 14.62.w,
-                      ),
-                      decoration: BoxDecoration(
-                        color:
-                            getHmoKycResponseModel!.data!.kycLevels!.isNotEmpty
-                            ? getKycStatusColor(
-                                getHmoKycResponseModel!
-                                    .data!
-                                    .kycLevels![1]
-                                    .status,
-                              )
-                            : AppColors.fadedyellow,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Row(
-                        children: [
-                          getHmoKycResponseModel!.data!.kycLevels!.isNotEmpty
-                              ? getKycStatusIcon(
-                                  getHmoKycResponseModel!
-                                      .data!
-                                      .kycLevels![1]
-                                      .status,
-                                )
-                              : SvgPicture.asset(AppImage.info),
-                          SizedBox(width: 10.w),
-                          SizedBox(
-                            width: 200.w,
-                            child: TextView(
-                              text:
-                                  getHmoKycResponseModel!
-                                      .data!
-                                      .kycLevels!
-                                      .isNotEmpty
-                                  ? getKycStatus(
-                                      getHmoKycResponseModel!
-                                          .data!
-                                          .kycLevels![1]
-                                          .status,
-                                    )
-                                  : 'Kindly upload and submit KYC for\nverification to obtain full access to\nplatform features.',
-                              maxLines: 4,
-                              textStyle: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 12.42.sp,
-                                fontWeight: FontWeight.w400,
-                                color: AppColors.black,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 20.h),
-                    Stack(
-                      clipBehavior: Clip.none,
-                      children: [
-                        TextView(
-                          text: 'Logo (Profile Picture)',
-                          textStyle: TextStyle(
-                            fontFamily: 'Arial',
-                            fontSize: 13.2.sp,
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.reminder,
-                          ),
-                        ),
-                        Positioned(
-                          right: -12.10,
-                          child: TextView(
-                            text: '*',
-                            textStyle: TextStyle(
-                              fontFamily: 'Arial',
-                              fontSize: 18.sp,
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.red,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 10.20.h),
-                    getHmoKycResponseModel!.data!.logo != null
-                        ? Container(
-                            padding: EdgeInsets.all(10.w),
-                            decoration: BoxDecoration(
-                              border: Border.all(color: AppColors.tintColor),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Row(
-                              children: [
-                                SvgPicture.asset(AppImage.kyc_file),
-                                SizedBox(width: 14.20.w),
-                                SizedBox(
-                                  width: 160.w,
-                                  child: TextView(
-                                    text: 'HMO LOGO.jpg',
-                                    textOverflow: TextOverflow.ellipsis,
-                                    textStyle: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 13.2.sp,
-                                      fontWeight: FontWeight.w400,
-                                      color: AppColors.black,
-                                    ),
-                                  ),
-                                ),
-                                Spacer(),
-                                GestureDetector(
-                                  onTap: () => Navigator.push(
-                                    contxxt!,
-                                    MaterialPageRoute(
-                                      builder: (_) => ImageWebViewScreen(
-                                        imageUrl:
-                                            getHmoKycResponseModel
-                                                ?.data
-                                                ?.logo
-                                                ?.url ??
-                                            '',
-                                      ),
-                                    ),
-                                  ),
-                                  child: SvgPicture.asset(AppImage.kyc_eye),
-                                ),
-                              ],
-                            ),
-                          )
-                        : _isLoadingLogo
-                        ? Center(
-                            child: SpinKitCircle(
-                              color: AppColors.infoGrey,
-                              size: 32.40.sp,
-                            ),
-                          )
-                        : filenameLogo != null
-                        ? Container(
-                            padding: EdgeInsets.all(10.w),
-                            decoration: BoxDecoration(
-                              border: Border.all(color: AppColors.tintColor),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Row(
-                              children: [
-                                SvgPicture.asset(AppImage.kyc_file),
-                                SizedBox(width: 14.20.w),
-                                SizedBox(
-                                  width: 160.w,
-                                  child: TextView(
-                                    text: "${filenameLogo ?? ""}.jpg",
-                                    textOverflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                    textStyle: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 13.2.sp,
-                                      fontWeight: FontWeight.w400,
-                                      color: AppColors.black,
-                                    ),
-                                  ),
-                                ),
-                                Spacer(),
-                                GestureDetector(
-                                  onTap: () {
-                                    pickImageLogo(contxxt!);
-                                    notifyListeners();
-                                  },
-                                  child: SvgPicture.asset(
-                                    AppImage.upload_arr_up,
-                                  ),
-                                ),
-                                SizedBox(width: 12.w),
-                                GestureDetector(
-                                  onTap: () {
-                                    filenameLogo = null;
-                                    imageLogo = null;
-                                    notifyListeners();
-                                  },
-                                  child: SvgPicture.asset(AppImage.delete),
-                                ),
-                              ],
-                            ),
-                          )
-                        : SizedBox(
-                            width: double.infinity,
-                            child: DottedBorder(
-                              options: RoundedRectDottedBorderOptions(
-                                dashPattern: [10, 10],
-                                strokeWidth: .94,
-                                radius: Radius.circular(10),
-                                color: AppColors.primary,
-                              ),
-                              child: GestureDetector(
-                                onTap: () => pickImageLogo(contxxt!),
-                                child: Container(
-                                  width: double.infinity,
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: 14.20.w,
-                                    horizontal: 12.0.w,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10.r),
-                                    color: AppColors.white,
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      SvgPicture.asset(AppImage.upload_doc),
-                                      SizedBox(width: 10.w),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          TextView(
-                                            text: 'Upload Document',
-                                            textStyle: TextStyle(
-                                              fontFamily: 'GoogleSans',
-                                              fontSize: 14.2.sp,
-                                              fontWeight: FontWeight.w500,
-                                              color: AppColors.reminder,
-                                            ),
-                                          ),
-                                          SizedBox(height: 2.0.h),
-                                          TextView(
-                                            text:
-                                                'Max file size: 2MB (.jpg, .jpeg,\n.png, or .pdf supported)',
-                                            textStyle: TextStyle(
-                                              fontFamily: 'Arial',
-                                              fontSize: 12.6.sp,
-                                              fontWeight: FontWeight.w400,
-                                              color: AppColors.fineGrey,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                    SizedBox(height: 20.h),
-                    Stack(
-                      clipBehavior: Clip.none,
-                      children: [
-                        TextView(
-                          text: 'CAC Registration Certificate (Nigeria)',
-                          textStyle: TextStyle(
-                            fontFamily: 'Arial',
-                            fontSize: 13.2.sp,
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.reminder,
-                          ),
-                        ),
-                        Positioned(
-                          right: -12.10,
-                          child: TextView(
-                            text: '*',
-                            textStyle: TextStyle(
-                              fontFamily: 'Arial',
-                              fontSize: 18.sp,
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.red,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 10.20.h),
-                    getHmoKycResponseModel!.data!.cacCertificate != null
-                        ? Container(
-                            padding: EdgeInsets.all(10.w),
-                            decoration: BoxDecoration(
-                              border: Border.all(color: AppColors.tintColor),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Row(
-                              children: [
-                                SvgPicture.asset(AppImage.kyc_file),
-                                SizedBox(width: 14.20.w),
-                                SizedBox(
-                                  width: 160.w,
-                                  child: TextView(
-                                    text: 'CAC REGISTRATION CERTIFICATE.jpg',
-                                    textOverflow: TextOverflow.ellipsis,
-                                    textStyle: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 13.2.sp,
-                                      fontWeight: FontWeight.w400,
-                                      color: AppColors.black,
-                                    ),
-                                  ),
-                                ),
-                                Spacer(),
-                                GestureDetector(
-                                  onTap: () => Navigator.push(
-                                    contxxt!,
-                                    MaterialPageRoute(
-                                      builder: (_) => ImageWebViewScreen(
-                                        imageUrl:
-                                            getHmoKycResponseModel!
-                                                .data!
-                                                .logo
-                                                ?.url ??
-                                            '',
-                                      ),
-                                    ),
-                                  ),
-                                  child: SvgPicture.asset(AppImage.kyc_eye),
-                                ),
-                              ],
-                            ),
-                          )
-                        : isLoadingCAC
-                        ? Center(
-                            child: SpinKitCircle(
-                              color: AppColors.infoGrey,
-                              size: 32.40.sp,
-                            ),
-                          )
-                        : filenameCAC != null
-                        ? Container(
-                            padding: EdgeInsets.all(10.w),
-                            decoration: BoxDecoration(
-                              border: Border.all(color: AppColors.tintColor),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Row(
-                              children: [
-                                SvgPicture.asset(AppImage.kyc_file),
-                                SizedBox(width: 14.20.w),
-                                SizedBox(
-                                  width: 160.w,
-                                  child: TextView(
-                                    text: "${filenameCAC ?? ""}.jpg",
-                                    textOverflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                    textStyle: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 13.2.sp,
-                                      fontWeight: FontWeight.w400,
-                                      color: AppColors.black,
-                                    ),
-                                  ),
-                                ),
-                                Spacer(),
-                                GestureDetector(
-                                  onTap: () {
-                                    pickImageCAC(contxxt!);
-                                    notifyListeners();
-                                  },
-                                  child: SvgPicture.asset(
-                                    AppImage.upload_arr_up,
-                                  ),
-                                ),
-                                SizedBox(width: 12.w),
-                                GestureDetector(
-                                  onTap: () {
-                                    filenameCAC = null;
-                                    imageCAC = null;
-                                    notifyListeners();
-                                  },
-                                  child: SvgPicture.asset(AppImage.delete),
-                                ),
-                              ],
-                            ),
-                          )
-                        : SizedBox(
-                            width: double.infinity,
-                            child: DottedBorder(
-                              options: RoundedRectDottedBorderOptions(
-                                dashPattern: [10, 10],
-                                strokeWidth: .94,
-                                radius: Radius.circular(10),
-                                color: AppColors.primary,
-                              ),
-                              child: GestureDetector(
-                                onTap: () => pickImageCAC(contxxt!),
-                                child: Container(
-                                  width: double.infinity,
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: 14.20.w,
-                                    horizontal: 12.0.w,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10.r),
-                                    color: AppColors.white,
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      SvgPicture.asset(AppImage.upload_doc),
-                                      SizedBox(width: 10.w),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          TextView(
-                                            text: 'Upload Document',
-                                            textStyle: TextStyle(
-                                              fontFamily: 'GoogleSans',
-                                              fontSize: 14.2.sp,
-                                              fontWeight: FontWeight.w500,
-                                              color: AppColors.reminder,
-                                            ),
-                                          ),
-                                          SizedBox(height: 2.0.h),
-                                          TextView(
-                                            text:
-                                                'Max file size: 2MB (.jpg, .jpeg,\n.png, or .pdf supported)',
-                                            textStyle: TextStyle(
-                                              fontFamily: 'Arial',
-                                              fontSize: 12.6.sp,
-                                              fontWeight: FontWeight.w400,
-                                              color: AppColors.fineGrey,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                    SizedBox(height: 20.h),
-                    Stack(
-                      clipBehavior: Clip.none,
-                      children: [
-                        SizedBox(
-                          width: 250.w,
-                          child: TextView(
-                            text:
-                                'HMO accreditation certificate from NHIS (National Health Insurance Scheme)',
-                            maxLines: 2,
-                            textStyle: TextStyle(
-                              fontFamily: 'Arial',
-                              fontSize: 13.2.sp,
-                              fontWeight: FontWeight.w400,
-                              color: AppColors.reminder,
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          right: -12.10,
-                          child: TextView(
-                            text: '*',
-                            textStyle: TextStyle(
-                              fontFamily: 'Arial',
-                              fontSize: 18.sp,
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.red,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 10.20.h),
-                    getHmoKycResponseModel!.data!.hmoAccreditation != null
-                        ? Container(
-                            padding: EdgeInsets.all(10.w),
-                            decoration: BoxDecoration(
-                              border: Border.all(color: AppColors.tintColor),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Row(
-                              children: [
-                                SvgPicture.asset(AppImage.kyc_file),
-                                SizedBox(width: 14.20.w),
-                                TextView(
-                                  text: 'NHIS LICENSE.jpg',
-                                  textStyle: TextStyle(
-                                    fontFamily: 'Arial',
-                                    fontSize: 13.2.sp,
-                                    fontWeight: FontWeight.w400,
-                                    color: AppColors.black,
-                                  ),
-                                ),
-                                Spacer(),
-                                GestureDetector(
-                                  onTap: () => Navigator.push(
-                                    contxxt!,
-                                    MaterialPageRoute(
-                                      builder: (_) => ImageWebViewScreen(
-                                        imageUrl:
-                                            getHmoKycResponseModel!
-                                                .data!
-                                                .listOfHospitals
-                                                ?.url ??
-                                            '',
-                                      ),
-                                    ),
-                                  ),
-                                  child: SvgPicture.asset(AppImage.kyc_eye),
-                                ),
-                              ],
-                            ),
-                          )
-                        : isLoadingLicense
-                        ? Center(
-                            child: SpinKitCircle(
-                              color: AppColors.infoGrey,
-                              size: 32.40.sp,
-                            ),
-                          )
-                        : filenameNHISLicense != null
-                        ? Container(
-                            padding: EdgeInsets.all(10.w),
-                            decoration: BoxDecoration(
-                              border: Border.all(color: AppColors.tintColor),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Row(
-                              children: [
-                                SvgPicture.asset(AppImage.kyc_file),
-                                SizedBox(width: 14.20.w),
-                                SizedBox(
-                                  width: 120.w,
-                                  child: TextView(
-                                    text: "${filenameNHISLicense ?? ""}.jpg",
-                                    textOverflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                    textStyle: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 13.2.sp,
-                                      fontWeight: FontWeight.w400,
-                                      color: AppColors.black,
-                                    ),
-                                  ),
-                                ),
-                                Spacer(),
-                                GestureDetector(
-                                  onTap: () {
-                                    pickImageNHISLicense(contxxt!);
-                                    notifyListeners();
-                                  },
-                                  child: SvgPicture.asset(
-                                    AppImage.upload_arr_up,
-                                  ),
-                                ),
-                                SizedBox(width: 12.w),
-                                GestureDetector(
-                                  onTap: () {
-                                    filenameNHISLicense = null;
-                                    imageNHISLicense = null;
-                                    notifyListeners();
-                                  },
-                                  child: SvgPicture.asset(AppImage.delete),
-                                ),
-                              ],
-                            ),
-                          )
-                        : SizedBox(
-                            width: double.infinity,
-                            child: DottedBorder(
-                              options: RoundedRectDottedBorderOptions(
-                                dashPattern: [10, 10],
-                                strokeWidth: .94,
-                                radius: Radius.circular(10),
-                                color: AppColors.primary,
-                              ),
-                              child: GestureDetector(
-                                onTap: () => pickImageNHISLicense(contxxt!),
-                                child: Container(
-                                  width: double.infinity,
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: 14.20.w,
-                                    horizontal: 12.0.w,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10.r),
-                                    color: AppColors.white,
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      SvgPicture.asset(AppImage.upload_doc),
-                                      SizedBox(width: 10.w),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          TextView(
-                                            text: 'Upload Document',
-                                            textStyle: TextStyle(
-                                              fontFamily: 'GoogleSans',
-                                              fontSize: 14.2.sp,
-                                              fontWeight: FontWeight.w500,
-                                              color: AppColors.reminder,
-                                            ),
-                                          ),
-                                          SizedBox(height: 2.0.h),
-                                          TextView(
-                                            text:
-                                                'Max file size: 2MB (.jpg, .jpeg,\n.png, or .pdf supported)',
-                                            textStyle: TextStyle(
-                                              fontFamily: 'Arial',
-                                              fontSize: 13.6.sp,
-                                              fontWeight: FontWeight.w400,
-                                              color: AppColors.fineGrey,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                    SizedBox(height: 20.h),
-                    Stack(
-                      clipBehavior: Clip.none,
-                      children: [
-                        TextView(
-                          text: 'Tax identification number',
-                          textStyle: TextStyle(
-                            fontFamily: 'Arial',
-                            fontSize: 14.2.sp,
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.reminder,
-                          ),
-                        ),
-                        Positioned(
-                          right: -12.10,
-                          child: TextView(
-                            text: '*',
-                            textStyle: TextStyle(
-                              fontFamily: 'Arial',
-                              fontSize: 18.sp,
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.red,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 10.20.h),
-                    getHmoKycResponseModel!.data!.taxIdCertificate != null
-                        ? Container(
-                            padding: EdgeInsets.all(10.w),
-                            decoration: BoxDecoration(
-                              border: Border.all(color: AppColors.tintColor),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Row(
-                              children: [
-                                SvgPicture.asset(AppImage.kyc_file),
-                                SizedBox(width: 14.20.w),
-                                SizedBox(
-                                  width: 160.w,
-                                  child: TextView(
-                                    text: 'TAX IDENTIFICATION NUMBER.jpg',
+  // KycWidget({String? level, BuildContext? contxxt}) => Container(
+  //   width: double.infinity,
+  //   margin: EdgeInsets.only(bottom: 16.w),
+  //   decoration: BoxDecoration(
+  //     color: Colors.white,
+  //     borderRadius: BorderRadius.circular(8),
+  //     border: Border.all(color: AppColors.grey),
+  //     boxShadow: [
+  //       BoxShadow(
+  //         color: AppColors.grey,
+  //         blurRadius: 6,
+  //         offset: const Offset(0, 2),
+  //       ),
+  //     ],
+  //   ),
+  //   clipBehavior: Clip.antiAlias, // VERY IMPORTANT
+  //   child: Column(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: [
+  //       GestureDetector(
+  //         onTap: () {
+  //           levelKyc = 0;
+  //           notifyListeners();
+  //         },
+  //         child: Container(
+  //           padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 16.w),
+  //           color: Color(0xFFF5F6F8), // light grey header
+  //           child: Row(
+  //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //             children: [
+  //               TextView(
+  //                 text: 'Level $level',
+  //                 textStyle: TextStyle(
+  //                   fontFamily: 'Arial',
+  //                   fontSize: 15.6.sp,
+  //                   fontWeight: FontWeight.w400,
+  //                   color: AppColors.reminder,
+  //                 ),
+  //               ),
+  //               int.parse(level!) == 1
+  //                   ? Container(
+  //                       padding: EdgeInsets.all(3.4),
+  //                       decoration: BoxDecoration(
+  //                         shape: BoxShape.circle,
+  //                         color: AppColors.app_green,
+  //                       ),
+  //                       child: Icon(
+  //                         Icons.check,
+  //                         color: AppColors.white,
+  //                         size: 10.sp,
+  //                       ),
+  //                     )
+  //                   : Icon(
+  //                       int.parse(level) == levelKyc
+  //                           ? Icons.keyboard_arrow_up_rounded
+  //                           : Icons.keyboard_arrow_down_rounded,
+  //                       size: 21.0.sp,
+  //                       color: AppColors.reminder,
+  //                     ),
+  //             ],
+  //           ),
+  //         ),
+  //       ),
+  //       // 🔹 BODY
+  //       levelKyc == 1
+  //           ? Padding(
+  //               padding: EdgeInsets.all(16.4.w),
+  //               child: Column(
+  //                 crossAxisAlignment: CrossAxisAlignment.start,
+  //                 children: [
+  //                   InfoItem(
+  //                     title: "Phone Number",
+  //                     value: SharedPreferencesService
+  //                         .instance
+  //                         .usersData['user']['phone']
+  //                         .toString()
+  //                         .substring(4),
+  //                   ),
+  //                   InfoItem(
+  //                     title: "HMO Name",
+  //                     value: getTetantResponseModel?.data?.name ?? '',
+  //                   ),
+  //                   InfoItem(
+  //                     title: "Business Address",
+  //                     value:
+  //                         getTetantResponseModel?.data?.businessAddress ?? '',
+  //                   ),
+  //                   InfoItem(
+  //                     title: "Business email",
+  //                     value: getTetantResponseModel?.data?.businessEmail ?? '',
+  //                   ),
+  //                   InfoItem(
+  //                     title: "First Name (Contact Person)",
+  //                     value:
+  //                         getTetantResponseModel
+  //                             ?.data
+  //                             ?.contactPersonFirstName ??
+  //                         '',
+  //                   ),
+  //                   InfoItem(
+  //                     title: "Last Name (Contact Person)",
+  //                     value:
+  //                         getTetantResponseModel?.data?.contactPersonLastName ??
+  //                         '',
+  //                   ),
+  //                   InfoItem(
+  //                     title: "Designation",
+  //                     value:
+  //                         getTetantResponseModel
+  //                             ?.data
+  //                             ?.contactPersonDesignation ??
+  //                         '',
+  //                   ),
+  //                 ],
+  //               ),
+  //             )
+  //           : levelKyc == 2
+  //           ? Padding(
+  //               padding: EdgeInsets.symmetric(
+  //                 horizontal: 12.8.w,
+  //                 vertical: 12.6.w,
+  //               ),
+  //               child: Column(
+  //                 crossAxisAlignment: CrossAxisAlignment.start,
+  //                 children: [
+  //                   Container(
+  //                     padding: EdgeInsets.symmetric(
+  //                       vertical: 12.w,
+  //                       horizontal: 14.62.w,
+  //                     ),
+  //                     decoration: BoxDecoration(
+  //                       color:
+  //                           getHmoKycResponseModel!.data!.kycLevels!.isNotEmpty
+  //                           ? getKycStatusColor(
+  //                               getHmoKycResponseModel!
+  //                                   .data!
+  //                                   .kycLevels![1]
+  //                                   .status,
+  //                             )
+  //                           : AppColors.fadedyellow,
+  //                       borderRadius: BorderRadius.circular(10),
+  //                     ),
+  //                     child: Row(
+  //                       children: [
+  //                         getHmoKycResponseModel!.data!.kycLevels!.isNotEmpty
+  //                             ? getKycStatusIcon(
+  //                                 getHmoKycResponseModel!
+  //                                     .data!
+  //                                     .kycLevels![1]
+  //                                     .status,
+  //                               )
+  //                             : SvgPicture.asset(AppImage.info),
+  //                         SizedBox(width: 10.w),
+  //                         SizedBox(
+  //                           width: 200.w,
+  //                           child: TextView(
+  //                             text:
+  //                                 getHmoKycResponseModel!
+  //                                     .data!
+  //                                     .kycLevels!
+  //                                     .isNotEmpty
+  //                                 ? getKycStatus(
+  //                                     getHmoKycResponseModel!
+  //                                         .data!
+  //                                         .kycLevels![1]
+  //                                         .status,
+  //                                   )
+  //                                 : 'Kindly upload and submit KYC for\nverification to obtain full access to\nplatform features.',
+  //                             maxLines: 4,
+  //                             textStyle: TextStyle(
+  //                               fontFamily: 'Arial',
+  //                               fontSize: 12.42.sp,
+  //                               fontWeight: FontWeight.w400,
+  //                               color: AppColors.black,
+  //                             ),
+  //                           ),
+  //                         ),
+  //                       ],
+  //                     ),
+  //                   ),
+  //                   SizedBox(height: 20.h),
+  //                   Stack(
+  //                     clipBehavior: Clip.none,
+  //                     children: [
+  //                       TextView(
+  //                         text: 'Logo (Profile Picture)',
+  //                         textStyle: TextStyle(
+  //                           fontFamily: 'Arial',
+  //                           fontSize: 13.2.sp,
+  //                           fontWeight: FontWeight.w400,
+  //                           color: AppColors.reminder,
+  //                         ),
+  //                       ),
+  //                       Positioned(
+  //                         right: -12.10,
+  //                         child: TextView(
+  //                           text: '*',
+  //                           textStyle: TextStyle(
+  //                             fontFamily: 'Arial',
+  //                             fontSize: 18.sp,
+  //                             fontWeight: FontWeight.w500,
+  //                             color: AppColors.red,
+  //                           ),
+  //                         ),
+  //                       ),
+  //                     ],
+  //                   ),
+  //                   SizedBox(height: 10.20.h),
+  //                   getHmoKycResponseModel!.data!.logo != null
+  //                       ? Container(
+  //                           padding: EdgeInsets.all(10.w),
+  //                           decoration: BoxDecoration(
+  //                             border: Border.all(color: AppColors.tintColor),
+  //                             borderRadius: BorderRadius.circular(12),
+  //                           ),
+  //                           child: Row(
+  //                             children: [
+  //                               SvgPicture.asset(AppImage.kyc_file),
+  //                               SizedBox(width: 14.20.w),
+  //                               SizedBox(
+  //                                 width: 160.w,
+  //                                 child: TextView(
+  //                                   text: 'HMO LOGO.jpg',
+  //                                   textOverflow: TextOverflow.ellipsis,
+  //                                   textStyle: TextStyle(
+  //                                     fontFamily: 'Arial',
+  //                                     fontSize: 13.2.sp,
+  //                                     fontWeight: FontWeight.w400,
+  //                                     color: AppColors.black,
+  //                                   ),
+  //                                 ),
+  //                               ),
+  //                               Spacer(),
+  //                               GestureDetector(
+  //                                 onTap: () => Navigator.push(
+  //                                   contxxt!,
+  //                                   MaterialPageRoute(
+  //                                     builder: (_) => ImageWebViewScreen(
+  //                                       imageUrl:
+  //                                           getHmoKycResponseModel
+  //                                               ?.data
+  //                                               ?.logo
+  //                                               ?.url ??
+  //                                           '',
+  //                                     ),
+  //                                   ),
+  //                                 ),
+  //                                 child: SvgPicture.asset(AppImage.kyc_eye),
+  //                               ),
+  //                             ],
+  //                           ),
+  //                         )
+  //                       : _isLoadingLogo
+  //                       ? Center(
+  //                           child: SpinKitCircle(
+  //                             color: AppColors.infoGrey,
+  //                             size: 32.40.sp,
+  //                           ),
+  //                         )
+  //                       : filenameLogo != null
+  //                       ? Container(
+  //                           padding: EdgeInsets.all(10.w),
+  //                           decoration: BoxDecoration(
+  //                             border: Border.all(color: AppColors.tintColor),
+  //                             borderRadius: BorderRadius.circular(12),
+  //                           ),
+  //                           child: Row(
+  //                             children: [
+  //                               SvgPicture.asset(AppImage.kyc_file),
+  //                               SizedBox(width: 14.20.w),
+  //                               SizedBox(
+  //                                 width: 160.w,
+  //                                 child: TextView(
+  //                                   text: "${filenameLogo ?? ""}.jpg",
+  //                                   textOverflow: TextOverflow.ellipsis,
+  //                                   maxLines: 1,
+  //                                   textStyle: TextStyle(
+  //                                     fontFamily: 'Arial',
+  //                                     fontSize: 13.2.sp,
+  //                                     fontWeight: FontWeight.w400,
+  //                                     color: AppColors.black,
+  //                                   ),
+  //                                 ),
+  //                               ),
+  //                               Spacer(),
+  //                               GestureDetector(
+  //                                 onTap: () {
+  //                                   pickImageLogo(contxxt!);
+  //                                   notifyListeners();
+  //                                 },
+  //                                 child: SvgPicture.asset(
+  //                                   AppImage.upload_arr_up,
+  //                                 ),
+  //                               ),
+  //                               SizedBox(width: 12.w),
+  //                               GestureDetector(
+  //                                 onTap: () {
+  //                                   filenameLogo = null;
+  //                                   imageLogo = null;
+  //                                   notifyListeners();
+  //                                 },
+  //                                 child: SvgPicture.asset(AppImage.delete),
+  //                               ),
+  //                             ],
+  //                           ),
+  //                         )
+  //                       : SizedBox(
+  //                           width: double.infinity,
+  //                           child: DottedBorder(
+  //                             options: RoundedRectDottedBorderOptions(
+  //                               dashPattern: [10, 10],
+  //                               strokeWidth: .94,
+  //                               radius: Radius.circular(10),
+  //                               color: AppColors.primary,
+  //                             ),
+  //                             child: GestureDetector(
+  //                               onTap: () => pickImageLogo(contxxt!),
+  //                               child: Container(
+  //                                 width: double.infinity,
+  //                                 padding: EdgeInsets.symmetric(
+  //                                   vertical: 14.20.w,
+  //                                   horizontal: 12.0.w,
+  //                                 ),
+  //                                 decoration: BoxDecoration(
+  //                                   borderRadius: BorderRadius.circular(10.r),
+  //                                   color: AppColors.white,
+  //                                 ),
+  //                                 child: Row(
+  //                                   mainAxisAlignment: MainAxisAlignment.start,
+  //                                   children: [
+  //                                     SvgPicture.asset(AppImage.upload_doc),
+  //                                     SizedBox(width: 10.w),
+  //                                     Column(
+  //                                       crossAxisAlignment:
+  //                                           CrossAxisAlignment.start,
+  //                                       children: [
+  //                                         TextView(
+  //                                           text: 'Upload Document',
+  //                                           textStyle: TextStyle(
+  //                                             fontFamily: 'GoogleSans',
+  //                                             fontSize: 14.2.sp,
+  //                                             fontWeight: FontWeight.w500,
+  //                                             color: AppColors.reminder,
+  //                                           ),
+  //                                         ),
+  //                                         SizedBox(height: 2.0.h),
+  //                                         TextView(
+  //                                           text:
+  //                                               'Max file size: 2MB (.jpg, .jpeg,\n.png, or .pdf supported)',
+  //                                           textStyle: TextStyle(
+  //                                             fontFamily: 'Arial',
+  //                                             fontSize: 12.6.sp,
+  //                                             fontWeight: FontWeight.w400,
+  //                                             color: AppColors.fineGrey,
+  //                                           ),
+  //                                         ),
+  //                                       ],
+  //                                     ),
+  //                                   ],
+  //                                 ),
+  //                               ),
+  //                             ),
+  //                           ),
+  //                         ),
+  //                   SizedBox(height: 20.h),
+  //                   Stack(
+  //                     clipBehavior: Clip.none,
+  //                     children: [
+  //                       TextView(
+  //                         text: 'CAC Registration Certificate (Nigeria)',
+  //                         textStyle: TextStyle(
+  //                           fontFamily: 'Arial',
+  //                           fontSize: 13.2.sp,
+  //                           fontWeight: FontWeight.w400,
+  //                           color: AppColors.reminder,
+  //                         ),
+  //                       ),
+  //                       Positioned(
+  //                         right: -12.10,
+  //                         child: TextView(
+  //                           text: '*',
+  //                           textStyle: TextStyle(
+  //                             fontFamily: 'Arial',
+  //                             fontSize: 18.sp,
+  //                             fontWeight: FontWeight.w500,
+  //                             color: AppColors.red,
+  //                           ),
+  //                         ),
+  //                       ),
+  //                     ],
+  //                   ),
+  //                   SizedBox(height: 10.20.h),
+  //                   getHmoKycResponseModel!.data!.cacCertificate != null
+  //                       ? Container(
+  //                           padding: EdgeInsets.all(10.w),
+  //                           decoration: BoxDecoration(
+  //                             border: Border.all(color: AppColors.tintColor),
+  //                             borderRadius: BorderRadius.circular(12),
+  //                           ),
+  //                           child: Row(
+  //                             children: [
+  //                               SvgPicture.asset(AppImage.kyc_file),
+  //                               SizedBox(width: 14.20.w),
+  //                               SizedBox(
+  //                                 width: 160.w,
+  //                                 child: TextView(
+  //                                   text: 'CAC REGISTRATION CERTIFICATE.jpg',
+  //                                   textOverflow: TextOverflow.ellipsis,
+  //                                   textStyle: TextStyle(
+  //                                     fontFamily: 'Arial',
+  //                                     fontSize: 13.2.sp,
+  //                                     fontWeight: FontWeight.w400,
+  //                                     color: AppColors.black,
+  //                                   ),
+  //                                 ),
+  //                               ),
+  //                               Spacer(),
+  //                               GestureDetector(
+  //                                 onTap: () => Navigator.push(
+  //                                   contxxt!,
+  //                                   MaterialPageRoute(
+  //                                     builder: (_) => ImageWebViewScreen(
+  //                                       imageUrl:
+  //                                           getHmoKycResponseModel!
+  //                                               .data!
+  //                                               .logo
+  //                                               ?.url ??
+  //                                           '',
+  //                                     ),
+  //                                   ),
+  //                                 ),
+  //                                 child: SvgPicture.asset(AppImage.kyc_eye),
+  //                               ),
+  //                             ],
+  //                           ),
+  //                         )
+  //                       : isLoadingCAC
+  //                       ? Center(
+  //                           child: SpinKitCircle(
+  //                             color: AppColors.infoGrey,
+  //                             size: 32.40.sp,
+  //                           ),
+  //                         )
+  //                       : filenameCAC != null
+  //                       ? Container(
+  //                           padding: EdgeInsets.all(10.w),
+  //                           decoration: BoxDecoration(
+  //                             border: Border.all(color: AppColors.tintColor),
+  //                             borderRadius: BorderRadius.circular(12),
+  //                           ),
+  //                           child: Row(
+  //                             children: [
+  //                               SvgPicture.asset(AppImage.kyc_file),
+  //                               SizedBox(width: 14.20.w),
+  //                               SizedBox(
+  //                                 width: 160.w,
+  //                                 child: TextView(
+  //                                   text: "${filenameCAC ?? ""}.jpg",
+  //                                   textOverflow: TextOverflow.ellipsis,
+  //                                   maxLines: 1,
+  //                                   textStyle: TextStyle(
+  //                                     fontFamily: 'Arial',
+  //                                     fontSize: 13.2.sp,
+  //                                     fontWeight: FontWeight.w400,
+  //                                     color: AppColors.black,
+  //                                   ),
+  //                                 ),
+  //                               ),
+  //                               Spacer(),
+  //                               GestureDetector(
+  //                                 onTap: () {
+  //                                   pickImageCAC(contxxt!);
+  //                                   notifyListeners();
+  //                                 },
+  //                                 child: SvgPicture.asset(
+  //                                   AppImage.upload_arr_up,
+  //                                 ),
+  //                               ),
+  //                               SizedBox(width: 12.w),
+  //                               GestureDetector(
+  //                                 onTap: () {
+  //                                   filenameCAC = null;
+  //                                   imageCAC = null;
+  //                                   notifyListeners();
+  //                                 },
+  //                                 child: SvgPicture.asset(AppImage.delete),
+  //                               ),
+  //                             ],
+  //                           ),
+  //                         )
+  //                       : SizedBox(
+  //                           width: double.infinity,
+  //                           child: DottedBorder(
+  //                             options: RoundedRectDottedBorderOptions(
+  //                               dashPattern: [10, 10],
+  //                               strokeWidth: .94,
+  //                               radius: Radius.circular(10),
+  //                               color: AppColors.primary,
+  //                             ),
+  //                             child: GestureDetector(
+  //                               onTap: () => pickImageCAC(contxxt!),
+  //                               child: Container(
+  //                                 width: double.infinity,
+  //                                 padding: EdgeInsets.symmetric(
+  //                                   vertical: 14.20.w,
+  //                                   horizontal: 12.0.w,
+  //                                 ),
+  //                                 decoration: BoxDecoration(
+  //                                   borderRadius: BorderRadius.circular(10.r),
+  //                                   color: AppColors.white,
+  //                                 ),
+  //                                 child: Row(
+  //                                   mainAxisAlignment: MainAxisAlignment.start,
+  //                                   children: [
+  //                                     SvgPicture.asset(AppImage.upload_doc),
+  //                                     SizedBox(width: 10.w),
+  //                                     Column(
+  //                                       crossAxisAlignment:
+  //                                           CrossAxisAlignment.start,
+  //                                       children: [
+  //                                         TextView(
+  //                                           text: 'Upload Document',
+  //                                           textStyle: TextStyle(
+  //                                             fontFamily: 'GoogleSans',
+  //                                             fontSize: 14.2.sp,
+  //                                             fontWeight: FontWeight.w500,
+  //                                             color: AppColors.reminder,
+  //                                           ),
+  //                                         ),
+  //                                         SizedBox(height: 2.0.h),
+  //                                         TextView(
+  //                                           text:
+  //                                               'Max file size: 2MB (.jpg, .jpeg,\n.png, or .pdf supported)',
+  //                                           textStyle: TextStyle(
+  //                                             fontFamily: 'Arial',
+  //                                             fontSize: 12.6.sp,
+  //                                             fontWeight: FontWeight.w400,
+  //                                             color: AppColors.fineGrey,
+  //                                           ),
+  //                                         ),
+  //                                       ],
+  //                                     ),
+  //                                   ],
+  //                                 ),
+  //                               ),
+  //                             ),
+  //                           ),
+  //                         ),
+  //                   SizedBox(height: 20.h),
+  //                   Stack(
+  //                     clipBehavior: Clip.none,
+  //                     children: [
+  //                       SizedBox(
+  //                         width: 250.w,
+  //                         child: TextView(
+  //                           text:
+  //                               'HMO accreditation certificate from NHIS (National Health Insurance Scheme)',
+  //                           maxLines: 2,
+  //                           textStyle: TextStyle(
+  //                             fontFamily: 'Arial',
+  //                             fontSize: 13.2.sp,
+  //                             fontWeight: FontWeight.w400,
+  //                             color: AppColors.reminder,
+  //                           ),
+  //                         ),
+  //                       ),
+  //                       Positioned(
+  //                         right: -12.10,
+  //                         child: TextView(
+  //                           text: '*',
+  //                           textStyle: TextStyle(
+  //                             fontFamily: 'Arial',
+  //                             fontSize: 18.sp,
+  //                             fontWeight: FontWeight.w500,
+  //                             color: AppColors.red,
+  //                           ),
+  //                         ),
+  //                       ),
+  //                     ],
+  //                   ),
+  //                   SizedBox(height: 10.20.h),
+  //                   getHmoKycResponseModel!.data!.hmoAccreditation != null
+  //                       ? Container(
+  //                           padding: EdgeInsets.all(10.w),
+  //                           decoration: BoxDecoration(
+  //                             border: Border.all(color: AppColors.tintColor),
+  //                             borderRadius: BorderRadius.circular(12),
+  //                           ),
+  //                           child: Row(
+  //                             children: [
+  //                               SvgPicture.asset(AppImage.kyc_file),
+  //                               SizedBox(width: 14.20.w),
+  //                               TextView(
+  //                                 text: 'NHIS LICENSE.jpg',
+  //                                 textStyle: TextStyle(
+  //                                   fontFamily: 'Arial',
+  //                                   fontSize: 13.2.sp,
+  //                                   fontWeight: FontWeight.w400,
+  //                                   color: AppColors.black,
+  //                                 ),
+  //                               ),
+  //                               Spacer(),
+  //                               GestureDetector(
+  //                                 onTap: () => Navigator.push(
+  //                                   contxxt!,
+  //                                   MaterialPageRoute(
+  //                                     builder: (_) => ImageWebViewScreen(
+  //                                       imageUrl:
+  //                                           getHmoKycResponseModel!
+  //                                               .data!
+  //                                               .listOfHospitals
+  //                                               ?.url ??
+  //                                           '',
+  //                                     ),
+  //                                   ),
+  //                                 ),
+  //                                 child: SvgPicture.asset(AppImage.kyc_eye),
+  //                               ),
+  //                             ],
+  //                           ),
+  //                         )
+  //                       : isLoadingLicense
+  //                       ? Center(
+  //                           child: SpinKitCircle(
+  //                             color: AppColors.infoGrey,
+  //                             size: 32.40.sp,
+  //                           ),
+  //                         )
+  //                       : filenameNHISLicense != null
+  //                       ? Container(
+  //                           padding: EdgeInsets.all(10.w),
+  //                           decoration: BoxDecoration(
+  //                             border: Border.all(color: AppColors.tintColor),
+  //                             borderRadius: BorderRadius.circular(12),
+  //                           ),
+  //                           child: Row(
+  //                             children: [
+  //                               SvgPicture.asset(AppImage.kyc_file),
+  //                               SizedBox(width: 14.20.w),
+  //                               SizedBox(
+  //                                 width: 120.w,
+  //                                 child: TextView(
+  //                                   text: "${filenameNHISLicense ?? ""}.jpg",
+  //                                   textOverflow: TextOverflow.ellipsis,
+  //                                   maxLines: 1,
+  //                                   textStyle: TextStyle(
+  //                                     fontFamily: 'Arial',
+  //                                     fontSize: 13.2.sp,
+  //                                     fontWeight: FontWeight.w400,
+  //                                     color: AppColors.black,
+  //                                   ),
+  //                                 ),
+  //                               ),
+  //                               Spacer(),
+  //                               GestureDetector(
+  //                                 onTap: () {
+  //                                   pickImageNHISLicense(contxxt!);
+  //                                   notifyListeners();
+  //                                 },
+  //                                 child: SvgPicture.asset(
+  //                                   AppImage.upload_arr_up,
+  //                                 ),
+  //                               ),
+  //                               SizedBox(width: 12.w),
+  //                               GestureDetector(
+  //                                 onTap: () {
+  //                                   filenameNHISLicense = null;
+  //                                   imageNHISLicense = null;
+  //                                   notifyListeners();
+  //                                 },
+  //                                 child: SvgPicture.asset(AppImage.delete),
+  //                               ),
+  //                             ],
+  //                           ),
+  //                         )
+  //                       : SizedBox(
+  //                           width: double.infinity,
+  //                           child: DottedBorder(
+  //                             options: RoundedRectDottedBorderOptions(
+  //                               dashPattern: [10, 10],
+  //                               strokeWidth: .94,
+  //                               radius: Radius.circular(10),
+  //                               color: AppColors.primary,
+  //                             ),
+  //                             child: GestureDetector(
+  //                               onTap: () => pickImageNHISLicense(contxxt!),
+  //                               child: Container(
+  //                                 width: double.infinity,
+  //                                 padding: EdgeInsets.symmetric(
+  //                                   vertical: 14.20.w,
+  //                                   horizontal: 12.0.w,
+  //                                 ),
+  //                                 decoration: BoxDecoration(
+  //                                   borderRadius: BorderRadius.circular(10.r),
+  //                                   color: AppColors.white,
+  //                                 ),
+  //                                 child: Row(
+  //                                   mainAxisAlignment: MainAxisAlignment.start,
+  //                                   children: [
+  //                                     SvgPicture.asset(AppImage.upload_doc),
+  //                                     SizedBox(width: 10.w),
+  //                                     Column(
+  //                                       crossAxisAlignment:
+  //                                           CrossAxisAlignment.start,
+  //                                       children: [
+  //                                         TextView(
+  //                                           text: 'Upload Document',
+  //                                           textStyle: TextStyle(
+  //                                             fontFamily: 'GoogleSans',
+  //                                             fontSize: 14.2.sp,
+  //                                             fontWeight: FontWeight.w500,
+  //                                             color: AppColors.reminder,
+  //                                           ),
+  //                                         ),
+  //                                         SizedBox(height: 2.0.h),
+  //                                         TextView(
+  //                                           text:
+  //                                               'Max file size: 2MB (.jpg, .jpeg,\n.png, or .pdf supported)',
+  //                                           textStyle: TextStyle(
+  //                                             fontFamily: 'Arial',
+  //                                             fontSize: 13.6.sp,
+  //                                             fontWeight: FontWeight.w400,
+  //                                             color: AppColors.fineGrey,
+  //                                           ),
+  //                                         ),
+  //                                       ],
+  //                                     ),
+  //                                   ],
+  //                                 ),
+  //                               ),
+  //                             ),
+  //                           ),
+  //                         ),
+  //                   SizedBox(height: 20.h),
+  //                   Stack(
+  //                     clipBehavior: Clip.none,
+  //                     children: [
+  //                       TextView(
+  //                         text: 'Tax identification number',
+  //                         textStyle: TextStyle(
+  //                           fontFamily: 'Arial',
+  //                           fontSize: 14.2.sp,
+  //                           fontWeight: FontWeight.w400,
+  //                           color: AppColors.reminder,
+  //                         ),
+  //                       ),
+  //                       Positioned(
+  //                         right: -12.10,
+  //                         child: TextView(
+  //                           text: '*',
+  //                           textStyle: TextStyle(
+  //                             fontFamily: 'Arial',
+  //                             fontSize: 18.sp,
+  //                             fontWeight: FontWeight.w500,
+  //                             color: AppColors.red,
+  //                           ),
+  //                         ),
+  //                       ),
+  //                     ],
+  //                   ),
+  //                   SizedBox(height: 10.20.h),
+  //                   getHmoKycResponseModel!.data!.taxIdCertificate != null
+  //                       ? Container(
+  //                           padding: EdgeInsets.all(10.w),
+  //                           decoration: BoxDecoration(
+  //                             border: Border.all(color: AppColors.tintColor),
+  //                             borderRadius: BorderRadius.circular(12),
+  //                           ),
+  //                           child: Row(
+  //                             children: [
+  //                               SvgPicture.asset(AppImage.kyc_file),
+  //                               SizedBox(width: 14.20.w),
+  //                               SizedBox(
+  //                                 width: 160.w,
+  //                                 child: TextView(
+  //                                   text: 'TAX IDENTIFICATION NUMBER.jpg',
 
-                                    textOverflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                    textStyle: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 13.2.sp,
-                                      fontWeight: FontWeight.w400,
-                                      color: AppColors.black,
-                                    ),
-                                  ),
-                                ),
-                                Spacer(),
-                                GestureDetector(
-                                  onTap: () => Navigator.push(
-                                    contxxt!,
-                                    MaterialPageRoute(
-                                      builder: (_) => ImageWebViewScreen(
-                                        imageUrl:
-                                            getHmoKycResponseModel!
-                                                .data!
-                                                .taxIdCertificate
-                                                ?.url ??
-                                            '',
-                                      ),
-                                    ),
-                                  ),
-                                  child: SvgPicture.asset(AppImage.kyc_eye),
-                                ),
-                              ],
-                            ),
-                          )
-                        : isLoadingTIN
-                        ? Center(
-                            child: SpinKitCircle(
-                              color: AppColors.infoGrey,
-                              size: 32.40.sp,
-                            ),
-                          )
-                        : filenameTIN != null
-                        ? Container(
-                            padding: EdgeInsets.all(10.w),
-                            decoration: BoxDecoration(
-                              border: Border.all(color: AppColors.tintColor),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Row(
-                              children: [
-                                SvgPicture.asset(AppImage.kyc_file),
-                                SizedBox(width: 14.20.w),
-                                SizedBox(
-                                  width: 160.w,
-                                  child: TextView(
-                                    text: "${filenameTIN ?? ""}.jpg",
-                                    textOverflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                    textStyle: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 13.2.sp,
-                                      fontWeight: FontWeight.w400,
-                                      color: AppColors.black,
-                                    ),
-                                  ),
-                                ),
-                                Spacer(),
-                                GestureDetector(
-                                  onTap: () {
-                                    pickImageTIN(contxxt!);
-                                    notifyListeners();
-                                  },
-                                  child: SvgPicture.asset(
-                                    AppImage.upload_arr_up,
-                                  ),
-                                ),
-                                SizedBox(width: 12.w),
-                                GestureDetector(
-                                  onTap: () {
-                                    filenameTIN = null;
-                                    imageTIN = null;
-                                    notifyListeners();
-                                  },
-                                  child: SvgPicture.asset(AppImage.delete),
-                                ),
-                              ],
-                            ),
-                          )
-                        : SizedBox(
-                            width: double.infinity,
-                            child: DottedBorder(
-                              options: RoundedRectDottedBorderOptions(
-                                dashPattern: [10, 10],
-                                strokeWidth: .94,
-                                radius: Radius.circular(10),
-                                color: AppColors.primary,
-                              ),
-                              child: GestureDetector(
-                                onTap: () => pickImageTIN(contxxt!),
-                                child: Container(
-                                  width: double.infinity,
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: 14.20.w,
-                                    horizontal: 12.0.w,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10.r),
-                                    color: AppColors.white,
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      SvgPicture.asset(AppImage.upload_doc),
-                                      SizedBox(width: 10.w),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          TextView(
-                                            text: 'Upload Document',
-                                            textStyle: TextStyle(
-                                              fontFamily: 'GoogleSans',
-                                              fontSize: 14.2.sp,
-                                              fontWeight: FontWeight.w500,
-                                              color: AppColors.reminder,
-                                            ),
-                                          ),
-                                          SizedBox(height: 2.0.h),
-                                          TextView(
-                                            text:
-                                                'Max file size: 2MB (.jpg, .jpeg,\n.png, or .pdf supported)',
-                                            textStyle: TextStyle(
-                                              fontFamily: 'Arial',
-                                              fontSize: 13.6.sp,
-                                              fontWeight: FontWeight.w400,
-                                              color: AppColors.fineGrey,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                    SizedBox(height: 30.h),
-                    ButtonWidget(
-                      border: 100.r,
-                      buttonColor:
-                          imageLogo == null &&
-                                  imageCAC == null &&
-                                  imageNHISLicense == null &&
-                                  imageTIN == null ||
-                              getHmoKycResponseModel!
-                                      .data!
-                                      .kycLevels!
-                                      .isNotEmpty &&
-                                  getKycStatusBool(
-                                        getHmoKycResponseModel!
-                                            .data!
-                                            .kycLevels![1]
-                                            .status,
-                                      ) ==
-                                      true
-                          ? AppColors.infoGrey
-                          : AppColors.primary,
-                      fontSize: 16.sp,
-                      buttonText: 'Submit for Verification',
-                      color: AppColors.white,
-                      isLoading: isLoading,
-                      buttonBorderColor: AppColors.transparent,
-                      onPressed:
-                          getHmoKycResponseModel!.data!.kycLevels!.isNotEmpty
-                          ? getKycStatusBool(
-                                          getHmoKycResponseModel!
-                                              .data!
-                                              .kycLevels![1]
-                                              .status,
-                                        ) ==
-                                        false &&
-                                    imageLogo != null &&
-                                    imageCAC != null &&
-                                    imageNHISLicense != null &&
-                                    imageTIN != null
-                                ? () {
-                                    if (imageLogo != null &&
-                                        imageCAC != null &&
-                                        imageNHISLicense != null &&
-                                        imageTIN != null) {
-                                      // updateHMOKyc(
-                                      //   contxxt,
-                                      //   updateKyc: UpdateHmoKycEntityModel(
-                                      //     logo: lg.Logo.fromJson(
-                                      //       fl.File.fromJson(
-                                      //         kycDocumentsList[0].file!
-                                      //             .toJson(),
-                                      //       ).toJson(),
-                                      //     ),
-                                      //     cacCertificate:
-                                      //         cc.CacCertificate.fromJson(
-                                      //           fl.File.fromJson(
-                                      //             kycDocumentsList[1].file!
-                                      //                 .toJson(),
-                                      //           ).toJson(),
-                                      //         ),
-                                      //     hmoAccreditation:
-                                      //         ac.HmoAccreditation.fromJson(
-                                      //           fl.File.fromJson(
-                                      //             kycDocumentsList[2].file!
-                                      //                 .toJson(),
-                                      //           ).toJson(),
-                                      //         ),
-                                      //     taxIdCertificate:
-                                      //         tx.TaxIdCertificate.fromJson(
-                                      //           fl.File.fromJson(
-                                      //             kycDocumentsList[3].file!
-                                      //                 .toJson(),
-                                      //           ).toJson(),
-                                      //         ),
-                                      //   ),
-                                      // );
-                                    } else {
-                                      AppUtils.snackbar(
-                                        context,
-                                        message:
-                                            'Kindly select and upload all documents. ',
-                                        error: true,
-                                      );
-                                    }
-                                  }
-                                : () {}
-                          : () {
-                              if (imageLogo != null &&
-                                  imageCAC != null &&
-                                  imageNHISLicense != null &&
-                                  imageTIN != null) {
-                                // updateHMOKyc(
-                                //   contxxt,
-                                //   updateKyc: UpdateHmoKycEntityModel(
-                                //     logo: lg.Logo.fromJson(
-                                //       fl.File.fromJson(
-                                //         kycDocumentsList[0].file!.toJson(),
-                                //       ).toJson(),
-                                //     ),
-                                //     cacCertificate: cc.CacCertificate.fromJson(
-                                //       fl.File.fromJson(
-                                //         kycDocumentsList[1].file!.toJson(),
-                                //       ).toJson(),
-                                //     ),
-                                //     hmoAccreditation:
-                                //         ac.HmoAccreditation.fromJson(
-                                //           fl.File.fromJson(
-                                //             kycDocumentsList[2].file!.toJson(),
-                                //           ).toJson(),
-                                //         ),
-                                //     taxIdCertificate:
-                                //         tx.TaxIdCertificate.fromJson(
-                                //           fl.File.fromJson(
-                                //             kycDocumentsList[3].file!.toJson(),
-                                //           ).toJson(),
-                                //         ),
-                                //   ),
-                                // );
-                              } else {
-                                AppUtils.snackbar(
-                                  context,
-                                  message:
-                                      'Kindly select and upload all documents. ',
-                                  error: true,
-                                );
-                              }
-                            },
-                    ),
-                    SizedBox(height: 10.h),
-                  ],
-                ),
-              )
-            : levelKyc == 3
-            ? Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 12.8.w,
-                  vertical: 12.6.w,
-                ),
-                child: Form(
-                  key: kycFormKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          vertical: 12.w,
-                          horizontal: 14.62.w,
-                        ),
-                        decoration: BoxDecoration(
-                          color:
-                              getHmoKycResponseModel!
-                                  .data!
-                                  .kycLevels!
-                                  .isNotEmpty
-                              ? getKycStatusColor(
-                                  getHmoKycResponseModel!
-                                      .data!
-                                      .kycLevels![2]
-                                      .status,
-                                )
-                              : AppColors.fadedyellow,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Row(
-                          children: [
-                            getHmoKycResponseModel!.data!.kycLevels!.isNotEmpty
-                                ? getKycStatusIcon(
-                                    getHmoKycResponseModel!
-                                        .data!
-                                        .kycLevels![2]
-                                        .status,
-                                  )
-                                : SvgPicture.asset(AppImage.info),
-                            SizedBox(width: 10.w),
-                            SizedBox(
-                              width: 200.w,
-                              child: TextView(
-                                text:
-                                    getHmoKycResponseModel!
-                                        .data!
-                                        .kycLevels!
-                                        .isNotEmpty
-                                    ? getKycStatus(
-                                        getHmoKycResponseModel!
-                                            .data!
-                                            .kycLevels![2]
-                                            .status,
-                                      )
-                                    : 'Kindly upload and submit KYC for\nverification to obtain full access to\nplatform features.',
-                                maxLines: 4,
-                                textStyle: TextStyle(
-                                  fontFamily: 'Arial',
-                                  fontSize: 12.42.sp,
-                                  fontWeight: FontWeight.w400,
-                                  color: AppColors.black,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 20.h),
-                      TextView(
-                        text: 'Bank Information',
-                        textStyle: TextStyle(
-                          fontFamily: 'GoogleSans',
-                          fontSize: 16.2.sp,
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.black,
-                        ),
-                      ),
-                      SizedBox(height: 6.h),
-                      Divider(color: const Color.fromARGB(255, 227, 227, 228)),
-                      SizedBox(height: 6.h),
-                      getHmoKycResponseModel!.data != null &&
-                              getHmoKycResponseModel!
-                                  .data!
-                                  .bankDetails!
-                                  .isNotEmpty
-                          ? Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                InfoItem(
-                                  title: "Bank Name",
-                                  value:
-                                      getHmoKycResponseModel!
-                                          .data!
-                                          .bankDetails![0]
-                                          .bankName ??
-                                      '',
-                                ),
-                                InfoItem(
-                                  title: "Account Number",
-                                  value:
-                                      getHmoKycResponseModel!
-                                          .data!
-                                          .bankDetails![0]
-                                          .accountNumber ??
-                                      '',
-                                ),
-                                InfoItem(
-                                  title: "Account Name",
-                                  value:
-                                      getHmoKycResponseModel!
-                                          .data!
-                                          .bankDetails![0]
-                                          .accountName ??
-                                      '',
-                                ),
-                              ],
-                            )
-                          : Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                TextFormWidget(
-                                  hint: 'Bank Name',
-                                  hintSize: 14,
-                                  borderColor: AppColors.transparent,
-                                  borderTopLeft: 10.r,
-                                  borderTopRight: 10.r,
-                                  borderBottomLeft: 10.r,
-                                  borderBottomRight: 10.r,
-                                  keyboardType: TextInputType.text,
-                                  labelStyle: TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    fontFamily: 'Arial',
-                                    fontSize: 14.2.sp,
-                                    color: AppColors.infoGrey,
-                                  ),
-                                  fillColor: AppColors.grey,
-                                  isFilled: true,
-                                  controller: bankNameController,
-                                  validator: AppValidator.validateString(),
-                                ),
-                                SizedBox(height: 20.h),
-                                TextFormWidget(
-                                  hint: 'Account Number',
-                                  hintSize: 14,
-                                  borderColor: AppColors.transparent,
-                                  borderTopLeft: 10.r,
-                                  borderTopRight: 10.r,
-                                  borderBottomLeft: 10.r,
-                                  borderBottomRight: 10.r,
-                                  label: 'Enter account number',
-                                  keyboardType: TextInputType.number,
-                                  labelStyle: TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    fontFamily: 'Arial',
-                                    fontSize: 14.2.sp,
-                                    color: AppColors.infoGrey,
-                                  ),
-                                  fillColor: AppColors.grey,
-                                  isFilled: true,
-                                  controller: accountNumberController,
-                                  validator: AppValidator.validateString(),
-                                  // ),
-                                ),
-                                SizedBox(height: 20.h),
-                                TextFormWidget(
-                                  hint: 'Account Name',
-                                  hintSize: 14,
-                                  borderColor: AppColors.transparent,
-                                  borderTopLeft: 10.r,
-                                  borderTopRight: 10.r,
-                                  borderBottomLeft: 10.r,
-                                  borderBottomRight: 10.r,
-                                  label: 'Enter account name',
-                                  keyboardType: TextInputType.name,
-                                  labelStyle: TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    fontFamily: 'Arial',
-                                    fontSize: 14.2.sp,
-                                    color: AppColors.infoGrey,
-                                  ),
-                                  fillColor: AppColors.grey,
-                                  isFilled: true,
-                                  controller: accountNameController,
-                                  validator: AppValidator.validateString(),
-                                  // ),
-                                ),
-                                SizedBox(height: 20.h),
-                              ],
-                            ),
-                      TextView(
-                        text: 'Process Documents',
-                        textStyle: TextStyle(
-                          fontFamily: 'GoogleSans',
-                          fontSize: 16.2.sp,
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.black,
-                        ),
-                      ),
-                      SizedBox(height: 6.h),
-                      Divider(color: const Color.fromARGB(255, 227, 227, 228)),
-                      SizedBox(height: 12.h),
-                      Stack(
-                        clipBehavior: Clip.none,
-                        children: [
-                          TextView(
-                            text: 'Application Form',
-                            textStyle: TextStyle(
-                              fontFamily: 'Arial',
-                              fontSize: 13.2.sp,
-                              fontWeight: FontWeight.w400,
-                              color: AppColors.reminder,
-                            ),
-                          ),
-                          Positioned(
-                            right: -12.10,
-                            child: TextView(
-                              text: '*',
-                              textStyle: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 18.sp,
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.red,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 10.20.h),
-                      getHmoKycResponseModel!.data!.applicationForm != null
-                          ? Container(
-                              padding: EdgeInsets.all(10.w),
-                              decoration: BoxDecoration(
-                                border: Border.all(color: AppColors.tintColor),
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Row(
-                                children: [
-                                  SvgPicture.asset(AppImage.kyc_file),
-                                  SizedBox(width: 14.20.w),
-                                  SizedBox(
-                                    width: 160.w,
-                                    child: TextView(
-                                      text: 'APPLICATION FORM.jpg',
-                                      textOverflow: TextOverflow.ellipsis,
-                                      textStyle: TextStyle(
-                                        fontFamily: 'Arial',
-                                        fontSize: 13.2.sp,
-                                        fontWeight: FontWeight.w400,
-                                        color: AppColors.black,
-                                      ),
-                                    ),
-                                  ),
-                                  Spacer(),
-                                  GestureDetector(
-                                    onTap: () => Navigator.push(
-                                      contxxt!,
-                                      MaterialPageRoute(
-                                        builder: (_) => ImageWebViewScreen(
-                                          imageUrl:
-                                              getHmoKycResponseModel!
-                                                  .data!
-                                                  .applicationForm
-                                                  ?.url ??
-                                              '',
-                                        ),
-                                      ),
-                                    ),
-                                    child: SvgPicture.asset(AppImage.kyc_eye),
-                                  ),
-                                ],
-                              ),
-                            )
-                          : _isLoadingAppForm
-                          ? Center(
-                              child: SpinKitCircle(
-                                color: AppColors.infoGrey,
-                                size: 32.40.sp,
-                              ),
-                            )
-                          : filenameAppForm != null
-                          ? Container(
-                              padding: EdgeInsets.all(10.w),
-                              decoration: BoxDecoration(
-                                border: Border.all(color: AppColors.tintColor),
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Row(
-                                children: [
-                                  SvgPicture.asset(AppImage.kyc_file),
-                                  SizedBox(width: 14.20.w),
-                                  SizedBox(
-                                    width: 160.w,
-                                    child: TextView(
-                                      text: "${filenameAppForm ?? ""}.jpg",
-                                      textOverflow: TextOverflow.ellipsis,
-                                      maxLines: 1,
-                                      textStyle: TextStyle(
-                                        fontFamily: 'Arial',
-                                        fontSize: 13.2.sp,
-                                        fontWeight: FontWeight.w400,
-                                        color: AppColors.black,
-                                      ),
-                                    ),
-                                  ),
-                                  Spacer(),
-                                  GestureDetector(
-                                    onTap: () {
-                                      pickImageAppForm(contxxt!);
-                                      notifyListeners();
-                                    },
-                                    child: SvgPicture.asset(
-                                      AppImage.upload_arr_up,
-                                    ),
-                                  ),
-                                  SizedBox(width: 12.w),
-                                  GestureDetector(
-                                    onTap: () {
-                                      filenameAppForm = null;
-                                      imageAppForm = null;
-                                      notifyListeners();
-                                    },
-                                    child: SvgPicture.asset(AppImage.delete),
-                                  ),
-                                ],
-                              ),
-                            )
-                          : SizedBox(
-                              width: double.infinity,
-                              child: DottedBorder(
-                                options: RoundedRectDottedBorderOptions(
-                                  dashPattern: [10, 10],
-                                  strokeWidth: .94,
-                                  radius: Radius.circular(10),
-                                  color: AppColors.primary,
-                                ),
-                                child: GestureDetector(
-                                  onTap: () => pickImageAppForm(contxxt!),
-                                  child: Container(
-                                    width: double.infinity,
-                                    padding: EdgeInsets.symmetric(
-                                      vertical: 14.20.w,
-                                      horizontal: 12.0.w,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10.r),
-                                      color: AppColors.white,
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        SvgPicture.asset(AppImage.upload_doc),
-                                        SizedBox(width: 10.w),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            TextView(
-                                              text: 'Upload Document',
-                                              textStyle: TextStyle(
-                                                fontFamily: 'GoogleSans',
-                                                fontSize: 14.2.sp,
-                                                fontWeight: FontWeight.w500,
-                                                color: AppColors.reminder,
-                                              ),
-                                            ),
-                                            SizedBox(height: 2.0.h),
-                                            TextView(
-                                              text:
-                                                  'Max file size: 2MB (.jpg, .jpeg,\n.png, or .pdf supported)',
-                                              textStyle: TextStyle(
-                                                fontFamily: 'Arial',
-                                                fontSize: 12.6.sp,
-                                                fontWeight: FontWeight.w400,
-                                                color: AppColors.fineGrey,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                      SizedBox(height: 20.h),
-                      Stack(
-                        clipBehavior: Clip.none,
-                        children: [
-                          TextView(
-                            text: 'Schedule of available plans ',
-                            textStyle: TextStyle(
-                              fontFamily: 'Arial',
-                              fontSize: 13.2.sp,
-                              fontWeight: FontWeight.w400,
-                              color: AppColors.reminder,
-                            ),
-                          ),
-                          Positioned(
-                            right: -12.10,
-                            child: TextView(
-                              text: '*',
-                              textStyle: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 18.sp,
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.red,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 10.20.h),
-                      getHmoKycResponseModel!.data!.scheduleOfPlans != null
-                          ? Container(
-                              padding: EdgeInsets.all(10.w),
-                              decoration: BoxDecoration(
-                                border: Border.all(color: AppColors.tintColor),
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Row(
-                                children: [
-                                  SvgPicture.asset(AppImage.kyc_file),
-                                  SizedBox(width: 14.20.w),
-                                  SizedBox(
-                                    width: 160.w,
-                                    child: TextView(
-                                      text: 'AVAILABLE PLAN.jpg',
-                                      textOverflow: TextOverflow.ellipsis,
-                                      textStyle: TextStyle(
-                                        fontFamily: 'Arial',
-                                        fontSize: 13.2.sp,
-                                        fontWeight: FontWeight.w400,
-                                        color: AppColors.black,
-                                      ),
-                                    ),
-                                  ),
-                                  Spacer(),
-                                  GestureDetector(
-                                    onTap: () => Navigator.push(
-                                      contxxt!,
-                                      MaterialPageRoute(
-                                        builder: (_) => ImageWebViewScreen(
-                                          imageUrl:
-                                              getHmoKycResponseModel!
-                                                  .data!
-                                                  .scheduleOfPlans
-                                                  ?.url ??
-                                              '',
-                                        ),
-                                      ),
-                                    ),
-                                    child: SvgPicture.asset(AppImage.kyc_eye),
-                                  ),
-                                ],
-                              ),
-                            )
-                          : isLoadingPlan
-                          ? Center(
-                              child: SpinKitCircle(
-                                color: AppColors.infoGrey,
-                                size: 32.40.sp,
-                              ),
-                            )
-                          : filenamePlan != null
-                          ? Container(
-                              padding: EdgeInsets.all(10.w),
-                              decoration: BoxDecoration(
-                                border: Border.all(color: AppColors.tintColor),
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Row(
-                                children: [
-                                  SvgPicture.asset(AppImage.kyc_file),
-                                  SizedBox(width: 14.20.w),
-                                  SizedBox(
-                                    width: 160.w,
-                                    child: TextView(
-                                      text: "${filenamePlan ?? ""}.jpg",
-                                      textOverflow: TextOverflow.ellipsis,
-                                      maxLines: 1,
-                                      textStyle: TextStyle(
-                                        fontFamily: 'Arial',
-                                        fontSize: 13.2.sp,
-                                        fontWeight: FontWeight.w400,
-                                        color: AppColors.black,
-                                      ),
-                                    ),
-                                  ),
-                                  Spacer(),
-                                  GestureDetector(
-                                    onTap: () {
-                                      pickImagePlan(contxxt!);
-                                      notifyListeners();
-                                    },
-                                    child: SvgPicture.asset(
-                                      AppImage.upload_arr_up,
-                                    ),
-                                  ),
-                                  SizedBox(width: 12.w),
-                                  GestureDetector(
-                                    onTap: () {
-                                      filenamePlan = null;
-                                      imagePlan = null;
-                                      notifyListeners();
-                                    },
-                                    child: SvgPicture.asset(AppImage.delete),
-                                  ),
-                                ],
-                              ),
-                            )
-                          : SizedBox(
-                              width: double.infinity,
-                              child: DottedBorder(
-                                options: RoundedRectDottedBorderOptions(
-                                  dashPattern: [10, 10],
-                                  strokeWidth: .94,
-                                  radius: Radius.circular(10),
-                                  color: AppColors.primary,
-                                ),
-                                child: GestureDetector(
-                                  onTap: () => pickImagePlan(contxxt!),
-                                  child: Container(
-                                    width: double.infinity,
-                                    padding: EdgeInsets.symmetric(
-                                      vertical: 14.20.w,
-                                      horizontal: 12.0.w,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10.r),
-                                      color: AppColors.white,
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        SvgPicture.asset(AppImage.upload_doc),
-                                        SizedBox(width: 10.w),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            TextView(
-                                              text: 'Upload Document',
-                                              textStyle: TextStyle(
-                                                fontFamily: 'GoogleSans',
-                                                fontSize: 14.2.sp,
-                                                fontWeight: FontWeight.w500,
-                                                color: AppColors.reminder,
-                                              ),
-                                            ),
-                                            SizedBox(height: 2.0.h),
-                                            TextView(
-                                              text:
-                                                  'Max file size: 2MB (.jpg, .jpeg,\n.png, or .pdf supported)',
-                                              textStyle: TextStyle(
-                                                fontFamily: 'Arial',
-                                                fontSize: 12.6.sp,
-                                                fontWeight: FontWeight.w400,
-                                                color: AppColors.fineGrey,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                      SizedBox(height: 20.h),
-                      Stack(
-                        clipBehavior: Clip.none,
-                        children: [
-                          SizedBox(
-                            width: 220.w,
-                            child: TextView(
-                              text: 'List of associated clinics/hospitals ',
-                              maxLines: 2,
-                              textStyle: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 13.2.sp,
-                                fontWeight: FontWeight.w400,
-                                color: AppColors.reminder,
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            right: -0.10,
-                            child: TextView(
-                              text: '*',
-                              textStyle: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 18.sp,
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.red,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 10.20.h),
-                      getHmoKycResponseModel!.data!.listOfHospitals != null
-                          ? Container(
-                              padding: EdgeInsets.all(10.w),
-                              decoration: BoxDecoration(
-                                border: Border.all(color: AppColors.tintColor),
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Row(
-                                children: [
-                                  SvgPicture.asset(AppImage.kyc_file),
-                                  SizedBox(width: 14.20.w),
-                                  TextView(
-                                    text: 'ASSOCIATED CLINIC.jpg',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 13.2.sp,
-                                      fontWeight: FontWeight.w400,
-                                      color: AppColors.black,
-                                    ),
-                                  ),
-                                  Spacer(),
-                                  GestureDetector(
-                                    onTap: () => Navigator.push(
-                                      contxxt!,
-                                      MaterialPageRoute(
-                                        builder: (_) => ImageWebViewScreen(
-                                          imageUrl:
-                                              getHmoKycResponseModel!
-                                                  .data!
-                                                  .listOfHospitals
-                                                  ?.url ??
-                                              '',
-                                        ),
-                                      ),
-                                    ),
-                                    child: SvgPicture.asset(AppImage.kyc_eye),
-                                  ),
-                                ],
-                              ),
-                            )
-                          : isLoadingAss
-                          ? Center(
-                              child: SpinKitCircle(
-                                color: AppColors.infoGrey,
-                                size: 32.40.sp,
-                              ),
-                            )
-                          : filenameAss != null
-                          ? Container(
-                              padding: EdgeInsets.all(10.w),
-                              decoration: BoxDecoration(
-                                border: Border.all(color: AppColors.tintColor),
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Row(
-                                children: [
-                                  SvgPicture.asset(AppImage.kyc_file),
-                                  SizedBox(width: 14.20.w),
-                                  SizedBox(
-                                    width: 120.w,
-                                    child: TextView(
-                                      text: "${filenameAss ?? ""}.jpg",
-                                      textOverflow: TextOverflow.ellipsis,
-                                      maxLines: 1,
-                                      textStyle: TextStyle(
-                                        fontFamily: 'Arial',
-                                        fontSize: 13.2.sp,
-                                        fontWeight: FontWeight.w400,
-                                        color: AppColors.black,
-                                      ),
-                                    ),
-                                  ),
-                                  Spacer(),
-                                  GestureDetector(
-                                    onTap: () {
-                                      pickImageAss(contxxt!);
-                                      notifyListeners();
-                                    },
-                                    child: SvgPicture.asset(
-                                      AppImage.upload_arr_up,
-                                    ),
-                                  ),
-                                  SizedBox(width: 12.w),
-                                  GestureDetector(
-                                    onTap: () {
-                                      filenameAss = null;
-                                      imageAss = null;
-                                      notifyListeners();
-                                    },
-                                    child: SvgPicture.asset(AppImage.delete),
-                                  ),
-                                ],
-                              ),
-                            )
-                          : SizedBox(
-                              width: double.infinity,
-                              child: DottedBorder(
-                                options: RoundedRectDottedBorderOptions(
-                                  dashPattern: [10, 10],
-                                  strokeWidth: .94,
-                                  radius: Radius.circular(10),
-                                  color: AppColors.primary,
-                                ),
-                                child: GestureDetector(
-                                  onTap: () => pickImageAss(contxxt!),
-                                  child: Container(
-                                    width: double.infinity,
-                                    padding: EdgeInsets.symmetric(
-                                      vertical: 14.20.w,
-                                      horizontal: 12.0.w,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10.r),
-                                      color: AppColors.white,
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        SvgPicture.asset(AppImage.upload_doc),
-                                        SizedBox(width: 10.w),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            TextView(
-                                              text: 'Upload Document',
-                                              textStyle: TextStyle(
-                                                fontFamily: 'GoogleSans',
-                                                fontSize: 14.2.sp,
-                                                fontWeight: FontWeight.w500,
-                                                color: AppColors.reminder,
-                                              ),
-                                            ),
-                                            SizedBox(height: 2.0.h),
-                                            TextView(
-                                              text:
-                                                  'Max file size: 2MB (.jpg, .jpeg,\n.png, or .pdf supported)',
-                                              textStyle: TextStyle(
-                                                fontFamily: 'Arial',
-                                                fontSize: 13.6.sp,
-                                                fontWeight: FontWeight.w400,
-                                                color: AppColors.fineGrey,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                      SizedBox(height: 30.h),
-                      ButtonWidget(
-                        border: 100.r,
-                        buttonColor:
-                            getHmoKycResponseModel!.data!.kycLevels!.isNotEmpty
-                            ? getKycStatusBool(
-                                            getHmoKycResponseModel!
-                                                .data!
-                                                .kycLevels![2]
-                                                .status,
-                                          ) ==
-                                          true ||
-                                      imageAppForm == null &&
-                                          imagePlan == null &&
-                                          imageAss == null
-                                  ? AppColors.infoGrey
-                                  : AppColors.primary
-                            : AppColors.infoGrey,
-                        fontSize: 16.sp,
-                        buttonText: 'Submit for Verification',
-                        color: AppColors.white,
-                        isLoading: isLoading,
-                        buttonBorderColor: AppColors.transparent,
-                        onPressed:
-                            getHmoKycResponseModel!.data!.kycLevels!.isNotEmpty
-                            ? getKycStatusBool(
-                                            getHmoKycResponseModel!
-                                                .data!
-                                                .kycLevels![2]
-                                                .status,
-                                          ) ==
-                                          false &&
-                                      imageAppForm != null &&
-                                      imagePlan != null &&
-                                      imageAss != null
-                                  ? () async {
-                                      if (kycFormKey.currentState!.validate() &&
-                                          imageAppForm != null &&
-                                          imageAss != null &&
-                                          imagePlan != null) {
-                                        // updateThirdHMOKyc(
-                                        //   contxxt,
-                                        //   updateKyc:
-                                        //       UpdateThirdHmoKycEntityModel(
-                                        //         bankName: bankNameController
-                                        //             .text
-                                        //             .trim(),
-                                        //         accountName:
-                                        //             accountNameController.text,
-                                        //         accountNumber:
-                                        //             accountNumberController
-                                        //                 .text,
-                                        //         applicationForm:
-                                        //             ApplicationForm.fromJson(
-                                        //               fl.File.fromJson(
-                                        //                 kycDocumentsList[0]
-                                        //                     .file!
-                                        //                     .toJson(),
-                                        //               ).toJson(),
-                                        //             ),
-                                        //         scheduleOfPlans:
-                                        //             ScheduleOfPlans.fromJson(
-                                        //               fl.File.fromJson(
-                                        //                 kycDocumentsList[1]
-                                        //                     .file!
-                                        //                     .toJson(),
-                                        //               ).toJson(),
-                                        //             ),
-                                        //         listOfHospitals:
-                                        //             ListOfHospitals.fromJson(
-                                        //               fl.File.fromJson(
-                                        //                 kycDocumentsList[2]
-                                        //                     .file!
-                                        //                     .toJson(),
-                                        //               ).toJson(),
-                                        //             ),
-                                        //       ),
-                                        // );
+  //                                   textOverflow: TextOverflow.ellipsis,
+  //                                   maxLines: 1,
+  //                                   textStyle: TextStyle(
+  //                                     fontFamily: 'Arial',
+  //                                     fontSize: 13.2.sp,
+  //                                     fontWeight: FontWeight.w400,
+  //                                     color: AppColors.black,
+  //                                   ),
+  //                                 ),
+  //                               ),
+  //                               Spacer(),
+  //                               GestureDetector(
+  //                                 onTap: () => Navigator.push(
+  //                                   contxxt!,
+  //                                   MaterialPageRoute(
+  //                                     builder: (_) => ImageWebViewScreen(
+  //                                       imageUrl:
+  //                                           getHmoKycResponseModel!
+  //                                               .data!
+  //                                               .taxIdCertificate
+  //                                               ?.url ??
+  //                                           '',
+  //                                     ),
+  //                                   ),
+  //                                 ),
+  //                                 child: SvgPicture.asset(AppImage.kyc_eye),
+  //                               ),
+  //                             ],
+  //                           ),
+  //                         )
+  //                       : isLoadingTIN
+  //                       ? Center(
+  //                           child: SpinKitCircle(
+  //                             color: AppColors.infoGrey,
+  //                             size: 32.40.sp,
+  //                           ),
+  //                         )
+  //                       : filenameTIN != null
+  //                       ? Container(
+  //                           padding: EdgeInsets.all(10.w),
+  //                           decoration: BoxDecoration(
+  //                             border: Border.all(color: AppColors.tintColor),
+  //                             borderRadius: BorderRadius.circular(12),
+  //                           ),
+  //                           child: Row(
+  //                             children: [
+  //                               SvgPicture.asset(AppImage.kyc_file),
+  //                               SizedBox(width: 14.20.w),
+  //                               SizedBox(
+  //                                 width: 160.w,
+  //                                 child: TextView(
+  //                                   text: "${filenameTIN ?? ""}.jpg",
+  //                                   textOverflow: TextOverflow.ellipsis,
+  //                                   maxLines: 1,
+  //                                   textStyle: TextStyle(
+  //                                     fontFamily: 'Arial',
+  //                                     fontSize: 13.2.sp,
+  //                                     fontWeight: FontWeight.w400,
+  //                                     color: AppColors.black,
+  //                                   ),
+  //                                 ),
+  //                               ),
+  //                               Spacer(),
+  //                               GestureDetector(
+  //                                 onTap: () {
+  //                                   pickImageTIN(contxxt!);
+  //                                   notifyListeners();
+  //                                 },
+  //                                 child: SvgPicture.asset(
+  //                                   AppImage.upload_arr_up,
+  //                                 ),
+  //                               ),
+  //                               SizedBox(width: 12.w),
+  //                               GestureDetector(
+  //                                 onTap: () {
+  //                                   filenameTIN = null;
+  //                                   imageTIN = null;
+  //                                   notifyListeners();
+  //                                 },
+  //                                 child: SvgPicture.asset(AppImage.delete),
+  //                               ),
+  //                             ],
+  //                           ),
+  //                         )
+  //                       : SizedBox(
+  //                           width: double.infinity,
+  //                           child: DottedBorder(
+  //                             options: RoundedRectDottedBorderOptions(
+  //                               dashPattern: [10, 10],
+  //                               strokeWidth: .94,
+  //                               radius: Radius.circular(10),
+  //                               color: AppColors.primary,
+  //                             ),
+  //                             child: GestureDetector(
+  //                               onTap: () => pickImageTIN(contxxt!),
+  //                               child: Container(
+  //                                 width: double.infinity,
+  //                                 padding: EdgeInsets.symmetric(
+  //                                   vertical: 14.20.w,
+  //                                   horizontal: 12.0.w,
+  //                                 ),
+  //                                 decoration: BoxDecoration(
+  //                                   borderRadius: BorderRadius.circular(10.r),
+  //                                   color: AppColors.white,
+  //                                 ),
+  //                                 child: Row(
+  //                                   mainAxisAlignment: MainAxisAlignment.start,
+  //                                   children: [
+  //                                     SvgPicture.asset(AppImage.upload_doc),
+  //                                     SizedBox(width: 10.w),
+  //                                     Column(
+  //                                       crossAxisAlignment:
+  //                                           CrossAxisAlignment.start,
+  //                                       children: [
+  //                                         TextView(
+  //                                           text: 'Upload Document',
+  //                                           textStyle: TextStyle(
+  //                                             fontFamily: 'GoogleSans',
+  //                                             fontSize: 14.2.sp,
+  //                                             fontWeight: FontWeight.w500,
+  //                                             color: AppColors.reminder,
+  //                                           ),
+  //                                         ),
+  //                                         SizedBox(height: 2.0.h),
+  //                                         TextView(
+  //                                           text:
+  //                                               'Max file size: 2MB (.jpg, .jpeg,\n.png, or .pdf supported)',
+  //                                           textStyle: TextStyle(
+  //                                             fontFamily: 'Arial',
+  //                                             fontSize: 13.6.sp,
+  //                                             fontWeight: FontWeight.w400,
+  //                                             color: AppColors.fineGrey,
+  //                                           ),
+  //                                         ),
+  //                                       ],
+  //                                     ),
+  //                                   ],
+  //                                 ),
+  //                               ),
+  //                             ),
+  //                           ),
+  //                         ),
+  //                   SizedBox(height: 30.h),
+  //                   ButtonWidget(
+  //                     border: 100.r,
+  //                     buttonColor:
+  //                         imageLogo == null &&
+  //                                 imageCAC == null &&
+  //                                 imageNHISLicense == null &&
+  //                                 imageTIN == null ||
+  //                             getHmoKycResponseModel!
+  //                                     .data!
+  //                                     .kycLevels!
+  //                                     .isNotEmpty &&
+  //                                 getKycStatusBool(
+  //                                       getHmoKycResponseModel!
+  //                                           .data!
+  //                                           .kycLevels![1]
+  //                                           .status,
+  //                                     ) ==
+  //                                     true
+  //                         ? AppColors.infoGrey
+  //                         : AppColors.primary,
+  //                     fontSize: 16.sp,
+  //                     buttonText: 'Submit for Verification',
+  //                     color: AppColors.white,
+  //                     isLoading: isLoading,
+  //                     buttonBorderColor: AppColors.transparent,
+  //                     onPressed:
+  //                         getHmoKycResponseModel!.data!.kycLevels!.isNotEmpty
+  //                         ? getKycStatusBool(
+  //                                         getHmoKycResponseModel!
+  //                                             .data!
+  //                                             .kycLevels![1]
+  //                                             .status,
+  //                                       ) ==
+  //                                       false &&
+  //                                   imageLogo != null &&
+  //                                   imageCAC != null &&
+  //                                   imageNHISLicense != null &&
+  //                                   imageTIN != null
+  //                               ? () {
+  //                                   if (imageLogo != null &&
+  //                                       imageCAC != null &&
+  //                                       imageNHISLicense != null &&
+  //                                       imageTIN != null) {
+  //                                     // updateHMOKyc(
+  //                                     //   contxxt,
+  //                                     //   updateKyc: UpdateHmoKycEntityModel(
+  //                                     //     logo: lg.Logo.fromJson(
+  //                                     //       fl.File.fromJson(
+  //                                     //         kycDocumentsList[0].file!
+  //                                     //             .toJson(),
+  //                                     //       ).toJson(),
+  //                                     //     ),
+  //                                     //     cacCertificate:
+  //                                     //         cc.CacCertificate.fromJson(
+  //                                     //           fl.File.fromJson(
+  //                                     //             kycDocumentsList[1].file!
+  //                                     //                 .toJson(),
+  //                                     //           ).toJson(),
+  //                                     //         ),
+  //                                     //     hmoAccreditation:
+  //                                     //         ac.HmoAccreditation.fromJson(
+  //                                     //           fl.File.fromJson(
+  //                                     //             kycDocumentsList[2].file!
+  //                                     //                 .toJson(),
+  //                                     //           ).toJson(),
+  //                                     //         ),
+  //                                     //     taxIdCertificate:
+  //                                     //         tx.TaxIdCertificate.fromJson(
+  //                                     //           fl.File.fromJson(
+  //                                     //             kycDocumentsList[3].file!
+  //                                     //                 .toJson(),
+  //                                     //           ).toJson(),
+  //                                     //         ),
+  //                                     //   ),
+  //                                     // );
+  //                                   } else {
+  //                                     AppUtils.snackbar(
+  //                                       context,
+  //                                       message:
+  //                                           'Kindly select and upload all documents. ',
+  //                                       error: true,
+  //                                     );
+  //                                   }
+  //                                 }
+  //                               : () {}
+  //                         : () {
+  //                             if (imageLogo != null &&
+  //                                 imageCAC != null &&
+  //                                 imageNHISLicense != null &&
+  //                                 imageTIN != null) {
+  //                               // updateHMOKyc(
+  //                               //   contxxt,
+  //                               //   updateKyc: UpdateHmoKycEntityModel(
+  //                               //     logo: lg.Logo.fromJson(
+  //                               //       fl.File.fromJson(
+  //                               //         kycDocumentsList[0].file!.toJson(),
+  //                               //       ).toJson(),
+  //                               //     ),
+  //                               //     cacCertificate: cc.CacCertificate.fromJson(
+  //                               //       fl.File.fromJson(
+  //                               //         kycDocumentsList[1].file!.toJson(),
+  //                               //       ).toJson(),
+  //                               //     ),
+  //                               //     hmoAccreditation:
+  //                               //         ac.HmoAccreditation.fromJson(
+  //                               //           fl.File.fromJson(
+  //                               //             kycDocumentsList[2].file!.toJson(),
+  //                               //           ).toJson(),
+  //                               //         ),
+  //                               //     taxIdCertificate:
+  //                               //         tx.TaxIdCertificate.fromJson(
+  //                               //           fl.File.fromJson(
+  //                               //             kycDocumentsList[3].file!.toJson(),
+  //                               //           ).toJson(),
+  //                               //         ),
+  //                               //   ),
+  //                               // );
+  //                             } else {
+  //                               AppUtils.snackbar(
+  //                                 context,
+  //                                 message:
+  //                                     'Kindly select and upload all documents. ',
+  //                                 error: true,
+  //                               );
+  //                             }
+  //                           },
+  //                   ),
+  //                   SizedBox(height: 10.h),
+  //                 ],
+  //               ),
+  //             )
+  //           : levelKyc == 3
+  //           ? Padding(
+  //               padding: EdgeInsets.symmetric(
+  //                 horizontal: 12.8.w,
+  //                 vertical: 12.6.w,
+  //               ),
+  //               child: Form(
+  //                 key: kycFormKey,
+  //                 child: Column(
+  //                   crossAxisAlignment: CrossAxisAlignment.start,
+  //                   children: [
+  //                     Container(
+  //                       padding: EdgeInsets.symmetric(
+  //                         vertical: 12.w,
+  //                         horizontal: 14.62.w,
+  //                       ),
+  //                       decoration: BoxDecoration(
+  //                         color:
+  //                             getHmoKycResponseModel!
+  //                                 .data!
+  //                                 .kycLevels!
+  //                                 .isNotEmpty
+  //                             ? getKycStatusColor(
+  //                                 getHmoKycResponseModel!
+  //                                     .data!
+  //                                     .kycLevels![2]
+  //                                     .status,
+  //                               )
+  //                             : AppColors.fadedyellow,
+  //                         borderRadius: BorderRadius.circular(10),
+  //                       ),
+  //                       child: Row(
+  //                         children: [
+  //                           getHmoKycResponseModel!.data!.kycLevels!.isNotEmpty
+  //                               ? getKycStatusIcon(
+  //                                   getHmoKycResponseModel!
+  //                                       .data!
+  //                                       .kycLevels![2]
+  //                                       .status,
+  //                                 )
+  //                               : SvgPicture.asset(AppImage.info),
+  //                           SizedBox(width: 10.w),
+  //                           SizedBox(
+  //                             width: 200.w,
+  //                             child: TextView(
+  //                               text:
+  //                                   getHmoKycResponseModel!
+  //                                       .data!
+  //                                       .kycLevels!
+  //                                       .isNotEmpty
+  //                                   ? getKycStatus(
+  //                                       getHmoKycResponseModel!
+  //                                           .data!
+  //                                           .kycLevels![2]
+  //                                           .status,
+  //                                     )
+  //                                   : 'Kindly upload and submit KYC for\nverification to obtain full access to\nplatform features.',
+  //                               maxLines: 4,
+  //                               textStyle: TextStyle(
+  //                                 fontFamily: 'Arial',
+  //                                 fontSize: 12.42.sp,
+  //                                 fontWeight: FontWeight.w400,
+  //                                 color: AppColors.black,
+  //                               ),
+  //                             ),
+  //                           ),
+  //                         ],
+  //                       ),
+  //                     ),
+  //                     SizedBox(height: 20.h),
+  //                     TextView(
+  //                       text: 'Bank Information',
+  //                       textStyle: TextStyle(
+  //                         fontFamily: 'GoogleSans',
+  //                         fontSize: 16.2.sp,
+  //                         fontWeight: FontWeight.w700,
+  //                         color: AppColors.black,
+  //                       ),
+  //                     ),
+  //                     SizedBox(height: 6.h),
+  //                     Divider(color: const Color.fromARGB(255, 227, 227, 228)),
+  //                     SizedBox(height: 6.h),
+  //                     getHmoKycResponseModel!.data != null &&
+  //                             getHmoKycResponseModel!
+  //                                 .data!
+  //                                 .bankDetails!
+  //                                 .isNotEmpty
+  //                         ? Column(
+  //                             crossAxisAlignment: CrossAxisAlignment.start,
+  //                             children: [
+  //                               InfoItem(
+  //                                 title: "Bank Name",
+  //                                 value:
+  //                                     getHmoKycResponseModel!
+  //                                         .data!
+  //                                         .bankDetails![0]
+  //                                         .bankName ??
+  //                                     '',
+  //                               ),
+  //                               InfoItem(
+  //                                 title: "Account Number",
+  //                                 value:
+  //                                     getHmoKycResponseModel!
+  //                                         .data!
+  //                                         .bankDetails![0]
+  //                                         .accountNumber ??
+  //                                     '',
+  //                               ),
+  //                               InfoItem(
+  //                                 title: "Account Name",
+  //                                 value:
+  //                                     getHmoKycResponseModel!
+  //                                         .data!
+  //                                         .bankDetails![0]
+  //                                         .accountName ??
+  //                                     '',
+  //                               ),
+  //                             ],
+  //                           )
+  //                         : Column(
+  //                             crossAxisAlignment: CrossAxisAlignment.start,
+  //                             children: [
+  //                               TextFormWidget(
+  //                                 hint: 'Bank Name',
+  //                                 hintSize: 14,
+  //                                 borderColor: AppColors.transparent,
+  //                                 borderTopLeft: 10.r,
+  //                                 borderTopRight: 10.r,
+  //                                 borderBottomLeft: 10.r,
+  //                                 borderBottomRight: 10.r,
+  //                                 keyboardType: TextInputType.text,
+  //                                 labelStyle: TextStyle(
+  //                                   fontWeight: FontWeight.w400,
+  //                                   fontFamily: 'Arial',
+  //                                   fontSize: 14.2.sp,
+  //                                   color: AppColors.infoGrey,
+  //                                 ),
+  //                                 fillColor: AppColors.grey,
+  //                                 isFilled: true,
+  //                                 controller: bankNameController,
+  //                                 validator: AppValidator.validateString(),
+  //                               ),
+  //                               SizedBox(height: 20.h),
+  //                               TextFormWidget(
+  //                                 hint: 'Account Number',
+  //                                 hintSize: 14,
+  //                                 borderColor: AppColors.transparent,
+  //                                 borderTopLeft: 10.r,
+  //                                 borderTopRight: 10.r,
+  //                                 borderBottomLeft: 10.r,
+  //                                 borderBottomRight: 10.r,
+  //                                 label: 'Enter account number',
+  //                                 keyboardType: TextInputType.number,
+  //                                 labelStyle: TextStyle(
+  //                                   fontWeight: FontWeight.w400,
+  //                                   fontFamily: 'Arial',
+  //                                   fontSize: 14.2.sp,
+  //                                   color: AppColors.infoGrey,
+  //                                 ),
+  //                                 fillColor: AppColors.grey,
+  //                                 isFilled: true,
+  //                                 controller: accountNumberController,
+  //                                 validator: AppValidator.validateString(),
+  //                                 // ),
+  //                               ),
+  //                               SizedBox(height: 20.h),
+  //                               TextFormWidget(
+  //                                 hint: 'Account Name',
+  //                                 hintSize: 14,
+  //                                 borderColor: AppColors.transparent,
+  //                                 borderTopLeft: 10.r,
+  //                                 borderTopRight: 10.r,
+  //                                 borderBottomLeft: 10.r,
+  //                                 borderBottomRight: 10.r,
+  //                                 label: 'Enter account name',
+  //                                 keyboardType: TextInputType.name,
+  //                                 labelStyle: TextStyle(
+  //                                   fontWeight: FontWeight.w400,
+  //                                   fontFamily: 'Arial',
+  //                                   fontSize: 14.2.sp,
+  //                                   color: AppColors.infoGrey,
+  //                                 ),
+  //                                 fillColor: AppColors.grey,
+  //                                 isFilled: true,
+  //                                 controller: accountNameController,
+  //                                 validator: AppValidator.validateString(),
+  //                                 // ),
+  //                               ),
+  //                               SizedBox(height: 20.h),
+  //                             ],
+  //                           ),
+  //                     TextView(
+  //                       text: 'Process Documents',
+  //                       textStyle: TextStyle(
+  //                         fontFamily: 'GoogleSans',
+  //                         fontSize: 16.2.sp,
+  //                         fontWeight: FontWeight.w700,
+  //                         color: AppColors.black,
+  //                       ),
+  //                     ),
+  //                     SizedBox(height: 6.h),
+  //                     Divider(color: const Color.fromARGB(255, 227, 227, 228)),
+  //                     SizedBox(height: 12.h),
+  //                     Stack(
+  //                       clipBehavior: Clip.none,
+  //                       children: [
+  //                         TextView(
+  //                           text: 'Application Form',
+  //                           textStyle: TextStyle(
+  //                             fontFamily: 'Arial',
+  //                             fontSize: 13.2.sp,
+  //                             fontWeight: FontWeight.w400,
+  //                             color: AppColors.reminder,
+  //                           ),
+  //                         ),
+  //                         Positioned(
+  //                           right: -12.10,
+  //                           child: TextView(
+  //                             text: '*',
+  //                             textStyle: TextStyle(
+  //                               fontFamily: 'Arial',
+  //                               fontSize: 18.sp,
+  //                               fontWeight: FontWeight.w500,
+  //                               color: AppColors.red,
+  //                             ),
+  //                           ),
+  //                         ),
+  //                       ],
+  //                     ),
+  //                     SizedBox(height: 10.20.h),
+  //                     getHmoKycResponseModel!.data!.applicationForm != null
+  //                         ? Container(
+  //                             padding: EdgeInsets.all(10.w),
+  //                             decoration: BoxDecoration(
+  //                               border: Border.all(color: AppColors.tintColor),
+  //                               borderRadius: BorderRadius.circular(12),
+  //                             ),
+  //                             child: Row(
+  //                               children: [
+  //                                 SvgPicture.asset(AppImage.kyc_file),
+  //                                 SizedBox(width: 14.20.w),
+  //                                 SizedBox(
+  //                                   width: 160.w,
+  //                                   child: TextView(
+  //                                     text: 'APPLICATION FORM.jpg',
+  //                                     textOverflow: TextOverflow.ellipsis,
+  //                                     textStyle: TextStyle(
+  //                                       fontFamily: 'Arial',
+  //                                       fontSize: 13.2.sp,
+  //                                       fontWeight: FontWeight.w400,
+  //                                       color: AppColors.black,
+  //                                     ),
+  //                                   ),
+  //                                 ),
+  //                                 Spacer(),
+  //                                 GestureDetector(
+  //                                   onTap: () => Navigator.push(
+  //                                     contxxt!,
+  //                                     MaterialPageRoute(
+  //                                       builder: (_) => ImageWebViewScreen(
+  //                                         imageUrl:
+  //                                             getHmoKycResponseModel!
+  //                                                 .data!
+  //                                                 .applicationForm
+  //                                                 ?.url ??
+  //                                             '',
+  //                                       ),
+  //                                     ),
+  //                                   ),
+  //                                   child: SvgPicture.asset(AppImage.kyc_eye),
+  //                                 ),
+  //                               ],
+  //                             ),
+  //                           )
+  //                         : _isLoadingAppForm
+  //                         ? Center(
+  //                             child: SpinKitCircle(
+  //                               color: AppColors.infoGrey,
+  //                               size: 32.40.sp,
+  //                             ),
+  //                           )
+  //                         : filenameAppForm != null
+  //                         ? Container(
+  //                             padding: EdgeInsets.all(10.w),
+  //                             decoration: BoxDecoration(
+  //                               border: Border.all(color: AppColors.tintColor),
+  //                               borderRadius: BorderRadius.circular(12),
+  //                             ),
+  //                             child: Row(
+  //                               children: [
+  //                                 SvgPicture.asset(AppImage.kyc_file),
+  //                                 SizedBox(width: 14.20.w),
+  //                                 SizedBox(
+  //                                   width: 160.w,
+  //                                   child: TextView(
+  //                                     text: "${filenameAppForm ?? ""}.jpg",
+  //                                     textOverflow: TextOverflow.ellipsis,
+  //                                     maxLines: 1,
+  //                                     textStyle: TextStyle(
+  //                                       fontFamily: 'Arial',
+  //                                       fontSize: 13.2.sp,
+  //                                       fontWeight: FontWeight.w400,
+  //                                       color: AppColors.black,
+  //                                     ),
+  //                                   ),
+  //                                 ),
+  //                                 Spacer(),
+  //                                 GestureDetector(
+  //                                   onTap: () {
+  //                                     pickImageAppForm(contxxt!);
+  //                                     notifyListeners();
+  //                                   },
+  //                                   child: SvgPicture.asset(
+  //                                     AppImage.upload_arr_up,
+  //                                   ),
+  //                                 ),
+  //                                 SizedBox(width: 12.w),
+  //                                 GestureDetector(
+  //                                   onTap: () {
+  //                                     filenameAppForm = null;
+  //                                     imageAppForm = null;
+  //                                     notifyListeners();
+  //                                   },
+  //                                   child: SvgPicture.asset(AppImage.delete),
+  //                                 ),
+  //                               ],
+  //                             ),
+  //                           )
+  //                         : SizedBox(
+  //                             width: double.infinity,
+  //                             child: DottedBorder(
+  //                               options: RoundedRectDottedBorderOptions(
+  //                                 dashPattern: [10, 10],
+  //                                 strokeWidth: .94,
+  //                                 radius: Radius.circular(10),
+  //                                 color: AppColors.primary,
+  //                               ),
+  //                               child: GestureDetector(
+  //                                 onTap: () => pickImageAppForm(contxxt!),
+  //                                 child: Container(
+  //                                   width: double.infinity,
+  //                                   padding: EdgeInsets.symmetric(
+  //                                     vertical: 14.20.w,
+  //                                     horizontal: 12.0.w,
+  //                                   ),
+  //                                   decoration: BoxDecoration(
+  //                                     borderRadius: BorderRadius.circular(10.r),
+  //                                     color: AppColors.white,
+  //                                   ),
+  //                                   child: Row(
+  //                                     mainAxisAlignment:
+  //                                         MainAxisAlignment.start,
+  //                                     children: [
+  //                                       SvgPicture.asset(AppImage.upload_doc),
+  //                                       SizedBox(width: 10.w),
+  //                                       Column(
+  //                                         crossAxisAlignment:
+  //                                             CrossAxisAlignment.start,
+  //                                         children: [
+  //                                           TextView(
+  //                                             text: 'Upload Document',
+  //                                             textStyle: TextStyle(
+  //                                               fontFamily: 'GoogleSans',
+  //                                               fontSize: 14.2.sp,
+  //                                               fontWeight: FontWeight.w500,
+  //                                               color: AppColors.reminder,
+  //                                             ),
+  //                                           ),
+  //                                           SizedBox(height: 2.0.h),
+  //                                           TextView(
+  //                                             text:
+  //                                                 'Max file size: 2MB (.jpg, .jpeg,\n.png, or .pdf supported)',
+  //                                             textStyle: TextStyle(
+  //                                               fontFamily: 'Arial',
+  //                                               fontSize: 12.6.sp,
+  //                                               fontWeight: FontWeight.w400,
+  //                                               color: AppColors.fineGrey,
+  //                                             ),
+  //                                           ),
+  //                                         ],
+  //                                       ),
+  //                                     ],
+  //                                   ),
+  //                                 ),
+  //                               ),
+  //                             ),
+  //                           ),
+  //                     SizedBox(height: 20.h),
+  //                     Stack(
+  //                       clipBehavior: Clip.none,
+  //                       children: [
+  //                         TextView(
+  //                           text: 'Schedule of available plans ',
+  //                           textStyle: TextStyle(
+  //                             fontFamily: 'Arial',
+  //                             fontSize: 13.2.sp,
+  //                             fontWeight: FontWeight.w400,
+  //                             color: AppColors.reminder,
+  //                           ),
+  //                         ),
+  //                         Positioned(
+  //                           right: -12.10,
+  //                           child: TextView(
+  //                             text: '*',
+  //                             textStyle: TextStyle(
+  //                               fontFamily: 'Arial',
+  //                               fontSize: 18.sp,
+  //                               fontWeight: FontWeight.w500,
+  //                               color: AppColors.red,
+  //                             ),
+  //                           ),
+  //                         ),
+  //                       ],
+  //                     ),
+  //                     SizedBox(height: 10.20.h),
+  //                     getHmoKycResponseModel!.data!.scheduleOfPlans != null
+  //                         ? Container(
+  //                             padding: EdgeInsets.all(10.w),
+  //                             decoration: BoxDecoration(
+  //                               border: Border.all(color: AppColors.tintColor),
+  //                               borderRadius: BorderRadius.circular(12),
+  //                             ),
+  //                             child: Row(
+  //                               children: [
+  //                                 SvgPicture.asset(AppImage.kyc_file),
+  //                                 SizedBox(width: 14.20.w),
+  //                                 SizedBox(
+  //                                   width: 160.w,
+  //                                   child: TextView(
+  //                                     text: 'AVAILABLE PLAN.jpg',
+  //                                     textOverflow: TextOverflow.ellipsis,
+  //                                     textStyle: TextStyle(
+  //                                       fontFamily: 'Arial',
+  //                                       fontSize: 13.2.sp,
+  //                                       fontWeight: FontWeight.w400,
+  //                                       color: AppColors.black,
+  //                                     ),
+  //                                   ),
+  //                                 ),
+  //                                 Spacer(),
+  //                                 GestureDetector(
+  //                                   onTap: () => Navigator.push(
+  //                                     contxxt!,
+  //                                     MaterialPageRoute(
+  //                                       builder: (_) => ImageWebViewScreen(
+  //                                         imageUrl:
+  //                                             getHmoKycResponseModel!
+  //                                                 .data!
+  //                                                 .scheduleOfPlans
+  //                                                 ?.url ??
+  //                                             '',
+  //                                       ),
+  //                                     ),
+  //                                   ),
+  //                                   child: SvgPicture.asset(AppImage.kyc_eye),
+  //                                 ),
+  //                               ],
+  //                             ),
+  //                           )
+  //                         : isLoadingPlan
+  //                         ? Center(
+  //                             child: SpinKitCircle(
+  //                               color: AppColors.infoGrey,
+  //                               size: 32.40.sp,
+  //                             ),
+  //                           )
+  //                         : filenamePlan != null
+  //                         ? Container(
+  //                             padding: EdgeInsets.all(10.w),
+  //                             decoration: BoxDecoration(
+  //                               border: Border.all(color: AppColors.tintColor),
+  //                               borderRadius: BorderRadius.circular(12),
+  //                             ),
+  //                             child: Row(
+  //                               children: [
+  //                                 SvgPicture.asset(AppImage.kyc_file),
+  //                                 SizedBox(width: 14.20.w),
+  //                                 SizedBox(
+  //                                   width: 160.w,
+  //                                   child: TextView(
+  //                                     text: "${filenamePlan ?? ""}.jpg",
+  //                                     textOverflow: TextOverflow.ellipsis,
+  //                                     maxLines: 1,
+  //                                     textStyle: TextStyle(
+  //                                       fontFamily: 'Arial',
+  //                                       fontSize: 13.2.sp,
+  //                                       fontWeight: FontWeight.w400,
+  //                                       color: AppColors.black,
+  //                                     ),
+  //                                   ),
+  //                                 ),
+  //                                 Spacer(),
+  //                                 GestureDetector(
+  //                                   onTap: () {
+  //                                     pickImagePlan(contxxt!);
+  //                                     notifyListeners();
+  //                                   },
+  //                                   child: SvgPicture.asset(
+  //                                     AppImage.upload_arr_up,
+  //                                   ),
+  //                                 ),
+  //                                 SizedBox(width: 12.w),
+  //                                 GestureDetector(
+  //                                   onTap: () {
+  //                                     filenamePlan = null;
+  //                                     imagePlan = null;
+  //                                     notifyListeners();
+  //                                   },
+  //                                   child: SvgPicture.asset(AppImage.delete),
+  //                                 ),
+  //                               ],
+  //                             ),
+  //                           )
+  //                         : SizedBox(
+  //                             width: double.infinity,
+  //                             child: DottedBorder(
+  //                               options: RoundedRectDottedBorderOptions(
+  //                                 dashPattern: [10, 10],
+  //                                 strokeWidth: .94,
+  //                                 radius: Radius.circular(10),
+  //                                 color: AppColors.primary,
+  //                               ),
+  //                               child: GestureDetector(
+  //                                 onTap: () => pickImagePlan(contxxt!),
+  //                                 child: Container(
+  //                                   width: double.infinity,
+  //                                   padding: EdgeInsets.symmetric(
+  //                                     vertical: 14.20.w,
+  //                                     horizontal: 12.0.w,
+  //                                   ),
+  //                                   decoration: BoxDecoration(
+  //                                     borderRadius: BorderRadius.circular(10.r),
+  //                                     color: AppColors.white,
+  //                                   ),
+  //                                   child: Row(
+  //                                     mainAxisAlignment:
+  //                                         MainAxisAlignment.start,
+  //                                     children: [
+  //                                       SvgPicture.asset(AppImage.upload_doc),
+  //                                       SizedBox(width: 10.w),
+  //                                       Column(
+  //                                         crossAxisAlignment:
+  //                                             CrossAxisAlignment.start,
+  //                                         children: [
+  //                                           TextView(
+  //                                             text: 'Upload Document',
+  //                                             textStyle: TextStyle(
+  //                                               fontFamily: 'GoogleSans',
+  //                                               fontSize: 14.2.sp,
+  //                                               fontWeight: FontWeight.w500,
+  //                                               color: AppColors.reminder,
+  //                                             ),
+  //                                           ),
+  //                                           SizedBox(height: 2.0.h),
+  //                                           TextView(
+  //                                             text:
+  //                                                 'Max file size: 2MB (.jpg, .jpeg,\n.png, or .pdf supported)',
+  //                                             textStyle: TextStyle(
+  //                                               fontFamily: 'Arial',
+  //                                               fontSize: 12.6.sp,
+  //                                               fontWeight: FontWeight.w400,
+  //                                               color: AppColors.fineGrey,
+  //                                             ),
+  //                                           ),
+  //                                         ],
+  //                                       ),
+  //                                     ],
+  //                                   ),
+  //                                 ),
+  //                               ),
+  //                             ),
+  //                           ),
+  //                     SizedBox(height: 20.h),
+  //                     Stack(
+  //                       clipBehavior: Clip.none,
+  //                       children: [
+  //                         SizedBox(
+  //                           width: 220.w,
+  //                           child: TextView(
+  //                             text: 'List of associated clinics/hospitals ',
+  //                             maxLines: 2,
+  //                             textStyle: TextStyle(
+  //                               fontFamily: 'Arial',
+  //                               fontSize: 13.2.sp,
+  //                               fontWeight: FontWeight.w400,
+  //                               color: AppColors.reminder,
+  //                             ),
+  //                           ),
+  //                         ),
+  //                         Positioned(
+  //                           right: -0.10,
+  //                           child: TextView(
+  //                             text: '*',
+  //                             textStyle: TextStyle(
+  //                               fontFamily: 'Arial',
+  //                               fontSize: 18.sp,
+  //                               fontWeight: FontWeight.w500,
+  //                               color: AppColors.red,
+  //                             ),
+  //                           ),
+  //                         ),
+  //                       ],
+  //                     ),
+  //                     SizedBox(height: 10.20.h),
+  //                     getHmoKycResponseModel!.data!.listOfHospitals != null
+  //                         ? Container(
+  //                             padding: EdgeInsets.all(10.w),
+  //                             decoration: BoxDecoration(
+  //                               border: Border.all(color: AppColors.tintColor),
+  //                               borderRadius: BorderRadius.circular(12),
+  //                             ),
+  //                             child: Row(
+  //                               children: [
+  //                                 SvgPicture.asset(AppImage.kyc_file),
+  //                                 SizedBox(width: 14.20.w),
+  //                                 TextView(
+  //                                   text: 'ASSOCIATED CLINIC.jpg',
+  //                                   textStyle: TextStyle(
+  //                                     fontFamily: 'Arial',
+  //                                     fontSize: 13.2.sp,
+  //                                     fontWeight: FontWeight.w400,
+  //                                     color: AppColors.black,
+  //                                   ),
+  //                                 ),
+  //                                 Spacer(),
+  //                                 GestureDetector(
+  //                                   onTap: () => Navigator.push(
+  //                                     contxxt!,
+  //                                     MaterialPageRoute(
+  //                                       builder: (_) => ImageWebViewScreen(
+  //                                         imageUrl:
+  //                                             getHmoKycResponseModel!
+  //                                                 .data!
+  //                                                 .listOfHospitals
+  //                                                 ?.url ??
+  //                                             '',
+  //                                       ),
+  //                                     ),
+  //                                   ),
+  //                                   child: SvgPicture.asset(AppImage.kyc_eye),
+  //                                 ),
+  //                               ],
+  //                             ),
+  //                           )
+  //                         : isLoadingAss
+  //                         ? Center(
+  //                             child: SpinKitCircle(
+  //                               color: AppColors.infoGrey,
+  //                               size: 32.40.sp,
+  //                             ),
+  //                           )
+  //                         : filenameAss != null
+  //                         ? Container(
+  //                             padding: EdgeInsets.all(10.w),
+  //                             decoration: BoxDecoration(
+  //                               border: Border.all(color: AppColors.tintColor),
+  //                               borderRadius: BorderRadius.circular(12),
+  //                             ),
+  //                             child: Row(
+  //                               children: [
+  //                                 SvgPicture.asset(AppImage.kyc_file),
+  //                                 SizedBox(width: 14.20.w),
+  //                                 SizedBox(
+  //                                   width: 120.w,
+  //                                   child: TextView(
+  //                                     text: "${filenameAss ?? ""}.jpg",
+  //                                     textOverflow: TextOverflow.ellipsis,
+  //                                     maxLines: 1,
+  //                                     textStyle: TextStyle(
+  //                                       fontFamily: 'Arial',
+  //                                       fontSize: 13.2.sp,
+  //                                       fontWeight: FontWeight.w400,
+  //                                       color: AppColors.black,
+  //                                     ),
+  //                                   ),
+  //                                 ),
+  //                                 Spacer(),
+  //                                 GestureDetector(
+  //                                   onTap: () {
+  //                                     pickImageAss(contxxt!);
+  //                                     notifyListeners();
+  //                                   },
+  //                                   child: SvgPicture.asset(
+  //                                     AppImage.upload_arr_up,
+  //                                   ),
+  //                                 ),
+  //                                 SizedBox(width: 12.w),
+  //                                 GestureDetector(
+  //                                   onTap: () {
+  //                                     filenameAss = null;
+  //                                     imageAss = null;
+  //                                     notifyListeners();
+  //                                   },
+  //                                   child: SvgPicture.asset(AppImage.delete),
+  //                                 ),
+  //                               ],
+  //                             ),
+  //                           )
+  //                         : SizedBox(
+  //                             width: double.infinity,
+  //                             child: DottedBorder(
+  //                               options: RoundedRectDottedBorderOptions(
+  //                                 dashPattern: [10, 10],
+  //                                 strokeWidth: .94,
+  //                                 radius: Radius.circular(10),
+  //                                 color: AppColors.primary,
+  //                               ),
+  //                               child: GestureDetector(
+  //                                 onTap: () => pickImageAss(contxxt!),
+  //                                 child: Container(
+  //                                   width: double.infinity,
+  //                                   padding: EdgeInsets.symmetric(
+  //                                     vertical: 14.20.w,
+  //                                     horizontal: 12.0.w,
+  //                                   ),
+  //                                   decoration: BoxDecoration(
+  //                                     borderRadius: BorderRadius.circular(10.r),
+  //                                     color: AppColors.white,
+  //                                   ),
+  //                                   child: Row(
+  //                                     mainAxisAlignment:
+  //                                         MainAxisAlignment.start,
+  //                                     children: [
+  //                                       SvgPicture.asset(AppImage.upload_doc),
+  //                                       SizedBox(width: 10.w),
+  //                                       Column(
+  //                                         crossAxisAlignment:
+  //                                             CrossAxisAlignment.start,
+  //                                         children: [
+  //                                           TextView(
+  //                                             text: 'Upload Document',
+  //                                             textStyle: TextStyle(
+  //                                               fontFamily: 'GoogleSans',
+  //                                               fontSize: 14.2.sp,
+  //                                               fontWeight: FontWeight.w500,
+  //                                               color: AppColors.reminder,
+  //                                             ),
+  //                                           ),
+  //                                           SizedBox(height: 2.0.h),
+  //                                           TextView(
+  //                                             text:
+  //                                                 'Max file size: 2MB (.jpg, .jpeg,\n.png, or .pdf supported)',
+  //                                             textStyle: TextStyle(
+  //                                               fontFamily: 'Arial',
+  //                                               fontSize: 13.6.sp,
+  //                                               fontWeight: FontWeight.w400,
+  //                                               color: AppColors.fineGrey,
+  //                                             ),
+  //                                           ),
+  //                                         ],
+  //                                       ),
+  //                                     ],
+  //                                   ),
+  //                                 ),
+  //                               ),
+  //                             ),
+  //                           ),
+  //                     SizedBox(height: 30.h),
+  //                     ButtonWidget(
+  //                       border: 100.r,
+  //                       buttonColor:
+  //                           getHmoKycResponseModel!.data!.kycLevels!.isNotEmpty
+  //                           ? getKycStatusBool(
+  //                                           getHmoKycResponseModel!
+  //                                               .data!
+  //                                               .kycLevels![2]
+  //                                               .status,
+  //                                         ) ==
+  //                                         true ||
+  //                                     imageAppForm == null &&
+  //                                         imagePlan == null &&
+  //                                         imageAss == null
+  //                                 ? AppColors.infoGrey
+  //                                 : AppColors.primary
+  //                           : AppColors.infoGrey,
+  //                       fontSize: 16.sp,
+  //                       buttonText: 'Submit for Verification',
+  //                       color: AppColors.white,
+  //                       isLoading: isLoading,
+  //                       buttonBorderColor: AppColors.transparent,
+  //                       onPressed:
+  //                           getHmoKycResponseModel!.data!.kycLevels!.isNotEmpty
+  //                           ? getKycStatusBool(
+  //                                           getHmoKycResponseModel!
+  //                                               .data!
+  //                                               .kycLevels![2]
+  //                                               .status,
+  //                                         ) ==
+  //                                         false &&
+  //                                     imageAppForm != null &&
+  //                                     imagePlan != null &&
+  //                                     imageAss != null
+  //                                 ? () async {
+  //                                     if (kycFormKey.currentState!.validate() &&
+  //                                         imageAppForm != null &&
+  //                                         imageAss != null &&
+  //                                         imagePlan != null) {
+  //                                       // updateThirdHMOKyc(
+  //                                       //   contxxt,
+  //                                       //   updateKyc:
+  //                                       //       UpdateThirdHmoKycEntityModel(
+  //                                       //         bankName: bankNameController
+  //                                       //             .text
+  //                                       //             .trim(),
+  //                                       //         accountName:
+  //                                       //             accountNameController.text,
+  //                                       //         accountNumber:
+  //                                       //             accountNumberController
+  //                                       //                 .text,
+  //                                       //         applicationForm:
+  //                                       //             ApplicationForm.fromJson(
+  //                                       //               fl.File.fromJson(
+  //                                       //                 kycDocumentsList[0]
+  //                                       //                     .file!
+  //                                       //                     .toJson(),
+  //                                       //               ).toJson(),
+  //                                       //             ),
+  //                                       //         scheduleOfPlans:
+  //                                       //             ScheduleOfPlans.fromJson(
+  //                                       //               fl.File.fromJson(
+  //                                       //                 kycDocumentsList[1]
+  //                                       //                     .file!
+  //                                       //                     .toJson(),
+  //                                       //               ).toJson(),
+  //                                       //             ),
+  //                                       //         listOfHospitals:
+  //                                       //             ListOfHospitals.fromJson(
+  //                                       //               fl.File.fromJson(
+  //                                       //                 kycDocumentsList[2]
+  //                                       //                     .file!
+  //                                       //                     .toJson(),
+  //                                       //               ).toJson(),
+  //                                       //             ),
+  //                                       //       ),
+  //                                       // );
 
-                                        // await updateHMO(
-                                        //   contxxt,
-                                        //   update: UpdateHmoProfileEntityModel(
-                                        //     logo: null,
-                                        //     name:
-                                        //         getTetantResponseModel!.data!.name ??
-                                        //         '',
-                                        //     businessAddress:
-                                        //         getTetantResponseModel
-                                        //             ?.data
-                                        //             ?.businessAddress ??
-                                        //         '',
-                                        //     businessEmail:
-                                        //         getTetantResponseModel
-                                        //             ?.data
-                                        //             ?.businessEmail ??
-                                        //         "",
-                                        //     country:
-                                        //         getTetantResponseModel
-                                        //             ?.data
-                                        //             ?.country ??
-                                        //         '',
-                                        //     state:
-                                        //         getTetantResponseModel?.data?.state ??
-                                        //         "",
-                                        //     lga:
-                                        //         getTetantResponseModel?.data?.lga ??
-                                        //         '',
-                                        //     contactPersonFirstName:
-                                        //         getTetantResponseModel
-                                        //             ?.data
-                                        //             ?.contactPersonFirstName ??
-                                        //         '',
-                                        //     contactPersonLastName:
-                                        //         getTetantResponseModel
-                                        //             ?.data
-                                        //             ?.contactPersonLastName ??
-                                        //         '',
-                                        //     contactPersonDesignation:
-                                        //         getTetantResponseModel
-                                        //             ?.data
-                                        //             ?.contactPersonDesignation ??
-                                        //         '',
-                                        //     bankDetails: [
-                                        //       BankDetail(
-                                        //         bankName: bankNameController.text
-                                        //             .trim(),
-                                        //         accountName: accountNameController
-                                        //             .text
-                                        //             .trim(),
-                                        //         accountNumber: accountNumberController
-                                        //             .text
-                                        //             .trim(),
-                                        //       ),
-                                        //     ],
-                                        //   ),updateThirdHMOKyc
-                                        // );
-                                        // // updateHMOKyc(
-                                        //   contxxt,
-                                        //   updateKyc: UpdatePharmacyKycEntityModel(
-                                        //     documents: kycDocumentsList,
-                                        //   ),
-                                        // );
-                                      } else {
-                                        AppUtils.snackbar(
-                                          context,
-                                          message:
-                                              'Kindly select and upload all documents and bank information.',
-                                          error: true,
-                                        );
-                                      }
-                                    }
-                                  : () {}
-                            : () {},
-                      ),
-                      SizedBox(height: 10.h),
-                    ],
-                  ),
-                ),
-              )
-            : Container(),
-      ],
-    ),
-  );
+  //                                       // await updateHMO(
+  //                                       //   contxxt,
+  //                                       //   update: UpdateHmoProfileEntityModel(
+  //                                       //     logo: null,
+  //                                       //     name:
+  //                                       //         getTetantResponseModel!.data!.name ??
+  //                                       //         '',
+  //                                       //     businessAddress:
+  //                                       //         getTetantResponseModel
+  //                                       //             ?.data
+  //                                       //             ?.businessAddress ??
+  //                                       //         '',
+  //                                       //     businessEmail:
+  //                                       //         getTetantResponseModel
+  //                                       //             ?.data
+  //                                       //             ?.businessEmail ??
+  //                                       //         "",
+  //                                       //     country:
+  //                                       //         getTetantResponseModel
+  //                                       //             ?.data
+  //                                       //             ?.country ??
+  //                                       //         '',
+  //                                       //     state:
+  //                                       //         getTetantResponseModel?.data?.state ??
+  //                                       //         "",
+  //                                       //     lga:
+  //                                       //         getTetantResponseModel?.data?.lga ??
+  //                                       //         '',
+  //                                       //     contactPersonFirstName:
+  //                                       //         getTetantResponseModel
+  //                                       //             ?.data
+  //                                       //             ?.contactPersonFirstName ??
+  //                                       //         '',
+  //                                       //     contactPersonLastName:
+  //                                       //         getTetantResponseModel
+  //                                       //             ?.data
+  //                                       //             ?.contactPersonLastName ??
+  //                                       //         '',
+  //                                       //     contactPersonDesignation:
+  //                                       //         getTetantResponseModel
+  //                                       //             ?.data
+  //                                       //             ?.contactPersonDesignation ??
+  //                                       //         '',
+  //                                       //     bankDetails: [
+  //                                       //       BankDetail(
+  //                                       //         bankName: bankNameController.text
+  //                                       //             .trim(),
+  //                                       //         accountName: accountNameController
+  //                                       //             .text
+  //                                       //             .trim(),
+  //                                       //         accountNumber: accountNumberController
+  //                                       //             .text
+  //                                       //             .trim(),
+  //                                       //       ),
+  //                                       //     ],
+  //                                       //   ),updateThirdHMOKyc
+  //                                       // );
+  //                                       // // updateHMOKyc(
+  //                                       //   contxxt,
+  //                                       //   updateKyc: UpdatePharmacyKycEntityModel(
+  //                                       //     documents: kycDocumentsList,
+  //                                       //   ),
+  //                                       // );
+  //                                     } else {
+  //                                       AppUtils.snackbar(
+  //                                         context,
+  //                                         message:
+  //                                             'Kindly select and upload all documents and bank information.',
+  //                                         error: true,
+  //                                       );
+  //                                     }
+  //                                   }
+  //                                 : () {}
+  //                           : () {},
+  //                     ),
+  //                     SizedBox(height: 10.h),
+  //                   ],
+  //                 ),
+  //               ),
+  //             )
+  //           : Container(),
+  //     ],
+  //   ),
+  // );
 }

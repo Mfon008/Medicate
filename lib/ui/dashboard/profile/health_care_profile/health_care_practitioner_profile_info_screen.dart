@@ -8,7 +8,6 @@ import 'package:stacked/stacked.dart';
 import '../../../../core/app_assets/app_validation.dart';
 import '../../../../core/app_assets/image.dart';
 import '../../../../core/config/colors.dart';
-import '../../../../core/connect_end/model/update_practitioner_profile_entity_model/bank_detail.dart';
 import '../../../../core/connect_end/model/update_practitioner_profile_entity_model/means_of_id.dart';
 import '../../../../core/connect_end/view_model/health_care_view_model.dart';
 import '../../../../core/core_folder/manager/shared_preference.dart';
@@ -1124,19 +1123,6 @@ class _HealthCarePractitionerProfileInfoScreenState
                                                             .trim(),
                                                     educationalExperience: model
                                                         .educationalExperienceList,
-                                                    bankDetails: [
-                                                      BankDetail(
-                                                        bankName:
-                                                            bankNameController
-                                                                .text,
-                                                        accountName:
-                                                            bankAccountNameController
-                                                                .text,
-                                                        accountNumber:
-                                                            bankNoController
-                                                                .text,
-                                                      ),
-                                                    ],
                                                     meansOfIdType:
                                                         model.isUpperCase(
                                                           model

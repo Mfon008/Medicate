@@ -2,10 +2,12 @@
 
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:medicate_app/core/app_assets/image.dart';
 import 'package:medicate_app/core/config/colors.dart';
+import 'package:medicate_app/core/connect_end/model/submit_level_two_kyc_entity_model/bank_details.dart';
 import 'package:medicate_app/core/connect_end/model/submit_level_two_kyc_entity_model/cac_certificate.dart';
 import 'package:medicate_app/core/connect_end/model/submit_level_two_kyc_entity_model/means_of_id_document.dart';
 import 'package:medicate_app/core/connect_end/model/submit_level_two_kyc_entity_model/pharmacy_license.dart';
@@ -16,6 +18,7 @@ import '../../../../../core/app_assets/app_validation.dart';
 import '../../../../../core/connect_end/model/submit_level_two_kyc_entity_model/submit_level_two_kyc_entity_model.dart';
 import '../../../../../core/connect_end/view_model/pharm_auth_view_model.dart';
 import '../../../../widget/button.dart';
+import '../../../../widget/info_item_widget.dart';
 import '../../../../widget/kyc_url_view.dart';
 import '../../../../widget/text_form_widget.dart';
 import '../../manufacture/dashed_border_painter.dart';
@@ -29,6 +32,11 @@ class LevelTwoCard extends StatefulWidget {
 
 class _LevelTwoCardState extends State<LevelTwoCard> {
   bool isExpanded = false;
+
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  TextEditingController bankNameController = TextEditingController();
+  TextEditingController bankAccountNoController = TextEditingController();
+  TextEditingController bankAccountNameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -62,6 +70,13 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                 TaxIdentificationNumberDocument.fromJson(
                   level2.taxIdentificationNumberDocument!.toJson(),
                 );
+          }
+          if (level2.bankDetails != null) {
+            bankNameController.text = level2.bankDetails?.bankName ?? '';
+            bankAccountNoController.text =
+                level2.bankDetails?.accountNumber ?? '';
+            bankAccountNameController.text =
+                level2.bankDetails?.accountName ?? '';
           }
         }
       },
@@ -1651,6 +1666,226 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                         ],
                                       ),
                                     ),
+                                    Container(
+                                      width: double.infinity,
+                                      margin: EdgeInsets.only(top: 20.w),
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 14.w,
+                                        vertical: 16.20.w,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        border: Border.all(color: AppColors.f1),
+                                        borderRadius: BorderRadius.circular(
+                                          12.r,
+                                        ),
+                                      ),
+                                      child:
+                                          model
+                                                      .getPharmacyKycResponseModel!
+                                                      .data!
+                                                      .level2 ==
+                                                  null ||
+                                              model
+                                                      .getPharmacyKycResponseModel!
+                                                      .data!
+                                                      .level2!
+                                                      .bankDetails ==
+                                                  null ||
+                                              model
+                                                      .getPharmacyKycResponseModel!
+                                                      .data!
+                                                      .level2!
+                                                      .bankDetails!
+                                                      .accountName ==
+                                                  '' ||
+                                              model
+                                                      .getPharmacyKycResponseModel!
+                                                      .data!
+                                                      .level2!
+                                                      .bankDetails!
+                                                      .accountNumber ==
+                                                  '' ||
+                                              model
+                                                      .getPharmacyKycResponseModel!
+                                                      .data!
+                                                      .level2!
+                                                      .bankDetails!
+                                                      .bankName ==
+                                                  ''
+                                          ? Form(
+                                              key: formKey,
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  TextView(
+                                                    text: 'Bank Information',
+                                                    textStyle: TextStyle(
+                                                      fontSize: 16.2.sp,
+                                                      fontWeight:
+                                                          FontWeight.w700,
+                                                      color: AppColors.black,
+                                                    ),
+                                                  ),
+                                                  SizedBox(height: 6.h),
+                                                  Divider(
+                                                    color: const Color.fromARGB(
+                                                      255,
+                                                      227,
+                                                      227,
+                                                      228,
+                                                    ),
+                                                  ),
+                                                  SizedBox(height: 6.h),
+
+                                                  TextFormWidget(
+                                                    hint: 'Bank name',
+                                                    hintSize: 14,
+                                                    borderColor:
+                                                        AppColors.transparent,
+                                                    borderTopLeft: 10.r,
+                                                    borderTopRight: 10.r,
+                                                    borderBottomLeft: 10.r,
+                                                    borderBottomRight: 10.r,
+                                                    keyboardType:
+                                                        TextInputType.text,
+                                                    labelStyle: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      fontFamily: 'Arial',
+                                                      fontSize: 14.2.sp,
+                                                      color: AppColors.infoGrey,
+                                                    ),
+                                                    fillColor: AppColors.grey,
+                                                    isFilled: true,
+                                                    controller:
+                                                        bankNameController,
+                                                    validator:
+                                                        AppValidator.validateString(),
+                                                  ),
+                                                  SizedBox(height: 20.h),
+                                                  TextFormWidget(
+                                                    hint: 'Account number',
+                                                    hintSize: 14,
+                                                    borderColor:
+                                                        AppColors.transparent,
+                                                    borderTopLeft: 10.r,
+                                                    borderTopRight: 10.r,
+                                                    borderBottomLeft: 10.r,
+                                                    borderBottomRight: 10.r,
+                                                    label:
+                                                        'Enter account number',
+                                                    keyboardType:
+                                                        TextInputType.number,
+                                                    labelStyle: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      fontFamily: 'Arial',
+                                                      fontSize: 14.2.sp,
+                                                      color: AppColors.infoGrey,
+                                                    ),
+                                                    fillColor: AppColors.grey,
+                                                    isFilled: true,
+                                                    controller:
+                                                        bankAccountNoController,
+                                                    validator:
+                                                        AppValidator.validateString(),
+                                                    inputFormatters: [
+                                                      FilteringTextInputFormatter
+                                                          .digitsOnly,
+                                                      LengthLimitingTextInputFormatter(
+                                                        10,
+                                                      ),
+                                                    ],
+                                                    // ),
+                                                  ),
+                                                  SizedBox(height: 20.h),
+                                                  TextFormWidget(
+                                                    hint: 'Account name',
+                                                    hintSize: 14,
+                                                    borderColor:
+                                                        AppColors.transparent,
+                                                    borderTopLeft: 10.r,
+                                                    borderTopRight: 10.r,
+                                                    borderBottomLeft: 10.r,
+                                                    borderBottomRight: 10.r,
+                                                    label: 'Enter account name',
+                                                    keyboardType:
+                                                        TextInputType.name,
+                                                    labelStyle: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      fontFamily: 'Arial',
+                                                      fontSize: 14.2.sp,
+                                                      color: AppColors.infoGrey,
+                                                    ),
+                                                    fillColor: AppColors.grey,
+                                                    isFilled: true,
+                                                    controller:
+                                                        bankAccountNameController,
+                                                    validator:
+                                                        AppValidator.validateString(),
+                                                  ),
+                                                ],
+                                              ),
+                                            )
+                                          : Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                TextView(
+                                                  text: 'Bank Information',
+                                                  textStyle: TextStyle(
+                                                    fontSize: 15.86.sp,
+                                                    fontWeight: FontWeight.w600,
+                                                    color: AppColors.reminder1,
+                                                    fontFamily: 'DMSans',
+                                                  ),
+                                                ),
+
+                                                Divider(color: AppColors.f1),
+                                                SizedBox(height: 18.22.h),
+                                                InfoItem(
+                                                  title: 'Bank name',
+                                                  value:
+                                                      model
+                                                          .getPharmacyKycResponseModel
+                                                          ?.data
+                                                          ?.level2
+                                                          ?.bankDetails
+                                                          ?.bankName ??
+                                                      '--',
+                                                ),
+
+                                                SizedBox(height: 18.22.h),
+                                                InfoItem(
+                                                  title: 'Account number',
+                                                  value:
+                                                      model
+                                                          .getPharmacyKycResponseModel
+                                                          ?.data
+                                                          ?.level2
+                                                          ?.bankDetails
+                                                          ?.accountNumber ??
+                                                      '--',
+                                                ),
+                                                SizedBox(height: 18.22.h),
+                                                InfoItem(
+                                                  title: 'Account name',
+                                                  value:
+                                                      model
+                                                          .getPharmacyKycResponseModel
+                                                          ?.data
+                                                          ?.level2
+                                                          ?.bankDetails
+                                                          ?.accountName ??
+                                                      '--',
+                                                ),
+
+                                                SizedBox(height: 2.h),
+                                              ],
+                                            ),
+                                    ),
 
                                     model.getStatusOFKycStatus(model)
                                         ? SizedBox.shrink()
@@ -1667,22 +1902,31 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                 buttonBorderColor:
                                                     AppColors.primary,
                                                 onPressed: () {
-                                                  if (model
-                                                              .submitLevelTwoKycEntityModelMeansOfId!
-                                                              .meansOfIdDocument !=
-                                                          null ||
-                                                      model
-                                                              .submitLevelTwoKycEntityModelCAC!
-                                                              .cacCertificate !=
-                                                          null ||
-                                                      model
-                                                              .submitLevelTwoKycEntityModelLin!
-                                                              .pharmacyLicense !=
-                                                          null ||
-                                                      model
-                                                              .submitLevelTwoKycEntityModelTIN!
-                                                              .taxIdentificationNumberDocument !=
-                                                          null) {
+                                                  // final isFormValid =
+                                                  //     formKey.currentState
+                                                  //         ?.validate() ??
+                                                  //     false;
+
+                                                  // final hasRequiredDocument =
+                                                  //     model
+                                                  //             .submitLevelTwoKycEntityModelMeansOfId
+                                                  //             ?.meansOfIdDocument !=
+                                                  //         null ||
+                                                  //     model
+                                                  //             .submitLevelTwoKycEntityModelCAC
+                                                  //             ?.cacCertificate !=
+                                                  //         null ||
+                                                  //     model
+                                                  //             .submitLevelTwoKycEntityModelLin
+                                                  //             ?.pharmacyLicense !=
+                                                  //         null ||
+                                                  //     model
+                                                  //             .submitLevelTwoKycEntityModelTIN
+                                                  //             ?.taxIdentificationNumberDocument !=
+                                                  //         null;
+
+                                                  // if (isFormValid &&
+                                                  //     hasRequiredDocument) {
                                                     model.saveLevelPharmacyKyc(
                                                       context,
                                                       updateKyc: SubmitLevelTwoKycEntityModel(
@@ -1695,35 +1939,57 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                             ),
                                                         meansOfIdDocument:
                                                             model.submitLevelTwoKycEntityModelMeansOfId ==
-                                                                null
+                                                                null || model
+                                                                  .submitLevelTwoKycEntityModelMeansOfId!
+                                                                  .meansOfIdDocument==null
                                                             ? null
                                                             : model
                                                                   .submitLevelTwoKycEntityModelMeansOfId!
                                                                   .meansOfIdDocument!,
                                                         cacCertificate:
                                                             model.submitLevelTwoKycEntityModelCAC ==
-                                                                null
+                                                                null || model
+                                                                  .submitLevelTwoKycEntityModelCAC!
+                                                                  .cacCertificate==null
                                                             ? null
                                                             : model
                                                                   .submitLevelTwoKycEntityModelCAC!
                                                                   .cacCertificate,
                                                         pharmacyLicense:
                                                             model.submitLevelTwoKycEntityModelLin ==
-                                                                null
+                                                                null || model
+                                                                  .submitLevelTwoKycEntityModelLin!
+                                                                  .pharmacyLicense==null
                                                             ? null
                                                             : model
                                                                   .submitLevelTwoKycEntityModelLin!
                                                                   .pharmacyLicense,
                                                         taxIdentificationNumberDocument:
                                                             model.submitLevelTwoKycEntityModelTIN ==
-                                                                null
+                                                                null || model
+                                                                  .submitLevelTwoKycEntityModelTIN!
+                                                                  .taxIdentificationNumberDocument==null
                                                             ? null
                                                             : model
                                                                   .submitLevelTwoKycEntityModelTIN!
                                                                   .taxIdentificationNumberDocument,
+                                                        bankDetails: BankDetails(
+                                                          bankName:
+                                                              bankNameController
+                                                                  .text
+                                                                  .trim(),
+                                                          accountName:
+                                                              bankAccountNameController
+                                                                  .text
+                                                                  .trim(),
+                                                          accountNumber:
+                                                              bankAccountNoController
+                                                                  .text
+                                                                  .trim(),
+                                                        ),
                                                       ),
                                                     );
-                                                  }
+                                                  // }
                                                 },
                                               ),
                                               SizedBox(height: 20.h),
@@ -1738,22 +2004,31 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                 buttonBorderColor:
                                                     AppColors.transparent,
                                                 onPressed: () {
-                                                  if (model
-                                                              .submitLevelTwoKycEntityModelMeansOfId!
-                                                              .meansOfIdDocument !=
+                                                  final isFormValid =
+                                                      formKey.currentState
+                                                          ?.validate() ??
+                                                      false;
+
+                                                  final hasRequiredDocument =
+                                                      model
+                                                              .submitLevelTwoKycEntityModelMeansOfId
+                                                              ?.meansOfIdDocument !=
                                                           null ||
                                                       model
-                                                              .submitLevelTwoKycEntityModelCAC!
-                                                              .cacCertificate !=
+                                                              .submitLevelTwoKycEntityModelCAC
+                                                              ?.cacCertificate !=
                                                           null ||
                                                       model
-                                                              .submitLevelTwoKycEntityModelLin!
-                                                              .pharmacyLicense !=
+                                                              .submitLevelTwoKycEntityModelLin
+                                                              ?.pharmacyLicense !=
                                                           null ||
                                                       model
-                                                              .submitLevelTwoKycEntityModelTIN!
-                                                              .taxIdentificationNumberDocument !=
-                                                          null) {
+                                                              .submitLevelTwoKycEntityModelTIN
+                                                              ?.taxIdentificationNumberDocument !=
+                                                          null;
+
+                                                  if (isFormValid &&
+                                                      hasRequiredDocument) {
                                                     model.updatePharmacyKyc(
                                                       context,
                                                       updateKyc: SubmitLevelTwoKycEntityModel(
@@ -1766,32 +2041,54 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                             ),
                                                         meansOfIdDocument:
                                                             model.submitLevelTwoKycEntityModelMeansOfId ==
-                                                                null
+                                                                null || model
+                                                                  .submitLevelTwoKycEntityModelMeansOfId!
+                                                                  .meansOfIdDocument==null
                                                             ? null
                                                             : model
                                                                   .submitLevelTwoKycEntityModelMeansOfId!
                                                                   .meansOfIdDocument!,
                                                         cacCertificate:
                                                             model.submitLevelTwoKycEntityModelCAC ==
-                                                                null
+                                                                null || model
+                                                                  .submitLevelTwoKycEntityModelCAC!
+                                                                  .cacCertificate==null
                                                             ? null
                                                             : model
                                                                   .submitLevelTwoKycEntityModelCAC!
                                                                   .cacCertificate,
                                                         pharmacyLicense:
                                                             model.submitLevelTwoKycEntityModelLin ==
-                                                                null
+                                                                null || model
+                                                                  .submitLevelTwoKycEntityModelLin!
+                                                                  .pharmacyLicense==null
                                                             ? null
                                                             : model
                                                                   .submitLevelTwoKycEntityModelLin!
                                                                   .pharmacyLicense,
                                                         taxIdentificationNumberDocument:
                                                             model.submitLevelTwoKycEntityModelTIN ==
-                                                                null
+                                                                null || model
+                                                                  .submitLevelTwoKycEntityModelTIN!
+                                                                  .taxIdentificationNumberDocument==null
                                                             ? null
                                                             : model
                                                                   .submitLevelTwoKycEntityModelTIN!
                                                                   .taxIdentificationNumberDocument,
+                                                        bankDetails: BankDetails(
+                                                          bankName:
+                                                              bankNameController
+                                                                  .text
+                                                                  .trim(),
+                                                          accountName:
+                                                              bankAccountNameController
+                                                                  .text
+                                                                  .trim(),
+                                                          accountNumber:
+                                                              bankAccountNoController
+                                                                  .text
+                                                                  .trim(),
+                                                        ),
                                                       ),
                                                     );
                                                   }
