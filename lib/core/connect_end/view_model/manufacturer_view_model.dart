@@ -17,10 +17,10 @@ import 'package:medicate_app/core/connect_end/model/distributor_wholesale_catego
 import 'package:medicate_app/core/connect_end/model/forgot_password_response_model/forgot_password_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/get_distributor_kyc_response_model/coverage_areas.dart';
 import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/distributor.dart';
-import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/import_permit.dart';
+// import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/import_permit.dart';
 import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/importer.dart';
 import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/manufacturer.dart';
-import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/manufacturer_authorization_letter.dart';
+// import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/manufacturer_authorization_letter.dart';
 import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/nafdac_permit.dart';
 import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/pharmaceutical_distribution_license.dart';
 import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/pharmacy_council_license.dart';
@@ -60,7 +60,7 @@ import '../model/get_user_details_response_model/get_user_details_response_model
 import '../model/get_wallet_response_model/get_wallet_response_model.dart';
 import '../model/initiate_payment_response_model/initiate_payment_response_model.dart';
 import '../model/level_three_distributor_kyc_entity_model.dart';
-import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/documents.dart';
+import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/dis_documents.dart';
 import '../model/list_incoming_orders_response_model/list_incoming_orders_response_model.dart';
 import '../model/login_entity_model.dart';
 import '../model/manufacturer_signup_entity_model.dart';
@@ -73,6 +73,8 @@ import '../model/reset_password_entity_model.dart';
 import '../model/second_level_distributor_kyc_entity_model/cac_certificate.dart';
 import '../model/second_level_distributor_kyc_entity_model/company_logo.dart';
 import '../model/second_level_distributor_kyc_entity_model/gmp_certificate.dart';
+import '../model/second_level_distributor_kyc_entity_model/imp_documents.dart';
+import '../model/second_level_distributor_kyc_entity_model/man_documents.dart';
 import '../model/second_level_distributor_kyc_entity_model/nafdac_manufacturing_license.dart';
 import '../model/second_level_distributor_kyc_entity_model/product_registration_evidence.dart';
 import '../model/second_level_distributor_kyc_entity_model/second_level_distributor_kyc_entity_model.dart';
@@ -90,6 +92,10 @@ import 'package:medicate_app/core/connect_end/model/get_single_product_response_
     as im;
 import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/coverage_areas.dart'
     as cov;
+import 'package:medicate_app/core/connect_end/model/get_distributor_kyc_response_model/manufacturer_authorization_letter.dart'
+    as imp;
+import 'package:medicate_app/core/connect_end/model/get_distributor_kyc_response_model/import_permit.dart'
+    as impp;
 
 class ManufacturerViewModel extends BaseViewModel {
   final BuildContext? context;
@@ -109,9 +115,9 @@ class ManufacturerViewModel extends BaseViewModel {
   bool _isLoadingProductImage = false;
   bool get isLoadingProductImage => _isLoadingProductImage;
 
-  List<Documents> kycDistributorDocumentsList = [];
-  List<Documents> kycManufacturerDocumentsList = [];
-  List<Documents> kycImporterDocumentsList = [];
+  List<DisDocuments> kycDistributorDocumentsList = [];
+  List<ManDocuments> kycManufacturerDocumentsList = [];
+  List<ImpDocuments> kycImporterDocumentsList = [];
 
   final _pickImage = ImagePickerHandler();
 
@@ -4390,7 +4396,7 @@ class ManufacturerViewModel extends BaseViewModel {
           _secondLevelDistributorKycEntityModelCAC =
               SecondLevelDistributorKycEntityModel(
                 distributor: Distributor(
-                  documents: Documents(
+                  documents: DisDocuments(
                     cacCertificate: CacCertificate(
                       width: _uploadImageResponseModelDisCAC!.data!.width,
                       height: _uploadImageResponseModelDisCAC!.data!.height,
@@ -4430,7 +4436,7 @@ class ManufacturerViewModel extends BaseViewModel {
           _secondLevelDistributorKycEntityModelPharmLin =
               SecondLevelDistributorKycEntityModel(
                 distributor: Distributor(
-                  documents: Documents(
+                  documents: DisDocuments(
                     pharmaceuticalDistributionLicense:
                         PharmaceuticalDistributionLicense(
                           width:
@@ -4479,7 +4485,7 @@ class ManufacturerViewModel extends BaseViewModel {
           _secondLevelDistributorKycEntityModelNAF =
               SecondLevelDistributorKycEntityModel(
                 distributor: Distributor(
-                  documents: Documents(
+                  documents: DisDocuments(
                     nafdacPermit: NafdacPermit(
                       width: _uploadImageResponseModelDisNAFPermit!.data!.width,
                       height:
@@ -4523,7 +4529,7 @@ class ManufacturerViewModel extends BaseViewModel {
           _secondLevelDistributorKycEntityModelPharmCouncilLin =
               SecondLevelDistributorKycEntityModel(
                 distributor: Distributor(
-                  documents: Documents(
+                  documents: DisDocuments(
                     pharmacyCouncilLicense: PharmacyCouncilLicense(
                       width: _uploadImageResponseModelDisPharmCouncilLin!
                           .data!
@@ -4575,7 +4581,7 @@ class ManufacturerViewModel extends BaseViewModel {
           _secondLevelDistributorKycEntityModelLogo =
               SecondLevelDistributorKycEntityModel(
                 distributor: Distributor(
-                  documents: Documents(
+                  documents: DisDocuments(
                     companyLogo: CompanyLogo(
                       width: _uploadImageResponseModelDisComLogo!.data!.width,
                       height: _uploadImageResponseModelDisComLogo!.data!.height,
@@ -4616,7 +4622,7 @@ class ManufacturerViewModel extends BaseViewModel {
           _secondLevelDistributorKycEntityModelManCAC =
               SecondLevelDistributorKycEntityModel(
                 manufacturer: Manufacturer(
-                  documents: Documents(
+                  documents: ManDocuments(
                     cacCertificate: CacCertificate(
                       width: _uploadImageResponseModelManCAC!.data!.width,
                       height: _uploadImageResponseModelManCAC!.data!.height,
@@ -4656,7 +4662,7 @@ class ManufacturerViewModel extends BaseViewModel {
           _secondLevelDistributorKycEntityModelManGMP =
               SecondLevelDistributorKycEntityModel(
                 manufacturer: Manufacturer(
-                  documents: Documents(
+                  documents: ManDocuments(
                     gmpCertificate: GmpCertificate(
                       width: _uploadImageResponseModelManGMP!.data!.width,
                       height: _uploadImageResponseModelManGMP!.data!.height,
@@ -4696,7 +4702,7 @@ class ManufacturerViewModel extends BaseViewModel {
           _secondLevelDistributorKycEntityModelManNAF =
               SecondLevelDistributorKycEntityModel(
                 manufacturer: Manufacturer(
-                  documents: Documents(
+                  documents: ManDocuments(
                     nafdacManufacturingLicense: NafdacManufacturingLicense(
                       width: _uploadImageResponseModelNAFManLin!.data!.width,
                       height: _uploadImageResponseModelNAFManLin!.data!.height,
@@ -4737,7 +4743,7 @@ class ManufacturerViewModel extends BaseViewModel {
           _secondLevelDistributorKycEntityModelManProd =
               SecondLevelDistributorKycEntityModel(
                 manufacturer: Manufacturer(
-                  documents: Documents(
+                  documents: ManDocuments(
                     productRegistrationEvidence: ProductRegistrationEvidence(
                       width:
                           _uploadImageResponseModelManProdRegEvi!.data!.width,
@@ -4782,7 +4788,7 @@ class ManufacturerViewModel extends BaseViewModel {
           _secondLevelDistributorKycEntityModelManLogo =
               SecondLevelDistributorKycEntityModel(
                 manufacturer: Manufacturer(
-                  documents: Documents(
+                  documents: ManDocuments(
                     companyLogo: CompanyLogo(
                       width: _uploadImageResponseModelManComLogo!.data!.width,
                       height: _uploadImageResponseModelManComLogo!.data!.height,
@@ -4823,7 +4829,7 @@ class ManufacturerViewModel extends BaseViewModel {
           _secondLevelDistributorKycEntityModelImpCAC =
               SecondLevelDistributorKycEntityModel(
                 importer: Importer(
-                  documents: Documents(
+                  documents: ImpDocuments(
                     cacCertificate: CacCertificate(
                       width: _uploadImageResponseModelCAC!.data!.width,
                       height: _uploadImageResponseModelCAC!.data!.height,
@@ -4863,8 +4869,8 @@ class ManufacturerViewModel extends BaseViewModel {
           _secondLevelDistributorKycEntityModelImpPermit =
               SecondLevelDistributorKycEntityModel(
                 importer: Importer(
-                  documents: Documents(
-                    importPermit: ImportPermit(
+                  documents: ImpDocuments(
+                    importPermit: impp.ImportPermit(
                       width: _uploadImageResponseModelImportPermit!.data!.width,
                       height:
                           _uploadImageResponseModelImportPermit!.data!.height,
@@ -4906,9 +4912,9 @@ class ManufacturerViewModel extends BaseViewModel {
           _secondLevelDistributorKycEntityModelImpManAuthLetter =
               SecondLevelDistributorKycEntityModel(
                 importer: Importer(
-                  documents: Documents(
+                  documents: ImpDocuments(
                     manufacturerAuthorizationLetter:
-                        ManufacturerAuthorizationLetter(
+                        imp.ManufacturerAuthorizationLetter(
                           width: _uploadImageResponseModelManAuthLetter!
                               .data!
                               .width,
@@ -4959,7 +4965,7 @@ class ManufacturerViewModel extends BaseViewModel {
           _secondLevelDistributorKycEntityModelImpLogo =
               SecondLevelDistributorKycEntityModel(
                 importer: Importer(
-                  documents: Documents(
+                  documents: ImpDocuments(
                     companyLogo: CompanyLogo(
                       width: _uploadImageResponseModelComLogo!.data!.width,
                       height: _uploadImageResponseModelComLogo!.data!.height,
@@ -5394,74 +5400,164 @@ class ManufacturerViewModel extends BaseViewModel {
                                   color: AppColors.white,
                                   buttonBorderColor: AppColors.transparent,
                                   isLoading: _isLoading,
+
                                   onPressed: () async {
-                                    _isLoading = true;
                                     final state = stateController.text.trim();
 
                                     if (state.isEmpty) {
                                       return;
                                     }
 
-                                    final stateIndex = listOfAddedLocation
-                                        .indexWhere(
-                                          (location) => location.lgas!.any(
-                                            (key) =>
-                                                key.trim().toLowerCase() ==
-                                                state.toLowerCase(),
-                                          ),
-                                        );
-
-                                    if (isEdit) {
-                                      // EDIT EXISTING STATE
-                                      if (stateIndex != -1) {
-                                        listOfAddedLocation[stateIndex] =
-                                            cov.CoverageAreas(
-                                              lgas: lgaAddedList,
-                                              state: stateController.text
-                                                  .trim(),
-                                            );
-                                        // {
-                                        //   state: List<String>.from(
-                                        //     lgaAddedList,
-                                        //   ),
-                                        // };
-                                      } else {
-                                        // In case the state was changed during editing
-                                        listOfAddedLocation.add(
-                                          cov.CoverageAreas(
-                                            lgas: lgaAddedList,
-                                            state: stateController.text.trim(),
-                                          ),
-                                          //   {
-                                          //   state: List<String>.from(
-                                          //     lgaAddedList,
-                                          //   ),
-                                          // }
-                                        );
-                                      }
-                                    } else {
-                                      // ADD NEW STATE
-                                      listOfAddedLocation.add(
-                                        cov.CoverageAreas(
-                                          lgas: lgaAddedList,
-                                          state: stateController.text.trim(),
-                                        ),
-                                        //   {
-                                        //   state: List<String>.from(lgaAddedList),
-                                        // }
-                                      );
-                                      // }
-                                    }
-                                    if (covAreaIndex != null) {
-                                      coverageAreaIndex = covAreaIndex;
-                                    }
-                                    _isLoading = false;
-                                    await Future.delayed(Duration(seconds: 1));
-                                    lgaListCopy.clear();
+                                    _isLoading = true;
                                     setModalState(() {});
-                                    Navigator.pop(context);
-                                    notifyListeners();
+
+                                    try {
+                                      // Find an existing entry by STATE, not by its LGAs.
+                                      final stateIndex = listOfAddedLocation
+                                          .indexWhere(
+                                            (location) =>
+                                                (location.state ?? '')
+                                                    .trim()
+                                                    .toLowerCase() ==
+                                                state.toLowerCase(),
+                                          );
+
+                                      final coverageAreas = cov.CoverageAreas(
+                                        state: state,
+                                        lgas: List<String>.from(lgaAddedList),
+                                      );
+
+                                      if (isEdit) {
+                                        if (stateIndex != -1) {
+                                          // Update the existing state.
+                                          listOfAddedLocation[stateIndex] =
+                                              coverageAreas;
+                                        } else {
+                                          // Add the state if it does not already exist.
+                                          listOfAddedLocation.add(
+                                            coverageAreas,
+                                          );
+                                        }
+                                      } else {
+                                        // Prevent duplicate states when adding.
+                                        if (stateIndex != -1) {
+                                          // Merge the selected LGAs with existing LGAs.
+                                          final existing =
+                                              listOfAddedLocation[stateIndex];
+                                          final mergedLgas = <String>{
+                                            ...?existing.lgas,
+                                            ...lgaAddedList,
+                                          }.toList();
+
+                                          listOfAddedLocation[stateIndex] =
+                                              cov.CoverageAreas(
+                                                state: state,
+                                                lgas: mergedLgas,
+                                              );
+                                        } else {
+                                          listOfAddedLocation.add(
+                                            coverageAreas,
+                                          );
+                                        }
+                                      }
+
+                                      if (covAreaIndex != null) {
+                                        coverageAreaIndex = covAreaIndex;
+                                      }
+
+                                      await Future.delayed(
+                                        const Duration(seconds: 1),
+                                      );
+
+                                      lgaListCopy.clear();
+
+                                      if (context.mounted) {
+                                        Navigator.pop(context);
+                                      }
+
+                                      notifyListeners();
+                                    } finally {
+                                      _isLoading = false;
+                                      notifyListeners();
+                                    }
                                   },
+
+                                  // onPressed: () async {
+                                  //   _isLoading = true;
+                                  //   final state = stateController.text.trim();
+
+                                  //   if (state.isEmpty) {
+                                  //     return;
+                                  //   }
+
+                                  //   // final stateIndex = listOfAddedLocation
+                                  //   //     .indexWhere(
+                                  //   //       (location) => location.lgas!.any(
+                                  //   //         (key) =>
+                                  //   //             key.trim().toLowerCase() ==
+                                  //   //             state.toLowerCase(),
+                                  //   //       ),
+                                  //   //     );
+                                  //   final stateIndex = listOfAddedLocation
+                                  //       .indexWhere(
+                                  //         (location) =>
+                                  //             (location.state ?? '')
+                                  //                 .trim()
+                                  //                 .toLowerCase() ==
+                                  //             state.toLowerCase(),
+                                  //       );
+
+                                  //   if (isEdit) {
+                                  //     // EDIT EXISTING STATE
+                                  //     if (stateIndex != -1) {
+                                  //       listOfAddedLocation[stateIndex] =
+                                  //           cov.CoverageAreas(
+                                  //             lgas: lgaAddedList,
+                                  //             state: stateController.text
+                                  //                 .trim(),
+                                  //           );
+                                  //       // {
+                                  //       //   state: List<String>.from(
+                                  //       //     lgaAddedList,
+                                  //       //   ),
+                                  //       // };
+                                  //     } else {
+                                  //       // In case the state was changed during editing
+                                  //       listOfAddedLocation.add(
+                                  //         cov.CoverageAreas(
+                                  //           lgas: lgaAddedList,
+                                  //           state: stateController.text.trim(),
+                                  //         ),
+                                  //         //   {
+                                  //         //   state: List<String>.from(
+                                  //         //     lgaAddedList,
+                                  //         //   ),
+                                  //         // }
+                                  //       );
+                                  //     }
+                                  //   } else {
+                                  //     // ADD NEW STATE
+                                  //     listOfAddedLocation.add(
+                                  //       cov.CoverageAreas(
+                                  //         lgas: lgaAddedList,
+                                  //         state: stateController.text.trim(),
+                                  //       ),
+                                  //       //   {
+                                  //       //   state: List<String>.from(lgaAddedList),
+                                  //       // }
+                                  //     );
+                                  //     // }
+                                  //   }
+                                  //   if (covAreaIndex != null) {
+                                  //     coverageAreaIndex = covAreaIndex;
+                                  //   }
+                                  //   _isLoading = false;
+                                  //   await Future.delayed(Duration(seconds: 1));
+                                  //   lgaListCopy.clear();
+                                  //   setModalState(() {});
+                                  //   Navigator.pop(context);
+                                  //   notifyListeners();
+                                  // },
                                 ),
                               ),
                             ],

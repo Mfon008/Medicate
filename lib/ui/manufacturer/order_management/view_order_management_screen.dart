@@ -70,15 +70,15 @@ class ViewOrderManagementScreen extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            TextView(
-                              text: 'Customer Information',
-                              textStyle: TextStyle(
-                                fontFamily: 'DMSans',
-                                fontSize: 16.82.sp,
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.reminder,
-                              ),
-                            ),
+                            // TextView(
+                            //   text: 'Customer Information',
+                            //   textStyle: TextStyle(
+                            //     fontFamily: 'DMSans',
+                            //     fontSize: 16.82.sp,
+                            //     fontWeight: FontWeight.w500,
+                            //     color: AppColors.reminder,
+                            //   ),
+                            // ),
                             model
                                             .getIncomingOrderDdetailResponseModel!
                                             .data!

@@ -481,7 +481,23 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                             SizedBox(
                                                               width: 8.10.w,
                                                             ),
-                                                            model
+                                                                                                                       model
+                                                                            .getHmoKycResponseModel
+                                                                            ?.data
+                                                                            ?.kycLevels?[1]
+                                                                            .status
+                                                                            ?.toLowerCase() ==
+                                                                        'approved' ||
+                                                                    model
+                                                                            .getHmoKycResponseModel
+                                                                            ?.data
+                                                                            ?.kycLevels?[1]
+                                                                            .status
+                                                                            ?.toLowerCase() ==
+                                                                        'UNDER_REVIEW'
+                                                                            .toLowerCase()
+                                                                ? SizedBox.shrink()
+                                                                :model
                                                                         .secondLevelHmoKycEntityModelLogo
                                                                         ?.logo !=
                                                                     null
@@ -511,7 +527,23 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                             SizedBox(
                                                               width: 8.10.w,
                                                             ),
-                                                            model
+                                                                                                                       model
+                                                                            .getHmoKycResponseModel
+                                                                            ?.data
+                                                                            ?.kycLevels?[1]
+                                                                            .status
+                                                                            ?.toLowerCase() ==
+                                                                        'approved' ||
+                                                                    model
+                                                                            .getHmoKycResponseModel
+                                                                            ?.data
+                                                                            ?.kycLevels?[1]
+                                                                            .status
+                                                                            ?.toLowerCase() ==
+                                                                        'UNDER_REVIEW'
+                                                                            .toLowerCase()
+                                                                ? SizedBox.shrink()
+                                                                :model
                                                                         .secondLevelHmoKycEntityModelLogo
                                                                         ?.logo !=
                                                                     null
@@ -778,7 +810,23 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                             SizedBox(
                                                               width: 8.10.w,
                                                             ),
-                                                            model.secondLevelHmoKycEntityModelCAC !=
+                                                                                                                       model
+                                                                            .getHmoKycResponseModel
+                                                                            ?.data
+                                                                            ?.kycLevels?[1]
+                                                                            .status
+                                                                            ?.toLowerCase() ==
+                                                                        'approved' ||
+                                                                    model
+                                                                            .getHmoKycResponseModel
+                                                                            ?.data
+                                                                            ?.kycLevels?[1]
+                                                                            .status
+                                                                            ?.toLowerCase() ==
+                                                                        'UNDER_REVIEW'
+                                                                            .toLowerCase()
+                                                                ? SizedBox.shrink()
+                                                                :model.secondLevelHmoKycEntityModelCAC !=
                                                                         null &&
                                                                     model
                                                                             .secondLevelHmoKycEntityModelCAC
@@ -810,7 +858,23 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                             SizedBox(
                                                               width: 8.10.w,
                                                             ),
-                                                            model.secondLevelHmoKycEntityModelCAC?.cacCertificate !=
+                                                                                                                       model
+                                                                            .getHmoKycResponseModel
+                                                                            ?.data
+                                                                            ?.kycLevels?[1]
+                                                                            .status
+                                                                            ?.toLowerCase() ==
+                                                                        'approved' ||
+                                                                    model
+                                                                            .getHmoKycResponseModel
+                                                                            ?.data
+                                                                            ?.kycLevels?[1]
+                                                                            .status
+                                                                            ?.toLowerCase() ==
+                                                                        'UNDER_REVIEW'
+                                                                            .toLowerCase()
+                                                                ? SizedBox.shrink()
+                                                                :model.secondLevelHmoKycEntityModelCAC?.cacCertificate !=
                                                                         null &&
                                                                     model
                                                                             .secondLevelHmoKycEntityModelCAC
@@ -1047,6 +1111,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                               ),
                                                             ),
                                                             Spacer(),
+
                                                             GestureDetector(
                                                               onTap: () => Navigator.push(
                                                                 context,
@@ -1076,10 +1141,27 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                             SizedBox(
                                                               width: 8.10.w,
                                                             ),
+
                                                             model
-                                                                        .secondLevelHmoKycEntityModelNHIS
-                                                                        ?.hmoAccreditation !=
-                                                                    null
+                                                                            .getHmoKycResponseModel
+                                                                            ?.data
+                                                                            ?.kycLevels?[1]
+                                                                            .status
+                                                                            ?.toLowerCase() ==
+                                                                        'approved' ||
+                                                                    model
+                                                                            .getHmoKycResponseModel
+                                                                            ?.data
+                                                                            ?.kycLevels?[1]
+                                                                            .status
+                                                                            ?.toLowerCase() ==
+                                                                        'UNDER_REVIEW'
+                                                                            .toLowerCase()
+                                                                ? SizedBox.shrink()
+                                                                : model
+                                                                          .secondLevelHmoKycEntityModelNHIS
+                                                                          ?.hmoAccreditation !=
+                                                                      null
                                                                 ? GestureDetector(
                                                                     onTap: () =>
                                                                         model.pickImageNHISLicense(
@@ -1106,7 +1188,23 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                             SizedBox(
                                                               width: 8.10.w,
                                                             ),
-                                                            model
+                                                                                                                       model
+                                                                            .getHmoKycResponseModel
+                                                                            ?.data
+                                                                            ?.kycLevels?[1]
+                                                                            .status
+                                                                            ?.toLowerCase() ==
+                                                                        'approved' ||
+                                                                    model
+                                                                            .getHmoKycResponseModel
+                                                                            ?.data
+                                                                            ?.kycLevels?[1]
+                                                                            .status
+                                                                            ?.toLowerCase() ==
+                                                                        'UNDER_REVIEW'
+                                                                            .toLowerCase()
+                                                                ? SizedBox.shrink()
+                                                                :model
                                                                         .secondLevelHmoKycEntityModelNHIS
                                                                         ?.hmoAccreditation !=
                                                                     null
@@ -1368,7 +1466,23 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                             SizedBox(
                                                               width: 8.10.w,
                                                             ),
-                                                            model
+                                                                                                                       model
+                                                                            .getHmoKycResponseModel
+                                                                            ?.data
+                                                                            ?.kycLevels?[1]
+                                                                            .status
+                                                                            ?.toLowerCase() ==
+                                                                        'approved' ||
+                                                                    model
+                                                                            .getHmoKycResponseModel
+                                                                            ?.data
+                                                                            ?.kycLevels?[1]
+                                                                            .status
+                                                                            ?.toLowerCase() ==
+                                                                        'UNDER_REVIEW'
+                                                                            .toLowerCase()
+                                                                ? SizedBox.shrink()
+                                                                :model
                                                                         .secondLevelHmoKycEntityModelTax
                                                                         ?.taxIdCertificate !=
                                                                     null
@@ -1398,7 +1512,23 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                             SizedBox(
                                                               width: 8.10.w,
                                                             ),
-                                                            model
+                                                                                                                       model
+                                                                            .getHmoKycResponseModel
+                                                                            ?.data
+                                                                            ?.kycLevels?[1]
+                                                                            .status
+                                                                            ?.toLowerCase() ==
+                                                                        'approved' ||
+                                                                    model
+                                                                            .getHmoKycResponseModel
+                                                                            ?.data
+                                                                            ?.kycLevels?[1]
+                                                                            .status
+                                                                            ?.toLowerCase() ==
+                                                                        'UNDER_REVIEW'
+                                                                            .toLowerCase()
+                                                                ? SizedBox.shrink()
+                                                                :model
                                                                         .secondLevelHmoKycEntityModelTax
                                                                         ?.taxIdCertificate !=
                                                                     null

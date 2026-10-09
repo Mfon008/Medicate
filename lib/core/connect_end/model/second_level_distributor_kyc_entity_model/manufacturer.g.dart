@@ -14,7 +14,7 @@ Manufacturer _$ManufacturerFromJson(Map<String, dynamic> json) => Manufacturer(
         ),
   documents: json['documents'] == null
       ? null
-      : Documents.fromJson(json['documents'] as Map<String, dynamic>),
+      : ManDocuments.fromJson(json['documents'] as Map<String, dynamic>),
 );
 
 Map<String, dynamic> _$ManufacturerToJson(Manufacturer instance) =>

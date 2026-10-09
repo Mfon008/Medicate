@@ -345,39 +345,61 @@ class _LevelThreeCardState extends State<LevelThreeCard> {
                                   controller: bankBVNController,
                                 ),
                                 SizedBox(height: 30.h),
-                                ButtonWidget(
-                                  border: 100.r,
-                                  buttonColor: AppColors.primary,
-                                  fontSize: 14.sp,
-                                  buttonText: 'Submit for Verification',
-                                  color: AppColors.white,
-                                  isLoading: widget.model!.isLoading,
-                                  buttonBorderColor: AppColors.transparent,
-                                  onPressed: () {
-                                    if (formKey!.currentState!.validate()) {
-                                      widget.model!
-                                          .submitLevelThreeManAndDistributorKyc(
-                                            context: context,
-                                            kycEntity:
-                                                LevelThreeDistributorKycEntityModel(
-                                                  bankName: bankNameController
-                                                      .text
-                                                      .trim(),
-                                                  accountName:
-                                                      accountNameController.text
-                                                          .trim(),
-                                                  accountNumber:
-                                                      accountNumberController
-                                                          .text
-                                                          .trim(),
-                                                  bvn: bankBVNController.text
-                                                      .trim(),
-                                                ),
-                                          );
-                                    }
-                                    widget.model!.notifyListeners();
-                                  },
-                                ),
+                                widget
+                                                .model!
+                                                .getDistributorKycResponseModel!
+                                                .data!
+                                                .kycLevels![2]
+                                                .status
+                                                ?.toLowerCase() ==
+                                            'approved' ||
+                                        widget
+                                                .model!
+                                                .getDistributorKycResponseModel!
+                                                .data!
+                                                .kycLevels![2]
+                                                .status
+                                                ?.toLowerCase() ==
+                                            'under_review'
+                                    ? SizedBox.shrink()
+                                    : ButtonWidget(
+                                        border: 100.r,
+                                        buttonColor: AppColors.primary,
+                                        fontSize: 14.sp,
+                                        buttonText: 'Submit for Verification',
+                                        color: AppColors.white,
+                                        isLoading: widget.model!.isLoading,
+                                        buttonBorderColor:
+                                            AppColors.transparent,
+                                        onPressed: () {
+                                          if (formKey!.currentState!
+                                              .validate()) {
+                                            widget.model!
+                                                .submitLevelThreeManAndDistributorKyc(
+                                                  context: context,
+                                                  kycEntity:
+                                                      LevelThreeDistributorKycEntityModel(
+                                                        bankName:
+                                                            bankNameController
+                                                                .text
+                                                                .trim(),
+                                                        accountName:
+                                                            accountNameController
+                                                                .text
+                                                                .trim(),
+                                                        accountNumber:
+                                                            accountNumberController
+                                                                .text
+                                                                .trim(),
+                                                        bvn: bankBVNController
+                                                            .text
+                                                            .trim(),
+                                                      ),
+                                                );
+                                          }
+                                          widget.model!.notifyListeners();
+                                        },
+                                      ),
                                 SizedBox(height: 10.h),
                               ],
                             ),

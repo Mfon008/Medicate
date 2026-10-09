@@ -14,7 +14,7 @@ Importer _$ImporterFromJson(Map<String, dynamic> json) => Importer(
         ),
   documents: json['documents'] == null
       ? null
-      : Documents.fromJson(json['documents'] as Map<String, dynamic>),
+      : ImpDocuments.fromJson(json['documents'] as Map<String, dynamic>),
 );
 
 Map<String, dynamic> _$ImporterToJson(Importer instance) => <String, dynamic>{

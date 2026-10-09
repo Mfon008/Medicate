@@ -32,10 +32,10 @@ class _LevelThreeCardState extends State<LevelThreeCard> {
   bool isExpanded = false;
   bool isSwitched = false;
 
-  TextEditingController bankNameController = TextEditingController();
-  TextEditingController accountNameController = TextEditingController();
-  TextEditingController accountNumberController = TextEditingController();
-  TextEditingController bankBVNController = TextEditingController();
+  TextEditingController bankNameController = TextEditingController(text: '');
+  TextEditingController accountNameController = TextEditingController(text: '');
+  TextEditingController accountNumberController = TextEditingController(text: '');
+  TextEditingController bankBVNController = TextEditingController(text: '');
 
   GlobalKey<FormState>? formKey = GlobalKey<FormState>();
 
@@ -1038,7 +1038,6 @@ class _LevelThreeCardState extends State<LevelThreeCard> {
                                             ],
                                           ),
                                           SizedBox(height: 10.h),
-
                                           model
                                                               .getHmoKycResponseModel!
                                                               .data!
@@ -1313,21 +1312,21 @@ class _LevelThreeCardState extends State<LevelThreeCard> {
                                 model
                                                 .getHmoKycResponseModel
                                                 ?.data
-                                                ?.kycLevels?[1]
+                                                ?.kycLevels?[2]
                                                 .status
                                                 ?.toLowerCase() ==
                                             'approved' ||
                                         model
                                                 .getHmoKycResponseModel
                                                 ?.data
-                                                ?.kycLevels?[1]
+                                                ?.kycLevels?[2]
                                                 .status
                                                 ?.toLowerCase() ==
                                             'UNDER_REVIEW'.toLowerCase()
                                     ? SizedBox.shrink()
                                     : Column(
                                         children: [
-                                          SizedBox(height: 30.h),
+                                          SizedBox(height: 20.h),
                                           ButtonWidget(
                                             border: 100.r,
                                             buttonColor: AppColors.white,

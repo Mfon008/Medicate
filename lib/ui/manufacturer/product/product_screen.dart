@@ -389,11 +389,11 @@ class _ProductScreenState extends State<ProductScreen> {
                                       ),
                                       TextView(
                                         text: DateFormat(
-                                          'dd/yyyy',
+                                          'dd/MM/yyyy',
                                         ).format(e.expiryDate!),
                                         textStyle: TextStyle(
                                           fontFamily: 'DMSans',
-                                          fontSize: 14.22.sp,
+                                          fontSize: 13.22.sp,
                                           fontWeight: FontWeight.w400,
                                           color: AppColors.red,
                                         ),

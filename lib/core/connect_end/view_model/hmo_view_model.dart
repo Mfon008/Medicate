@@ -3896,7 +3896,7 @@ class HMOViewModel extends BaseViewModel {
             ),
           );
           _isLoadingAss = _isLoading;
-          _uploadImageResponseModelPlan = _uploadImageResponseModel;
+          _uploadImageResponseModelAss = _uploadImageResponseModel;
           _thirdLevelHmoKycEntityModelAssClinic =
               UpdateHmoKycThirdLevelEntityModel(
                 listOfHospitals: ListOfHospitals(

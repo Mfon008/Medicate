@@ -6,14 +6,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:medicate_app/core/app_assets/image.dart';
 import 'package:medicate_app/core/config/colors.dart';
-import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/business_details.dart';
 import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/cac_certificate.dart';
 import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/company_logo.dart';
-import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/distributor.dart';
-import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/documents.dart';
 import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/gmp_certificate.dart';
-import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/import_permit.dart';
-import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/manufacturer.dart';
 import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/nafdac_manufacturing_license.dart';
 import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/nafdac_permit.dart';
 import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/pharmaceutical_distribution_license.dart';
@@ -23,9 +18,16 @@ import 'package:medicate_app/ui/widget/text.dart';
 import 'package:stacked/stacked.dart';
 import '../../../../../core/app_assets/app_validation.dart';
 import '../../../../../core/app_assets/constant.dart';
+import '../../../../../core/connect_end/model/get_distributor_kyc_response_model/import_permit.dart';
+import '../../../../../core/connect_end/model/get_distributor_kyc_response_model/manufacturer_authorization_letter.dart';
+import '../../../../../core/connect_end/model/second_level_distributor_kyc_entity_model/business_details.dart';
 import '../../../../../core/connect_end/model/second_level_distributor_kyc_entity_model/coverage_areas.dart';
+import '../../../../../core/connect_end/model/second_level_distributor_kyc_entity_model/dis_documents.dart';
+import '../../../../../core/connect_end/model/second_level_distributor_kyc_entity_model/distributor.dart';
+import '../../../../../core/connect_end/model/second_level_distributor_kyc_entity_model/imp_documents.dart';
 import '../../../../../core/connect_end/model/second_level_distributor_kyc_entity_model/importer.dart';
-import '../../../../../core/connect_end/model/second_level_distributor_kyc_entity_model/manufacturer_authorization_letter.dart';
+import '../../../../../core/connect_end/model/second_level_distributor_kyc_entity_model/man_documents.dart';
+import '../../../../../core/connect_end/model/second_level_distributor_kyc_entity_model/manufacturer.dart';
 import '../../../../../core/connect_end/model/second_level_distributor_kyc_entity_model/second_level_distributor_kyc_entity_model.dart';
 import '../../../../../core/connect_end/view_model/manufacturer_view_model.dart';
 import '../../../../manufacturer/product/custom_switch_widget.dart';
@@ -2833,7 +2835,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                   ),
                                                                   child: TextView(
                                                                     text:
-                                                                        '${model.getDistributorKycResponseModel!.data!.level2!.distributor!.coverageAreas!.length}',
+                                                                        '${model.getDistributorKycResponseModel?.data?.level2?.distributor?.coverageAreas?.length??0}',
                                                                     textStyle: TextStyle(
                                                                       fontSize:
                                                                           12.6.sp,
@@ -2850,22 +2852,53 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                               ],
                                                             ),
                                                             IconButton(
-                                                              onPressed: () {
-                                                                model
-                                                                    .stateController
-                                                                    .clear();
-                                                                model
-                                                                    .lgaListCopy
-                                                                    .clear();
-                                                                model
-                                                                    .showLGAAndStateDialog(
-                                                                      context,
-                                                                    );
-                                                              },
+                                                              onPressed:  model
+                                                                      .getDistributorKycResponseModel!
+                                                                      .data!
+                                                                      .level2!
+                                                                      .distributor!
+                                                                      .coverageAreas!=null &&
+                                                                  model
+                                                                      .getDistributorKycResponseModel!
+                                                                      .data!
+                                                                      .level2!
+                                                                      .distributor!
+                                                                      .coverageAreas!
+                                                                      .isNotEmpty
+                                                                  ? () {}
+                                                                  : () {
+                                                                      model
+                                                                          .stateController
+                                                                          .clear();
+                                                                      model
+                                                                          .lgaListCopy
+                                                                          .clear();
+                                                                      model.showLGAAndStateDialog(
+                                                                        context,
+                                                                      );
+                                                                    },
                                                               icon: Icon(
                                                                 Icons.add,
-                                                                color: AppColors
-                                                                    .reminder1,
+                                                                color:model
+                                                                      .getDistributorKycResponseModel!
+                                                                      .data!
+                                                                      .level2!
+                                                                      .distributor!
+                                                                      .coverageAreas==null ||
+                                                                    model
+                                                                        .getDistributorKycResponseModel!
+                                                                        .data!
+                                                                        .level2!
+                                                                        .distributor!
+                                                                        .coverageAreas!
+                                                                        .isNotEmpty
+                                                                    ? AppColors
+                                                                          .reminder1
+                                                                          .withOpacity(
+                                                                            .3,
+                                                                          )
+                                                                    : AppColors
+                                                                          .reminder1,
                                                                 size: 22.sp,
                                                               ),
                                                             ),
@@ -2880,7 +2913,16 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                   .getDistributorKycResponseModel!
                                                                   .data!
                                                                   .level2 !=
-                                                              null &&
+                                                              null &&model
+                                                                      .getDistributorKycResponseModel!
+                                                                      .data!
+                                                                      .level2!
+                                                                      .distributor!=null &&  model
+                                                                      .getDistributorKycResponseModel!
+                                                                      .data!
+                                                                      .level2!
+                                                                      .distributor!
+                                                                      .coverageAreas!=null &&
                                                           model
                                                               .getDistributorKycResponseModel!
                                                               .data!
@@ -3047,22 +3089,27 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                           .end,
                                                                   children: [
                                                                     GestureDetector(
-                                                                      onTap: () {
-                                                                        model.stateController.text =
-                                                                            o.state ??
-                                                                            '';
-                                                                        model.showLGAAndStateDialog(
-                                                                          context,
-                                                                          isEdit:
-                                                                              true,
-                                                                          editState:
-                                                                              o.state,
-                                                                          editLgas:
-                                                                              o.lgas,
-                                                                        );
-                                                                        model
-                                                                            .notifyListeners();
-                                                                      },
+                                                                      onTap:
+                                                                          model
+                                                                              .getDistributorKycResponseModel!
+                                                                              .data!
+                                                                              .level2!
+                                                                              .distributor!
+                                                                              .coverageAreas!
+                                                                              .isNotEmpty
+                                                                          ? () {}
+                                                                          : () {
+                                                                              model.stateController.text =
+                                                                                  o.state ??
+                                                                                  '';
+                                                                              model.showLGAAndStateDialog(
+                                                                                context,
+                                                                                isEdit: true,
+                                                                                editState: o.state,
+                                                                                editLgas: o.lgas,
+                                                                              );
+                                                                              model.notifyListeners();
+                                                                            },
                                                                       child: SvgPicture.asset(
                                                                         AppImage
                                                                             .round_edit,
@@ -3077,22 +3124,24 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                           10.h,
                                                                     ),
                                                                     GestureDetector(
-                                                                      onTap: () {
-                                                                        model
-                                                                            .getDistributorKycResponseModel!
-                                                                            .data!
-                                                                            .level2!
-                                                                            .distributor!
-                                                                            .coverageAreas!
-                                                                            .remove(
-                                                                              o,
-                                                                            );
-                                                                        setState(
-                                                                          () {},
-                                                                        );
-                                                                        model
-                                                                            .notifyListeners();
-                                                                      },
+                                                                      onTap:
+                                                                          model
+                                                                              .getDistributorKycResponseModel!
+                                                                              .data!
+                                                                              .level2!
+                                                                              .distributor!
+                                                                              .coverageAreas!
+                                                                              .isNotEmpty
+                                                                          ? () {}
+                                                                          : () {
+                                                                              model.getDistributorKycResponseModel!.data!.level2!.distributor!.coverageAreas!.remove(
+                                                                                o,
+                                                                              );
+                                                                              setState(
+                                                                                () {},
+                                                                              );
+                                                                              model.notifyListeners();
+                                                                            },
                                                                       child: SvgPicture.asset(
                                                                         AppImage
                                                                             .delete,
@@ -3100,6 +3149,10 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                             20.h,
                                                                         width:
                                                                             20.h,
+                                                                        color:
+                                                                            model.getDistributorKycResponseModel!.data!.level2!.distributor!.coverageAreas!.isNotEmpty
+                                                                            ? AppColors.red.withOpacity(.3)
+                                                                            : AppColors.red,
                                                                       ),
                                                                     ),
                                                                   ],
@@ -5024,87 +5077,87 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                       //         .data!
                                                       //         .level2 !=
                                                       //     null)
-                                                      //   Row(
-                                                      //     mainAxisAlignment:
-                                                      //         MainAxisAlignment
-                                                      //             .spaceBetween,
-                                                      //     children: [
-                                                      //       Row(
-                                                      //         children: [
-                                                      //           TextView(
-                                                      //             text:
-                                                      //                 'Area/Location ',
-                                                      //             textStyle: TextStyle(
-                                                      //               fontSize:
-                                                      //                   15.86
-                                                      //                       .sp,
-                                                      //               fontWeight:
-                                                      //                   FontWeight
-                                                      //                       .w600,
-                                                      //               color: AppColors
-                                                      //                   .reminder1,
-                                                      //               fontFamily:
-                                                      //                   'DMSans',
-                                                      //             ),
-                                                      //           ),
-                                                      //           SizedBox(
-                                                      //             width: 6.10.w,
-                                                      //           ),
-                                                      //           Container(
-                                                      //             padding: EdgeInsets.symmetric(
-                                                      //               horizontal:
-                                                      //                   6.2.w,
-                                                      //             ),
-                                                      //             decoration: BoxDecoration(
-                                                      //               borderRadius:
-                                                      //                   BorderRadius.circular(
-                                                      //                     22,
-                                                      //                   ),
-                                                      //               border: Border.all(
-                                                      //                 color: AppColors
-                                                      //                     .primary1,
-                                                      //               ),
-                                                      //             ),
-                                                      //             child: TextView(
-                                                      //               text:
-                                                      //                   '${model.getDistributorKycResponseModel!.data!.level2!.distributor!.coverageAreas!.length}',
-                                                      //               textStyle: TextStyle(
-                                                      //                 fontSize:
-                                                      //                     12.6.sp,
-                                                      //                 fontWeight:
-                                                      //                     FontWeight
-                                                      //                         .w300,
-                                                      //                 color: AppColors
-                                                      //                     .primary1,
-                                                      //                 fontFamily:
-                                                      //                     'DMSans',
-                                                      //               ),
-                                                      //             ),
-                                                      //           ),
-                                                      //         ],
-                                                      //       ),
-                                                      //       IconButton(
-                                                      //         onPressed: () {
-                                                      //           model
-                                                      //               .stateController
-                                                      //               .clear();
-                                                      //           model
-                                                      //               .lgaListCopy
-                                                      //               .clear();
-                                                      //           model
-                                                      //               .showLGAAndStateDialog(
-                                                      //                 context,
-                                                      //               );
-                                                      //         },
-                                                      //         icon: Icon(
-                                                      //           Icons.add,
-                                                      //           color: AppColors
-                                                      //               .reminder1,
-                                                      //           size: 22.sp,
-                                                      //         ),
-                                                      //       ),
-                                                      //     ],
-                                                      //   ),
+                                                        // Row(
+                                                        //   mainAxisAlignment:
+                                                        //       MainAxisAlignment
+                                                        //           .spaceBetween,
+                                                        //   children: [
+                                                        //     Row(
+                                                        //       children: [
+                                                        //         TextView(
+                                                        //           text:
+                                                        //               'Area/Location ',
+                                                        //           textStyle: TextStyle(
+                                                        //             fontSize:
+                                                        //                 15.86
+                                                        //                     .sp,
+                                                        //             fontWeight:
+                                                        //                 FontWeight
+                                                        //                     .w600,
+                                                        //             color: AppColors
+                                                        //                 .reminder1,
+                                                        //             fontFamily:
+                                                        //                 'DMSans',
+                                                        //           ),
+                                                        //         ),
+                                                        //         SizedBox(
+                                                        //           width: 6.10.w,
+                                                        //         ),
+                                                        //         Container(
+                                                        //           padding: EdgeInsets.symmetric(
+                                                        //             horizontal:
+                                                        //                 6.2.w,
+                                                        //           ),
+                                                        //           decoration: BoxDecoration(
+                                                        //             borderRadius:
+                                                        //                 BorderRadius.circular(
+                                                        //                   22,
+                                                        //                 ),
+                                                        //             border: Border.all(
+                                                        //               color: AppColors
+                                                        //                   .primary1,
+                                                        //             ),
+                                                        //           ),
+                                                        //           child: TextView(
+                                                        //             text:
+                                                        //                 '${model.getDistributorKycResponseModel!.data!.level2!.distributor!.coverageAreas!.length}',
+                                                        //             textStyle: TextStyle(
+                                                        //               fontSize:
+                                                        //                   12.6.sp,
+                                                        //               fontWeight:
+                                                        //                   FontWeight
+                                                        //                       .w300,
+                                                        //               color: AppColors
+                                                        //                   .primary1,
+                                                        //               fontFamily:
+                                                        //                   'DMSans',
+                                                        //             ),
+                                                        //           ),
+                                                        //         ),
+                                                        //       ],
+                                                        //     ),
+                                                        //     IconButton(
+                                                        //       onPressed: () {
+                                                        //         model
+                                                        //             .stateController
+                                                        //             .clear();
+                                                        //         model
+                                                        //             .lgaListCopy
+                                                        //             .clear();
+                                                        //         model
+                                                        //             .showLGAAndStateDialog(
+                                                        //               context,
+                                                        //             );
+                                                        //       },
+                                                        //       icon: Icon(
+                                                        //         Icons.add,
+                                                        //         color: AppColors
+                                                        //             .reminder1,
+                                                        //         size: 22.sp,
+                                                        //       ),
+                                                        //     ),
+                                                        //   ],
+                                                        // ),
                                                       // Divider(
                                                       //   color: AppColors.f1,
                                                       // ),
@@ -5357,7 +5410,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                       //                 .level2 ==
                                                       //             null &&
                                                       //         model.coverageAreaIndex ==
-                                                      //             null)
+                                                      //             null || model.listOfAddedLocation.isNotEmpty)
                                                       //   Column(
                                                       //     children: [
                                                       //       Row(
@@ -5478,8 +5531,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                       //               children: [
                                                       //                 TextView(
                                                       //                   text: o
-                                                      //                       .keys
-                                                      //                       .first,
+                                                      //                       .state??'',
                                                       //                   textStyle: TextStyle(
                                                       //                     fontSize:
                                                       //                         13.86.sp,
@@ -5508,7 +5560,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                       //                           o
                                                       //                       ? Wrap(
                                                       //                           children: [
-                                                      //                             ...o.values.first.map(
+                                                      //                             ...o.lgas!.map(
                                                       //                               (
                                                       //                                 e,
                                                       //                               ) => TextView(
@@ -5524,8 +5576,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                       //                           ],
                                                       //                         )
                                                       //                       : Text(
-                                                      //                           o.values.first
-                                                      //                               .map(
+                                                      //                           o.lgas!.map(
                                                       //                                 (
                                                       //                                   e,
                                                       //                                 ) => e.toString(),
@@ -5598,12 +5649,12 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                       //                   children: [
                                                       //                     GestureDetector(
                                                       //                       onTap: () {
-                                                      //                         model.stateController.text = o.keys.first;
+                                                      //                         model.stateController.text = o.state ?? '';
                                                       //                         model.showLGAAndStateDialog(
                                                       //                           context,
                                                       //                           isEdit: true,
-                                                      //                           editState: o.keys.first,
-                                                      //                           editLgas: o.values.first,
+                                                      //                           editState: o.state,
+                                                      //                           editLgas: o.lgas,
                                                       //                         );
                                                       //                         model.notifyListeners();
                                                       //                       },
@@ -5635,6 +5686,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                       //                     ),
                                                       //                   ],
                                                       //                 ),
+                                                                   
                                                       //               ],
                                                       //             ),
                                                       //           ),
@@ -7677,11 +7729,18 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                 gmpCertificateNumber:
                                                                     null,
                                                               ),
-                                                              documents: Documents(
+                                                              documents: DisDocuments(
+                                                                // gmpCertificate: null,
+                                                                // manufacturerAuthorizationLetter: null,
+                                                                // nafdacManufacturingLicense: null,
+                                                                // productRegistrationEvidence: null,
+                                                                // importPermit: null,
                                                                 cacCertificate:
                                                                     model.secondLevelDistributorKycEntityModelCAC ==
                                                                             null ||
                                                                         model.secondLevelDistributorKycEntityModelCAC!.distributor ==
+                                                                            null ||
+                                                                        model.secondLevelDistributorKycEntityModelCAC!.distributor!.documents!.cacCertificate ==
                                                                             null
                                                                     ? null
                                                                     : model
@@ -7693,7 +7752,11 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                     model.secondLevelDistributorKycEntityModelPharmLin ==
                                                                             null ||
                                                                         model.secondLevelDistributorKycEntityModelPharmLin!.distributor ==
-                                                                            null
+                                                                            null ||model
+                                                                          .secondLevelDistributorKycEntityModelPharmLin!
+                                                                          .distributor!
+                                                                          .documents!
+                                                                          .pharmaceuticalDistributionLicense==null
                                                                     ? null
                                                                     : model
                                                                           .secondLevelDistributorKycEntityModelPharmLin!
@@ -7704,7 +7767,11 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                     model.secondLevelDistributorKycEntityModelNAF ==
                                                                             null ||
                                                                         model.secondLevelDistributorKycEntityModelNAF!.distributor ==
-                                                                            null
+                                                                            null ||model
+                                                                          .secondLevelDistributorKycEntityModelNAF!
+                                                                          .distributor!
+                                                                          .documents!
+                                                                          .nafdacPermit==null
                                                                     ? null
                                                                     : model
                                                                           .secondLevelDistributorKycEntityModelNAF!
@@ -7715,7 +7782,11 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                     model.secondLevelDistributorKycEntityModelPharmCouncilLin ==
                                                                             null ||
                                                                         model.secondLevelDistributorKycEntityModelPharmCouncilLin!.distributor ==
-                                                                            null
+                                                                            null || model
+                                                                          .secondLevelDistributorKycEntityModelPharmCouncilLin!
+                                                                          .distributor!
+                                                                          .documents!
+                                                                          .pharmacyCouncilLicense == null
                                                                     ? null
                                                                     : model
                                                                           .secondLevelDistributorKycEntityModelPharmCouncilLin!
@@ -7726,7 +7797,11 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                     model.secondLevelDistributorKycEntityModelLogo ==
                                                                             null ||
                                                                         model.secondLevelDistributorKycEntityModelLogo!.distributor ==
-                                                                            null
+                                                                            null || model
+                                                                          .secondLevelDistributorKycEntityModelLogo!
+                                                                          .distributor!
+                                                                          .documents!
+                                                                          .companyLogo == null
                                                                     ? null
                                                                     : model
                                                                           .secondLevelDistributorKycEntityModelLogo!
@@ -7804,7 +7879,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                 nafdacPermitNumber:
                                                                     null,
                                                               ),
-                                                              documents: Documents(
+                                                              documents: ManDocuments(
                                                                 cacCertificate:
                                                                     model.secondLevelDistributorKycEntityModelManCAC ==
                                                                             null ||
@@ -7918,7 +7993,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                 nafdacManufacturingLicenseNumber:
                                                                     null,
                                                               ),
-                                                              documents: Documents(
+                                                              documents: ImpDocuments(
                                                                 cacCertificate:
                                                                     model.secondLevelDistributorKycEntityModelImpCAC ==
                                                                             null ||
@@ -8045,15 +8120,8 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                     gmpCertificateNumber:
                                                                         null,
                                                                   ),
-                                                                  documents: Documents(
-                                                                    gmpCertificate:
-                                                                        null,
-                                                                    nafdacManufacturingLicense:
-                                                                        null,
-                                                                    productRegistrationEvidence:
-                                                                        null,
-                                                                    importPermit:
-                                                                        null,
+                                                                  documents: DisDocuments(
+                                                                    
                                                                     cacCertificate:
                                                                         model.secondLevelDistributorKycEntityModelCAC ==
                                                                                 null ||
@@ -8170,7 +8238,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                             .text
                                                                             .trim(),
                                                                   ),
-                                                                  documents: Documents(
+                                                                  documents: ManDocuments(
                                                                     cacCertificate:
                                                                         model.secondLevelDistributorKycEntityModelManCAC ==
                                                                                 null ||
@@ -8226,14 +8294,6 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                               .manufacturer!
                                                                               .documents!
                                                                               .companyLogo!,
-                                                                    pharmaceuticalDistributionLicense:
-                                                                        null,
-                                                                    pharmacyCouncilLicense:
-                                                                        null,
-                                                                    importPermit:
-                                                                        null,
-                                                                    nafdacPermit:
-                                                                        null,
                                                                   ),
                                                                 ),
                                                           importer:
@@ -8290,7 +8350,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                     nafdacManufacturingLicenseNumber:
                                                                         null,
                                                                   ),
-                                                                  documents: Documents(
+                                                                  documents: ImpDocuments(
                                                                     cacCertificate:
                                                                         model.secondLevelDistributorKycEntityModelImpCAC ==
                                                                                 null ||
@@ -8335,16 +8395,6 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                               .importer!
                                                                               .documents!
                                                                               .companyLogo!,
-                                                                    pharmaceuticalDistributionLicense:
-                                                                        null,
-                                                                    pharmacyCouncilLicense:
-                                                                        null,
-                                                                    productRegistrationEvidence:
-                                                                        null,
-                                                                    nafdacPermit:
-                                                                        null,
-                                                                    gmpCertificate:
-                                                                        null,
                                                                   ),
                                                                 ),
                                                         ),

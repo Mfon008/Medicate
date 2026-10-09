@@ -1,14 +1,14 @@
 import 'package:json_annotation/json_annotation.dart';
 
 import 'business_details.dart';
-import 'documents.dart';
+import 'imp_documents.dart';
 
 part 'importer.g.dart';
 
 @JsonSerializable()
 class Importer {
   BusinessDetails? businessDetails;
-  Documents? documents;
+  ImpDocuments? documents;
 
   Importer({this.businessDetails, this.documents});
 

@@ -606,6 +606,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       fillColor: AppColors.grey,
                       isFilled: true,
                       controller: suggestedPriceDescription,
+                      keyboardType: TextInputType.number,
                       validator: AppValidator.validateString(),
                     ),
                     SizedBox(height: 20.h),

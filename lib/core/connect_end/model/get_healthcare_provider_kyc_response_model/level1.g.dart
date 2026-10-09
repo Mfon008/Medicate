@@ -35,7 +35,7 @@ Map<String, dynamic> _$Level1ToJson(Level1 instance) => <String, dynamic>{
   'lga': instance.lga,
   'website': instance.website,
   'servicesOffered': instance.servicesOffered,
-  'businessAddress': instance.businessAddress,
   'businessAddresses': instance.businessAddresses,
+  'businessAddress': instance.businessAddress,
   'businessEmail': instance.businessEmail,
 };

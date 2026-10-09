@@ -511,62 +511,62 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
                                     ],
                                   ),
                                   SizedBox(height: 16.20.h),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      TextView(
-                                        text: 'Payment Status',
-                                        textStyle: TextStyle(
-                                          fontFamily: 'DMSans',
-                                          fontSize: 15.22.sp,
-                                          fontWeight: FontWeight.w500,
-                                          color: AppColors.infoGrey,
-                                          letterSpacing: -0.92,
-                                        ),
-                                      ),
-                                      SizedBox(height: 10.h),
-                                      IntrinsicWidth(
-                                        child: Container(
-                                          padding: EdgeInsets.symmetric(
-                                            vertical: 2.w,
-                                            horizontal: 12.0.w,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: model
-                                                .getOrderPaymentStatusColor(
-                                                  ord.paymentStatus!,
-                                                )
-                                                .withOpacity(.1),
-                                            borderRadius: BorderRadius.circular(
-                                              12.r,
-                                            ),
-                                            border: Border.all(
-                                              color: model
-                                                  .getOrderPaymentStatusColor(
-                                                    ord.paymentStatus!,
-                                                  ),
-                                            ),
-                                          ),
-                                          child: Center(
-                                            child: TextView(
-                                              text: '${ord.paymentStatusLabel}',
-                                              textStyle: TextStyle(
-                                                fontFamily: 'DMSans',
-                                                fontSize: 12.2.sp,
-                                                fontWeight: FontWeight.w500,
-                                                color: model
-                                                    .getOrderPaymentStatusColor(
-                                                      ord.paymentStatus!,
-                                                    ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 16.20.h),
+                                  // Column(
+                                  //   crossAxisAlignment:
+                                  //       CrossAxisAlignment.start,
+                                  //   children: [
+                                  //     TextView(
+                                  //       text: 'Payment Status',
+                                  //       textStyle: TextStyle(
+                                  //         fontFamily: 'DMSans',
+                                  //         fontSize: 15.22.sp,
+                                  //         fontWeight: FontWeight.w500,
+                                  //         color: AppColors.infoGrey,
+                                  //         letterSpacing: -0.92,
+                                  //       ),
+                                  //     ),
+                                  //     SizedBox(height: 10.h),
+                                  //     IntrinsicWidth(
+                                  //       child: Container(
+                                  //         padding: EdgeInsets.symmetric(
+                                  //           vertical: 2.w,
+                                  //           horizontal: 12.0.w,
+                                  //         ),
+                                  //         decoration: BoxDecoration(
+                                  //           color: model
+                                  //               .getOrderPaymentStatusColor(
+                                  //                 ord.paymentStatus!,
+                                  //               )
+                                  //               .withOpacity(.1),
+                                  //           borderRadius: BorderRadius.circular(
+                                  //             12.r,
+                                  //           ),
+                                  //           border: Border.all(
+                                  //             color: model
+                                  //                 .getOrderPaymentStatusColor(
+                                  //                   ord.paymentStatus!,
+                                  //                 ),
+                                  //           ),
+                                  //         ),
+                                  //         child: Center(
+                                  //           child: TextView(
+                                  //             text: '${ord.paymentStatusLabel}',
+                                  //             textStyle: TextStyle(
+                                  //               fontFamily: 'DMSans',
+                                  //               fontSize: 12.2.sp,
+                                  //               fontWeight: FontWeight.w500,
+                                  //               color: model
+                                  //                   .getOrderPaymentStatusColor(
+                                  //                     ord.paymentStatus!,
+                                  //                   ),
+                                  //             ),
+                                  //           ),
+                                  //         ),
+                                  //       ),
+                                  //     ),
+                                  //   ],
+                                  // ),
+                                  // SizedBox(height: 16.20.h),
                                   ord.paymentStatus?.toLowerCase() ==
                                               'success' &&
                                           ord.status?.toLowerCase() !=

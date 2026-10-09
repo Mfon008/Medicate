@@ -320,46 +320,46 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            model
-                                    .getSingleMarketProductResponseModel!
-                                    .data!
-                                    .product!
-                                    .nafdacVerification!
-                                    .isVerified!
-                                ? Container(
-                                    padding: EdgeInsets.symmetric(
-                                      vertical: 2.60.w,
-                                      horizontal: 10.w,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20.r),
-                                      border: Border.all(
-                                        color: AppColors.app_green,
-                                        width: 1.2,
-                                      ),
-                                    ),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        SvgPicture.asset(
-                                          AppImage.validate,
-                                          height: 14.6.h,
-                                          width: 12.w,
-                                        ),
-                                        SizedBox(width: 6.2.w),
-                                        TextView(
-                                          text: 'Validated',
-                                          textStyle: TextStyle(
-                                            fontFamily: 'DMSans',
-                                            fontSize: 14.60.sp,
-                                            fontWeight: FontWeight.w400,
-                                            color: AppColors.app_green,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                : SizedBox.shrink(),
+                            // model
+                            //         .getSingleMarketProductResponseModel!
+                            //         .data!
+                            //         .product!
+                            //         .nafdacVerification!
+                            //         .isVerified!
+                            //     ? Container(
+                            //         padding: EdgeInsets.symmetric(
+                            //           vertical: 2.60.w,
+                            //           horizontal: 10.w,
+                            //         ),
+                            //         decoration: BoxDecoration(
+                            //           borderRadius: BorderRadius.circular(20.r),
+                            //           border: Border.all(
+                            //             color: AppColors.app_green,
+                            //             width: 1.2,
+                            //           ),
+                            //         ),
+                            //         child: Row(
+                            //           mainAxisSize: MainAxisSize.min,
+                            //           children: [
+                            //             SvgPicture.asset(
+                            //               AppImage.validate,
+                            //               height: 14.6.h,
+                            //               width: 12.w,
+                            //             ),
+                            //             SizedBox(width: 6.2.w),
+                            //             TextView(
+                            //               text: 'Validated',
+                            //               textStyle: TextStyle(
+                            //                 fontFamily: 'DMSans',
+                            //                 fontSize: 14.60.sp,
+                            //                 fontWeight: FontWeight.w400,
+                            //                 color: AppColors.app_green,
+                            //               ),
+                            //             ),
+                            //           ],
+                            //         ),
+                            //       )
+                            //     : SizedBox.shrink(),
 
                             model
                                             .getSingleMarketProductResponseModel!
@@ -665,6 +665,11 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                         .getSingleMarketProductResponseModel!
                                         .data!
                                         .product
+                                        ?.suggestedRetailPrice!=null &&
+                            model
+                                        .getSingleMarketProductResponseModel!
+                                        .data!
+                                        .product
                                         ?.suggestedRetailPrice !=
                                     ''
                                 ? Container(
@@ -680,11 +685,48 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                       ),
                                     ),
                                     child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
+                                        
+                                        // Row(
+                                        //   mainAxisAlignment:
+                                        //       MainAxisAlignment.spaceBetween,
+                                        //   children: [
+                                        //     TextView(
+                                        //       text:
+                                        //           'Suggested Retail Price (SRP)',
+                                        //       textStyle: TextStyle(
+                                        //         fontFamily: 'DMSans',
+                                        //         fontSize: 14.90.sp,
+                                        //         fontWeight: FontWeight.w500,
+                                        //         color: AppColors.black,
+                                        //       ),
+                                        //     ),
+                                        //     GestureDetector(
+                                        //       onTap: () {
+                                        //         model.isSeeMore =
+                                        //             !model.isSeeMore;
+                                        //         model.notifyListeners();
+                                        //       },
+                                        //       child: TextView(
+                                        //         text: !model.isSeeMore
+                                        //             ? 'See more'
+                                        //             : 'See less',
+                                        //         textStyle: TextStyle(
+                                        //           fontFamily: 'DMSans',
+                                        //           decoration:
+                                        //               TextDecoration.underline,
+                                        //           decorationColor:
+                                        //               AppColors.reminder,
+                                        //           fontSize: 14.20.sp,
+                                        //           fontWeight: FontWeight.w400,
+                                        //           color: AppColors.reminder,
+                                        //         ),
+                                        //       ),
+                                        //     ),
+                                        //   ],
+                                        // ),
+                                       
                                             TextView(
                                               text:
                                                   'Suggested Retail Price (SRP)',
@@ -695,42 +737,18 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                                 color: AppColors.black,
                                               ),
                                             ),
-                                            GestureDetector(
-                                              onTap: () {
-                                                model.isSeeMore =
-                                                    !model.isSeeMore;
-                                                model.notifyListeners();
-                                              },
-                                              child: TextView(
-                                                text: !model.isSeeMore
-                                                    ? 'See more'
-                                                    : 'See less',
-                                                textStyle: TextStyle(
-                                                  fontFamily: 'DMSans',
-                                                  decoration:
-                                                      TextDecoration.underline,
-                                                  decorationColor:
-                                                      AppColors.reminder,
-                                                  fontSize: 14.20.sp,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: AppColors.reminder,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
+                                            
                                         SizedBox(height: 10.h),
                                         !model.isSeeMore
                                             ? SizedBox(
                                                 height: 70.h,
                                                 child: TextView(
                                                   text:
-                                                      model
+                                                      formatNaira(int.parse(model
                                                           .getSingleMarketProductResponseModel!
                                                           .data!
                                                           .product
-                                                          ?.suggestedRetailPrice ??
-                                                      '',
+                                                          ?.suggestedRetailPrice ??'0')),
                                                   maxLines: 4,
                                                   textOverflow:
                                                       TextOverflow.ellipsis,
@@ -960,33 +978,33 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                           ),
                                         ),
                                         SizedBox(height: 12.h),
-                                        TextView(
-                                          text: 'Manufacturer',
-                                          textStyle: TextStyle(
-                                            fontFamily: 'GoogleSans',
-                                            fontSize: 12.90.sp,
-                                            fontWeight: FontWeight.w300,
-                                            color: AppColors.infoGrey,
-                                          ),
-                                        ),
-                                        SizedBox(height: 2.h),
+                                        // TextView(
+                                        //   text: 'Manufacturer',
+                                        //   textStyle: TextStyle(
+                                        //     fontFamily: 'GoogleSans',
+                                        //     fontSize: 12.90.sp,
+                                        //     fontWeight: FontWeight.w300,
+                                        //     color: AppColors.infoGrey,
+                                        //   ),
+                                        // ),
+                                        // SizedBox(height: 2.h),
 
-                                        TextView(
-                                          text:
-                                              manufacturerName
-                                                      ?.trim()
-                                                      .isNotEmpty ==
-                                                  true
-                                              ? manufacturerName!
-                                              : 'Not available',
-                                          textStyle: TextStyle(
-                                            fontFamily: 'GoogleSans',
-                                            fontSize: 15.90.sp,
-                                            fontWeight: FontWeight.w500,
-                                            color: AppColors.black,
-                                          ),
-                                        ),
-                                        SizedBox(height: 12.h),
+                                        // TextView(
+                                        //   text:
+                                        //       manufacturerName
+                                        //               ?.trim()
+                                        //               .isNotEmpty ==
+                                        //           true
+                                        //       ? manufacturerName!
+                                        //       : 'Not available',
+                                        //   textStyle: TextStyle(
+                                        //     fontFamily: 'GoogleSans',
+                                        //     fontSize: 15.90.sp,
+                                        //     fontWeight: FontWeight.w500,
+                                        //     color: AppColors.black,
+                                        //   ),
+                                        // ),
+                                        // SizedBox(height: 12.h),
                                         TextView(
                                           text: 'Serial Number:',
                                           textStyle: TextStyle(
@@ -1024,7 +1042,7 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                         ),
                                         SizedBox(height: 2.h),
                                         TextView(
-                                          text: DateFormat('MM/yyyy').format(
+                                          text: DateFormat('dd/MM/yyyy').format(
                                             model
                                                 .getSingleMarketProductResponseModel!
                                                 .data!
@@ -1033,7 +1051,7 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                           ),
                                           textStyle: TextStyle(
                                             fontFamily: 'GoogleSans',
-                                            fontSize: 15.90.sp,
+                                            fontSize: 14.90.sp,
                                             fontWeight: FontWeight.w500,
                                             color: AppColors.black,
                                           ),
@@ -1050,7 +1068,7 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                         ),
                                         SizedBox(height: 2.h),
                                         TextView(
-                                          text: DateFormat('MM/yyyy').format(
+                                          text: DateFormat('dd/MM/yyyy').format(
                                             model
                                                 .getSingleMarketProductResponseModel!
                                                 .data!
@@ -1059,52 +1077,52 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                           ),
                                           textStyle: TextStyle(
                                             fontFamily: 'GoogleSans',
-                                            fontSize: 15.90.sp,
+                                            fontSize: 14.90.sp,
                                             fontWeight: FontWeight.w500,
                                             color: AppColors.red,
                                           ),
                                         ),
                                         SizedBox(height: 12.h),
-                                        TextView(
-                                          text: 'Status:',
-                                          textStyle: TextStyle(
-                                            fontFamily: 'GoogleSans',
-                                            fontSize: 12.90.sp,
-                                            fontWeight: FontWeight.w300,
-                                            color: AppColors.infoGrey,
-                                          ),
-                                        ),
-                                        SizedBox(height: 2.h),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            Container(
-                                              padding: EdgeInsets.all(3.4.w),
-                                              decoration: BoxDecoration(
-                                                color: AppColors.app_green,
-                                                shape: BoxShape.circle,
-                                              ),
-                                              child: Icon(
-                                                Icons.check,
-                                                size: 12.sp,
-                                                color: AppColors.white,
-                                                weight: 2,
-                                              ),
-                                            ),
-                                            SizedBox(width: 5.0.w),
-                                            TextView(
-                                              text: 'Approved',
-                                              textStyle: TextStyle(
-                                                fontFamily: 'GoogleSans',
-                                                fontSize: 14.90.sp,
-                                                fontWeight: FontWeight.w500,
-                                                color: AppColors.app_green,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBox(height: 12.h),
+                                        // TextView(
+                                        //   text: 'Status:',
+                                        //   textStyle: TextStyle(
+                                        //     fontFamily: 'GoogleSans',
+                                        //     fontSize: 12.90.sp,
+                                        //     fontWeight: FontWeight.w300,
+                                        //     color: AppColors.infoGrey,
+                                        //   ),
+                                        // ),
+                                        // SizedBox(height: 2.h),
+                                        // Row(
+                                        //   mainAxisAlignment:
+                                        //       MainAxisAlignment.start,
+                                        //   children: [
+                                        //     Container(
+                                        //       padding: EdgeInsets.all(3.4.w),
+                                        //       decoration: BoxDecoration(
+                                        //         color: AppColors.app_green,
+                                        //         shape: BoxShape.circle,
+                                        //       ),
+                                        //       child: Icon(
+                                        //         Icons.check,
+                                        //         size: 12.sp,
+                                        //         color: AppColors.white,
+                                        //         weight: 2,
+                                        //       ),
+                                        //     ),
+                                        //     SizedBox(width: 5.0.w),
+                                        //     TextView(
+                                        //       text: 'Approved',
+                                        //       textStyle: TextStyle(
+                                        //         fontFamily: 'GoogleSans',
+                                        //         fontSize: 14.90.sp,
+                                        //         fontWeight: FontWeight.w500,
+                                        //         color: AppColors.app_green,
+                                        //       ),
+                                        //     ),
+                                        //   ],
+                                        // ),
+                                        // SizedBox(height: 12.h),
                                       ],
                                     ),
                                   ),
