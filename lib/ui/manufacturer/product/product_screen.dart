@@ -759,13 +759,15 @@ class _ProductScreenState extends State<ProductScreen> {
                                         },
                                   icon: Icon(
                                     Icons.arrow_back,
-                                    color: model
-                                              .getAllProductListResponseModel!
-                                              .data!
-                                              .meta!
-                                              .page ==
-                                          1
-                                ? AppColors.primary1.withOpacity(.3):  AppColors.primary1,
+                                    color:
+                                        model
+                                                .getAllProductListResponseModel!
+                                                .data!
+                                                .meta!
+                                                .page ==
+                                            1
+                                        ? AppColors.primary1.withOpacity(.3)
+                                        : AppColors.primary1,
                                     size: 20.sp,
                                   ),
                                 ),
