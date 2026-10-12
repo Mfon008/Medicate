@@ -2581,12 +2581,12 @@ class ManufacturerViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  getAllProduct(context, {String? categoryId, String? search}) async {
+  getAllProduct(context, {String? categoryId, String? search, int? page}) async {
     try {
       _isLoading = true;
       _getAllProductListResponseModel = await runBusyFuture(
         repositoryImply.getProductList(
-          page: page.toString(),
+          page: page?.toString() ?? '1',
           search: search,
           categoryId: categoryId,
         ),

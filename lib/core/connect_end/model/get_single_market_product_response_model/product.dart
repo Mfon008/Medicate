@@ -14,7 +14,7 @@ class Product {
   String? id;
   String? productName;
   String? description;
-  String? suggestedRetailPrice;
+  dynamic suggestedRetailPrice;
   String? additionalResourceDescription;
   String? additionalResourceUrl;
   String? creationSource;

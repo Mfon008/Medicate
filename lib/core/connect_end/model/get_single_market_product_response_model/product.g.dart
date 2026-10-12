@@ -10,7 +10,7 @@ Product _$ProductFromJson(Map<String, dynamic> json) => Product(
   id: json['_id'] as String?,
   productName: json['productName'] as String?,
   description: json['description'] as String?,
-  suggestedRetailPrice: json['suggestedRetailPrice'] as String?,
+  suggestedRetailPrice: json['suggestedRetailPrice'],
   creationSource: json['creationSource'] as String?,
   additionalResourceUrl: json['additionalResourceUrl'] as String?,
   additionalResourceDescription:

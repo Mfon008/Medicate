@@ -68,7 +68,7 @@ Product _$ProductFromJson(Map<String, dynamic> json) => Product(
   priceDetails: json['priceDetails'] == null
       ? null
       : PriceDetails.fromJson(json['priceDetails'] as Map<String, dynamic>),
-  suggestedRetailPrice: json['suggestedRetailPrice'] as String?,
+  suggestedRetailPrice: json['suggestedRetailPrice'],
   additionalResourceDescription:
       json['additionalResourceDescription'] as String?,
   additionalResourceUrl: json['additionalResourceUrl'] as String?,

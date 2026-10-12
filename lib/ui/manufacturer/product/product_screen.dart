@@ -731,36 +731,115 @@ class _ProductScreenState extends State<ProductScreen> {
                         ),
                       ),
                       SizedBox(height: 10.h),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          IconButton(
-                            onPressed: () {},
-                            icon: Icon(
-                              Icons.arrow_back,
-                              color: AppColors.primary1,
-                              size: 20.sp,
+                      model.getAllProductListResponseModel == null
+                          ? SizedBox.shrink()
+                          : Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                IconButton(
+                                  onPressed:
+                                      model
+                                              .getAllProductListResponseModel!
+                                              .data!
+                                              .meta!
+                                              .page ==
+                                          1
+                                      ? () {}
+                                      : () async {
+                                          model.page--;
+                                          await Future.delayed(
+                                            Duration(seconds: 1),
+                                          );
+                                          model.getAllProduct(
+                                            context,
+                                            page: model.page,
+                                          );
+
+                                          model.notifyListeners();
+                                        },
+                                  icon: Icon(
+                                    Icons.arrow_back,
+                                    color: model
+                                              .getAllProductListResponseModel!
+                                              .data!
+                                              .meta!
+                                              .page ==
+                                          1
+                                ? AppColors.primary1.withOpacity(.3):  AppColors.primary1,
+                                    size: 20.sp,
+                                  ),
+                                ),
+                                model.isLoading
+                                    ? SpinKitFadingCircle(
+                                        size: 20.sp,
+                                        color: AppColors.fineGrey,
+                                      )
+                                    : TextView(
+                                        text:
+                                            'Page ${model.getAllProductListResponseModel!.data!.meta!.page} of ${model.getAllProductListResponseModel!.data!.meta!.totalPages}',
+                                        textStyle: TextStyle(
+                                          fontFamily: 'Arial',
+                                          fontSize: 15.2.sp,
+                                          fontWeight: FontWeight.w400,
+                                          color: AppColors.black,
+                                        ),
+                                      ),
+                                IconButton(
+                                  onPressed:
+                                      model
+                                                  .getAllProductListResponseModel!
+                                                  .data!
+                                                  .meta!
+                                                  .page ==
+                                              model
+                                                  .getAllProductListResponseModel!
+                                                  .data!
+                                                  .meta!
+                                                  .totalPages ||
+                                          model
+                                                  .getAllProductListResponseModel!
+                                                  .data!
+                                                  .meta!
+                                                  .totalPages ==
+                                              0
+                                      ? () {}
+                                      : () async {
+                                          model.page++;
+                                          await Future.delayed(
+                                            Duration(seconds: 1),
+                                          );
+                                          model.getAllProduct(
+                                            context,
+                                            page: model.page,
+                                          );
+                                          model.notifyListeners();
+                                        },
+                                  icon: Icon(
+                                    Icons.arrow_forward,
+                                    color:
+                                        model
+                                                    .getAllProductListResponseModel!
+                                                    .data!
+                                                    .meta!
+                                                    .page ==
+                                                model
+                                                    .getAllProductListResponseModel!
+                                                    .data!
+                                                    .meta!
+                                                    .totalPages ||
+                                            model
+                                                    .getAllProductListResponseModel!
+                                                    .data!
+                                                    .meta!
+                                                    .totalPages ==
+                                                0
+                                        ? AppColors.primary1.withOpacity(.3)
+                                        : AppColors.primary1,
+                                    size: 20.sp,
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                          TextView(
-                            text: 'Page 1 of 10',
-                            textStyle: TextStyle(
-                              fontFamily: 'Arial',
-                              fontSize: 15.2.sp,
-                              fontWeight: FontWeight.w400,
-                              color: AppColors.black,
-                            ),
-                          ),
-                          IconButton(
-                            onPressed: () {},
-                            icon: Icon(
-                              Icons.arrow_forward,
-                              color: AppColors.primary1,
-                              size: 20.sp,
-                            ),
-                          ),
-                        ],
-                      ),
                       SizedBox(height: 10.h),
                     ],
                   ),

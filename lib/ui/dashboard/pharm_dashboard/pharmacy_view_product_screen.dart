@@ -67,11 +67,11 @@ class PharmacyViewProductScreen extends StatelessWidget {
         disposeViewModel: false,
         onDispose: (viewModel) {},
         builder: (_, PharmViewModel model, _) {
-          final manufacturerName = model
-              .getSingleMarketProductResponseModel
-              ?.data
-              ?.product
-              ?.manufacturerName;
+          // final manufacturerName = model
+          //     .getSingleMarketProductResponseModel
+          //     ?.data
+          //     ?.product
+          //     ?.manufacturerName;
           return SingleChildScrollView(
             padding: EdgeInsets.symmetric(horizontal: 16.20.w, vertical: 20.0),
             child: Column(
@@ -662,16 +662,17 @@ class PharmacyViewProductScreen extends StatelessWidget {
                               ),
                             ),
                             model
-                                        .getSingleMarketProductResponseModel!
-                                        .data!
-                                        .product
-                                        ?.suggestedRetailPrice!=null &&
-                            model
-                                        .getSingleMarketProductResponseModel!
-                                        .data!
-                                        .product
-                                        ?.suggestedRetailPrice !=
-                                    ''
+                                            .getSingleMarketProductResponseModel!
+                                            .data!
+                                            .product
+                                            ?.suggestedRetailPrice !=
+                                        null &&
+                                    model
+                                            .getSingleMarketProductResponseModel!
+                                            .data!
+                                            .product
+                                            ?.suggestedRetailPrice !=
+                                        ''
                                 ? Container(
                                     width: double.infinity,
                                     padding: EdgeInsets.all(14.w),
@@ -685,9 +686,9 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                       ),
                                     ),
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        
                                         // Row(
                                         //   mainAxisAlignment:
                                         //       MainAxisAlignment.spaceBetween,
@@ -726,55 +727,76 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                         //     ),
                                         //   ],
                                         // ),
-                                       
-                                            TextView(
-                                              text:
-                                                  'Suggested Retail Price (SRP)',
-                                              textStyle: TextStyle(
-                                                fontFamily: 'DMSans',
-                                                fontSize: 14.90.sp,
-                                                fontWeight: FontWeight.w500,
-                                                color: AppColors.black,
-                                              ),
-                                            ),
-                                            
+
+                                        TextView(
+                                          text: 'Suggested Retail Price (SRP)',
+                                          textStyle: TextStyle(
+                                            fontFamily: 'DMSans',
+                                            fontSize: 14.90.sp,
+                                            fontWeight: FontWeight.w500,
+                                            color: AppColors.black,
+                                          ),
+                                        ),
+
                                         SizedBox(height: 10.h),
-                                        !model.isSeeMore
-                                            ? SizedBox(
-                                                height: 70.h,
-                                                child: TextView(
-                                                  text:
-                                                      formatNaira(int.parse(model
-                                                          .getSingleMarketProductResponseModel!
-                                                          .data!
-                                                          .product
-                                                          ?.suggestedRetailPrice ??'0')),
-                                                  maxLines: 4,
-                                                  textOverflow:
-                                                      TextOverflow.ellipsis,
-                                                  textStyle: TextStyle(
-                                                    fontFamily: 'DMSans',
-                                                    fontSize: 14.0.sp,
-                                                    fontWeight: FontWeight.w400,
-                                                    color: AppColors.black,
+                                        // !model.isSeeMore
+                                        //     ? SizedBox(
+                                        //         height: 70.h,
+                                        //         child: TextView(
+                                        //           text:
+                                        //               formatNaira(int.parse(model
+                                        //                   .getSingleMarketProductResponseModel!
+                                        //                   .data!
+                                        //                   .product
+                                        //                   ?.suggestedRetailPrice ??'0')),
+                                        //           maxLines: 4,
+                                        //           textOverflow:
+                                        //               TextOverflow.ellipsis,
+                                        //           textStyle: TextStyle(
+                                        //             fontFamily: 'DMSans',
+                                        //             fontSize: 14.0.sp,
+                                        //             fontWeight: FontWeight.w400,
+                                        //             color: AppColors.black,
+                                        //           ),
+                                        //         ),
+                                        //       )
+                                        //     :
+                                        TextView(
+                                          text:
+                                              model
+                                                      .getSingleMarketProductResponseModel!
+                                                      .data!
+                                                      .product!
+                                                      .suggestedRetailPrice
+                                                      .runtimeType ==
+                                                  String
+                                              ? formatNairaDouble(
+                                                  double.parse('0.00'),
+                                                )
+                                              : formatNairaDouble(
+                                                  double.parse(
+                                                    model
+                                                                .getSingleMarketProductResponseModel!
+                                                                .data!
+                                                                .product!
+                                                                .suggestedRetailPrice !=
+                                                            null
+                                                        ? model
+                                                              .getSingleMarketProductResponseModel!
+                                                              .data!
+                                                              .product!
+                                                              .suggestedRetailPrice
+                                                              .toString()
+                                                        : '0.00',
                                                   ),
                                                 ),
-                                              )
-                                            : TextView(
-                                                text:
-                                                    model
-                                                        .getSingleMarketProductResponseModel!
-                                                        .data!
-                                                        .product
-                                                        ?.suggestedRetailPrice ??
-                                                    '',
-                                                textStyle: TextStyle(
-                                                  fontFamily: 'DMSans',
-                                                  fontSize: 14.0.sp,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: AppColors.black,
-                                                ),
-                                              ),
+                                          textStyle: TextStyle(
+                                            fontFamily: 'DMSans',
+                                            fontSize: 14.0.sp,
+                                            fontWeight: FontWeight.w400,
+                                            color: AppColors.black,
+                                          ),
+                                        ),
                                       ],
                                     ),
                                   )
@@ -1170,24 +1192,70 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                       children: [
                                         Divider(color: AppColors.infoGrey1),
                                         SizedBox(height: 5.10.h),
-                                        TextView(
-                                          text:
-                                              model
-                                                  .getSingleMarketProductResponseModel
-                                                  ?.data
-                                                  ?.product
-                                                  ?.description ??
-                                              '',
-                                          textAlign: TextAlign.start,
-                                          textStyle: TextStyle(
-                                            fontFamily: 'DMSans',
-                                            fontSize: 15.40.sp,
-                                            fontWeight: FontWeight.w400,
-                                            color: AppColors.reminder,
+                                        model.isSeeMore
+                                            ? SizedBox(
+                                                height: 70.h,
+                                                child: TextView(
+                                                  text:
+                                                      model
+                                                          .getSingleMarketProductResponseModel
+                                                          ?.data
+                                                          ?.product
+                                                          ?.description ??
+                                                      '',
+                                                  textAlign: TextAlign.start,
+                                                  maxLines: 4,
+                                                  textOverflow:
+                                                      TextOverflow.ellipsis,
+                                                  textStyle: TextStyle(
+                                                    fontFamily: 'DMSans',
+                                                    fontSize: 15.40.sp,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: AppColors.reminder,
+                                                  ),
+                                                ),
+                                              )
+                                            : TextView(
+                                                text:
+                                                    model
+                                                        .getSingleMarketProductResponseModel
+                                                        ?.data
+                                                        ?.product
+                                                        ?.description ??
+                                                    '',
+                                                textAlign: TextAlign.start,
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'DMSans',
+                                                  fontSize: 15.40.sp,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: AppColors.reminder,
+                                                ),
+                                              ),
+
+                                        SizedBox(height: 6.2.h),
+                                        GestureDetector(
+                                          onTap: () {
+                                            model.isSeeMore = !model.isSeeMore;
+                                            model.notifyListeners();
+                                          },
+                                          child: Align(
+                                            alignment: Alignment.topRight,
+                                            child: TextView(
+                                              text: model.isSeeMore?'See less': 'See more',
+                                              textStyle: TextStyle(
+                                                fontFamily: 'DMSans',
+                                                decoration:
+                                                    TextDecoration.underline,
+                                                decorationColor:
+                                                    AppColors.reminder,
+                                                fontSize: 13.90.sp,
+                                                fontWeight: FontWeight.w500,
+                                                color: AppColors.reminder,
+                                              ),
+                                            ),
                                           ),
                                         ),
-
-                                        SizedBox(height: 2.h),
+                                        SizedBox(height: 10.h),
                                       ],
                                     ),
                                   ),

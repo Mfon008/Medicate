@@ -49,7 +49,7 @@ class Product {
   int? enlistedPricePerUnit;
   int? displayPricePerUnit;
   PriceDetails? priceDetails;
-  String? suggestedRetailPrice;
+  dynamic suggestedRetailPrice;
   String? additionalResourceDescription;
   String? additionalResourceUrl;
 

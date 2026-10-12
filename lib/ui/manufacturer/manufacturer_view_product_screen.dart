@@ -510,24 +510,6 @@ class ManufacturerViewProductScreen extends StatelessWidget {
                                   ],
                                 ),
                                 SizedBox(height: 10.h),
-                                Divider(color: AppColors.infoGrey1),
-                                SizedBox(height: 10.h),
-                                TextView(
-                                  text:
-                                      model
-                                          .getSingleProductResponseModel
-                                          ?.data
-                                          ?.product
-                                          ?.description ??
-                                      '',
-                                  textStyle: TextStyle(
-                                    fontFamily: 'DMSans',
-                                    fontSize: 15.80.sp,
-                                    fontWeight: FontWeight.w400,
-                                    color: AppColors.reminder,
-                                  ),
-                                ),
-                                SizedBox(height: 10.h),
                                 Container(
                                   margin: EdgeInsets.only(bottom: 10.w),
                                   padding: EdgeInsets.symmetric(
@@ -802,55 +784,40 @@ class ManufacturerViewProductScreen extends StatelessWidget {
                                       ),
 
                                       SizedBox(height: 10.h),
-                                      model.isSeeMore
-                                          ? SizedBox(
-                                              height: 70.h,
-                                              child: TextView(
-                                                text:
-                                                    model
-                                                        .getSingleProductResponseModel!
-                                                        .data!
-                                                        .product
-                                                        ?.suggestedRetailPrice ??
-                                                    '',
-                                                // text:formatNaira(int.parse(model
-                                                //           .getSingleProductResponseModel!
-                                                //           .data!
-                                                //           .product
-                                                //           ?.suggestedRetailPrice ??'0')),
-
-                                                maxLines: 4,
-                                                textOverflow:
-                                                    TextOverflow.ellipsis,
-                                                textStyle: TextStyle(
-                                                  fontFamily: 'DMSans',
-                                                  fontSize: 14.90.sp,
-                                                  fontWeight: FontWeight.w500,
-                                                  color: AppColors.black,
+                                      TextView(
+                                        text:
+                                            model
+                                                    .getSingleProductResponseModel!
+                                                    .data!
+                                                    .product!
+                                                    .suggestedRetailPrice
+                                                    .runtimeType ==
+                                                String
+                                            ? formatNairaDouble(
+                                                double.parse('0.00'),
+                                              )
+                                            : formatNairaDouble(
+                                                double.parse(model
+                                                          .getSingleProductResponseModel!
+                                                          .data!
+                                                          .product
+                                                          !.suggestedRetailPrice !=null?
+                                                  model
+                                                          .getSingleProductResponseModel!
+                                                          .data!
+                                                          .product
+                                                          !.suggestedRetailPrice.toString():
+                                                      '0.00',
                                                 ),
                                               ),
-                                            )
-                                          : TextView(
-                                              text:
-                                                  model
-                                                      .getSingleProductResponseModel!
-                                                      .data!
-                                                      .product
-                                                      ?.suggestedRetailPrice ??
-                                                  '',
-                                              // text:formatNaira(int.parse(model
-                                              //           .getSingleProductResponseModel!
-                                              //           .data!
-                                              //           .product
-                                              //           ?.suggestedRetailPrice ??'0')),
 
-                                              textStyle: TextStyle(
-                                                fontFamily: 'DMSans',
-                                                fontSize: 14.90.sp,
-                                                fontWeight: FontWeight.w500,
-                                                color: AppColors.black,
-                                              ),
-                                            ),
+                                        textStyle: TextStyle(
+                                          fontFamily: 'DMSans',
+                                          fontSize: 14.90.sp,
+                                          fontWeight: FontWeight.w500,
+                                          color: AppColors.black,
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -1148,23 +1115,76 @@ class ManufacturerViewProductScreen extends StatelessWidget {
                                           children: [
                                             Divider(color: AppColors.infoGrey1),
                                             SizedBox(height: 5.10.h),
-                                            TextView(
-                                              text:
-                                                  model
-                                                      .getSingleProductResponseModel
-                                                      ?.data
-                                                      ?.product
-                                                      ?.description ??
-                                                  '',
-                                              textAlign: TextAlign.start,
-                                              textStyle: TextStyle(
-                                                fontFamily: 'DMSans',
-                                                fontSize: 12.90.sp,
-                                                fontWeight: FontWeight.w300,
-                                                color: AppColors.infoGrey,
+
+                                            model.isSeeMore
+                                                ? SizedBox(
+                                                    height: 70.h,
+                                                    child: TextView(
+                                                      text:
+                                                          model
+                                                              .getSingleProductResponseModel
+                                                              ?.data
+                                                              ?.product
+                                                              ?.description ??
+                                                          '',
+                                                      textAlign:
+                                                          TextAlign.start,
+                                                      maxLines: 4,
+                                                      textOverflow:
+                                                          TextOverflow.ellipsis,
+                                                      textStyle: TextStyle(
+                                                        fontFamily: 'DMSans',
+                                                        fontSize: 12.90.sp,
+                                                        fontWeight:
+                                                            FontWeight.w300,
+                                                        color:
+                                                            AppColors.infoGrey,
+                                                      ),
+                                                    ),
+                                                  )
+                                                : TextView(
+                                                    text:
+                                                        model
+                                                            .getSingleProductResponseModel
+                                                            ?.data
+                                                            ?.product
+                                                            ?.description ??
+                                                        '',
+                                                    textAlign: TextAlign.start,
+                                                    textStyle: TextStyle(
+                                                      fontFamily: 'DMSans',
+                                                      fontSize: 12.90.sp,
+                                                      fontWeight:
+                                                          FontWeight.w300,
+                                                      color: AppColors.infoGrey,
+                                                    ),
+                                                  ),
+
+                                            SizedBox(height: 6.2.h),
+                                            GestureDetector(
+                                              onTap: () {
+                                                model.isSeeMore =
+                                                    !model.isSeeMore;
+                                                model.notifyListeners();
+                                              },
+                                              child: Align(
+                                                alignment: Alignment.topRight,
+                                                child: TextView(
+                                                  text:model.isSeeMore?'See less': 'See more',
+                                                  textStyle: TextStyle(
+                                                    fontFamily: 'DMSans',
+                                                    decoration: TextDecoration
+                                                        .underline,
+                                                    decorationColor:
+                                                        AppColors.reminder,
+                                                    fontSize: 13.90.sp,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: AppColors.reminder,
+                                                  ),
+                                                ),
                                               ),
                                             ),
-                                            SizedBox(height: 2.h),
+                                            SizedBox(height: 10.h),
                                           ],
                                         ),
                                       ),
@@ -1172,8 +1192,6 @@ class ManufacturerViewProductScreen extends StatelessWidget {
                                   ),
                                 ),
                                 SizedBox(height: 10.h),
-
-                                SizedBox(height: 20.h),
                                 GestureDetector(
                                   onTap: () => navigate.navigateTo(
                                     Routes.addProductScreen,
