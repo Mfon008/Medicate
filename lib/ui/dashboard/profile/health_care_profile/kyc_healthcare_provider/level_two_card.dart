@@ -99,7 +99,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                 curve: Curves.easeInOut,
                 alignment: Alignment.topCenter,
                 child: Container(
-                  color: const Color(0xFFF1F7FE),
+                  color:!isExpanded?AppColors.f1: const Color(0xFFF1F7FE),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -184,7 +184,17 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
 
                               const Spacer(),
                               !isExpanded
-                                  ? SizedBox.shrink()
+                                  ? AnimatedRotation(
+                                      turns: isExpanded ? 0.5 : 0,
+                                      duration: const Duration(
+                                        milliseconds: 300,
+                                      ),
+                                      child: Icon(
+                                        Icons.keyboard_arrow_down_rounded,
+                                        size: 21.sp,
+                                        color: const Color(0xFF333333),
+                                      ),
+                                    )
                                   : AnimatedRotation(
                                       turns: isExpanded ? 0.5 : 0,
                                       duration: const Duration(
@@ -207,9 +217,9 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                       if (isExpanded)
                         Container(
                           width: double.infinity,
+                          margin: EdgeInsets.only(bottom: 12.h),
                           decoration: BoxDecoration(
                             color: AppColors.white,
-
                             // Curved top corners
                             borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(20.r),
@@ -1183,7 +1193,6 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                   ],
                                 ),
                               ),
-
                               Container(
                                 width: double.infinity,
                                 margin: EdgeInsets.all(10.w),
@@ -1549,7 +1558,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                             ],
                           ),
                         ),
-                      SizedBox(height: 20.h),
+                       
                     ],
                   ),
                 ),

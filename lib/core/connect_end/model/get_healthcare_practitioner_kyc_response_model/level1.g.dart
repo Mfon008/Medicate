@@ -29,6 +29,9 @@ Level1 _$Level1FromJson(Map<String, dynamic> json) => Level1(
       ? null
       : MeansOfId.fromJson(json['meansOfId'] as Map<String, dynamic>),
   businessAddress: json['businessAddress'] as String?,
+  businessAddresses: (json['businessAddresses'] as List<dynamic>?)
+      ?.map((e) => BusinessAddresses.fromJson(e as Map<String, dynamic>))
+      .toList(),
   businessEmail: json['businessEmail'] as String?,
   educationalExperience: (json['educationalExperience'] as List<dynamic>?)
       ?.map((e) => EducationalExperience.fromJson(e as Map<String, dynamic>))

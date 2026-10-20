@@ -13,6 +13,7 @@ class Level1 {
   String? country;
   String? state;
   String? lga;
+  String? meansOfIdType;
   String? website;
   List<String>? servicesOffered;
   List<BusinessAddresses>? businessAddresses;
@@ -27,6 +28,7 @@ class Level1 {
     this.country,
     this.state,
     this.lga,
+    this.meansOfIdType,
     this.website,
     this.servicesOffered,
     this.businessAddresses,

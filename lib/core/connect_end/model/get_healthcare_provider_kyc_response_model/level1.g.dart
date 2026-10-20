@@ -14,6 +14,7 @@ Level1 _$Level1FromJson(Map<String, dynamic> json) => Level1(
   country: json['country'] as String?,
   state: json['state'] as String?,
   lga: json['lga'] as String?,
+  meansOfIdType: json['meansOfIdType'] as String?,
   website: json['website'] as String?,
   servicesOffered: (json['servicesOffered'] as List<dynamic>?)
       ?.map((e) => e as String)
@@ -33,6 +34,7 @@ Map<String, dynamic> _$Level1ToJson(Level1 instance) => <String, dynamic>{
   'country': instance.country,
   'state': instance.state,
   'lga': instance.lga,
+  'meansOfIdType': instance.meansOfIdType,
   'website': instance.website,
   'servicesOffered': instance.servicesOffered,
   'businessAddresses': instance.businessAddresses,

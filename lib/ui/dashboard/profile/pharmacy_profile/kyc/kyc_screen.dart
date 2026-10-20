@@ -1,12 +1,16 @@
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:stacked/stacked.dart';
+import '../../../../../core/app_assets/image.dart';
 import '../../../../../core/config/colors.dart';
 import '../../../../../core/connect_end/view_model/pharm_auth_view_model.dart';
 import '../../../../widget/button.dart';
 import '../../../../widget/text.dart';
 import 'level_one_card.dart';
 import 'level_two_card.dart';
+import 'upgrade_account.dart';
 
 class KycScreen extends StatelessWidget {
   const KycScreen({super.key});
@@ -108,7 +112,65 @@ class KycScreen extends StatelessWidget {
                         LevelOneCard(model: model),
                         SizedBox(height: 14.0.h),
                         LevelTwoCard(),
-                        SizedBox(height: 6.0.h),
+                        SizedBox(height: 14.0.h),
+                        model
+                                    .getPharmacyKycResponseModel
+                                    ?.data
+                                    ?.kycLevels?[1]
+                                    .status
+                                    ?.toLowerCase() ==
+                                'approved'
+                            ? UpgradeAccount()
+                            : SizedBox(
+                                width: double.infinity,
+                                child: DottedBorder(
+                                  options: RoundedRectDottedBorderOptions(
+                                    dashPattern: [4, 4],
+                                    strokeWidth: .90,
+                                    radius: Radius.circular(20),
+                                    color: AppColors.primary,
+                                  ),
+                                  child: GestureDetector(
+                                    onTap: () {},
+                                    child: Container(
+                                      width: double.infinity,
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: 16.20.w,
+                                        horizontal: 22.0.w,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(
+                                          20.r,
+                                        ),
+                                        color: AppColors.white,
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          SvgPicture.asset(
+                                            AppImage.upgrade_account,
+                                          ),
+                                          SizedBox(width: 10.w),
+                                          TextView(
+                                            text: 'Upgrade Account',
+                                            textStyle: TextStyle(
+                                              fontFamily: 'DMSans',
+                                              fontSize: 15.2.sp,
+                                              fontWeight: FontWeight.w500,
+                                              color: AppColors.primary,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                      
+                      
                       ],
                     ),
                   ),

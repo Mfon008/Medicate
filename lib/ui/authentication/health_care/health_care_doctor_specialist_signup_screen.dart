@@ -764,7 +764,7 @@ class _HealthCareDoctorSpecialistSignUpScreenState
                                     SignUpHealthcareProviderPractitionerEntityModel(
                                       practitionerType: 'PHYSICIAN',
                                       phone:
-                                          '+234${phoneController.text.trim()}',
+                                          '+234${model.returnPhoneNoStructure(phoneController.text.trim())}',
                                       registrationNumber:
                                           registrationNumberController.text
                                               .trim(),

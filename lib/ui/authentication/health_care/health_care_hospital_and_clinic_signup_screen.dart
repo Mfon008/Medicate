@@ -678,7 +678,7 @@ class _HealthCareHospitalAndClinicSignUpScreenState
                                           registrationNumberController.text
                                               .trim(),
                                       phone:
-                                          '+234${phoneController.text.trim()}',
+                                          '+234${model.returnPhoneNoStructure(phoneController.text.trim())}',
                                       healthcareProviderType:
                                           healthCareTypeController.text
                                               .trim()

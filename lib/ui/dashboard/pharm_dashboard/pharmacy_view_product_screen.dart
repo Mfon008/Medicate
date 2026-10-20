@@ -460,30 +460,33 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                     color: AppColors.infoGrey,
                                   ),
                                 ),
-                                TextView(
-                                  text:
-                                      model
-                                              .getSingleMarketProductResponseModel
-                                              ?.data
-                                              ?.product
-                                              ?.manufacturerName
-                                              ?.isNotEmpty ==
-                                          true
-                                      ? model
+                                GestureDetector(
+                                  onTap: () => model.showManufacturerDetailDialog(context,product:model.getSingleMarketProductResponseModel?.data?.product),
+                                  child: TextView(
+                                    text:
+                                        model
                                                 .getSingleMarketProductResponseModel
                                                 ?.data
                                                 ?.product
-                                                ?.manufacturerName ??
-                                            'Not available'
-                                      : 'Not available',
-                                  textStyle: TextStyle(
-                                    fontFamily: 'DMSans',
-                                    fontSize: 14.20.sp,
-                                    fontWeight: FontWeight.w500,
-                                    color: AppColors.reminder,
-                                    decoration: TextDecoration.underline,
-                                    decorationColor: AppColors.reminder,
-                                    decorationThickness: 0.60,
+                                                ?.manufacturerName
+                                                ?.isNotEmpty ==
+                                            true
+                                        ? model
+                                                  .getSingleMarketProductResponseModel
+                                                  ?.data
+                                                  ?.product
+                                                  ?.manufacturerName ??
+                                              'Not available'
+                                        : 'Not available',
+                                    textStyle: TextStyle(
+                                      fontFamily: 'DMSans',
+                                      fontSize: 14.20.sp,
+                                      fontWeight: FontWeight.w500,
+                                      color: AppColors.reminder,
+                                      decoration: TextDecoration.underline,
+                                      decorationColor: AppColors.reminder,
+                                      decorationThickness: 0.60,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -1192,7 +1195,7 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                       children: [
                                         Divider(color: AppColors.infoGrey1),
                                         SizedBox(height: 5.10.h),
-                                        model.isSeeMore
+                                        !model.isSeeMore
                                             ? SizedBox(
                                                 height: 70.h,
                                                 child: TextView(
@@ -1239,18 +1242,18 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                             model.notifyListeners();
                                           },
                                           child: Align(
-                                            alignment: Alignment.topRight,
+                                            alignment: Alignment.topLeft,
                                             child: TextView(
-                                              text: model.isSeeMore?'See less': 'See more',
+                                              text: model.isSeeMore?'View less': 'View more',
                                               textStyle: TextStyle(
                                                 fontFamily: 'DMSans',
                                                 decoration:
                                                     TextDecoration.underline,
                                                 decorationColor:
-                                                    AppColors.reminder,
+                                                    AppColors.primary1,
                                                 fontSize: 13.90.sp,
                                                 fontWeight: FontWeight.w500,
-                                                color: AppColors.reminder,
+                                                color: AppColors.primary1,
                                               ),
                                             ),
                                           ),

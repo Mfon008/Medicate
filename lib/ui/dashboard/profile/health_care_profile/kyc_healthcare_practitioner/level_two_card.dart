@@ -185,7 +185,17 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
 
                               const Spacer(),
                               !isExpanded
-                                  ? SizedBox.shrink()
+                                  ?  AnimatedRotation(
+                                      turns: isExpanded ? 0.5 : 0,
+                                      duration: const Duration(
+                                        milliseconds: 300,
+                                      ),
+                                      child: Icon(
+                                        Icons.keyboard_arrow_down_rounded,
+                                        size: 21.sp,
+                                        color: const Color(0xFF333333),
+                                      ),
+                                    )
                                   : AnimatedRotation(
                                       turns: isExpanded ? 0.5 : 0,
                                       duration: const Duration(

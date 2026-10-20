@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:medicate_app/core/app_assets/constant.dart';
 import 'package:medicate_app/core/app_assets/image.dart';
@@ -107,7 +108,7 @@ class ManufacturerProfileScreen extends StatelessWidget {
                         ),
                   SizedBox(height: 10.h),
                   Center(
-                    child: GestureDetector(
+                    child:model.isLoading?SpinKitCircle(size: 32.sp,color: AppColors.primary1,): GestureDetector(
                       onTap: () => model.pickImage(context),
                       child: TextView(
                         text:
@@ -126,8 +127,8 @@ class ManufacturerProfileScreen extends StatelessWidget {
                                         .data!
                                         .logo ==
                                     null
-                            ? 'Upload Photo'
-                            : 'Change Photo',
+                            ? 'Change Photo'
+                            : 'Upload Photo',
                         textStyle: TextStyle(
                           fontFamily: 'Arial',
                           fontSize: 14.2.sp,

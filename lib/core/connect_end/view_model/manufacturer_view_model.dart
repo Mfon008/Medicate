@@ -636,7 +636,7 @@ class ManufacturerViewModel extends BaseViewModel {
 
   returnFulfillmentIncomingOrderText(String s) {
     if (s.toLowerCase() == 'pending') {
-      return 'confrimed';
+      return 'confirmed';
     }
     if (s.toLowerCase() == 'confirmed') {
       return 'processing';
@@ -2252,123 +2252,171 @@ class ManufacturerViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void additionalResourceInfo(context, {String? des, String? desLink}) {
+  void additionalResourceInfo(
+    BuildContext context, {
+    String? des,
+    String? desLink,
+  }) {
     showDialog(
       context: context,
-      barrierDismissible: false, // prevent closing by tapping outside
-      builder: (BuildContext context) {
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
         return ViewModelBuilder<ManufacturerViewModel>.reactive(
           viewModelBuilder: () => ManufacturerViewModel(),
           onViewModelReady: (model) async {},
           disposeViewModel: false,
           onDispose: (viewModel) {},
           builder: (_, ManufacturerViewModel model, _) {
-            return Container(
-              color: AppColors.transparent,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Align(
-                    alignment: Alignment.topCenter,
-                    child: TextButton.icon(
-                      onPressed: () => Navigator.pop(context),
-                      icon: Icon(Icons.close, color: Colors.white, size: 18),
-                      label: Text(
-                        "Close",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      style: TextButton.styleFrom(
-                        backgroundColor: AppColors.primary,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 10.w,
-                          vertical: 4.w,
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 6.10.h),
-                  Dialog(
-                    insetPadding: EdgeInsets.all(16.20.w),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    backgroundColor: AppColors.white,
+            return SafeArea(
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final screenHeight = MediaQuery.sizeOf(context).height;
+                  // final screenWidth = MediaQuery.sizeOf(context).width;
+
+                  return Center(
                     child: Padding(
-                      padding: EdgeInsets.all(20.w),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          TextView(
-                            text: 'Additional Resource Info',
-                            textStyle: TextStyle(
-                              fontFamily: 'DMSans',
-                              color: AppColors.black,
-                              fontSize: 16.20.sp,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          SizedBox(height: 8.0.h),
-                          Divider(color: AppColors.infoGrey1),
-                          SizedBox(height: 10.h),
-                          TextView(
-                            text: des ?? '',
-                            textStyle: TextStyle(
-                              fontFamily: 'DMSans',
-                              color: AppColors.black,
-                              fontSize: 13.20.sp,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                          SizedBox(height: 20.h),
-
-                          // 🔹 Save button
-                          SizedBox(
-                            width: double.infinity,
-                            child: ElevatedButton(
-                              onPressed: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) =>
-                                      WebViewScreen(imageUrl: desLink ?? ''),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16.w,
+                        vertical: 12.h,
+                      ),
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          maxWidth: 500,
+                          maxHeight: screenHeight * 0.85,
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Align(
+                              alignment: Alignment.center,
+                              child: TextButton.icon(
+                                onPressed: () => Navigator.pop(dialogContext),
+                                icon: const Icon(
+                                  Icons.close,
+                                  color: Colors.white,
+                                  size: 18,
                                 ),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.primary,
-                                padding: EdgeInsets.symmetric(vertical: 16),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(30),
+                                label: const Text(
+                                  "Close",
+                                  style: TextStyle(color: Colors.white),
                                 ),
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  SvgPicture.asset(AppImage.open_link),
-                                  SizedBox(width: 4.w),
-
-                                  Text(
-                                    "Open Link",
-                                    style: TextStyle(
-                                      fontSize: 18.0,
-                                      fontFamily: 'DMSans',
-                                      color: AppColors.white,
-                                      fontWeight: FontWeight.w500,
-                                    ),
+                                style: TextButton.styleFrom(
+                                  backgroundColor: AppColors.primary,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
                                   ),
-                                ],
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 10.w,
+                                    vertical: 4.w,
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+
+                            SizedBox(height: 6.h),
+
+                            Flexible(
+                              child: Material(
+                                color: AppColors.white,
+                                borderRadius: BorderRadius.circular(12),
+                                clipBehavior: Clip.antiAlias,
+                                child: Padding(
+                                  padding: EdgeInsets.all(20.w),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      TextView(
+                                        text: 'Additional Resource Info',
+                                        textStyle: TextStyle(
+                                          fontFamily: 'DMSans',
+                                          color: AppColors.black,
+                                          fontSize: 16.20.sp,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+
+                                      SizedBox(height: 8.h),
+
+                                      Divider(color: AppColors.infoGrey1),
+
+                                      SizedBox(height: 10.h),
+
+                                      Flexible(
+                                        child: SingleChildScrollView(
+                                          child: SizedBox(
+                                            width: double.infinity,
+                                            child: TextView(
+                                              text: des ?? '',
+                                              textStyle: TextStyle(
+                                                fontFamily: 'DMSans',
+                                                color: AppColors.black,
+                                                fontSize: 13.20.sp,
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+
+                                      SizedBox(height: 20.h),
+
+                                      SizedBox(
+                                        width: double.infinity,
+                                        child: ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.push(
+                                              dialogContext,
+                                              MaterialPageRoute(
+                                                builder: (_) => WebViewScreen(
+                                                  imageUrl: desLink ?? '',
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: AppColors.primary,
+                                            padding: EdgeInsets.symmetric(
+                                              vertical: 16.h,
+                                            ),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(30),
+                                            ),
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              SvgPicture.asset(
+                                                AppImage.open_link,
+                                              ),
+                                              SizedBox(width: 4.w),
+                                              Text(
+                                                "Open Link",
+                                                style: TextStyle(
+                                                  fontSize: 18.sp,
+                                                  fontFamily: 'DMSans',
+                                                  color: AppColors.white,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  );
+                },
               ),
             );
           },
@@ -2581,7 +2629,12 @@ class ManufacturerViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  getAllProduct(context, {String? categoryId, String? search, int? page}) async {
+  getAllProduct(
+    context, {
+    String? categoryId,
+    String? search,
+    int? page,
+  }) async {
     try {
       _isLoading = true;
       _getAllProductListResponseModel = await runBusyFuture(
@@ -2897,6 +2950,53 @@ class ManufacturerViewModel extends BaseViewModel {
                           fontSize: 15.2.sp,
                           fontWeight: FontWeight.w500,
                           color: AppColors.infoGrey,
+                        ),
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () async {
+                      c = null;
+                      menuSetState(() {});
+                      notifyListeners();
+                      getAllProduct(context);
+                      await Future.delayed(const Duration(milliseconds: 300));
+
+                      // Close popup
+                      if (context.mounted) {
+                        Navigator.pop(context);
+                      }
+                    },
+                    child: Container(
+                      width: double.infinity,
+                      margin: EdgeInsets.symmetric(
+                        horizontal: 8.w,
+                        vertical: 3.w,
+                      ),
+                      padding: EdgeInsets.symmetric(
+                        vertical: 8.w,
+                        horizontal: 12.w,
+                      ),
+                      decoration: BoxDecoration(
+                        color: c == null
+                            ? AppColors.skyBlue
+                            : AppColors.transparent,
+                        borderRadius: BorderRadius.circular(12.r),
+                        border: Border.all(
+                          color: c == null
+                              ? AppColors.cool_blue
+                              : AppColors.transparent,
+                        ),
+                      ),
+                      child: TextView(
+                        text: 'All',
+                        textStyle: TextStyle(
+                          fontFamily: 'DMSans',
+                          fontSize: 16.2.sp,
+                          fontWeight: FontWeight.w500,
+                          color: selectedCategory?.name == null
+                              ? AppColors.primary
+                              : AppColors.reminder,
                         ),
                       ),
                     ),

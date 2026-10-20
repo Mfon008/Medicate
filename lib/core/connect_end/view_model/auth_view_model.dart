@@ -12031,11 +12031,6 @@ class AuthViewModel extends BaseViewModel {
           phoneReminderList.addAll(payload.phoneNumbers!);
           addedPhoneReminderList.addAll(payload.phoneNumbers!);
         }
-
-        // emailReminderList.addAll(payload!.emails!);
-        // addedEmailReminderList.addAll(payload.emails!);
-        // phoneReminderList.addAll(payload.phoneNumbers!);
-        // addedPhoneReminderList.addAll(payload.phoneNumbers!);
       });
 
       model.medNameUpdateFocusNodes.add(FocusNode());

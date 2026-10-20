@@ -204,7 +204,7 @@ class _HealthCareForgotPinScreenState extends State<HealthCareForgotPinScreen> {
                               model.forgotPassword(
                                 context,
                                 forgotPassword: ResendOtpEntityModel(
-                                  phone: '+234${phoneController.text}',
+                                  phone: '+234${model.returnPhoneNoStructure(phoneController.text)}',
                                 ),
                               );
                             }

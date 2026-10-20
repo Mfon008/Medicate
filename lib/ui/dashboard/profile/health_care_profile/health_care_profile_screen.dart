@@ -168,7 +168,7 @@ class HealthCareProfileScreen extends StatelessWidget {
                   SizedBox(height: 1.0.h),
                   profileContainer(
                     icon: AppImage.key,
-                    isactive: model.returnBool(),
+                    isactive: model.returnBoolKyc(),
                     text: 'KYC',
                     onTap: () => navigate.navigateTo(
                       Routes.kycHealthcareProvidersScreen,

@@ -203,7 +203,7 @@ class _PharmacyForgotPinScreenState extends State<PharmacyForgotPinScreen> {
                               model.forgotPasswordPharmacy(
                                 context,
                                 forgotPassword: ResendOtpEntityModel(
-                                  phone: '+234${phoneController.text}',
+                                  phone: '+234${model.returnPhoneNoStructure(phoneController.text)}',
                                 ),
                               );
                             }

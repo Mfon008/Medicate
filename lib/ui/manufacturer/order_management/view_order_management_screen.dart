@@ -160,98 +160,99 @@ class ViewOrderManagementScreen extends StatelessWidget {
                           ],
                         ),
                         SizedBox(height: 14.h),
-                        Container(
-                          width: double.infinity,
-                          padding: EdgeInsets.all(16.w),
-                          decoration: BoxDecoration(
-                            color: AppColors.cooool,
-                            borderRadius: BorderRadius.circular(8.r),
-                            border: Border.all(color: AppColors.infoGrey2),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              TextView(
-                                text:
-                                    model
-                                        .getIncomingOrderDdetailResponseModel!
-                                        .data!
-                                        .order!
-                                        .customer
-                                        ?.name
-                                        ?.capitalize() ??
-                                    '',
-                                textStyle: TextStyle(
-                                  fontFamily: 'DMSans',
-                                  fontSize: 16.32.sp,
-                                  fontWeight: FontWeight.w500,
-                                  color: AppColors.reminder,
-                                ),
-                              ),
-                              SizedBox(height: 10.h),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  SvgPicture.asset(
-                                    AppImage.locator,
-                                    height: 14.h,
-                                    width: 10.w,
-                                    color: AppColors.primary,
-                                  ),
-                                  SizedBox(width: 10.h),
-                                  Expanded(
-                                    child: TextView(
-                                      text:
-                                          model
-                                              .getIncomingOrderDdetailResponseModel!
-                                              .data!
-                                              .order!
-                                              .customer
-                                              ?.address ??
-                                          '',
-                                      textStyle: TextStyle(
-                                        fontFamily: 'DMSans',
-                                        fontSize: 14.2.sp,
-                                        fontWeight: FontWeight.w500,
-                                        color: AppColors.reminder,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 10.h),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  SvgPicture.asset(
-                                    AppImage.phone,
-                                    height: 14.h,
-                                    width: 10.w,
-                                    color: AppColors.primary,
-                                  ),
-                                  SizedBox(width: 10.h),
-                                  TextView(
-                                    text:
-                                        model
-                                            .getIncomingOrderDdetailResponseModel!
-                                            .data!
-                                            .order!
-                                            .customer
-                                            ?.phoneNumber ??
-                                        '',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'DMSans',
-                                      fontSize: 14.2.sp,
-                                      fontWeight: FontWeight.w500,
-                                      color: AppColors.reminder,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: 20.h),
+
+                        // Container(
+                        //   width: double.infinity,
+                        //   padding: EdgeInsets.all(16.w),
+                        //   decoration: BoxDecoration(
+                        //     color: AppColors.cooool,
+                        //     borderRadius: BorderRadius.circular(8.r),
+                        //     border: Border.all(color: AppColors.infoGrey2),
+                        //   ),
+                        //   child: Column(
+                        //     crossAxisAlignment: CrossAxisAlignment.start,
+                        //     children: [
+                        //       TextView(
+                        //         text:
+                        //             model
+                        //                 .getIncomingOrderDdetailResponseModel!
+                        //                 .data!
+                        //                 .order!
+                        //                 .customer
+                        //                 ?.name
+                        //                 ?.capitalize() ??
+                        //             '',
+                        //         textStyle: TextStyle(
+                        //           fontFamily: 'DMSans',
+                        //           fontSize: 16.32.sp,
+                        //           fontWeight: FontWeight.w500,
+                        //           color: AppColors.reminder,
+                        //         ),
+                        //       ),
+                        //       SizedBox(height: 10.h),
+                        //       Row(
+                        //         mainAxisAlignment: MainAxisAlignment.start,
+                        //         children: [
+                        //           SvgPicture.asset(
+                        //             AppImage.locator,
+                        //             height: 14.h,
+                        //             width: 10.w,
+                        //             color: AppColors.primary,
+                        //           ),
+                        //           SizedBox(width: 10.h),
+                        //           Expanded(
+                        //             child: TextView(
+                        //               text:
+                        //                   model
+                        //                       .getIncomingOrderDdetailResponseModel!
+                        //                       .data!
+                        //                       .order!
+                        //                       .customer
+                        //                       ?.address ??
+                        //                   '',
+                        //               textStyle: TextStyle(
+                        //                 fontFamily: 'DMSans',
+                        //                 fontSize: 14.2.sp,
+                        //                 fontWeight: FontWeight.w500,
+                        //                 color: AppColors.reminder,
+                        //               ),
+                        //             ),
+                        //           ),
+                        //         ],
+                        //       ),
+                        //       SizedBox(height: 10.h),
+                        //       Row(
+                        //         mainAxisAlignment: MainAxisAlignment.start,
+                        //         children: [
+                        //           SvgPicture.asset(
+                        //             AppImage.phone,
+                        //             height: 14.h,
+                        //             width: 10.w,
+                        //             color: AppColors.primary,
+                        //           ),
+                        //           SizedBox(width: 10.h),
+                        //           TextView(
+                        //             text:
+                        //                 model
+                        //                     .getIncomingOrderDdetailResponseModel!
+                        //                     .data!
+                        //                     .order!
+                        //                     .customer
+                        //                     ?.phoneNumber ??
+                        //                 '',
+                        //             textStyle: TextStyle(
+                        //               fontFamily: 'DMSans',
+                        //               fontSize: 14.2.sp,
+                        //               fontWeight: FontWeight.w500,
+                        //               color: AppColors.reminder,
+                        //             ),
+                        //           ),
+                        //         ],
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
+                        // SizedBox(height: 20.h),
                         TextView(
                           text: 'Order Notes',
                           textStyle: TextStyle(

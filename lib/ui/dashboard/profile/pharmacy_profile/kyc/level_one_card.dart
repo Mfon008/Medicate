@@ -2,8 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:medicate_app/core/config/colors.dart';
 import 'package:medicate_app/ui/widget/text.dart';
+import '../../../../../core/app_assets/image.dart';
 import '../../../../../core/connect_end/view_model/pharm_auth_view_model.dart';
 import '../../../../widget/info_item_widget.dart';
 import '../../manufacture/dashed_border_painter.dart';
@@ -66,19 +68,31 @@ class _LevelOneCardState extends State<LevelOneCard> {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Container(
-                            width: 14.w,
-                            height: 14.w,
-                            decoration: const BoxDecoration(
-                              color: Color(0xFF58C58A),
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(
-                              Icons.check,
-                              size: 9.sp,
-                              color: Colors.white,
-                            ),
-                          ),
+                          widget
+                                      .model
+                                      ?.getPharmacyKycResponseModel
+                                      ?.data
+                                      ?.kycLevels?[0]
+                                      .status
+                                      ?.toLowerCase() ==
+                                  'approved'
+                              ? Container(
+                                  width: 14.w,
+                                  height: 14.w,
+                                  margin: EdgeInsets.only(top: 1.h),
+                                  decoration: const BoxDecoration(
+                                    color: Color(0xFF58C58A),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    Icons.check,
+                                    size: 9.sp,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : !isExpanded
+                              ? SvgPicture.asset(AppImage.open_padlock)
+                              : SvgPicture.asset(AppImage.open_padlock),
 
                           SizedBox(width: 8.w),
 
@@ -156,34 +170,65 @@ class _LevelOneCardState extends State<LevelOneCard> {
                               vertical: 22.h,
                             ),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFE8FAF0),
+                              color: widget.model!.kycStatusColor(
+                                    widget.model?.getPharmacyKycResponseModel
+                                        ?.data
+                                        ?.kycLevels?[0]
+                                        .status,
+                                  ),
                               borderRadius: BorderRadius.circular(10.r),
                             ),
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Container(
-                                  width: 14.w,
-                                  height: 14.w,
-                                  margin: EdgeInsets.only(top: 1.h),
-                                  decoration: const BoxDecoration(
-                                    color: Color(0xFF58C58A),
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: Icon(
-                                    Icons.check,
-                                    size: 9.sp,
-                                    color: Colors.white,
-                                  ),
-                                ),
+                                widget
+                                            .model!
+                                            .getPharmacyKycResponseModel
+                                            ?.data
+                                            ?.kycLevels?[0]
+                                            .status
+                                            ?.toLowerCase() ==
+                                        'approved'
+                                    ? Container(
+                                        width: 14.w,
+                                        height: 14.w,
+                                        margin: EdgeInsets.only(top: 1.h),
+                                        decoration: const BoxDecoration(
+                                          color: Color(0xFF58C58A),
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: Icon(
+                                          Icons.check,
+                                          size: 9.sp,
+                                          color: Colors.white,
+                                        ),
+                                      )
+                                    : Icon(
+                                        Icons.info_outline,
+                                        size: 18.90.sp,
+                                        color: widget.model!.kycStatusColorIcon(
+                                          widget
+                                                  .model!
+                                                  .getPharmacyKycResponseModel
+                                                  ?.data
+                                                  ?.kycLevels?[0]
+                                                  .status ??
+                                              '',
+                                        ),
+                                      ),
 
                                 SizedBox(width: 8.w),
 
                                 Expanded(
                                   child: Text(
-                                    'Your KYC has been successfully '
-                                    'verified. You can now access '
-                                    'some services.',
+                                    widget.model!.kycStatusText(
+                                      widget
+                                          .model
+                                          ?.getPharmacyKycResponseModel
+                                          ?.data
+                                          ?.kycLevels?[0]
+                                          .status,
+                                    ),
                                     style: TextStyle(
                                       fontSize: 12.5.sp,
                                       height: 1.35,

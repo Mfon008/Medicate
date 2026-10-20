@@ -575,9 +575,7 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
                                               'rejected' &&
                                           ord.status?.toLowerCase() !=
                                               'returned'
-                                      ? Column(
-                                        children: [
-                                          SizedBox(height: 16.20.h),
+                                      ? 
                                           GestureDetector(
                                               onTap: () =>
                                                   _showAdvanceStatusListMenu(
@@ -586,6 +584,7 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
                                                     order: ord,
                                                   ),
                                               child: Container(
+                                                margin: EdgeInsets.only(top: 16.0.w),
                                                 padding: EdgeInsets.symmetric(
                                                   vertical: 8.10.w,
                                                 ),
@@ -624,9 +623,7 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
                                                   ],
                                                 ),
                                               ),
-                                            ),
-                                        ],
-                                      )
+                                            )
                                       : SizedBox.shrink(),
                                   SizedBox(height: 2.0.h),
                                 ],

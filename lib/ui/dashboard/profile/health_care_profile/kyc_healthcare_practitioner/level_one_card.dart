@@ -2,8 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:medicate_app/core/config/colors.dart';
 import 'package:medicate_app/ui/widget/text.dart';
+import '../../../../../core/app_assets/image.dart';
 import '../../../../../core/connect_end/view_model/health_care_view_model.dart';
 import '../../../../widget/info_item_widget.dart';
 import '../../manufacture/dashed_border_painter.dart';
@@ -66,19 +68,31 @@ class _LevelOneCardState extends State<LevelOneCard> {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Container(
-                            width: 14.w,
-                            height: 14.w,
-                            decoration: const BoxDecoration(
-                              color: Color(0xFF58C58A),
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(
-                              Icons.check,
-                              size: 9.sp,
-                              color: Colors.white,
-                            ),
-                          ),
+                          widget
+                                      .model
+                                      ?.getHealthcareProviderKycResponseModel
+                                      ?.data
+                                      ?.kycLevels?[0]
+                                      .status
+                                      ?.toLowerCase() ==
+                                  'approved'
+                              ? Container(
+                                  width: 14.w,
+                                  height: 14.w,
+                                  margin: EdgeInsets.only(top: 1.h),
+                                  decoration: const BoxDecoration(
+                                    color: Color(0xFF58C58A),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    Icons.check,
+                                    size: 9.sp,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : !isExpanded
+                              ? SvgPicture.asset(AppImage.open_padlock)
+                              : SvgPicture.asset(AppImage.open_padlock),
 
                           SizedBox(width: 8.w),
 
@@ -156,34 +170,68 @@ class _LevelOneCardState extends State<LevelOneCard> {
                               vertical: 22.h,
                             ),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFE8FAF0),
+                              color: widget.model!.kycStatusColor(
+                                widget
+                                        .model!
+                                        .getHealthcarePractitionerKycResponseModel
+                                        ?.data
+                                        ?.kycLevels?[0]
+                                        .status ??
+                                    '',
+                              ),
                               borderRadius: BorderRadius.circular(10.r),
                             ),
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Container(
-                                  width: 14.w,
-                                  height: 14.w,
-                                  margin: EdgeInsets.only(top: 1.h),
-                                  decoration: const BoxDecoration(
-                                    color: Color(0xFF58C58A),
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: Icon(
-                                    Icons.check,
-                                    size: 9.sp,
-                                    color: Colors.white,
-                                  ),
-                                ),
+                                widget
+                                            .model!
+                                            .getHealthcarePractitionerKycResponseModel
+                                            ?.data
+                                            ?.kycLevels?[0]
+                                            .status
+                                            ?.toLowerCase() ==
+                                        'approved'
+                                    ? Container(
+                                        width: 14.w,
+                                        height: 14.w,
+                                        margin: EdgeInsets.only(top: 1.h),
+                                        decoration: const BoxDecoration(
+                                          color: Color(0xFF58C58A),
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: Icon(
+                                          Icons.check,
+                                          size: 9.sp,
+                                          color: Colors.white,
+                                        ),
+                                      )
+                                    : Icon(
+                                        Icons.info_outline,
+                                        size: 18.90.sp,
+                                        color: widget.model!.kycStatusColorIcon(
+                                          widget
+                                                  .model!
+                                                  .getHealthcarePractitionerKycResponseModel
+                                                  ?.data
+                                                  ?.kycLevels?[0]
+                                                  .status ??
+                                              '',
+                                        ),
+                                      ),
 
                                 SizedBox(width: 8.w),
 
                                 Expanded(
                                   child: Text(
-                                    'Your KYC has been successfully '
-                                    'verified. You can now access '
-                                    'some services.',
+                                    widget.model!.kycStatusText(
+                                      widget
+                                          .model
+                                          ?.getHealthcarePractitionerKycResponseModel
+                                          ?.data
+                                          ?.kycLevels?[0]
+                                          .status,
+                                    ),
                                     style: TextStyle(
                                       fontSize: 12.5.sp,
                                       height: 1.35,
@@ -247,7 +295,7 @@ class _LevelOneCardState extends State<LevelOneCard> {
 
                                 SizedBox(height: 13.6.h),
                                 TextView(
-                                  text: 'Education',
+                                  text: 'Addresses',
                                   textStyle: TextStyle(
                                     fontSize: 15.86.sp,
                                     fontWeight: FontWeight.w600,
@@ -266,14 +314,14 @@ class _LevelOneCardState extends State<LevelOneCard> {
                                         .getHealthcarePractitionerKycResponseModel!
                                         .data!
                                         .level1!
-                                        .educationalExperience!
+                                        .businessAddresses!
                                         .isNotEmpty)
                                   ...widget
                                       .model!
                                       .getHealthcarePractitionerKycResponseModel!
                                       .data!
                                       .level1!
-                                      .educationalExperience!
+                                      .businessAddresses!
                                       .asMap()
                                       .entries
                                       .map((entry) {
@@ -295,7 +343,7 @@ class _LevelOneCardState extends State<LevelOneCard> {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               TextView(
-                                                text: o.degree ?? '',
+                                                text: o.businessAddress ?? '',
                                                 textStyle: TextStyle(
                                                   fontSize: 13.86.sp,
                                                   fontWeight: FontWeight.w600,
@@ -304,16 +352,16 @@ class _LevelOneCardState extends State<LevelOneCard> {
                                                 ),
                                               ),
                                               SizedBox(height: 5.2.h),
-                                              // TextView(
-                                              //   text:
-                                              //       '${o.lga}, ${o.state} State, ${o.country}',
-                                              //   textStyle: TextStyle(
-                                              //     fontSize: 12.86.sp,
-                                              //     fontWeight: FontWeight.w400,
-                                              //     color: AppColors.infoGrey,
-                                              //     fontFamily: 'DMSans',
-                                              //   ),
-                                              // ),
+                                              TextView(
+                                                text:
+                                                    '${o.lga}, ${o.state} State, ${o.country}',
+                                                textStyle: TextStyle(
+                                                  fontSize: 12.86.sp,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: AppColors.infoGrey,
+                                                  fontFamily: 'DMSans',
+                                                ),
+                                              ),
 
                                               SizedBox(height: 10.h),
                                             ],
@@ -452,6 +500,29 @@ class _LevelOneCardState extends State<LevelOneCard> {
                                   ),
                                 ),
 
+                                SizedBox(height: 18.22.h),
+                                TextView(
+                                  text: 'Means of ID',
+                                  textStyle: TextStyle(
+                                    fontSize: 15.86.sp,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.reminder1,
+                                    fontFamily: 'DMSans',
+                                  ),
+                                ),
+
+                                Divider(color: AppColors.f1),
+                                SizedBox(height: 18.22.h),
+                                InfoItem(
+                                  title: 'Means of ID',
+                                  value:
+                                      widget.model
+                                          ?.getHealthcarePractitionerKycResponseModel
+                                          ?.data
+                                          ?.level1
+                                          ?.meansOfIdType ??
+                                      '--',
+                                ),
                                 SizedBox(height: 18.22.h),
                                 TextView(
                                   text: 'Contact Details',

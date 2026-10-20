@@ -9,6 +9,7 @@ class AppImage {
   static const String paystack = 'assets/images/paystack.png';
   static const String applogoSvg = 'assets/svgs/medicate.svg';
   static const String open_link = 'assets/svgs/open_link.svg';
+  static const String man_reg_icon = 'assets/svgs/man_reg_icon.svg';
   static const String info = 'assets/svgs/info.svg';
   static const String order_notes = 'assets/svgs/order_notes.svg';
   static const String opay = 'assets/svgs/opay.svg';
@@ -25,6 +26,7 @@ class AppImage {
   static const String padlock = 'assets/svgs/padlock.svg';
   static const String fa = 'assets/svgs/2fa.svg';
   static const String pen = 'assets/svgs/pen.svg';
+  static const String upgrade_account = 'assets/svgs/upgrade_account.svg';
   static const String validate = 'assets/svgs/validate.svg';
   static const String stack_pack = 'assets/svgs/stack_pack.svg';
   static const String two_fa_ui = 'assets/svgs/2fa_ui.svg';

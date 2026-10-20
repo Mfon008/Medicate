@@ -119,8 +119,11 @@ class ManufacturerViewProductScreen extends StatelessWidget {
                                                 .images!
                                                 .length
                                         ? () {}
-                                        : () {
+                                        : () async {
                                             model.inImage = model.inImage + 1;
+                                            await Future.delayed(
+                                              Duration(milliseconds: 50),
+                                            );
                                             model.images = model
                                                 .getSingleProductResponseModel!
                                                 .data!
@@ -1116,7 +1119,7 @@ class ManufacturerViewProductScreen extends StatelessWidget {
                                             Divider(color: AppColors.infoGrey1),
                                             SizedBox(height: 5.10.h),
 
-                                            model.isSeeMore
+                                            !model.isSeeMore
                                                 ? SizedBox(
                                                     height: 70.h,
                                                     child: TextView(
@@ -1168,18 +1171,18 @@ class ManufacturerViewProductScreen extends StatelessWidget {
                                                 model.notifyListeners();
                                               },
                                               child: Align(
-                                                alignment: Alignment.topRight,
+                                                alignment: Alignment.topLeft,
                                                 child: TextView(
-                                                  text:model.isSeeMore?'See less': 'See more',
+                                                  text:model.isSeeMore?'View less': 'View more',
                                                   textStyle: TextStyle(
                                                     fontFamily: 'DMSans',
                                                     decoration: TextDecoration
                                                         .underline,
                                                     decorationColor:
-                                                        AppColors.reminder,
+                                                        AppColors.primary1,
                                                     fontSize: 13.90.sp,
                                                     fontWeight: FontWeight.w500,
-                                                    color: AppColors.reminder,
+                                                    color: AppColors.primary1,
                                                   ),
                                                 ),
                                               ),

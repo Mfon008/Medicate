@@ -496,6 +496,7 @@ class HealthCareViewModel extends BaseViewModel {
   List<List<upReminder.DailyDoseTime>> dailyDose = [];
 
   final _pickImage = ImagePickerHandler();
+  bool isNotReadable = false;
 
   List listOfDosage = [];
   int page = 1;
@@ -16269,6 +16270,14 @@ class HealthCareViewModel extends BaseViewModel {
     return text == text.toUpperCase();
   }
 
+  String returnPhoneNoStructure(String phoneNo) {
+    if (phoneNo.substring(0, 1).contains('0')) {
+      phoneNo = phoneNo.substring(1);
+    }
+    notifyListeners();
+    return phoneNo;
+  }
+
   bool returnBool() {
     if (_getHealthcareProviderKycResponseModel == null ||
         _getHealthcareProviderKycResponseModel!.data!.kycLevels?[0].status
@@ -16283,7 +16292,7 @@ class HealthCareViewModel extends BaseViewModel {
     if (_getHealthcareProviderKycResponseModel == null ||
         _getHealthcareProviderKycResponseModel != null &&
             _getHealthcareProviderKycResponseModel!.data!.kycStatus!
-                    .toLowerCase() ==
+                    .toLowerCase() !=
                 'APPROVED'.toLowerCase()) {
       return true;
     }
@@ -16304,7 +16313,7 @@ class HealthCareViewModel extends BaseViewModel {
     if (_getHealthcarePractitionerKycResponseModel == null ||
         _getHealthcarePractitionerKycResponseModel != null &&
             _getHealthcarePractitionerKycResponseModel!.data!.kycStatus!
-                    .toLowerCase() ==
+                    .toLowerCase() !=
                 'APPROVED'.toLowerCase()) {
       return true;
     }
@@ -19819,6 +19828,34 @@ class HealthCareViewModel extends BaseViewModel {
   }
 
   String kycStatusText(status) {
+    if (status!=null) {
+      if (status.toLowerCase() == 'UNDER_REVIEW'.toLowerCase()) {
+        return 'Your KYC is submitted and under '
+            'review. We’ll notify you once it’s '
+            'verified.';
+      }
+      if (status.toLowerCase() == 'NOT_SUBMITTED'.toLowerCase()) {
+        return 'Kindly upload and submit KYC for '
+            'verification to obtain some access '
+            'to platform features.';
+      }
+      if (status.toLowerCase() == 'REJECTED'.toLowerCase()) {
+        return 'Your KYC couldn’t be verified. '
+            'Please review your details and '
+            'resubmit the required documents.';
+      }
+      if (status.toLowerCase() == 'APPROVED'.toLowerCase()) {
+        return 'Your KYC has been successfully '
+            'verified. You can now access '
+            'some services.';
+      }
+    }
+    return 'Kindly upload and submit KYC for '
+        'verification to obtain some access '
+        'to platform features.';
+  }
+
+  String upgradeStatusText(status) {
     if (status.toLowerCase() == 'UNDER_REVIEW'.toLowerCase()) {
       return 'Your KYC is submitted and under '
           'review. We’ll notify you once it’s '
@@ -19839,23 +19876,23 @@ class HealthCareViewModel extends BaseViewModel {
           'verified. You can now access '
           'some services.';
     }
-    return 'Kindly upload and submit KYC for '
-        'verification to obtain some access '
-        'to platform features.';
+    return 'Kindly upload and submit the required documents for verification to unlock distributor features.';
   }
 
   Color kycStatusColor(status) {
-    if (status.toLowerCase() == 'UNDER_REVIEW'.toLowerCase()) {
-      return AppColors.fadedyellow;
-    }
-    if (status.toLowerCase() == 'NOT_SUBMITTED'.toLowerCase()) {
-      return AppColors.fadedyellow;
-    }
-    if (status.toLowerCase() == 'REJECTED'.toLowerCase()) {
-      return AppColors.red_bar_faded;
-    }
-    if (status.toLowerCase() == 'APPROVED'.toLowerCase()) {
-      return AppColors.app_green_light;
+    if (status!=null) {
+      if (status.toLowerCase() == 'UNDER_REVIEW'.toLowerCase()) {
+        return AppColors.fadedyellow;
+      }
+      if (status.toLowerCase() == 'NOT_SUBMITTED'.toLowerCase()) {
+        return AppColors.fadedyellow;
+      }
+      if (status.toLowerCase() == 'REJECTED'.toLowerCase()) {
+        return AppColors.red_bar_faded;
+      }
+      if (status.toLowerCase() == 'APPROVED'.toLowerCase()) {
+        return AppColors.app_green_light;
+      }
     }
     return AppColors.fadedyellow;
   }

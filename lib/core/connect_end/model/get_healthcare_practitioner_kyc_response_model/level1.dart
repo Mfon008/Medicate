@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import 'business_addresses.dart';
 import 'educational_experience.dart';
 import 'means_of_id.dart';
 
@@ -25,6 +26,7 @@ class Level1 {
   String? businessAddress;
   String? businessEmail;
   List<EducationalExperience>? educationalExperience;
+  List<BusinessAddresses>? businessAddresses;
 
   Level1({
     this.fullName,
@@ -43,6 +45,7 @@ class Level1 {
     this.meansOfIdType,
     this.meansOfId,
     this.businessAddress,
+    this.businessAddresses,
     this.businessEmail,
     this.educationalExperience,
   });
