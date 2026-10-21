@@ -1007,7 +1007,7 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                             color: AppColors.faintedGrey,
                           ),
                         ),
-                         SizedBox(height: 12.h),
+                        SizedBox(height: 12.h),
                         TextFormWidget(
                           hint: 'Contact of person receiving',
                           label: '+234',

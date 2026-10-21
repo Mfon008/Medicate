@@ -2457,7 +2457,7 @@ class HMOViewModel extends BaseViewModel {
         repositoryImply.updateHMOKycSubmit(updateKyc!),
         throwException: true,
       );
-      if (v['statusCode'] == 201||v['statusCode'] == 200) {
+      if (v['statusCode'] == 201 || v['statusCode'] == 200) {
         AppUtils.snackbar(context, message: v['message']);
         getHMOKyc(context);
       } else {
@@ -2479,7 +2479,7 @@ class HMOViewModel extends BaseViewModel {
         repositoryImply.updateHMOKycSave(updateKyc!),
         throwException: true,
       );
-      if (v['statusCode'] == 201||v['statusCode'] == 200) {
+      if (v['statusCode'] == 201 || v['statusCode'] == 200) {
         AppUtils.snackbar(context, message: v['message']);
         getHMOKyc(context);
       } else {
@@ -2504,7 +2504,7 @@ class HMOViewModel extends BaseViewModel {
         repositoryImply.updateThirdHMOKycSubmit(updateKyc!),
         throwException: true,
       );
-      if (v['statusCode'] == 201||v['statusCode'] == 200) {
+      if (v['statusCode'] == 201 || v['statusCode'] == 200) {
         AppUtils.snackbar(context, message: v['message']);
         getHMOKyc(context);
       } else {
@@ -2529,7 +2529,7 @@ class HMOViewModel extends BaseViewModel {
         repositoryImply.updateThirdHMOKycSave(updateKyc!),
         throwException: true,
       );
-      if (v['statusCode'] == 201||v['statusCode'] == 200) {
+      if (v['statusCode'] == 201 || v['statusCode'] == 200) {
         AppUtils.snackbar(context, message: v['message']);
         getHMOKyc(context);
       } else {

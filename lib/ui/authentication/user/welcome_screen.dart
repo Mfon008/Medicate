@@ -176,7 +176,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             text:
                                 'Welcome back, ${model.getUserDetailsResponseModel?.data?.fullName ?? ''}',
 
-                              textAlign: TextAlign.center,
+                            textAlign: TextAlign.center,
                             textStyle: TextStyle(
                               fontFamily: 'GoogleSans',
                               fontSize: 20.sp,
@@ -193,7 +193,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                 ? 'Welcome back'
                                 : 'Welcome back, ${SharedPreferencesService.instance.usersData['user']['fullName'].toString()}',
 
-                              textAlign: TextAlign.center,
+                            textAlign: TextAlign.center,
                             textStyle: TextStyle(
                               fontFamily: 'GoogleSans',
                               fontSize: 20.sp,

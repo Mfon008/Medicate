@@ -169,8 +169,6 @@ class KycScreen extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                      
-                      
                       ],
                     ),
                   ),

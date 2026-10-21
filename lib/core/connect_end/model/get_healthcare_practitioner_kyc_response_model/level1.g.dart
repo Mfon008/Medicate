@@ -57,4 +57,5 @@ Map<String, dynamic> _$Level1ToJson(Level1 instance) => <String, dynamic>{
   'businessAddress': instance.businessAddress,
   'businessEmail': instance.businessEmail,
   'educationalExperience': instance.educationalExperience,
+  'businessAddresses': instance.businessAddresses,
 };

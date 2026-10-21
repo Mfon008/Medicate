@@ -143,4 +143,11 @@ class UrlConfig {
       'auth/healthcare-practitioner/kyc/status';
   static const String auth_healthcare_provider_kyc_status =
       'auth/healthcare-provider/kyc/status';
+
+  static const String auth_marketplace_upgrade_submit =
+      '/auth/marketplace-upgrade/submit';
+  static const String auth_marketplace_upgrade =
+      '/auth/marketplace-upgrade';
+  static const String auth_marketplace_upgrade_save =
+      '/auth/marketplace-upgrade/save';
 }

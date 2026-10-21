@@ -108,37 +108,39 @@ class ManufacturerProfileScreen extends StatelessWidget {
                         ),
                   SizedBox(height: 10.h),
                   Center(
-                    child:model.isLoading?SpinKitCircle(size: 32.sp,color: AppColors.primary1,): GestureDetector(
-                      onTap: () => model.pickImage(context),
-                      child: TextView(
-                        text:
-                            SharedPreferencesService.instance.usersData ==
-                                    null ||
-                                SharedPreferencesService
-                                        .instance
-                                        .usersData['user'] ==
-                                    null ||
-                                SharedPreferencesService
-                                        .instance
-                                        .usersData['user']['profilePicture'] ==
-                                    null ||
-                                model
-                                        .getDistributorDetailsResponseModel!
-                                        .data!
-                                        .logo ==
-                                    null
-                            ? 'Change Photo'
-                            : 'Upload Photo',
-                        textStyle: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 14.2.sp,
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.primary,
-                          decoration: TextDecoration.underline,
-                          decorationColor: AppColors.primary,
-                        ),
-                      ),
-                    ),
+                    child: model.isLoading
+                        ? SpinKitCircle(size: 32.sp, color: AppColors.primary1)
+                        : GestureDetector(
+                            onTap: () => model.pickImage(context),
+                            child: TextView(
+                              text:
+                                  SharedPreferencesService.instance.usersData ==
+                                          null ||
+                                      SharedPreferencesService
+                                              .instance
+                                              .usersData['user'] ==
+                                          null ||
+                                      SharedPreferencesService
+                                              .instance
+                                              .usersData['user']['profilePicture'] ==
+                                          null ||
+                                      model
+                                              .getDistributorDetailsResponseModel!
+                                              .data!
+                                              .logo ==
+                                          null
+                                  ? 'Change Photo'
+                                  : 'Upload Photo',
+                              textStyle: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 14.2.sp,
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.primary,
+                                decoration: TextDecoration.underline,
+                                decorationColor: AppColors.primary,
+                              ),
+                            ),
+                          ),
                   ),
                   SizedBox(height: 6.h),
                   Center(

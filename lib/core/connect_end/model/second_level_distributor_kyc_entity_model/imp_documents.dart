@@ -1,11 +1,10 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import '../get_distributor_kyc_response_model/import_permit.dart';
-import '../get_distributor_kyc_response_model/manufacturer_authorization_letter.dart';
 import 'cac_certificate.dart';
 import 'company_logo.dart';
+import 'import_permit.dart';
+import 'manufacturer_authorization_letter.dart';
 part 'imp_documents.g.dart';
-
 
 @JsonSerializable()
 class ImpDocuments {

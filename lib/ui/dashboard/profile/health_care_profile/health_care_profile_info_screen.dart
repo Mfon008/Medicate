@@ -1001,7 +1001,7 @@ class _HealthCareProfileInfoScreenState
                           controller: businessEmailController,
                           readOnly: model.isProfileUpdated,
                         ),
-                        
+
                         SizedBox(height: 30.h),
                         TextView(
                           text: 'Authorized Representative Information',
@@ -1285,6 +1285,7 @@ class _HealthCareProfileInfoScreenState
                       : Row(
                           children: [
                             Expanded(
+                              flex: 3,
                               child: ButtonWidget(
                                 border: 100.r,
                                 buttonColor: AppColors.white,
@@ -1299,6 +1300,7 @@ class _HealthCareProfileInfoScreenState
                             ),
                             SizedBox(width: 20.w),
                             Expanded(
+                              flex: 4,
                               child: ButtonWidget(
                                 border: 100.r,
                                 buttonColor: AppColors.primary,
@@ -1373,26 +1375,6 @@ class _HealthCareProfileInfoScreenState
                                                               .authDocumentsList[0]
                                                               .toJson(),
                                                         ),
-                                                  // UploadMeansOfId(
-                                                  //     url: model
-                                                  //         .authDocumentsList[0]
-                                                  //         .url,
-                                                  //     mimeType: model
-                                                  //         .authDocumentsList[0]
-                                                  //         .mimeType,
-                                                  //     width: model
-                                                  //         .authDocumentsList[0]
-                                                  //         .width,
-                                                  //     size: model
-                                                  //         .authDocumentsList[0]
-                                                  //         .size,
-                                                  //     height: model
-                                                  //         .authDocumentsList[0]
-                                                  //         .height,
-                                                  //     format: model
-                                                  //         .authDocumentsList[0]
-                                                  //         .format,
-                                                  //   ),
                                                 ),
                                           );
                                         }

@@ -800,17 +800,20 @@ class ManufacturerViewProductScreen extends StatelessWidget {
                                                 double.parse('0.00'),
                                               )
                                             : formatNairaDouble(
-                                                double.parse(model
-                                                          .getSingleProductResponseModel!
-                                                          .data!
-                                                          .product
-                                                          !.suggestedRetailPrice !=null?
+                                                double.parse(
                                                   model
-                                                          .getSingleProductResponseModel!
-                                                          .data!
-                                                          .product
-                                                          !.suggestedRetailPrice.toString():
-                                                      '0.00',
+                                                              .getSingleProductResponseModel!
+                                                              .data!
+                                                              .product!
+                                                              .suggestedRetailPrice !=
+                                                          null
+                                                      ? model
+                                                            .getSingleProductResponseModel!
+                                                            .data!
+                                                            .product!
+                                                            .suggestedRetailPrice
+                                                            .toString()
+                                                      : '0.00',
                                                 ),
                                               ),
 
@@ -1173,7 +1176,9 @@ class ManufacturerViewProductScreen extends StatelessWidget {
                                               child: Align(
                                                 alignment: Alignment.topLeft,
                                                 child: TextView(
-                                                  text:model.isSeeMore?'View less': 'View more',
+                                                  text: model.isSeeMore
+                                                      ? 'View less'
+                                                      : 'View more',
                                                   textStyle: TextStyle(
                                                     fontFamily: 'DMSans',
                                                     decoration: TextDecoration

@@ -461,7 +461,14 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                   ),
                                 ),
                                 GestureDetector(
-                                  onTap: () => model.showManufacturerDetailDialog(context,product:model.getSingleMarketProductResponseModel?.data?.product),
+                                  onTap: () =>
+                                      model.showManufacturerDetailDialog(
+                                        context,
+                                        product: model
+                                            .getSingleMarketProductResponseModel
+                                            ?.data
+                                            ?.product,
+                                      ),
                                   child: TextView(
                                     text:
                                         model
@@ -1244,7 +1251,9 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                           child: Align(
                                             alignment: Alignment.topLeft,
                                             child: TextView(
-                                              text: model.isSeeMore?'View less': 'View more',
+                                              text: model.isSeeMore
+                                                  ? 'View less'
+                                                  : 'View more',
                                               textStyle: TextStyle(
                                                 fontFamily: 'DMSans',
                                                 decoration:

@@ -575,55 +575,56 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
                                               'rejected' &&
                                           ord.status?.toLowerCase() !=
                                               'returned'
-                                      ? 
-                                          GestureDetector(
-                                              onTap: () =>
-                                                  _showAdvanceStatusListMenu(
-                                                    context: context,
-                                                    model: model,
-                                                    order: ord,
-                                                  ),
-                                              child: Container(
-                                                margin: EdgeInsets.only(top: 16.0.w),
-                                                padding: EdgeInsets.symmetric(
-                                                  vertical: 8.10.w,
-                                                ),
-                                                decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                    color: AppColors.primary,
-                                                    width: 1.42,
-                                                  ),
-                                                  borderRadius:
-                                                      BorderRadius.circular(40.r),
-                                                ),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    SvgPicture.asset(
-                                                      AppImage.van,
-                                                      height: isTablet(context)
-                                                          ? 28.40.h
-                                                          : 14.20.h,
-                                                      width: isTablet(context)
-                                                          ? 28.40.w
-                                                          : 14.20.w,
-                                                      color: AppColors.primary,
-                                                    ),
-                                                    SizedBox(width: 7.10.w),
-                                                    TextView(
-                                                      text: 'Advance',
-                                                      textStyle: TextStyle(
-                                                        fontFamily: 'DMSans',
-                                                        fontSize: 16.20.sp,
-                                                        fontWeight: FontWeight.w500,
-                                                        color: AppColors.primary,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
+                                      ? GestureDetector(
+                                          onTap: () =>
+                                              _showAdvanceStatusListMenu(
+                                                context: context,
+                                                model: model,
+                                                order: ord,
                                               ),
-                                            )
+                                          child: Container(
+                                            margin: EdgeInsets.only(
+                                              top: 16.0.w,
+                                            ),
+                                            padding: EdgeInsets.symmetric(
+                                              vertical: 8.10.w,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                color: AppColors.primary,
+                                                width: 1.42,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(40.r),
+                                            ),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                SvgPicture.asset(
+                                                  AppImage.van,
+                                                  height: isTablet(context)
+                                                      ? 28.40.h
+                                                      : 14.20.h,
+                                                  width: isTablet(context)
+                                                      ? 28.40.w
+                                                      : 14.20.w,
+                                                  color: AppColors.primary,
+                                                ),
+                                                SizedBox(width: 7.10.w),
+                                                TextView(
+                                                  text: 'Advance',
+                                                  textStyle: TextStyle(
+                                                    fontFamily: 'DMSans',
+                                                    fontSize: 16.20.sp,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: AppColors.primary,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        )
                                       : SizedBox.shrink(),
                                   SizedBox(height: 2.0.h),
                                 ],

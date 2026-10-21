@@ -25,6 +25,7 @@ import '../connect_end/model/distributor_wholesale_category_model/distributor_wh
 import '../connect_end/model/forgot_password_response_model/forgot_password_response_model.dart';
 import '../connect_end/model/get_checkout_delivery_option_response_model/get_checkout_delivery_option_response_model.dart';
 import '../connect_end/model/get_created_user_response_model/get_created_user_response_model.dart';
+import '../connect_end/model/get_marketplace_upgrade_response_model/get_marketplace_upgrade_response_model.dart';
 import '../connect_end/model/get_reminder_by_id/get_reminder_by_id.dart';
 import '../connect_end/model/get_reminder_for_tenant_response_model/get_reminder_for_tenant_response_model.dart';
 import '../connect_end/model/get_single_market_product_response_model/get_single_market_product_response_model.dart';
@@ -48,6 +49,7 @@ import '../connect_end/model/quote_schedule_delivery_response_model/quote_schedu
 import '../connect_end/model/resend_otp_entity_model.dart';
 import '../connect_end/model/resend_otp_response_model/resend_otp_response_model.dart';
 import '../connect_end/model/reset_password_entity_model.dart';
+import '../connect_end/model/second_level_distributor_kyc_entity_model/second_level_distributor_kyc_entity_model.dart';
 import '../connect_end/model/set_pin_entity_model.dart';
 import '../connect_end/model/set_pin_pharm_response_model/set_pin_pharm_response_model.dart';
 import '../connect_end/model/sign_up_phamary_response_model/sign_up_phamary_response_model.dart';
@@ -1273,6 +1275,54 @@ class PharmApi {
       );
       logger.d(response.data);
       return Uint8List.fromList(List<int>.from(response.data));
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> saveMarketplaceProfileUpgrade(
+    SecondLevelDistributorKycEntityModel kycEntity,
+  ) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.auth_marketplace_upgrade_save,
+        RequestMethod.patch,
+        data: kycEntity.toJson(),
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> submitMarketplaceProfileUpgrade(
+    SecondLevelDistributorKycEntityModel kycEntity,
+  ) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.auth_marketplace_upgrade_submit,
+        RequestMethod.post,
+        data: kycEntity.toJson(),
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<GetMarketplaceUpgradeResponseModel> getMarketplaceUpgrade() async {
+    try {
+      final response = await _service.call(
+        UrlConfig.auth_marketplace_upgrade,
+        RequestMethod.get,
+      );
+      logger.d(response.data);
+      return GetMarketplaceUpgradeResponseModel.fromJson(response.data);
     } catch (e) {
       logger.d("response:$e");
       rethrow;

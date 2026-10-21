@@ -120,7 +120,7 @@ class KycHealthcareProvidersScreen extends StatelessWidget {
                                     .status
                                     ?.toLowerCase() ==
                                 'approved'
-                            ? UpgradeAccount(isHealthCareProvider: true,)
+                            ? UpgradeAccount(isHealthCareProvider: true)
                             : SizedBox(
                                 width: double.infinity,
                                 child: DottedBorder(
@@ -169,7 +169,6 @@ class KycHealthcareProvidersScreen extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                      
                       ],
                     ),
                   ),

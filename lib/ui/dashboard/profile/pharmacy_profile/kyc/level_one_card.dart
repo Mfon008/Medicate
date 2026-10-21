@@ -171,11 +171,13 @@ class _LevelOneCardState extends State<LevelOneCard> {
                             ),
                             decoration: BoxDecoration(
                               color: widget.model!.kycStatusColor(
-                                    widget.model?.getPharmacyKycResponseModel
-                                        ?.data
-                                        ?.kycLevels?[0]
-                                        .status,
-                                  ),
+                                widget
+                                    .model
+                                    ?.getPharmacyKycResponseModel
+                                    ?.data
+                                    ?.kycLevels?[0]
+                                    .status,
+                              ),
                               borderRadius: BorderRadius.circular(10.r),
                             ),
                             child: Row(

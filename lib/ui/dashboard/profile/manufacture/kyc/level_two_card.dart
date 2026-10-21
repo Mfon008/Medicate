@@ -18,16 +18,16 @@ import 'package:medicate_app/ui/widget/text.dart';
 import 'package:stacked/stacked.dart';
 import '../../../../../core/app_assets/app_validation.dart';
 import '../../../../../core/app_assets/constant.dart';
-import '../../../../../core/connect_end/model/get_distributor_kyc_response_model/import_permit.dart';
-import '../../../../../core/connect_end/model/get_distributor_kyc_response_model/manufacturer_authorization_letter.dart';
 import '../../../../../core/connect_end/model/second_level_distributor_kyc_entity_model/business_details.dart';
 import '../../../../../core/connect_end/model/second_level_distributor_kyc_entity_model/coverage_areas.dart';
 import '../../../../../core/connect_end/model/second_level_distributor_kyc_entity_model/dis_documents.dart';
 import '../../../../../core/connect_end/model/second_level_distributor_kyc_entity_model/distributor.dart';
 import '../../../../../core/connect_end/model/second_level_distributor_kyc_entity_model/imp_documents.dart';
+import '../../../../../core/connect_end/model/second_level_distributor_kyc_entity_model/import_permit.dart';
 import '../../../../../core/connect_end/model/second_level_distributor_kyc_entity_model/importer.dart';
 import '../../../../../core/connect_end/model/second_level_distributor_kyc_entity_model/man_documents.dart';
 import '../../../../../core/connect_end/model/second_level_distributor_kyc_entity_model/manufacturer.dart';
+import '../../../../../core/connect_end/model/second_level_distributor_kyc_entity_model/manufacturer_authorization_letter.dart';
 import '../../../../../core/connect_end/model/second_level_distributor_kyc_entity_model/second_level_distributor_kyc_entity_model.dart';
 import '../../../../../core/connect_end/view_model/manufacturer_view_model.dart';
 import '../../../../manufacturer/product/custom_switch_widget.dart';
@@ -7730,11 +7730,6 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                     null,
                                                               ),
                                                               documents: DisDocuments(
-                                                                // gmpCertificate: null,
-                                                                // manufacturerAuthorizationLetter: null,
-                                                                // nafdacManufacturingLicense: null,
-                                                                // productRegistrationEvidence: null,
-                                                                // importPermit: null,
                                                                 cacCertificate:
                                                                     model.secondLevelDistributorKycEntityModelCAC ==
                                                                             null ||
@@ -7811,13 +7806,6 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                               ),
                                                               coverageAreas: model
                                                                   .listOfAddedLocation,
-                                                              // .map(
-                                                              //   (e) =>
-                                                              //       CoverageAreas.fromJson(
-                                                              //         e,
-                                                              //       ),
-                                                              // )
-                                                              // .toList(),
                                                             ),
                                                       manufacturer:
                                                           !isSwitchedManufaturer

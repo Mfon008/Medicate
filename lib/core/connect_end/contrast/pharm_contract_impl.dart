@@ -15,6 +15,7 @@ import '../model/create_user_entity_model.dart';
 import '../model/distributor_wholesale_category_model/distributor_wholesale_category_model.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
 import '../model/get_checkout_delivery_option_response_model/get_checkout_delivery_option_response_model.dart';
+import '../model/get_marketplace_upgrade_response_model/get_marketplace_upgrade_response_model.dart';
 import '../model/get_pharmacy_kyc_response_model/get_pharmacy_kyc_response_model.dart';
 import '../model/get_reminder_by_id/get_reminder_by_id.dart';
 import '../model/get_reminder_for_tenant_response_model/get_reminder_for_tenant_response_model.dart';
@@ -45,6 +46,7 @@ import '../model/resend_otp_entity_model.dart';
 import '../model/resend_otp_response_model/resend_otp_response_model.dart';
 import '../model/reset_password_entity_model.dart';
 import '../model/roles_entity_model.dart';
+import '../model/second_level_distributor_kyc_entity_model/second_level_distributor_kyc_entity_model.dart';
 import '../model/set_pin_entity_model.dart';
 import '../model/set_pin_pharm_response_model/set_pin_pharm_response_model.dart';
 import '../model/sign_up_phamary_response_model/sign_up_phamary_response_model.dart';
@@ -325,4 +327,14 @@ class PharmContractsImpl {
       await _api.shareInvoice(id);
   Future<dynamic> retryPayment(String? wholesaleOrderId) async =>
       await _api.retryPayment(wholesaleOrderId);
+  Future<dynamic> saveMarketplaceProfileUpgrade(
+    SecondLevelDistributorKycEntityModel kycEntity,
+  ) async =>
+      await _api.saveMarketplaceProfileUpgrade(kycEntity);
+  Future<dynamic> submitMarketplaceProfileUpgrade(
+    SecondLevelDistributorKycEntityModel kycEntity,
+  ) async =>
+      await _api.submitMarketplaceProfileUpgrade(kycEntity);
+  Future<GetMarketplaceUpgradeResponseModel> getMarketplaceUpgrade() async =>
+      await _api.getMarketplaceUpgrade();
 }

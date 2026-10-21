@@ -185,7 +185,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
 
                               const Spacer(),
                               !isExpanded
-                                  ?  AnimatedRotation(
+                                  ? AnimatedRotation(
                                       turns: isExpanded ? 0.5 : 0,
                                       duration: const Duration(
                                         milliseconds: 300,

@@ -68,30 +68,31 @@ class _LevelOneCardState extends State<LevelOneCard> {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          
-                              widget.model?.getHealthcareProviderKycResponseModel
-                                          ?.data
-                                          ?.kycLevels?[0]
-                                          .status
-                                          ?.toLowerCase() ==
-                                      'approved'
-                                  ? Container(
-                                      width: 14.w,
-                                      height: 14.w,
-                                      margin: EdgeInsets.only(top: 1.h),
-                                      decoration: const BoxDecoration(
-                                        color: Color(0xFF58C58A),
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: Icon(
-                                        Icons.check,
-                                        size: 9.sp,
-                                        color: Colors.white,
-                                      ),
-                                    )
-                                  : !isExpanded
-                                  ? SvgPicture.asset(AppImage.open_padlock)
-                                  : SvgPicture.asset(AppImage.open_padlock),
+                          widget
+                                      .model
+                                      ?.getHealthcareProviderKycResponseModel
+                                      ?.data
+                                      ?.kycLevels?[0]
+                                      .status
+                                      ?.toLowerCase() ==
+                                  'approved'
+                              ? Container(
+                                  width: 14.w,
+                                  height: 14.w,
+                                  margin: EdgeInsets.only(top: 1.h),
+                                  decoration: const BoxDecoration(
+                                    color: Color(0xFF58C58A),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    Icons.check,
+                                    size: 9.sp,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : !isExpanded
+                              ? SvgPicture.asset(AppImage.open_padlock)
+                              : SvgPicture.asset(AppImage.open_padlock),
 
                           SizedBox(width: 8.w),
 
@@ -159,7 +160,7 @@ class _LevelOneCardState extends State<LevelOneCard> {
                           // ==================================
                           // KYC MESSAGE
                           // ==================================
-                           Container(
+                          Container(
                             padding: EdgeInsets.symmetric(
                               horizontal: 14.w,
                               vertical: 12.h,
@@ -170,11 +171,13 @@ class _LevelOneCardState extends State<LevelOneCard> {
                             ),
                             decoration: BoxDecoration(
                               color: widget.model!.kycStatusColor(
-                                    widget.model?.getHealthcareProviderKycResponseModel
-                                        ?.data
-                                        ?.kycLevels?[0]
-                                        .status,
-                                  ),
+                                widget
+                                    .model
+                                    ?.getHealthcareProviderKycResponseModel
+                                    ?.data
+                                    ?.kycLevels?[0]
+                                    .status,
+                              ),
                               borderRadius: BorderRadius.circular(10.r),
                             ),
                             child: Row(
@@ -216,17 +219,18 @@ class _LevelOneCardState extends State<LevelOneCard> {
                                         ),
                                       ),
 
-
                                 SizedBox(width: 8.w),
 
                                 Expanded(
                                   child: Text(
                                     widget.model!.kycStatusText(
-                                          widget.model?.getHealthcareProviderKycResponseModel
-                                              ?.data
-                                              ?.kycLevels?[0]
-                                              .status,
-                                        ),
+                                      widget
+                                          .model
+                                          ?.getHealthcareProviderKycResponseModel
+                                          ?.data
+                                          ?.kycLevels?[0]
+                                          .status,
+                                    ),
                                     style: TextStyle(
                                       fontSize: 12.5.sp,
                                       height: 1.35,
@@ -500,7 +504,7 @@ class _LevelOneCardState extends State<LevelOneCard> {
                                 ),
 
                                 Divider(color: AppColors.f1),
-                                 SizedBox(height: 12.h),
+                                SizedBox(height: 12.h),
                                 if (widget
                                             .model!
                                             .getHealthcareProviderKycResponseModel !=
@@ -580,14 +584,16 @@ class _LevelOneCardState extends State<LevelOneCard> {
                                 InfoItem(
                                   title: 'Means of ID',
                                   value:
-                                      widget.model
+                                      widget
+                                          .model
                                           ?.getHealthcareProviderKycResponseModel
                                           ?.data
                                           ?.level1
                                           ?.meansOfIdType ??
                                       '--',
                                 ),
-                                SizedBox(height: 18.22.h),TextView(
+                                SizedBox(height: 18.22.h),
+                                TextView(
                                   text: 'Contact Details',
                                   textStyle: TextStyle(
                                     fontSize: 15.86.sp,

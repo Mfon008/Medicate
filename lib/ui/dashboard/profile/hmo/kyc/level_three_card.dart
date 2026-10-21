@@ -34,7 +34,9 @@ class _LevelThreeCardState extends State<LevelThreeCard> {
 
   TextEditingController bankNameController = TextEditingController(text: '');
   TextEditingController accountNameController = TextEditingController(text: '');
-  TextEditingController accountNumberController = TextEditingController(text: '');
+  TextEditingController accountNumberController = TextEditingController(
+    text: '',
+  );
   TextEditingController bankBVNController = TextEditingController(text: '');
 
   GlobalKey<FormState>? formKey = GlobalKey<FormState>();

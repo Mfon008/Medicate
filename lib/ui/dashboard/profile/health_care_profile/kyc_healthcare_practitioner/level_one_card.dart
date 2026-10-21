@@ -516,7 +516,8 @@ class _LevelOneCardState extends State<LevelOneCard> {
                                 InfoItem(
                                   title: 'Means of ID',
                                   value:
-                                      widget.model
+                                      widget
+                                          .model
                                           ?.getHealthcarePractitionerKycResponseModel
                                           ?.data
                                           ?.level1

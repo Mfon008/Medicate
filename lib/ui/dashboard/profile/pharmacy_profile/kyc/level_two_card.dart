@@ -1937,68 +1937,76 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
 
                                                   // if (isFormValid &&
                                                   //     hasRequiredDocument) {
-                                                    model.saveLevelPharmacyKyc(
-                                                      context,
-                                                      updateKyc: SubmitLevelTwoKycEntityModel(
-                                                        meansOfIdType: model
-                                                            .selectedMeanIdText(
+                                                  model.saveLevelPharmacyKyc(
+                                                    context,
+                                                    updateKyc: SubmitLevelTwoKycEntityModel(
+                                                      meansOfIdType: model
+                                                          .selectedMeanIdText(
+                                                            model
+                                                                .meansIdController
+                                                                .text
+                                                                .trim(),
+                                                          ),
+                                                      meansOfIdDocument:
+                                                          model.submitLevelTwoKycEntityModelMeansOfId ==
+                                                                  null ||
                                                               model
-                                                                  .meansIdController
-                                                                  .text
-                                                                  .trim(),
-                                                            ),
-                                                        meansOfIdDocument:
-                                                            model.submitLevelTwoKycEntityModelMeansOfId ==
-                                                                null || model
-                                                                  .submitLevelTwoKycEntityModelMeansOfId!
-                                                                  .meansOfIdDocument==null
-                                                            ? null
-                                                            : model
-                                                                  .submitLevelTwoKycEntityModelMeansOfId!
-                                                                  .meansOfIdDocument!,
-                                                        cacCertificate:
-                                                            model.submitLevelTwoKycEntityModelCAC ==
-                                                                null || model
-                                                                  .submitLevelTwoKycEntityModelCAC!
-                                                                  .cacCertificate==null
-                                                            ? null
-                                                            : model
-                                                                  .submitLevelTwoKycEntityModelCAC!
-                                                                  .cacCertificate,
-                                                        pharmacyLicense:
-                                                            model.submitLevelTwoKycEntityModelLin ==
-                                                                null || model
-                                                                  .submitLevelTwoKycEntityModelLin!
-                                                                  .pharmacyLicense==null
-                                                            ? null
-                                                            : model
-                                                                  .submitLevelTwoKycEntityModelLin!
-                                                                  .pharmacyLicense,
-                                                        taxIdentificationNumberDocument:
-                                                            model.submitLevelTwoKycEntityModelTIN ==
-                                                                null || model
-                                                                  .submitLevelTwoKycEntityModelTIN!
-                                                                  .taxIdentificationNumberDocument==null
-                                                            ? null
-                                                            : model
-                                                                  .submitLevelTwoKycEntityModelTIN!
-                                                                  .taxIdentificationNumberDocument,
-                                                        bankDetails: BankDetails(
-                                                          bankName:
-                                                              bankNameController
-                                                                  .text
-                                                                  .trim(),
-                                                          accountName:
-                                                              bankAccountNameController
-                                                                  .text
-                                                                  .trim(),
-                                                          accountNumber:
-                                                              bankAccountNoController
-                                                                  .text
-                                                                  .trim(),
-                                                        ),
+                                                                      .submitLevelTwoKycEntityModelMeansOfId!
+                                                                      .meansOfIdDocument ==
+                                                                  null
+                                                          ? null
+                                                          : model
+                                                                .submitLevelTwoKycEntityModelMeansOfId!
+                                                                .meansOfIdDocument!,
+                                                      cacCertificate:
+                                                          model.submitLevelTwoKycEntityModelCAC ==
+                                                                  null ||
+                                                              model
+                                                                      .submitLevelTwoKycEntityModelCAC!
+                                                                      .cacCertificate ==
+                                                                  null
+                                                          ? null
+                                                          : model
+                                                                .submitLevelTwoKycEntityModelCAC!
+                                                                .cacCertificate,
+                                                      pharmacyLicense:
+                                                          model.submitLevelTwoKycEntityModelLin ==
+                                                                  null ||
+                                                              model
+                                                                      .submitLevelTwoKycEntityModelLin!
+                                                                      .pharmacyLicense ==
+                                                                  null
+                                                          ? null
+                                                          : model
+                                                                .submitLevelTwoKycEntityModelLin!
+                                                                .pharmacyLicense,
+                                                      taxIdentificationNumberDocument:
+                                                          model.submitLevelTwoKycEntityModelTIN ==
+                                                                  null ||
+                                                              model
+                                                                      .submitLevelTwoKycEntityModelTIN!
+                                                                      .taxIdentificationNumberDocument ==
+                                                                  null
+                                                          ? null
+                                                          : model
+                                                                .submitLevelTwoKycEntityModelTIN!
+                                                                .taxIdentificationNumberDocument,
+                                                      bankDetails: BankDetails(
+                                                        bankName:
+                                                            bankNameController
+                                                                .text
+                                                                .trim(),
+                                                        accountName:
+                                                            bankAccountNameController
+                                                                .text
+                                                                .trim(),
+                                                        accountNumber:
+                                                            bankAccountNoController
+                                                                .text
+                                                                .trim(),
                                                       ),
-                                                    );
+                                                    ),
+                                                  );
                                                   // }
                                                 },
                                               ),
@@ -2051,36 +2059,44 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                             ),
                                                         meansOfIdDocument:
                                                             model.submitLevelTwoKycEntityModelMeansOfId ==
-                                                                null || model
-                                                                  .submitLevelTwoKycEntityModelMeansOfId!
-                                                                  .meansOfIdDocument==null
+                                                                    null ||
+                                                                model
+                                                                        .submitLevelTwoKycEntityModelMeansOfId!
+                                                                        .meansOfIdDocument ==
+                                                                    null
                                                             ? null
                                                             : model
                                                                   .submitLevelTwoKycEntityModelMeansOfId!
                                                                   .meansOfIdDocument!,
                                                         cacCertificate:
                                                             model.submitLevelTwoKycEntityModelCAC ==
-                                                                null || model
-                                                                  .submitLevelTwoKycEntityModelCAC!
-                                                                  .cacCertificate==null
+                                                                    null ||
+                                                                model
+                                                                        .submitLevelTwoKycEntityModelCAC!
+                                                                        .cacCertificate ==
+                                                                    null
                                                             ? null
                                                             : model
                                                                   .submitLevelTwoKycEntityModelCAC!
                                                                   .cacCertificate,
                                                         pharmacyLicense:
                                                             model.submitLevelTwoKycEntityModelLin ==
-                                                                null || model
-                                                                  .submitLevelTwoKycEntityModelLin!
-                                                                  .pharmacyLicense==null
+                                                                    null ||
+                                                                model
+                                                                        .submitLevelTwoKycEntityModelLin!
+                                                                        .pharmacyLicense ==
+                                                                    null
                                                             ? null
                                                             : model
                                                                   .submitLevelTwoKycEntityModelLin!
                                                                   .pharmacyLicense,
                                                         taxIdentificationNumberDocument:
                                                             model.submitLevelTwoKycEntityModelTIN ==
-                                                                null || model
-                                                                  .submitLevelTwoKycEntityModelTIN!
-                                                                  .taxIdentificationNumberDocument==null
+                                                                    null ||
+                                                                model
+                                                                        .submitLevelTwoKycEntityModelTIN!
+                                                                        .taxIdentificationNumberDocument ==
+                                                                    null
                                                             ? null
                                                             : model
                                                                   .submitLevelTwoKycEntityModelTIN!

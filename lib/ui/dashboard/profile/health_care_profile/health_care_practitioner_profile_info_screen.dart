@@ -1053,6 +1053,7 @@ class _HealthCarePractitionerProfileInfoScreenState
                             : Row(
                                 children: [
                                   Expanded(
+                                    flex: 3,
                                     child: ButtonWidget(
                                       border: 100.r,
                                       buttonColor: AppColors.white,
@@ -1067,10 +1068,11 @@ class _HealthCarePractitionerProfileInfoScreenState
                                   ),
                                   SizedBox(width: 20.w),
                                   Expanded(
+                                    flex: 4,
                                     child: ButtonWidget(
                                       border: 100.r,
                                       buttonColor: AppColors.primary,
-                                      fontSize: 16.sp,
+                                      fontSize: 14.sp,
                                       buttonText: 'Save Changes',
                                       color: AppColors.white,
                                       isLoading: model.isLoading,

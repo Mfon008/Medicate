@@ -1,4 +1,4 @@
-// ignore_for_file: strict_top_level_inference, use_build_context_synchronously, prefer_typing_uninitialized_variables, deprecated_member_use, unnecessary_null_comparison, library_prefixes
+// ignore_for_file: prefer_final_fields, strict_top_level_inference, use_build_context_synchronously, prefer_typing_uninitialized_variables, deprecated_member_use, unnecessary_null_comparison, library_prefixes
 
 import 'dart:io';
 import 'package:flutter/services.dart';
@@ -87,6 +87,7 @@ import '../model/get_checkout_delivery_option_response_model/get_checkout_delive
 import '../model/get_checkout_delivery_option_response_model/time_block.dart';
 import '../model/get_created_user_response_model/get_created_user_response_model.dart';
 import '../model/get_created_user_response_model/staff.dart';
+import '../model/get_marketplace_upgrade_response_model/get_marketplace_upgrade_response_model.dart';
 import '../model/get_reminder_by_id/get_reminder_by_id.dart';
 import '../model/get_roles_response_model/get_roles_response_model.dart';
 import '../model/get_single_market_product_response_model/get_single_market_product_response_model.dart';
@@ -116,6 +117,22 @@ import '../model/quote_schedule_delivery_response_model/quote_schedule_delivery_
 import '../model/resend_otp_entity_model.dart';
 import '../model/resend_otp_response_model/resend_otp_response_model.dart';
 import '../model/reset_password_entity_model.dart';
+import '../model/second_level_distributor_kyc_entity_model/company_logo.dart';
+import '../model/second_level_distributor_kyc_entity_model/dis_documents.dart';
+import '../model/second_level_distributor_kyc_entity_model/distributor.dart';
+import '../model/second_level_distributor_kyc_entity_model/gmp_certificate.dart';
+import '../model/second_level_distributor_kyc_entity_model/imp_documents.dart';
+import '../model/second_level_distributor_kyc_entity_model/import_permit.dart';
+import '../model/second_level_distributor_kyc_entity_model/importer.dart';
+import '../model/second_level_distributor_kyc_entity_model/man_documents.dart';
+import '../model/second_level_distributor_kyc_entity_model/manufacturer.dart';
+import '../model/second_level_distributor_kyc_entity_model/manufacturer_authorization_letter.dart';
+import '../model/second_level_distributor_kyc_entity_model/nafdac_manufacturing_license.dart';
+import '../model/second_level_distributor_kyc_entity_model/nafdac_permit.dart';
+import '../model/second_level_distributor_kyc_entity_model/pharmaceutical_distribution_license.dart';
+import '../model/second_level_distributor_kyc_entity_model/pharmacy_council_license.dart';
+import '../model/second_level_distributor_kyc_entity_model/product_registration_evidence.dart';
+import '../model/second_level_distributor_kyc_entity_model/second_level_distributor_kyc_entity_model.dart';
 import '../model/set_pin_entity_model.dart';
 import '../model/sign_up_pharmacy_entity_model.dart';
 import '../model/submit_level_two_kyc_entity_model/means_of_id_document.dart';
@@ -152,8 +169,11 @@ import 'package:medicate_app/core/connect_end/model/get_tenant_response_model/bu
 import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 import 'package:path_provider/path_provider.dart';
 
-// import 'package:medicate_app/core/connect_end/model/submit_level_two_kyc_entity_model/submit_level_two_kyc_entity_model.dart'
-//     as phmKyc;
+import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/coverage_areas.dart'
+    as cov;
+import 'package:medicate_app/core/connect_end/model/get_marketplace_upgrade_response_model/coverage_area.dart';
+import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/cac_certificate.dart'
+    as cac;
 
 class PharmViewModel extends BaseViewModel {
   final BuildContext? context;
@@ -382,6 +402,65 @@ class PharmViewModel extends BaseViewModel {
 
   bool isTappedPhoneAdded = false;
   bool isTappedEmailAdded = false;
+
+
+  UploadImageResponseModel? _uploadImageResponseModelDisCAC;
+  UploadImageResponseModel? get uploadImageResponseModelDisCAC =>
+      _uploadImageResponseModelDisCAC;
+  UploadImageResponseModel? _uploadImageResponseModelDisPharmLin;
+  UploadImageResponseModel? get uploadImageResponseModelDisPharmLin =>
+      _uploadImageResponseModelDisPharmLin;
+  UploadImageResponseModel? _uploadImageResponseModelDisNAFPermit;
+  UploadImageResponseModel? get uploadImageResponseModelDisNAFPermit =>
+      _uploadImageResponseModelDisNAFPermit;
+  UploadImageResponseModel? _uploadImageResponseModelDisPharmCouncilLin;
+  UploadImageResponseModel? get uploadImageResponseModelDisPharmCouncilLin =>
+      _uploadImageResponseModelDisPharmCouncilLin;
+  UploadImageResponseModel? _uploadImageResponseModelDisComLogo;
+  UploadImageResponseModel? get uploadImageResponseModelDisComLogo =>
+      _uploadImageResponseModelDisComLogo;
+
+  UploadImageResponseModel? _uploadImageResponseModelManCAC;
+  UploadImageResponseModel? get uploadImageResponseModelManCAC =>
+      _uploadImageResponseModelManCAC;
+  UploadImageResponseModel? _uploadImageResponseModelManGMP;
+  UploadImageResponseModel? get uploadImageResponseModelManGMP =>
+      _uploadImageResponseModelManGMP;
+  UploadImageResponseModel? _uploadImageResponseModelNAFManLin;
+  UploadImageResponseModel? get uploadImageResponseModelNAFManLin =>
+      _uploadImageResponseModelNAFManLin;
+  UploadImageResponseModel? _uploadImageResponseModelManProdRegEvi;
+  UploadImageResponseModel? get uploadImageResponseModelManProdRegEvi =>
+      _uploadImageResponseModelManProdRegEvi;
+  UploadImageResponseModel? _uploadImageResponseModelManComLogo;
+  UploadImageResponseModel? get uploadImageResponseModelManComLogo =>
+      _uploadImageResponseModelManComLogo;
+
+  UploadImageResponseModel? _uploadImageResponseModelImportPermit;
+  UploadImageResponseModel? get uploadImageResponseModelImportPermit =>
+      _uploadImageResponseModelImportPermit;
+  UploadImageResponseModel? _uploadImageResponseModelManAuthLetter;
+  UploadImageResponseModel? get uploadImageResponseModelManAuthLetter =>
+      _uploadImageResponseModelManAuthLetter;
+  UploadImageResponseModel? _uploadImageResponseModelComLogo;
+  UploadImageResponseModel? get uploadImageResponseModelComLogo =>
+      _uploadImageResponseModelComLogo;
+  
+  int? coverageAreaIndex;
+  CoverageArea? coverageAreas;
+
+  bool _isLoadingGMP = false;
+  bool get isLoadingGMP => _isLoadingGMP;
+
+  bool _isLoadingNAF = false;
+  bool get isLoadingNAF => _isLoadingNAF;
+
+  bool _isLoadingProd = false;
+  bool get isLoadingProd => _isLoadingProd;
+
+  bool _isLoadingLogo = false;
+  bool get isLoadingLogo => _isLoadingLogo;
+  
 
   String startDateIso = '';
   String? searchProduct = '';
@@ -626,6 +705,106 @@ class PharmViewModel extends BaseViewModel {
   bool isTappedCopyall = false;
   bool isNotReadable = false;
 
+  GetMarketplaceUpgradeResponseModel? _getMarketplaceUpgradeResponseModel;
+  GetMarketplaceUpgradeResponseModel? get getMarketplaceUpgradeResponseModel =>
+      _getMarketplaceUpgradeResponseModel;
+
+  List<cov.CoverageAreas> listOfAddedLocation = [];
+  BusinessAddresses? selectedLocation;
+  cov.CoverageAreas? coverageAreasMap;
+
+  SecondLevelDistributorKycEntityModel
+  _secondLevelDistributorKycEntityModelCAC =
+      SecondLevelDistributorKycEntityModel();
+  SecondLevelDistributorKycEntityModel?
+  get secondLevelDistributorKycEntityModelCAC =>
+      _secondLevelDistributorKycEntityModelCAC;
+
+  SecondLevelDistributorKycEntityModel
+  _secondLevelDistributorKycEntityModelPharmLin =
+      SecondLevelDistributorKycEntityModel();
+  SecondLevelDistributorKycEntityModel?
+  get secondLevelDistributorKycEntityModelPharmLin =>
+      _secondLevelDistributorKycEntityModelPharmLin;
+  SecondLevelDistributorKycEntityModel
+  _secondLevelDistributorKycEntityModelNAF =
+      SecondLevelDistributorKycEntityModel();
+  SecondLevelDistributorKycEntityModel?
+  get secondLevelDistributorKycEntityModelNAF =>
+      _secondLevelDistributorKycEntityModelNAF;
+  SecondLevelDistributorKycEntityModel
+  _secondLevelDistributorKycEntityModelPharmCouncilLin =
+      SecondLevelDistributorKycEntityModel();
+  SecondLevelDistributorKycEntityModel?
+  get secondLevelDistributorKycEntityModelPharmCouncilLin =>
+      _secondLevelDistributorKycEntityModelPharmCouncilLin;
+  SecondLevelDistributorKycEntityModel
+  _secondLevelDistributorKycEntityModelLogo =
+      SecondLevelDistributorKycEntityModel();
+  SecondLevelDistributorKycEntityModel?
+  get secondLevelDistributorKycEntityModelLogo =>
+      _secondLevelDistributorKycEntityModelLogo;
+
+  SecondLevelDistributorKycEntityModel
+  _secondLevelDistributorKycEntityModelManCAC =
+      SecondLevelDistributorKycEntityModel();
+  SecondLevelDistributorKycEntityModel?
+  get secondLevelDistributorKycEntityModelManCAC =>
+      _secondLevelDistributorKycEntityModelManCAC;
+
+  SecondLevelDistributorKycEntityModel
+  _secondLevelDistributorKycEntityModelManGMP =
+      SecondLevelDistributorKycEntityModel();
+  SecondLevelDistributorKycEntityModel?
+  get secondLevelDistributorKycEntityModelManGMP =>
+      _secondLevelDistributorKycEntityModelManGMP;
+  SecondLevelDistributorKycEntityModel
+  _secondLevelDistributorKycEntityModelManNAF =
+      SecondLevelDistributorKycEntityModel();
+  SecondLevelDistributorKycEntityModel?
+  get secondLevelDistributorKycEntityModelManNAF =>
+      _secondLevelDistributorKycEntityModelManNAF;
+  SecondLevelDistributorKycEntityModel
+  _secondLevelDistributorKycEntityModelManProd =
+      SecondLevelDistributorKycEntityModel();
+  SecondLevelDistributorKycEntityModel?
+  get secondLevelDistributorKycEntityModelManProd =>
+      _secondLevelDistributorKycEntityModelManProd;
+  SecondLevelDistributorKycEntityModel
+  _secondLevelDistributorKycEntityModelManLogo =
+      SecondLevelDistributorKycEntityModel();
+  SecondLevelDistributorKycEntityModel?
+  get secondLevelDistributorKycEntityModelManLogo =>
+      _secondLevelDistributorKycEntityModelManLogo;
+
+  SecondLevelDistributorKycEntityModel
+  _secondLevelDistributorKycEntityModelImpCAC =
+      SecondLevelDistributorKycEntityModel();
+  SecondLevelDistributorKycEntityModel?
+  get secondLevelDistributorKycEntityModelImpCAC =>
+      _secondLevelDistributorKycEntityModelImpCAC;
+
+  SecondLevelDistributorKycEntityModel
+  _secondLevelDistributorKycEntityModelImpPermit =
+      SecondLevelDistributorKycEntityModel();
+  SecondLevelDistributorKycEntityModel?
+  get secondLevelDistributorKycEntityModelImpPermit =>
+      _secondLevelDistributorKycEntityModelImpPermit;
+  SecondLevelDistributorKycEntityModel
+  _secondLevelDistributorKycEntityModelImpManAuthLetter =
+      SecondLevelDistributorKycEntityModel();
+  SecondLevelDistributorKycEntityModel?
+  get secondLevelDistributorKycEntityModelImpManAuthLetter =>
+      _secondLevelDistributorKycEntityModelImpManAuthLetter;
+  SecondLevelDistributorKycEntityModel
+  _secondLevelDistributorKycEntityModelImpLogo =
+      SecondLevelDistributorKycEntityModel();
+
+  List<String> businessTypes = [];
+  SecondLevelDistributorKycEntityModel?
+  get secondLevelDistributorKycEntityModelImpLogo =>
+      _secondLevelDistributorKycEntityModelImpLogo;
+
   bool isCusSchedule = false;
   List<bool> isCusScheduleUpdate = [];
 
@@ -760,8 +939,7 @@ class PharmViewModel extends BaseViewModel {
   SubmitLevelTwoKycEntityModel? get submitLevelTwoKycEntityModelTIN =>
       _submitLevelTwoKycEntityModelTIN;
 
-  void showManufacturerDetailDialog(
-    BuildContext context,{Product? product}) {
+  void showManufacturerDetailDialog(BuildContext context, {Product? product}) {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -809,7 +987,7 @@ class PharmViewModel extends BaseViewModel {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           TextView(
-                            text:'Manufacturer Details',
+                            text: 'Manufacturer Details',
                             textStyle: TextStyle(
                               fontFamily: 'GoogleSans',
                               fontSize: 16.2.sp,
@@ -821,30 +999,52 @@ class PharmViewModel extends BaseViewModel {
                           Divider(color: AppColors.grey, thickness: 1),
                           SizedBox(height: 5.10.h),
                           Container(
-                          width: double.infinity,
-                          padding: EdgeInsets.all(16.w),
-                          decoration: BoxDecoration(
-                            color: AppColors.cooool,
-                            borderRadius: BorderRadius.circular(8.r),
-                            border: Border.all(color: AppColors.infoGrey2),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  SvgPicture.asset(
-                                    AppImage.person2,
-                                    height: 16.h,
-                                    width: 14.w,
-                                    color: AppColors.primary,
-                                  ),
-                                  SizedBox(width: 10.h),
-                                  Expanded(
-                                    child: TextView(
-                                      text:
-                                          'Emzor Phamaceuticals',
+                            width: double.infinity,
+                            padding: EdgeInsets.all(16.w),
+                            decoration: BoxDecoration(
+                              color: AppColors.cooool,
+                              borderRadius: BorderRadius.circular(8.r),
+                              border: Border.all(color: AppColors.infoGrey2),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    SvgPicture.asset(
+                                      AppImage.person2,
+                                      height: 16.h,
+                                      width: 14.w,
+                                      color: AppColors.primary,
+                                    ),
+                                    SizedBox(width: 10.h),
+                                    Expanded(
+                                      child: TextView(
+                                        text: 'Emzor Phamaceuticals',
+                                        textStyle: TextStyle(
+                                          fontFamily: 'DMSans',
+                                          fontSize: 14.2.sp,
+                                          fontWeight: FontWeight.w500,
+                                          color: AppColors.reminder,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 14.h),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    SvgPicture.asset(
+                                      AppImage.phone,
+                                      height: 14.h,
+                                      width: 10.w,
+                                      color: AppColors.primary,
+                                    ),
+                                    SizedBox(width: 10.h),
+                                    TextView(
+                                      text: '+234 801 234 5678',
                                       textStyle: TextStyle(
                                         fontFamily: 'DMSans',
                                         fontSize: 14.2.sp,
@@ -852,101 +1052,73 @@ class PharmViewModel extends BaseViewModel {
                                         color: AppColors.reminder,
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 14.h),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  SvgPicture.asset(
-                                    AppImage.phone,
-                                    height: 14.h,
-                                    width: 10.w,
-                                    color: AppColors.primary,
-                                  ),
-                                  SizedBox(width: 10.h),
-                                  TextView(
-                                    text:
-                                        '+234 801 234 5678',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'DMSans',
-                                      fontSize: 14.2.sp,
-                                      fontWeight: FontWeight.w500,
-                                      color: AppColors.reminder,
+                                  ],
+                                ),
+                                SizedBox(height: 14.h),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    SvgPicture.asset(
+                                      AppImage.man_reg_icon,
+                                      height: 14.h,
+                                      width: 10.w,
+                                      color: AppColors.primary,
                                     ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 14.h),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  SvgPicture.asset(
-                                    AppImage.man_reg_icon,
-                                    height: 14.h,
-                                    width: 10.w,
-                                    color: AppColors.primary,
-                                  ),
-                                  SizedBox(width: 10.h),
-                                  TextView(
-                                    text:
-                                        'LAG/PHARM/2023/00789',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'DMSans',
-                                      fontSize: 14.2.sp,
-                                      fontWeight: FontWeight.w500,
-                                      color: AppColors.reminder,
+                                    SizedBox(width: 10.h),
+                                    TextView(
+                                      text: 'LAG/PHARM/2023/00789',
+                                      textStyle: TextStyle(
+                                        fontFamily: 'DMSans',
+                                        fontSize: 14.2.sp,
+                                        fontWeight: FontWeight.w500,
+                                        color: AppColors.reminder,
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 14.h),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  SvgPicture.asset(
-                                    AppImage.locator,
-                                    height: 14.h,
-                                    width: 14.w,
-                                    color: AppColors.primary,
-                                  ),
-                                  SizedBox(width: 10.h),
-                                  Expanded(
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        TextView(
-                                          text:
-                                              '12 Oluwole Street',
-                                          textStyle: TextStyle(
-                                            fontFamily: 'DMSans',
-                                            fontSize: 14.2.sp,
-                                            fontWeight: FontWeight.w500,
-                                            color: AppColors.reminder,
+                                  ],
+                                ),
+                                SizedBox(height: 14.h),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    SvgPicture.asset(
+                                      AppImage.locator,
+                                      height: 14.h,
+                                      width: 14.w,
+                                      color: AppColors.primary,
+                                    ),
+                                    SizedBox(width: 10.h),
+                                    Expanded(
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          TextView(
+                                            text: '12 Oluwole Street',
+                                            textStyle: TextStyle(
+                                              fontFamily: 'DMSans',
+                                              fontSize: 14.2.sp,
+                                              fontWeight: FontWeight.w500,
+                                              color: AppColors.reminder,
+                                            ),
                                           ),
-                                        ),
-                                        TextView(
-                                          text:
-                                              'Ikeja, Lagos State, Nigeria',
-                                          textStyle: TextStyle(
-                                            fontFamily: 'DMSans',
-                                            fontSize: 13.62.sp,
-                                            fontWeight: FontWeight.w500,
-                                            color: AppColors.fineGrey,
+                                          TextView(
+                                            text: 'Ikeja, Lagos State, Nigeria',
+                                            textStyle: TextStyle(
+                                              fontFamily: 'DMSans',
+                                              fontSize: 13.62.sp,
+                                              fontWeight: FontWeight.w500,
+                                              color: AppColors.fineGrey,
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                        
-                        
                         ],
                       ),
                     ),
@@ -4330,42 +4502,28 @@ class PharmViewModel extends BaseViewModel {
     }
   }
 
-  String getKycStatus({id, cac, license, tin}) {
-    if (id == 'PENDING' ||
-        cac == 'PENDING' ||
-        license == 'PENDING' ||
-        tin == 'PENDING') {
-      return 'Your KYC is submitted and under\nreview. We’ll notify you once it’s\nverified.';
-    }
-    if (id == 'APPROVED' &&
-        cac == 'APPROVED' &&
-        license == 'APPROVED' &&
-        tin == 'APPROVED') {
-      return 'Your KYC has been successfully\nverified. You can now access all\nservices.';
-    }
-    return 'Kindly upload and submit KYC for\nverification to obtain full access to\nplatform features.';
-  }
-
   String kycStatusText(status) {
-    if (status.toLowerCase() == 'UNDER_REVIEW'.toLowerCase()) {
-      return 'Your KYC is submitted and under '
-          'review. We’ll notify you once it’s '
-          'verified.';
-    }
-    if (status.toLowerCase() == 'NOT_SUBMITTED'.toLowerCase()) {
-      return 'Kindly upload and submit KYC for '
-          'verification to obtain some access '
-          'to platform features.';
-    }
-    if (status.toLowerCase() == 'REJECTED'.toLowerCase()) {
-      return 'Your KYC couldn’t be verified. '
-          'Please review your details and '
-          'resubmit the required documents.';
-    }
-    if (status.toLowerCase() == 'APPROVED'.toLowerCase()) {
-      return 'Your KYC has been successfully '
-          'verified. You can now access '
-          'some services.';
+    if (status != null) {
+      if (status.toLowerCase() == 'UNDER_REVIEW'.toLowerCase()) {
+        return 'Your KYC is submitted and under '
+            'review. We’ll notify you once it’s '
+            'verified.';
+      }
+      if (status.toLowerCase() == 'NOT_SUBMITTED'.toLowerCase()) {
+        return 'Kindly upload and submit KYC for '
+            'verification to obtain some access '
+            'to platform features.';
+      }
+      if (status.toLowerCase() == 'REJECTED'.toLowerCase()) {
+        return 'Your KYC couldn’t be verified. '
+            'Please review your details and '
+            'resubmit the required documents.';
+      }
+      if (status.toLowerCase() == 'APPROVED'.toLowerCase()) {
+        return 'Your KYC has been successfully '
+            'verified. You can now access '
+            'some services.';
+      }
     }
     return 'Kindly upload and submit KYC for '
         'verification to obtain some access '
@@ -4373,17 +4531,19 @@ class PharmViewModel extends BaseViewModel {
   }
 
   Color kycStatusColor(status) {
-    if (status.toLowerCase() == 'UNDER_REVIEW'.toLowerCase()) {
-      return AppColors.fadedyellow;
-    }
-    if (status.toLowerCase() == 'NOT_SUBMITTED'.toLowerCase()) {
-      return AppColors.fadedyellow;
-    }
-    if (status.toLowerCase() == 'REJECTED'.toLowerCase()) {
-      return AppColors.red_bar_faded;
-    }
-    if (status.toLowerCase() == 'APPROVED'.toLowerCase()) {
-      return AppColors.app_green_light;
+    if (status != null) {
+      if (status.toLowerCase() == 'UNDER_REVIEW'.toLowerCase()) {
+        return AppColors.fadedyellow;
+      }
+      if (status.toLowerCase() == 'NOT_SUBMITTED'.toLowerCase()) {
+        return AppColors.fadedyellow;
+      }
+      if (status.toLowerCase() == 'REJECTED'.toLowerCase()) {
+        return AppColors.red_bar_faded;
+      }
+      if (status.toLowerCase() == 'APPROVED'.toLowerCase()) {
+        return AppColors.app_green_light;
+      }
     }
     return AppColors.fadedyellow;
   }
@@ -19608,7 +19768,6 @@ class PharmViewModel extends BaseViewModel {
     );
   }
 
-
   void additionalResourceInfo(
     BuildContext context, {
     String? des,
@@ -19781,7 +19940,6 @@ class PharmViewModel extends BaseViewModel {
       },
     );
   }
-
 
   // void additionalResourceInfo(context, {String? des, String? desLink}) {
   //   showDialog(
@@ -21307,6 +21465,78 @@ class PharmViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  String returnAddingPhoneNoStructureWith234Kyc(String phoneNo) {
+    if (phoneNo.substring(0).startsWith('0')) {
+      phoneNo = '+234${phoneNo.substring(1)}';
+    } else {
+      phoneNo = '0${phoneNo.substring(4)}';
+    }
+    notifyListeners();
+    return phoneNo;
+  }
+
+  Future<void> getMarketplaceUpgrade(context) async {
+    try {
+      _isLoading = true;
+      _getMarketplaceUpgradeResponseModel = await runBusyFuture(
+        repositoryImply.getMarketplaceUpgrade(),
+        throwException: true,
+      );
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<dynamic> saveMarketplaceProfileUpgrade(
+    context, {
+    SecondLevelDistributorKycEntityModel? kycEntity,
+  }) async {
+    try {
+      _isLoading = true;
+      var v = await runBusyFuture(
+        repositoryImply.saveMarketplaceProfileUpgrade(kycEntity!),
+        throwException: true,
+      );
+      if (v['statusCode'] == 200 || v['statusCode'] == 201) {
+        await AppUtils.snackbar(context, message: v['message']);
+        getMarketplaceUpgrade(context);
+      }
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+      logger.d(e);
+    }
+    notifyListeners();
+  }
+
+  Future<dynamic> submitMarketplaceProfileUpgrade(
+    context, {
+    SecondLevelDistributorKycEntityModel? kycEntity,
+  }) async {
+    try {
+      _isLoading = true;
+      var v = await runBusyFuture(
+        repositoryImply.submitMarketplaceProfileUpgrade(kycEntity!),
+        throwException: true,
+      );
+      if (v['statusCode'] == 200 || v['statusCode'] == 201) {
+        await AppUtils.snackbar(context, message: v['message']);
+        getMarketplaceUpgrade(context);
+      }
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+      logger.d(e);
+    }
+    notifyListeners();
+  }
+
   Future<void> quoteInstantDelivery({
     context,
     QuoteInstantDeliveryEntityModel? instantDelivery,
@@ -22257,25 +22487,1209 @@ class PharmViewModel extends BaseViewModel {
 
   String upgradeStatusText(status) {
     if (status.toLowerCase() == 'UNDER_REVIEW'.toLowerCase()) {
-      return 'Your KYC is submitted and under '
+      return 'Your verification to unlock distributor '
+          'features is submitted and under '
           'review. We’ll notify you once it’s '
           'verified.';
     }
     if (status.toLowerCase() == 'NOT_SUBMITTED'.toLowerCase()) {
-      return 'Kindly upload and submit KYC for '
-          'verification to obtain some access '
-          'to platform features.';
+      return 'Kindly upload and submit the required '
+          'documents for verification to unlock '
+          'distributor features.';
     }
     if (status.toLowerCase() == 'REJECTED'.toLowerCase()) {
-      return 'Your KYC couldn’t be verified. '
+      return 'Your verification to unlock distributor features couldn’t be verified. '
           'Please review your details and '
           'resubmit the required documents.';
     }
     if (status.toLowerCase() == 'APPROVED'.toLowerCase()) {
-      return 'Your KYC has been successfully '
+      return 'Your verification to unlock distributor features has been successfully '
           'verified. You can now access '
           'some services.';
     }
-    return 'Kindly upload and submit the required documents for verification to unlock distributor features.';
+    return 'Kindly upload and submit the required '
+          'documents for verification to unlock '
+          'distributor features.';
   }
+
+  void pickImageDistributorKycCAC(BuildContext context) {
+    try {
+      _pickImage.pickImage(
+        context: context,
+        file: (file) async {
+          imageCAC = file;
+          filenameCAC = imageCAC!.path.split("/").last;
+          _isLoadingCAC = true;
+          await uploadImage(
+            context: context,
+            file: MultipartFile.fromBytes(
+              formartFileImage(imageCAC).readAsBytesSync(),
+              filename: imageCAC!.path.split("/").last,
+            ),
+          );
+          _isLoadingCAC = _isLoading;
+          _uploadImageResponseModelDisCAC = _uploadImageResponseModel;
+          _secondLevelDistributorKycEntityModelCAC =
+              SecondLevelDistributorKycEntityModel(
+                distributor: Distributor(
+                  documents: DisDocuments(
+                    cacCertificate: cac.CacCertificate(
+                      width: _uploadImageResponseModelDisCAC!.data!.width,
+                      height: _uploadImageResponseModelDisCAC!.data!.height,
+                      format: _uploadImageResponseModelDisCAC!.data!.format,
+                      url: _uploadImageResponseModelDisCAC!.data!.url!,
+                      mimeType: _uploadImageResponseModelDisCAC!.data!.mimeType,
+                      size: _uploadImageResponseModelDisCAC!.data!.size,
+                    ),
+                  ),
+                ),
+              );
+        },
+      );
+    } catch (e) {
+      logger.e(e);
+    }
+    notifyListeners();
+  }
+
+  void pickImageDistributorKycPharmLin(BuildContext context) {
+    try {
+      _pickImage.pickImage(
+        context: context,
+        file: (file) async {
+          imageCAC = file;
+          filenameCAC = imageCAC!.path.split("/").last;
+          _isLoadingGMP = true;
+          await uploadImage(
+            context: context,
+            file: MultipartFile.fromBytes(
+              formartFileImage(imageCAC).readAsBytesSync(),
+              filename: imageCAC!.path.split("/").last,
+            ),
+          );
+          _isLoadingGMP = _isLoading;
+          _uploadImageResponseModelDisPharmLin = _uploadImageResponseModel;
+          _secondLevelDistributorKycEntityModelPharmLin =
+              SecondLevelDistributorKycEntityModel(
+                distributor: Distributor(
+                  documents: DisDocuments(
+                    pharmaceuticalDistributionLicense:
+                        PharmaceuticalDistributionLicense(
+                          width:
+                              _uploadImageResponseModelDisPharmLin!.data!.width,
+                          height: _uploadImageResponseModelDisPharmLin!
+                              .data!
+                              .height,
+                          format: _uploadImageResponseModelDisPharmLin!
+                              .data!
+                              .format,
+                          url: _uploadImageResponseModelDisPharmLin!.data!.url!,
+                          mimeType: _uploadImageResponseModelDisPharmLin!
+                              .data!
+                              .mimeType,
+                          size:
+                              _uploadImageResponseModelDisPharmLin!.data!.size,
+                        ),
+                  ),
+                ),
+              );
+        },
+      );
+    } catch (e) {
+      logger.e(e);
+    }
+    notifyListeners();
+  }
+
+  void pickImageDistributorKycNAFPermit(BuildContext context) {
+    try {
+      _pickImage.pickImage(
+        context: context,
+        file: (file) async {
+          imageCAC = file;
+          filenameCAC = imageCAC!.path.split("/").last;
+          _isLoadingNAF = true;
+          await uploadImage(
+            context: context,
+            file: MultipartFile.fromBytes(
+              formartFileImage(imageCAC).readAsBytesSync(),
+              filename: imageCAC!.path.split("/").last,
+            ),
+          );
+          _isLoadingNAF = _isLoading;
+          _uploadImageResponseModelDisNAFPermit = _uploadImageResponseModel;
+          _secondLevelDistributorKycEntityModelNAF =
+              SecondLevelDistributorKycEntityModel(
+                distributor: Distributor(
+                  documents: DisDocuments(
+                    nafdacPermit: NafdacPermit(
+                      width: _uploadImageResponseModelDisNAFPermit!.data!.width,
+                      height:
+                          _uploadImageResponseModelDisNAFPermit!.data!.height,
+                      format:
+                          _uploadImageResponseModelDisNAFPermit!.data!.format,
+                      url: _uploadImageResponseModelDisNAFPermit!.data!.url!,
+                      mimeType:
+                          _uploadImageResponseModelDisNAFPermit!.data!.mimeType,
+                      size: _uploadImageResponseModelDisNAFPermit!.data!.size,
+                    ),
+                  ),
+                ),
+              );
+        },
+      );
+    } catch (e) {
+      logger.e(e);
+    }
+    notifyListeners();
+  }
+
+  void pickImageDistributorKycPharmCouncilLin(BuildContext context) {
+    try {
+      _pickImage.pickImage(
+        context: context,
+        file: (file) async {
+          imageCAC = file;
+          filenameCAC = imageCAC!.path.split("/").last;
+          _isLoadingProd = true;
+          await uploadImage(
+            context: context,
+            file: MultipartFile.fromBytes(
+              formartFileImage(imageCAC).readAsBytesSync(),
+              filename: imageCAC!.path.split("/").last,
+            ),
+          );
+          _isLoadingProd = _isLoading;
+          _uploadImageResponseModelDisPharmCouncilLin =
+              _uploadImageResponseModel;
+          _secondLevelDistributorKycEntityModelPharmCouncilLin =
+              SecondLevelDistributorKycEntityModel(
+                distributor: Distributor(
+                  documents: DisDocuments(
+                    pharmacyCouncilLicense: PharmacyCouncilLicense(
+                      width: _uploadImageResponseModelDisPharmCouncilLin!
+                          .data!
+                          .width,
+                      height: _uploadImageResponseModelDisPharmCouncilLin!
+                          .data!
+                          .height,
+                      format: _uploadImageResponseModelDisPharmCouncilLin!
+                          .data!
+                          .format,
+                      url: _uploadImageResponseModelDisPharmCouncilLin!
+                          .data!
+                          .url!,
+                      mimeType: _uploadImageResponseModelDisPharmCouncilLin!
+                          .data!
+                          .mimeType,
+                      size: _uploadImageResponseModelDisPharmCouncilLin!
+                          .data!
+                          .size,
+                    ),
+                  ),
+                ),
+              );
+        },
+      );
+    } catch (e) {
+      logger.e(e);
+    }
+    notifyListeners();
+  }
+
+  void pickImageDistributorKycLogo(BuildContext context) {
+    try {
+      _pickImage.pickImage(
+        context: context,
+        file: (file) async {
+          imageCAC = file;
+          filenameCAC = imageCAC!.path.split("/").last;
+          _isLoadingLogo = true;
+          await uploadImage(
+            context: context,
+            file: MultipartFile.fromBytes(
+              formartFileImage(imageCAC).readAsBytesSync(),
+              filename: imageCAC!.path.split("/").last,
+            ),
+          );
+          _isLoadingLogo = _isLoading;
+          _uploadImageResponseModelDisComLogo = _uploadImageResponseModel;
+          _secondLevelDistributorKycEntityModelLogo =
+              SecondLevelDistributorKycEntityModel(
+                distributor: Distributor(
+                  documents: DisDocuments(
+                    companyLogo: CompanyLogo(
+                      width: _uploadImageResponseModelDisComLogo!.data!.width,
+                      height: _uploadImageResponseModelDisComLogo!.data!.height,
+                      format: _uploadImageResponseModelDisComLogo!.data!.format,
+                      url: _uploadImageResponseModelDisComLogo!.data!.url!,
+                      mimeType:
+                          _uploadImageResponseModelDisComLogo!.data!.mimeType,
+                      size: _uploadImageResponseModelDisComLogo!.data!.size,
+                    ),
+                  ),
+                ),
+              );
+        },
+      );
+    } catch (e) {
+      logger.e(e);
+    }
+    notifyListeners();
+  }
+
+  void pickImageManufacturerKycCAC(BuildContext context) {
+    try {
+      _pickImage.pickImage(
+        context: context,
+        file: (file) async {
+          imageCAC = file;
+          filenameCAC = imageCAC!.path.split("/").last;
+          _isLoadingCAC = true;
+          await uploadImage(
+            context: context,
+            file: MultipartFile.fromBytes(
+              formartFileImage(imageCAC).readAsBytesSync(),
+              filename: imageCAC!.path.split("/").last,
+            ),
+          );
+          _isLoadingCAC = _isLoading;
+          _uploadImageResponseModelManCAC = _uploadImageResponseModel;
+          _secondLevelDistributorKycEntityModelManCAC =
+              SecondLevelDistributorKycEntityModel(
+                manufacturer: Manufacturer(
+                  documents: ManDocuments(
+                    cacCertificate: cac.CacCertificate(
+                      width: _uploadImageResponseModelManCAC!.data!.width,
+                      height: _uploadImageResponseModelManCAC!.data!.height,
+                      format: _uploadImageResponseModelManCAC!.data!.format,
+                      url: _uploadImageResponseModelManCAC!.data!.url!,
+                      mimeType: _uploadImageResponseModelManCAC!.data!.mimeType,
+                      size: _uploadImageResponseModelManCAC!.data!.size,
+                    ),
+                  ),
+                ),
+              );
+        },
+      );
+    } catch (e) {
+      logger.e(e);
+    }
+    notifyListeners();
+  }
+
+  void pickImageManufacturerKycGMP(BuildContext context) {
+    try {
+      _pickImage.pickImage(
+        context: context,
+        file: (file) async {
+          imageCAC = file;
+          filenameCAC = imageCAC!.path.split("/").last;
+          _isLoadingGMP = true;
+          await uploadImage(
+            context: context,
+            file: MultipartFile.fromBytes(
+              formartFileImage(imageCAC).readAsBytesSync(),
+              filename: imageCAC!.path.split("/").last,
+            ),
+          );
+          _isLoadingGMP = _isLoading;
+          _uploadImageResponseModelManGMP = _uploadImageResponseModel;
+          _secondLevelDistributorKycEntityModelManGMP =
+              SecondLevelDistributorKycEntityModel(
+                manufacturer: Manufacturer(
+                  documents: ManDocuments(
+                    gmpCertificate: GmpCertificate(
+                      width: _uploadImageResponseModelManGMP!.data!.width,
+                      height: _uploadImageResponseModelManGMP!.data!.height,
+                      format: _uploadImageResponseModelManGMP!.data!.format,
+                      url: _uploadImageResponseModelManGMP!.data!.url!,
+                      mimeType: _uploadImageResponseModelManGMP!.data!.mimeType,
+                      size: _uploadImageResponseModelManGMP!.data!.size,
+                    ),
+                  ),
+                ),
+              );
+        },
+      );
+    } catch (e) {
+      logger.e(e);
+    }
+    notifyListeners();
+  }
+
+  void pickImageManufacturerKycNAFManLin(BuildContext context) {
+    try {
+      _pickImage.pickImage(
+        context: context,
+        file: (file) async {
+          imageCAC = file;
+          filenameCAC = imageCAC!.path.split("/").last;
+          _isLoadingNAF = true;
+          await uploadImage(
+            context: context,
+            file: MultipartFile.fromBytes(
+              formartFileImage(imageCAC).readAsBytesSync(),
+              filename: imageCAC!.path.split("/").last,
+            ),
+          );
+          _isLoadingNAF = _isLoading;
+          _uploadImageResponseModelNAFManLin = _uploadImageResponseModel;
+          _secondLevelDistributorKycEntityModelManNAF =
+              SecondLevelDistributorKycEntityModel(
+                manufacturer: Manufacturer(
+                  documents: ManDocuments(
+                    nafdacManufacturingLicense: NafdacManufacturingLicense(
+                      width: _uploadImageResponseModelNAFManLin!.data!.width,
+                      height: _uploadImageResponseModelNAFManLin!.data!.height,
+                      format: _uploadImageResponseModelNAFManLin!.data!.format,
+                      url: _uploadImageResponseModelNAFManLin!.data!.url!,
+                      mimeType:
+                          _uploadImageResponseModelNAFManLin!.data!.mimeType,
+                      size: _uploadImageResponseModelNAFManLin!.data!.size,
+                    ),
+                  ),
+                ),
+              );
+        },
+      );
+    } catch (e) {
+      logger.e(e);
+    }
+    notifyListeners();
+  }
+
+  void pickImageManufacturerKycProdRegEvi(BuildContext context) {
+    try {
+      _pickImage.pickImage(
+        context: context,
+        file: (file) async {
+          imageCAC = file;
+          filenameCAC = imageCAC!.path.split("/").last;
+          _isLoadingProd = true;
+          await uploadImage(
+            context: context,
+            file: MultipartFile.fromBytes(
+              formartFileImage(imageCAC).readAsBytesSync(),
+              filename: imageCAC!.path.split("/").last,
+            ),
+          );
+          _isLoadingProd = _isLoading;
+          _uploadImageResponseModelManProdRegEvi = _uploadImageResponseModel;
+          _secondLevelDistributorKycEntityModelManProd =
+              SecondLevelDistributorKycEntityModel(
+                manufacturer: Manufacturer(
+                  documents: ManDocuments(
+                    productRegistrationEvidence: ProductRegistrationEvidence(
+                      width:
+                          _uploadImageResponseModelManProdRegEvi!.data!.width,
+                      height:
+                          _uploadImageResponseModelManProdRegEvi!.data!.height,
+                      format:
+                          _uploadImageResponseModelManProdRegEvi!.data!.format,
+                      url: _uploadImageResponseModelManProdRegEvi!.data!.url!,
+                      mimeType: _uploadImageResponseModelManProdRegEvi!
+                          .data!
+                          .mimeType,
+                      size: _uploadImageResponseModelManProdRegEvi!.data!.size,
+                    ),
+                  ),
+                ),
+              );
+        },
+      );
+    } catch (e) {
+      logger.e(e);
+    }
+    notifyListeners();
+  }
+
+  void pickImageManufacturerKycComLogo(BuildContext context) {
+    try {
+      _pickImage.pickImage(
+        context: context,
+        file: (file) async {
+          imageCAC = file;
+          filenameCAC = imageCAC!.path.split("/").last;
+          _isLoadingLogo = true;
+          await uploadImage(
+            context: context,
+            file: MultipartFile.fromBytes(
+              formartFileImage(imageCAC).readAsBytesSync(),
+              filename: imageCAC!.path.split("/").last,
+            ),
+          );
+          _isLoadingLogo = _isLoading;
+          _uploadImageResponseModelManComLogo = _uploadImageResponseModel;
+          _secondLevelDistributorKycEntityModelManLogo =
+              SecondLevelDistributorKycEntityModel(
+                manufacturer: Manufacturer(
+                  documents: ManDocuments(
+                    companyLogo: CompanyLogo(
+                      width: _uploadImageResponseModelManComLogo!.data!.width,
+                      height: _uploadImageResponseModelManComLogo!.data!.height,
+                      format: _uploadImageResponseModelManComLogo!.data!.format,
+                      url: _uploadImageResponseModelManComLogo!.data!.url!,
+                      mimeType:
+                          _uploadImageResponseModelManComLogo!.data!.mimeType,
+                      size: _uploadImageResponseModelManComLogo!.data!.size,
+                    ),
+                  ),
+                ),
+              );
+        },
+      );
+    } catch (e) {
+      logger.e(e);
+    }
+    notifyListeners();
+  }
+
+  void pickImageImporterKycCAC(BuildContext context) {
+    try {
+      _pickImage.pickImage(
+        context: context,
+        file: (file) async {
+          imageCAC = file;
+          filenameCAC = imageCAC!.path.split("/").last;
+          _isLoadingCAC = true;
+          await uploadImage(
+            context: context,
+            file: MultipartFile.fromBytes(
+              formartFileImage(imageCAC).readAsBytesSync(),
+              filename: imageCAC!.path.split("/").last,
+            ),
+          );
+          _isLoadingCAC = _isLoading;
+          _uploadImageResponseModelCAC = _uploadImageResponseModel;
+          _secondLevelDistributorKycEntityModelImpCAC =
+              SecondLevelDistributorKycEntityModel(
+                importer: Importer(
+                  documents: ImpDocuments(
+                    cacCertificate: cac.CacCertificate(
+                      width: _uploadImageResponseModelCAC!.data!.width,
+                      height: _uploadImageResponseModelCAC!.data!.height,
+                      format: _uploadImageResponseModelCAC!.data!.format,
+                      url: _uploadImageResponseModelCAC!.data!.url!,
+                      mimeType: _uploadImageResponseModelCAC!.data!.mimeType,
+                      size: _uploadImageResponseModelCAC!.data!.size,
+                    ),
+                  ),
+                ),
+              );
+        },
+      );
+    } catch (e) {
+      logger.e(e);
+    }
+    notifyListeners();
+  }
+
+  void pickImageImporterKycPermit(BuildContext context) {
+    try {
+      _pickImage.pickImage(
+        context: context,
+        file: (file) async {
+          imageCAC = file;
+          filenameCAC = imageCAC!.path.split("/").last;
+          _isLoadingProd = true;
+          await uploadImage(
+            context: context,
+            file: MultipartFile.fromBytes(
+              formartFileImage(imageCAC).readAsBytesSync(),
+              filename: imageCAC!.path.split("/").last,
+            ),
+          );
+          _isLoadingProd = _isLoading;
+          _uploadImageResponseModelImportPermit = _uploadImageResponseModel;
+          _secondLevelDistributorKycEntityModelImpPermit =
+              SecondLevelDistributorKycEntityModel(
+                importer: Importer(
+                  documents: ImpDocuments(
+                    importPermit: ImportPermit(
+                      width: _uploadImageResponseModelImportPermit!.data!.width,
+                      height:
+                          _uploadImageResponseModelImportPermit!.data!.height,
+                      format:
+                          _uploadImageResponseModelImportPermit!.data!.format,
+                      url: _uploadImageResponseModelImportPermit!.data!.url!,
+                      mimeType:
+                          _uploadImageResponseModelImportPermit!.data!.mimeType,
+                      size: _uploadImageResponseModelImportPermit!.data!.size,
+                    ),
+                  ),
+                ),
+              );
+        },
+      );
+    } catch (e) {
+      logger.e(e);
+    }
+    notifyListeners();
+  }
+
+  void pickImageImporterKycManAuthLetter(BuildContext context) {
+    try {
+      _pickImage.pickImage(
+        context: context,
+        file: (file) async {
+          imageCAC = file;
+          filenameCAC = imageCAC!.path.split("/").last;
+          _isLoadingNAF = true;
+          await uploadImage(
+            context: context,
+            file: MultipartFile.fromBytes(
+              formartFileImage(imageCAC).readAsBytesSync(),
+              filename: imageCAC!.path.split("/").last,
+            ),
+          );
+          _isLoadingNAF = _isLoading;
+          _uploadImageResponseModelManAuthLetter = _uploadImageResponseModel;
+          _secondLevelDistributorKycEntityModelImpManAuthLetter =
+              SecondLevelDistributorKycEntityModel(
+                importer: Importer(
+                  documents: ImpDocuments(
+                    manufacturerAuthorizationLetter:
+                        ManufacturerAuthorizationLetter(
+                          width: _uploadImageResponseModelManAuthLetter!
+                              .data!
+                              .width,
+                          height: _uploadImageResponseModelManAuthLetter!
+                              .data!
+                              .height,
+                          format: _uploadImageResponseModelManAuthLetter!
+                              .data!
+                              .format,
+                          url: _uploadImageResponseModelManAuthLetter!
+                              .data!
+                              .url!,
+                          mimeType: _uploadImageResponseModelManAuthLetter!
+                              .data!
+                              .mimeType,
+                          size: _uploadImageResponseModelManAuthLetter!
+                              .data!
+                              .size,
+                        ),
+                  ),
+                ),
+              );
+        },
+      );
+    } catch (e) {
+      logger.e(e);
+    }
+    notifyListeners();
+  }
+
+  void pickImageImporterKycLogo(BuildContext context) {
+    try {
+      _pickImage.pickImage(
+        context: context,
+        file: (file) async {
+          imageCAC = file;
+          filenameCAC = imageCAC!.path.split("/").last;
+          _isLoadingLogo = true;
+          await uploadImage(
+            context: context,
+            file: MultipartFile.fromBytes(
+              formartFileImage(imageCAC).readAsBytesSync(),
+              filename: imageCAC!.path.split("/").last,
+            ),
+          );
+          _isLoadingLogo = _isLoading;
+          _uploadImageResponseModelComLogo = _uploadImageResponseModel;
+          _secondLevelDistributorKycEntityModelImpLogo =
+              SecondLevelDistributorKycEntityModel(
+                importer: Importer(
+                  documents: ImpDocuments(
+                    companyLogo: CompanyLogo(
+                      width: _uploadImageResponseModelComLogo!.data!.width,
+                      height: _uploadImageResponseModelComLogo!.data!.height,
+                      format: _uploadImageResponseModelComLogo!.data!.format,
+                      url: _uploadImageResponseModelComLogo!.data!.url!,
+                      mimeType:
+                          _uploadImageResponseModelComLogo!.data!.mimeType,
+                      size: _uploadImageResponseModelComLogo!.data!.size,
+                    ),
+                  ),
+                ),
+              );
+        },
+      );
+    } catch (e) {
+      logger.e(e);
+    }
+    notifyListeners();
+  }
+
+  void showLGAAndStateDialog(
+    BuildContext context, {
+    bool isEdit = false,
+    int? covAreaIndex,
+    String? editState,
+    List<String>? editLgas,
+  }) {
+    if (isEdit && editState != null) {
+      stateController.text = editState;
+      lgaAddedList.clear();
+
+      lgaAddedList.addAll(List<String>.from(editLgas ?? []));
+
+      // Get all LGAs belonging to this state
+      final selectedStateLga = stateLgaFormat.firstWhere(
+        (state) =>
+            state['state'].toString().trim().toLowerCase() ==
+            editState.trim().toLowerCase(),
+        orElse: () => <String, dynamic>{'state': '', 'lgas': <String>[]},
+      );
+
+      final selectedLgas = List<String>.from(
+        selectedStateLga['lgas'] ?? <String>[],
+      );
+
+      lgaList = List<String>.from(selectedLgas);
+      lgaListCopy = List<String>.from(selectedLgas);
+    }
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return Container(
+              color: AppColors.transparent,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: TextButton.icon(
+                      onPressed: () => Navigator.pop(context),
+                      icon: Icon(Icons.close, color: Colors.white, size: 18),
+                      label: Text(
+                        "Close",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      style: TextButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 10.w,
+                          vertical: 4.w,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 6.10.h),
+                  Dialog(
+                    insetPadding: EdgeInsets.all(16.20.w),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    backgroundColor: AppColors.white,
+                    child: Padding(
+                      padding: EdgeInsets.all(21.4.w),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          TextView(
+                            text: !isEdit
+                                ? 'Add Area/Location'
+                                : 'Edit Area/Location',
+                            textStyle: TextStyle(
+                              fontSize: 15.86.sp,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.reminder1,
+                              fontFamily: 'DMSans',
+                            ),
+                          ),
+                          SizedBox(height: 16.2.h),
+                          TextFormWidget(
+                            hint: 'State',
+                            label: '--Select--',
+                            rightPos: -14,
+                            hintSize: 14,
+                            borderColor: AppColors.transparent,
+                            borderTopLeft: 10.r,
+                            borderTopRight: 10.r,
+                            borderBottomLeft: 10.r,
+                            borderBottomRight: 10.r,
+                            labelStyle: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontFamily: 'Arial',
+                              fontSize: 14.2.sp,
+                              color: AppColors.infoGrey,
+                            ),
+                            fillColor: AppColors.grey,
+                            isFilled: true,
+                            readOnly: true,
+                            controller: stateController,
+                            suffixWidget: Builder(
+                              builder: (context) {
+                                return GestureDetector(
+                                  onTap: isEdit
+                                      ? () {}
+                                      : () async {
+                                          final RenderBox button =
+                                              context.findRenderObject()
+                                                  as RenderBox;
+
+                                          final RenderBox overlay =
+                                              Overlay.of(
+                                                    context,
+                                                  ).context.findRenderObject()
+                                                  as RenderBox;
+
+                                          final Offset buttonPosition = button
+                                              .localToGlobal(
+                                                Offset.zero,
+                                                ancestor: overlay,
+                                              );
+
+                                          final Size buttonSize = button.size;
+
+                                          final selectedState =
+                                              await showMenu<String>(
+                                                context: context,
+
+                                                position: RelativeRect.fromLTRB(
+                                                  buttonPosition.dx,
+                                                  buttonPosition.dy +
+                                                      buttonSize.height +
+                                                      5.h,
+                                                  overlay.size.width -
+                                                      buttonPosition.dx -
+                                                      buttonSize.width,
+                                                  0,
+                                                ),
+
+                                                constraints: BoxConstraints(
+                                                  minWidth: 200.w,
+                                                  maxWidth: 250.w,
+                                                  minHeight: 150.h,
+                                                  maxHeight: 450.h,
+                                                ),
+
+                                                color: AppColors.white,
+
+                                                elevation: 4,
+
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                        10.r,
+                                                      ),
+                                                ),
+
+                                                items: stateLgaFormat
+                                                    .map<
+                                                      PopupMenuEntry<String>
+                                                    >((s) {
+                                                      final String state =
+                                                          s['state']
+                                                              ?.toString() ??
+                                                          '';
+
+                                                      return PopupMenuItem<
+                                                        String
+                                                      >(
+                                                        value: state,
+                                                        height: 38.h,
+                                                        padding:
+                                                            EdgeInsets.symmetric(
+                                                              horizontal: 14.w,
+                                                            ),
+                                                        child: TextView(
+                                                          text: state,
+                                                          textStyle: TextStyle(
+                                                            fontFamily:
+                                                                'GoogleSans',
+                                                            fontSize: 13.70.sp,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                            color:
+                                                                AppColors.black,
+                                                          ),
+                                                        ),
+                                                      );
+                                                    })
+                                                    .toList(),
+                                              );
+
+                                          if (selectedState != null) {
+                                            stateController.text =
+                                                selectedState;
+                                            final selectedStateLga =
+                                                stateLgaFormat.firstWhere(
+                                                  (state) =>
+                                                      state['state']
+                                                          .toString()
+                                                          .trim()
+                                                          .toLowerCase() ==
+                                                      stateController.text
+                                                          .trim()
+                                                          .toLowerCase(),
+                                                  orElse: () =>
+                                                      <String, dynamic>{
+                                                        'state': '',
+                                                        'lgas': <String>[],
+                                                      },
+                                                );
+
+                                            final selectedLgas =
+                                                List<String>.from(
+                                                  selectedStateLga['lgas'] ??
+                                                      <String>[],
+                                                );
+
+                                            lgaList = List<String>.from(
+                                              selectedLgas,
+                                            );
+                                            lgaListCopy = List<String>.from(
+                                              selectedLgas,
+                                            );
+
+                                            // Optional: reset previously selected LGAs
+                                            lgaAddedList.clear();
+                                          }
+                                          setModalState(() {});
+                                          notifyListeners();
+                                        },
+
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 8.w,
+                                    ),
+                                    child: Icon(
+                                      Icons.keyboard_arrow_down,
+                                      color: isEdit
+                                          ? AppColors.greygreyer
+                                          : AppColors.grey1,
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+
+                            validator: AppValidator.validateString(),
+                          ),
+
+                          SizedBox(height: 12.30.h),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  TextView(
+                                    text: 'LGA ',
+                                    textStyle: TextStyle(
+                                      fontSize: 13.86.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColors.reminder1,
+                                      fontFamily: 'DMSans',
+                                    ),
+                                  ),
+                                  TextView(
+                                    text: '(Please click to select)',
+                                    textStyle: TextStyle(
+                                      fontSize: 13.86.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColors.infoGrey,
+                                      fontFamily: 'DMSans',
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  lgaAddedList.clear();
+                                  lgaAddedList.addAll(lgaListCopy);
+                                  setModalState(() {});
+                                  notifyListeners();
+                                },
+                                child: TextView(
+                                  text: 'Select all',
+                                  textStyle: TextStyle(
+                                    decoration: TextDecoration.underline,
+                                    decorationColor: AppColors.primary,
+                                    fontSize: 13.86.sp,
+                                    fontWeight: FontWeight.w400,
+                                    color: AppColors.primary,
+                                    fontFamily: 'DMSans',
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 30.h),
+                          Container(
+                            height: lgaListCopy.length > 30 ? 250.h : 120.h,
+                            width: double.infinity,
+                            padding: EdgeInsets.all(16.w),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              color: AppColors.grey,
+                            ),
+                            child: SingleChildScrollView(
+                              child: Wrap(
+                                runSpacing: 10,
+                                spacing: 10,
+                                children: [
+                                  ...lgaListCopy.map(
+                                    (e) => GestureDetector(
+                                      onTap: () {
+                                        if (lgaAddedList.contains(e)) {
+                                          lgaAddedList.remove(e);
+                                        } else {
+                                          lgaAddedList.add(e);
+                                        }
+                                        setModalState(() {});
+                                        notifyListeners();
+                                      },
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Container(
+                                            width: 14.w,
+                                            height: 14.w,
+                                            margin: EdgeInsets.only(top: 1.h),
+                                            decoration: BoxDecoration(
+                                              color: lgaAddedList.contains(e)
+                                                  ? AppColors.app_green
+                                                  : AppColors.infoGrey1,
+                                              shape: BoxShape.circle,
+                                            ),
+                                            child: Icon(
+                                              Icons.check,
+                                              size: 9.sp,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          SizedBox(width: 2.w),
+                                          TextView(
+                                            text: '$e ',
+                                            textStyle: TextStyle(
+                                              fontSize: 13.86.sp,
+                                              fontWeight: FontWeight.w200,
+                                              color: lgaAddedList.contains(e)
+                                                  ? AppColors.reminder
+                                                  : AppColors.infoGrey,
+                                              fontFamily: 'DMSans',
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+
+                          SizedBox(height: 30.h),
+                          Row(
+                            children: [
+                              Expanded(
+                                flex: 1,
+                                child: ButtonWidget(
+                                  border: 100.r,
+                                  buttonColor: AppColors.grey,
+                                  buttonText: 'Cancel',
+                                  color: AppColors.reminder1,
+                                  buttonBorderColor: AppColors.transparent,
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                    notifyListeners();
+                                  },
+                                ),
+                              ),
+                              SizedBox(width: 20.w),
+                              Expanded(
+                                flex: !isEdit ? 1 : 2,
+                                child: ButtonWidget(
+                                  border: 100.r,
+                                  buttonColor: AppColors.primary,
+                                  buttonText: !isEdit ? 'Add' : 'Save Changes',
+                                  color: AppColors.white,
+                                  buttonBorderColor: AppColors.transparent,
+                                  isLoading: _isLoading,
+
+                                  onPressed: () async {
+                                    final state = stateController.text.trim();
+
+                                    if (state.isEmpty) {
+                                      return;
+                                    }
+
+                                    _isLoading = true;
+                                    setModalState(() {});
+
+                                    try {
+                                      // Find an existing entry by STATE, not by its LGAs.
+                                      final stateIndex = listOfAddedLocation
+                                          .indexWhere(
+                                            (location) =>
+                                                (location.state ?? '')
+                                                    .trim()
+                                                    .toLowerCase() ==
+                                                state.toLowerCase(),
+                                          );
+
+                                      final coverageAreas = cov.CoverageAreas(
+                                        state: state,
+                                        lgas: List<String>.from(lgaAddedList),
+                                      );
+
+                                      if (isEdit) {
+                                        if (stateIndex != -1) {
+                                          // Update the existing state.
+                                          listOfAddedLocation[stateIndex] =
+                                              coverageAreas;
+                                        } else {
+                                          // Add the state if it does not already exist.
+                                          listOfAddedLocation.add(
+                                            coverageAreas,
+                                          );
+                                        }
+                                      } else {
+                                        // Prevent duplicate states when adding.
+                                        if (stateIndex != -1) {
+                                          // Merge the selected LGAs with existing LGAs.
+                                          final existing =
+                                              listOfAddedLocation[stateIndex];
+                                          final mergedLgas = <String>{
+                                            ...?existing.lgas,
+                                            ...lgaAddedList,
+                                          }.toList();
+
+                                          listOfAddedLocation[stateIndex] =
+                                              cov.CoverageAreas(
+                                                state: state,
+                                                lgas: mergedLgas,
+                                              );
+                                        } else {
+                                          listOfAddedLocation.add(
+                                            coverageAreas,
+                                          );
+                                        }
+                                      }
+
+                                      if (covAreaIndex != null) {
+                                        coverageAreaIndex = covAreaIndex;
+                                      }
+
+                                      await Future.delayed(
+                                        const Duration(seconds: 1),
+                                      );
+
+                                      lgaListCopy.clear();
+
+                                      if (context.mounted) {
+                                        Navigator.pop(context);
+                                      }
+
+                                      notifyListeners();
+                                    } finally {
+                                      _isLoading = false;
+                                      notifyListeners();
+                                    }
+                                  },
+
+                                  // onPressed: () async {
+                                  //   _isLoading = true;
+                                  //   final state = stateController.text.trim();
+
+                                  //   if (state.isEmpty) {
+                                  //     return;
+                                  //   }
+
+                                  //   // final stateIndex = listOfAddedLocation
+                                  //   //     .indexWhere(
+                                  //   //       (location) => location.lgas!.any(
+                                  //   //         (key) =>
+                                  //   //             key.trim().toLowerCase() ==
+                                  //   //             state.toLowerCase(),
+                                  //   //       ),
+                                  //   //     );
+                                  //   final stateIndex = listOfAddedLocation
+                                  //       .indexWhere(
+                                  //         (location) =>
+                                  //             (location.state ?? '')
+                                  //                 .trim()
+                                  //                 .toLowerCase() ==
+                                  //             state.toLowerCase(),
+                                  //       );
+
+                                  //   if (isEdit) {
+                                  //     // EDIT EXISTING STATE
+                                  //     if (stateIndex != -1) {
+                                  //       listOfAddedLocation[stateIndex] =
+                                  //           cov.CoverageAreas(
+                                  //             lgas: lgaAddedList,
+                                  //             state: stateController.text
+                                  //                 .trim(),
+                                  //           );
+                                  //       // {
+                                  //       //   state: List<String>.from(
+                                  //       //     lgaAddedList,
+                                  //       //   ),
+                                  //       // };
+                                  //     } else {
+                                  //       // In case the state was changed during editing
+                                  //       listOfAddedLocation.add(
+                                  //         cov.CoverageAreas(
+                                  //           lgas: lgaAddedList,
+                                  //           state: stateController.text.trim(),
+                                  //         ),
+                                  //         //   {
+                                  //         //   state: List<String>.from(
+                                  //         //     lgaAddedList,
+                                  //         //   ),
+                                  //         // }
+                                  //       );
+                                  //     }
+                                  //   } else {
+                                  //     // ADD NEW STATE
+                                  //     listOfAddedLocation.add(
+                                  //       cov.CoverageAreas(
+                                  //         lgas: lgaAddedList,
+                                  //         state: stateController.text.trim(),
+                                  //       ),
+                                  //       //   {
+                                  //       //   state: List<String>.from(lgaAddedList),
+                                  //       // }
+                                  //     );
+                                  //     // }
+                                  //   }
+                                  //   if (covAreaIndex != null) {
+                                  //     coverageAreaIndex = covAreaIndex;
+                                  //   }
+                                  //   _isLoading = false;
+                                  //   await Future.delayed(Duration(seconds: 1));
+                                  //   lgaListCopy.clear();
+                                  //   setModalState(() {});
+                                  //   Navigator.pop(context);
+                                  //   notifyListeners();
+                                  // },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
 }

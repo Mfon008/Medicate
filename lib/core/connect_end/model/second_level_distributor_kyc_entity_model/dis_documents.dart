@@ -15,11 +15,6 @@ class DisDocuments {
   NafdacPermit? nafdacPermit;
   PharmacyCouncilLicense? pharmacyCouncilLicense;
   CompanyLogo? companyLogo;
-  // GmpCertificate? gmpCertificate;
-  // NafdacManufacturingLicense? nafdacManufacturingLicense;
-  // ImportPermit? importPermit;
-  // ManufacturerAuthorizationLetter? manufacturerAuthorizationLetter;
-  // ProductRegistrationEvidence? productRegistrationEvidence;
 
   DisDocuments({
     this.cacCertificate,
@@ -27,11 +22,6 @@ class DisDocuments {
     this.nafdacPermit,
     this.pharmacyCouncilLicense,
     this.companyLogo,
-    // this.gmpCertificate,
-    // this.importPermit,
-    // this.manufacturerAuthorizationLetter,
-    // this.nafdacManufacturingLicense,
-    // this.productRegistrationEvidence,
   });
 
   factory DisDocuments.fromJson(Map<String, dynamic> json) {

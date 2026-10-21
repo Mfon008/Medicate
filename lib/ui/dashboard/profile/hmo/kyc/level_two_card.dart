@@ -481,7 +481,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                             SizedBox(
                                                               width: 8.10.w,
                                                             ),
-                                                                                                                       model
+                                                            model
                                                                             .getHmoKycResponseModel
                                                                             ?.data
                                                                             ?.kycLevels?[1]
@@ -497,10 +497,10 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                         'UNDER_REVIEW'
                                                                             .toLowerCase()
                                                                 ? SizedBox.shrink()
-                                                                :model
-                                                                        .secondLevelHmoKycEntityModelLogo
-                                                                        ?.logo !=
-                                                                    null
+                                                                : model
+                                                                          .secondLevelHmoKycEntityModelLogo
+                                                                          ?.logo !=
+                                                                      null
                                                                 ? GestureDetector(
                                                                     onTap: () =>
                                                                         model.pickImageLogo(
@@ -527,7 +527,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                             SizedBox(
                                                               width: 8.10.w,
                                                             ),
-                                                                                                                       model
+                                                            model
                                                                             .getHmoKycResponseModel
                                                                             ?.data
                                                                             ?.kycLevels?[1]
@@ -543,10 +543,10 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                         'UNDER_REVIEW'
                                                                             .toLowerCase()
                                                                 ? SizedBox.shrink()
-                                                                :model
-                                                                        .secondLevelHmoKycEntityModelLogo
-                                                                        ?.logo !=
-                                                                    null
+                                                                : model
+                                                                          .secondLevelHmoKycEntityModelLogo
+                                                                          ?.logo !=
+                                                                      null
                                                                 ? GestureDetector(
                                                                     onTap: () {
                                                                       model.secondLevelHmoKycEntityModelLogo?.logo =
@@ -810,7 +810,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                             SizedBox(
                                                               width: 8.10.w,
                                                             ),
-                                                                                                                       model
+                                                            model
                                                                             .getHmoKycResponseModel
                                                                             ?.data
                                                                             ?.kycLevels?[1]
@@ -826,12 +826,10 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                         'UNDER_REVIEW'
                                                                             .toLowerCase()
                                                                 ? SizedBox.shrink()
-                                                                :model.secondLevelHmoKycEntityModelCAC !=
-                                                                        null &&
-                                                                    model
-                                                                            .secondLevelHmoKycEntityModelCAC
-                                                                            ?.cacCertificate !=
-                                                                        null
+                                                                : model.secondLevelHmoKycEntityModelCAC !=
+                                                                          null &&
+                                                                      model.secondLevelHmoKycEntityModelCAC?.cacCertificate !=
+                                                                          null
                                                                 ? GestureDetector(
                                                                     onTap: () =>
                                                                         model.pickImageCAC(
@@ -858,7 +856,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                             SizedBox(
                                                               width: 8.10.w,
                                                             ),
-                                                                                                                       model
+                                                            model
                                                                             .getHmoKycResponseModel
                                                                             ?.data
                                                                             ?.kycLevels?[1]
@@ -874,12 +872,10 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                         'UNDER_REVIEW'
                                                                             .toLowerCase()
                                                                 ? SizedBox.shrink()
-                                                                :model.secondLevelHmoKycEntityModelCAC?.cacCertificate !=
-                                                                        null &&
-                                                                    model
-                                                                            .secondLevelHmoKycEntityModelCAC
-                                                                            ?.cacCertificate !=
-                                                                        null
+                                                                : model.secondLevelHmoKycEntityModelCAC?.cacCertificate !=
+                                                                          null &&
+                                                                      model.secondLevelHmoKycEntityModelCAC?.cacCertificate !=
+                                                                          null
                                                                 ? GestureDetector(
                                                                     onTap: () {
                                                                       model.secondLevelHmoKycEntityModelCAC?.cacCertificate =
@@ -1188,7 +1184,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                             SizedBox(
                                                               width: 8.10.w,
                                                             ),
-                                                                                                                       model
+                                                            model
                                                                             .getHmoKycResponseModel
                                                                             ?.data
                                                                             ?.kycLevels?[1]
@@ -1204,10 +1200,10 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                         'UNDER_REVIEW'
                                                                             .toLowerCase()
                                                                 ? SizedBox.shrink()
-                                                                :model
-                                                                        .secondLevelHmoKycEntityModelNHIS
-                                                                        ?.hmoAccreditation !=
-                                                                    null
+                                                                : model
+                                                                          .secondLevelHmoKycEntityModelNHIS
+                                                                          ?.hmoAccreditation !=
+                                                                      null
                                                                 ? GestureDetector(
                                                                     onTap: () {
                                                                       model.secondLevelHmoKycEntityModelNHIS?.hmoAccreditation =
@@ -1466,7 +1462,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                             SizedBox(
                                                               width: 8.10.w,
                                                             ),
-                                                                                                                       model
+                                                            model
                                                                             .getHmoKycResponseModel
                                                                             ?.data
                                                                             ?.kycLevels?[1]
@@ -1482,10 +1478,10 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                         'UNDER_REVIEW'
                                                                             .toLowerCase()
                                                                 ? SizedBox.shrink()
-                                                                :model
-                                                                        .secondLevelHmoKycEntityModelTax
-                                                                        ?.taxIdCertificate !=
-                                                                    null
+                                                                : model
+                                                                          .secondLevelHmoKycEntityModelTax
+                                                                          ?.taxIdCertificate !=
+                                                                      null
                                                                 ? GestureDetector(
                                                                     onTap: () =>
                                                                         model.pickImageTIN(
@@ -1512,7 +1508,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                             SizedBox(
                                                               width: 8.10.w,
                                                             ),
-                                                                                                                       model
+                                                            model
                                                                             .getHmoKycResponseModel
                                                                             ?.data
                                                                             ?.kycLevels?[1]
@@ -1528,10 +1524,10 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                         'UNDER_REVIEW'
                                                                             .toLowerCase()
                                                                 ? SizedBox.shrink()
-                                                                :model
-                                                                        .secondLevelHmoKycEntityModelTax
-                                                                        ?.taxIdCertificate !=
-                                                                    null
+                                                                : model
+                                                                          .secondLevelHmoKycEntityModelTax
+                                                                          ?.taxIdCertificate !=
+                                                                      null
                                                                 ? GestureDetector(
                                                                     onTap: () {
                                                                       model.secondLevelHmoKycEntityModelTax?.taxIdCertificate =

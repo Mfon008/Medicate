@@ -1,4 +1,3 @@
-
 // ignore_for_file: must_be_immutable, deprecated_member_use
 
 import 'package:dotted_border/dotted_border.dart';
@@ -8,17 +7,38 @@ import 'package:flutter_svg/svg.dart';
 import 'package:stacked/stacked.dart';
 
 import '../../../../../core/app_assets/app_validation.dart';
+import '../../../../../core/app_assets/constant.dart';
 import '../../../../../core/app_assets/image.dart';
 import '../../../../../core/config/colors.dart';
+import '../../../../../core/connect_end/model/second_level_distributor_kyc_entity_model/business_details.dart';
+import '../../../../../core/connect_end/model/second_level_distributor_kyc_entity_model/cac_certificate.dart';
+import '../../../../../core/connect_end/model/second_level_distributor_kyc_entity_model/company_logo.dart';
+import '../../../../../core/connect_end/model/second_level_distributor_kyc_entity_model/coverage_areas.dart';
+import '../../../../../core/connect_end/model/second_level_distributor_kyc_entity_model/dis_documents.dart';
+import '../../../../../core/connect_end/model/second_level_distributor_kyc_entity_model/distributor.dart';
+import '../../../../../core/connect_end/model/second_level_distributor_kyc_entity_model/gmp_certificate.dart';
+import '../../../../../core/connect_end/model/second_level_distributor_kyc_entity_model/imp_documents.dart';
+import '../../../../../core/connect_end/model/second_level_distributor_kyc_entity_model/import_permit.dart';
+import '../../../../../core/connect_end/model/second_level_distributor_kyc_entity_model/importer.dart';
+import '../../../../../core/connect_end/model/second_level_distributor_kyc_entity_model/man_documents.dart';
+import '../../../../../core/connect_end/model/second_level_distributor_kyc_entity_model/manufacturer.dart';
+import '../../../../../core/connect_end/model/second_level_distributor_kyc_entity_model/manufacturer_authorization_letter.dart';
+import '../../../../../core/connect_end/model/second_level_distributor_kyc_entity_model/nafdac_manufacturing_license.dart';
+import '../../../../../core/connect_end/model/second_level_distributor_kyc_entity_model/nafdac_permit.dart';
+import '../../../../../core/connect_end/model/second_level_distributor_kyc_entity_model/pharmaceutical_distribution_license.dart';
+import '../../../../../core/connect_end/model/second_level_distributor_kyc_entity_model/pharmacy_council_license.dart';
+import '../../../../../core/connect_end/model/second_level_distributor_kyc_entity_model/product_registration_evidence.dart';
+import '../../../../../core/connect_end/model/second_level_distributor_kyc_entity_model/second_level_distributor_kyc_entity_model.dart';
 import '../../../../../core/connect_end/view_model/pharm_auth_view_model.dart';
 import '../../../../manufacturer/product/custom_switch_widget.dart';
 import '../../../../widget/button.dart';
+import '../../../../widget/kyc_url_view.dart';
 import '../../../../widget/text.dart';
 import '../../../../widget/text_form_widget.dart';
 import '../../manufacture/dashed_border_painter.dart';
 
 class UpgradeAccount extends StatefulWidget {
-   UpgradeAccount({super.key, this.isHealthCareProvider});
+  UpgradeAccount({super.key, this.isHealthCareProvider});
 
   bool? isHealthCareProvider;
 
@@ -53,9 +73,6 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
       TextEditingController(text: '');
   TextEditingController cacRegNoControllerDistributorTin =
       TextEditingController(text: '');
-  // TextEditingController cacRegNoControllerManufacturer = TextEditingController(
-  //   text: '',
-  // );
 
   TextEditingController cacRegNoManufacturerController = TextEditingController(
     text: '',
@@ -100,573 +117,574 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
 
   GlobalKey<FormState>? formKey = GlobalKey<FormState>();
 
-  // Future<void> getStuffs(HealthCareViewModel model) async {
-  //   model.businessTypes =
-  //       model.getDistributorKycResponseModel?.data?.level2?.businessTypes ?? [];
+  Future<void> getStuffs(PharmViewModel model) async {
+    model.businessTypes =
+        model.getMarketplaceUpgradeResponseModel?.data?.kyc?.businessTypes ??
+        [];
 
-  //   if (model.businessTypes.contains('DISTRIBUTOR')) {
-  //     isSwitchedDistributor = true;
-  //   }
-  //   if (model.businessTypes.contains('MANUFACTURER')) {
-  //     isSwitchedManufaturer = true;
-  //   }
-  //   if (model.businessTypes.contains('IMPORTER')) {
-  //     isSwitchedImporter = true;
-  //   }
-  //   cacRegNoControllerDistributor.text =
-  //       model
-  //           .getDistributorKycResponseModel
-  //           ?.data
-  //           ?.level2
-  //           ?.distributor
-  //           ?.businessDetails
-  //           ?.cacRegistrationNumber ??
-  //       '';
-  //   cacRegNoControllerDistributorLincense.text =
-  //       model
-  //           .getDistributorKycResponseModel
-  //           ?.data
-  //           ?.level2
-  //           ?.distributor
-  //           ?.businessDetails
-  //           ?.pharmaceuticalDistributionLicenseNumber ??
-  //       '';
-  //   cacRegNoControllerDistributorNafPermit.text =
-  //       model
-  //           .getDistributorKycResponseModel
-  //           ?.data
-  //           ?.level2
-  //           ?.distributor
-  //           ?.businessDetails
-  //           ?.nafdacPermitNumber ??
-  //       '';
-  //   cacRegNoControllerDistributorCouncilLincense.text =
-  //       model
-  //           .getDistributorKycResponseModel
-  //           ?.data
-  //           ?.level2
-  //           ?.distributor
-  //           ?.businessDetails
-  //           ?.pharmacyCouncilLicenseNumber ??
-  //       '';
-  //   cacRegNoControllerDistributorBusinessAddress.text =
-  //       model
-  //           .getDistributorKycResponseModel
-  //           ?.data
-  //           ?.level2
-  //           ?.distributor
-  //           ?.businessDetails
-  //           ?.businessAddress ??
-  //       '';
-  //   cacRegNoControllerDistributorContactPerson.text =
-  //       model
-  //           .getDistributorKycResponseModel
-  //           ?.data
-  //           ?.level2
-  //           ?.distributor
-  //           ?.businessDetails
-  //           ?.contactPersonName ??
-  //       '';
-  //   cacRegNoControllerDistributorContactPersonEmail.text =
-  //       model
-  //           .getDistributorKycResponseModel
-  //           ?.data
-  //           ?.level2
-  //           ?.distributor
-  //           ?.businessDetails
-  //           ?.contactPersonEmail ??
-  //       '';
-  //   cacRegNoControllerDistributorBusinessWeb.text =
-  //       model
-  //           .getDistributorKycResponseModel
-  //           ?.data
-  //           ?.level2
-  //           ?.distributor
-  //           ?.businessDetails
-  //           ?.businessWebsite ??
-  //       '';
-  //   cacRegNoControllerDistributorTin.text =
-  //       model
-  //           .getDistributorKycResponseModel
-  //           ?.data
-  //           ?.level2
-  //           ?.distributor
-  //           ?.businessDetails
-  //           ?.taxIdentificationNumber ??
-  //       '';
+    if (model.businessTypes.contains('DISTRIBUTOR')) {
+      isSwitchedDistributor = true;
+    }
+    if (model.businessTypes.contains('MANUFACTURER')) {
+      isSwitchedManufaturer = true;
+    }
+    if (model.businessTypes.contains('IMPORTER')) {
+      isSwitchedImporter = true;
+    }
+    cacRegNoControllerDistributor.text =
+        model
+            .getMarketplaceUpgradeResponseModel
+            ?.data
+            ?.kyc
+            ?.distributor
+            ?.businessDetails
+            ?.cacRegistrationNumber ??
+        '';
+    cacRegNoControllerDistributorLincense.text =
+        model
+            .getMarketplaceUpgradeResponseModel
+            ?.data
+            ?.kyc
+            ?.distributor
+            ?.businessDetails
+            ?.pharmaceuticalDistributionLicenseNumber ??
+        '';
+    cacRegNoControllerDistributorNafPermit.text =
+        model
+            .getMarketplaceUpgradeResponseModel
+            ?.data
+            ?.kyc
+            ?.distributor
+            ?.businessDetails
+            ?.nafdacPermitNumber ??
+        '';
+    cacRegNoControllerDistributorCouncilLincense.text =
+        model
+            .getMarketplaceUpgradeResponseModel
+            ?.data
+            ?.kyc
+            ?.distributor
+            ?.businessDetails
+            ?.pharmacyCouncilLicenseNumber ??
+        '';
+    cacRegNoControllerDistributorBusinessAddress.text =
+        model
+            .getMarketplaceUpgradeResponseModel
+            ?.data
+            ?.kyc
+            ?.distributor
+            ?.businessDetails
+            ?.businessAddress ??
+        '';
+    cacRegNoControllerDistributorContactPerson.text =
+        model
+            .getMarketplaceUpgradeResponseModel
+            ?.data
+            ?.kyc
+            ?.distributor
+            ?.businessDetails
+            ?.contactPersonName ??
+        '';
+    cacRegNoControllerDistributorContactPersonEmail.text =
+        model
+            .getMarketplaceUpgradeResponseModel
+            ?.data
+            ?.kyc
+            ?.distributor
+            ?.businessDetails
+            ?.contactPersonEmail ??
+        '';
+    cacRegNoControllerDistributorBusinessWeb.text =
+        model
+            .getMarketplaceUpgradeResponseModel
+            ?.data
+            ?.kyc
+            ?.distributor
+            ?.businessDetails
+            ?.businessWebsite ??
+        '';
+    cacRegNoControllerDistributorTin.text =
+        model
+            .getMarketplaceUpgradeResponseModel
+            ?.data
+            ?.kyc
+            ?.distributor
+            ?.businessDetails
+            ?.taxIdentificationNumber ??
+        '';
 
-  //   cacRegNoManufacturerController.text =
-  //       model
-  //           .getDistributorKycResponseModel
-  //           ?.data
-  //           ?.level2
-  //           ?.manufacturer
-  //           ?.businessDetails
-  //           ?.cacRegistrationNumber ??
-  //       '';
-  //   cacRegNoControllerManufacturerCertificateNum.text =
-  //       model
-  //           .getDistributorKycResponseModel
-  //           ?.data
-  //           ?.level2
-  //           ?.manufacturer
-  //           ?.businessDetails
-  //           ?.gmpCertificateNumber ??
-  //       '';
-  //   cacRegNoControllerManufacturerLincenseNumber.text =
-  //       model
-  //           .getDistributorKycResponseModel
-  //           ?.data
-  //           ?.level2
-  //           ?.manufacturer
-  //           ?.businessDetails
-  //           ?.nafdacManufacturingLicenseNumber ??
-  //       '';
-  //   cacRegNoControllerManufacturerProdNumber.text =
-  //       model
-  //           .getDistributorKycResponseModel
-  //           ?.data
-  //           ?.level2
-  //           ?.manufacturer
-  //           ?.businessDetails
-  //           ?.productRegistrationEvidenceNumber ??
-  //       '';
-  //   cacRegNoControllerManufacturerBusinessAddress.text =
-  //       model
-  //           .getDistributorKycResponseModel
-  //           ?.data
-  //           ?.level2
-  //           ?.manufacturer
-  //           ?.businessDetails
-  //           ?.businessAddress ??
-  //       '';
-  //   cacRegNoControllerManufacturerContactPerson.text =
-  //       model
-  //           .getDistributorKycResponseModel
-  //           ?.data
-  //           ?.level2
-  //           ?.manufacturer
-  //           ?.businessDetails
-  //           ?.contactPersonName ??
-  //       '';
-  //   cacRegNoControllerManufacturerContactPersonEmail.text =
-  //       model
-  //           .getDistributorKycResponseModel
-  //           ?.data
-  //           ?.level2
-  //           ?.manufacturer
-  //           ?.businessDetails
-  //           ?.contactPersonEmail ??
-  //       '';
-  //   cacRegNoControllerManufacturerBusinessWeb.text =
-  //       model
-  //           .getDistributorKycResponseModel
-  //           ?.data
-  //           ?.level2
-  //           ?.manufacturer
-  //           ?.businessDetails
-  //           ?.businessWebsite ??
-  //       '';
-  //   cacRegNoControllerManufacturerTin.text =
-  //       model
-  //           .getDistributorKycResponseModel
-  //           ?.data
-  //           ?.level2
-  //           ?.manufacturer
-  //           ?.businessDetails
-  //           ?.taxIdentificationNumber ??
-  //       '';
+    cacRegNoManufacturerController.text =
+        model
+            .getMarketplaceUpgradeResponseModel
+            ?.data
+            ?.kyc
+            ?.manufacturer
+            ?.businessDetails
+            ?.cacRegistrationNumber ??
+        '';
+    cacRegNoControllerManufacturerCertificateNum.text =
+        model
+            .getMarketplaceUpgradeResponseModel
+            ?.data
+            ?.kyc
+            ?.manufacturer
+            ?.businessDetails
+            ?.gmpCertificateNumber ??
+        '';
+    cacRegNoControllerManufacturerLincenseNumber.text =
+        model
+            .getMarketplaceUpgradeResponseModel
+            ?.data
+            ?.kyc
+            ?.manufacturer
+            ?.businessDetails
+            ?.nafdacManufacturingLicenseNumber ??
+        '';
+    cacRegNoControllerManufacturerProdNumber.text =
+        model
+            .getMarketplaceUpgradeResponseModel
+            ?.data
+            ?.kyc
+            ?.manufacturer
+            ?.businessDetails
+            ?.productRegistrationEvidenceNumber ??
+        '';
+    cacRegNoControllerManufacturerBusinessAddress.text =
+        model
+            .getMarketplaceUpgradeResponseModel
+            ?.data
+            ?.kyc
+            ?.manufacturer
+            ?.businessDetails
+            ?.businessAddress ??
+        '';
+    cacRegNoControllerManufacturerContactPerson.text =
+        model
+            .getMarketplaceUpgradeResponseModel
+            ?.data
+            ?.kyc
+            ?.manufacturer
+            ?.businessDetails
+            ?.contactPersonName ??
+        '';
+    cacRegNoControllerManufacturerContactPersonEmail.text =
+        model
+            .getMarketplaceUpgradeResponseModel
+            ?.data
+            ?.kyc
+            ?.manufacturer
+            ?.businessDetails
+            ?.contactPersonEmail ??
+        '';
+    cacRegNoControllerManufacturerBusinessWeb.text =
+        model
+            .getMarketplaceUpgradeResponseModel
+            ?.data
+            ?.kyc
+            ?.manufacturer
+            ?.businessDetails
+            ?.businessWebsite ??
+        '';
+    cacRegNoControllerManufacturerTin.text =
+        model
+            .getMarketplaceUpgradeResponseModel
+            ?.data
+            ?.kyc
+            ?.manufacturer
+            ?.businessDetails
+            ?.taxIdentificationNumber ??
+        '';
 
-  //   cacRegNoImporterController.text =
-  //       model
-  //           .getDistributorKycResponseModel
-  //           ?.data
-  //           ?.level2
-  //           ?.importer
-  //           ?.businessDetails
-  //           ?.cacRegistrationNumber ??
-  //       '';
-  //   cacRegNoControllerImporterCertificateNum.text =
-  //       model
-  //           .getDistributorKycResponseModel
-  //           ?.data
-  //           ?.level2
-  //           ?.importer
-  //           ?.businessDetails
-  //           ?.importPermitNumber ??
-  //       '';
-  //   cacRegNoControllerImporterBusinessAddress.text =
-  //       model
-  //           .getDistributorKycResponseModel
-  //           ?.data
-  //           ?.level2
-  //           ?.importer
-  //           ?.businessDetails
-  //           ?.businessAddress ??
-  //       '';
-  //   cacRegNoControllerImporterContactPerson.text =
-  //       model
-  //           .getDistributorKycResponseModel
-  //           ?.data
-  //           ?.level2
-  //           ?.importer
-  //           ?.businessDetails
-  //           ?.contactPersonName ??
-  //       '';
-  //   cacRegNoControllerImporterContactPersonNumber.text =
-  //       model
-  //           .getDistributorKycResponseModel
-  //           ?.data
-  //           ?.level2
-  //           ?.importer
-  //           ?.businessDetails
-  //           ?.contactPersonPhoneNumber ??
-  //       '';
-  //   cacRegNoControllerImporterContactPersonEmail.text =
-  //       model
-  //           .getDistributorKycResponseModel
-  //           ?.data
-  //           ?.level2
-  //           ?.importer
-  //           ?.businessDetails
-  //           ?.contactPersonEmail ??
-  //       '';
-  //   cacRegNoControllerImporterBusinessWeb.text =
-  //       model
-  //           .getDistributorKycResponseModel
-  //           ?.data
-  //           ?.level2
-  //           ?.importer
-  //           ?.businessDetails
-  //           ?.businessWebsite ??
-  //       '';
-  //   cacRegNoControllerImporterTin.text =
-  //       model
-  //           .getDistributorKycResponseModel
-  //           ?.data
-  //           ?.level2
-  //           ?.importer
-  //           ?.businessDetails
-  //           ?.taxIdentificationNumber ??
-  //       "";
+    cacRegNoImporterController.text =
+        model
+            .getMarketplaceUpgradeResponseModel
+            ?.data
+            ?.kyc
+            ?.importer
+            ?.businessDetails
+            ?.cacRegistrationNumber ??
+        '';
+    cacRegNoControllerImporterCertificateNum.text =
+        model
+            .getMarketplaceUpgradeResponseModel
+            ?.data
+            ?.kyc
+            ?.importer
+            ?.businessDetails
+            ?.importPermitNumber ??
+        '';
+    cacRegNoControllerImporterBusinessAddress.text =
+        model
+            .getMarketplaceUpgradeResponseModel
+            ?.data
+            ?.kyc
+            ?.importer
+            ?.businessDetails
+            ?.businessAddress ??
+        '';
+    cacRegNoControllerImporterContactPerson.text =
+        model
+            .getMarketplaceUpgradeResponseModel
+            ?.data
+            ?.kyc
+            ?.importer
+            ?.businessDetails
+            ?.contactPersonName ??
+        '';
+    cacRegNoControllerImporterContactPersonNumber.text =
+        model
+            .getMarketplaceUpgradeResponseModel
+            ?.data
+            ?.kyc
+            ?.importer
+            ?.businessDetails
+            ?.contactPersonPhoneNumber ??
+        '';
+    cacRegNoControllerImporterContactPersonEmail.text =
+        model
+            .getMarketplaceUpgradeResponseModel
+            ?.data
+            ?.kyc
+            ?.importer
+            ?.businessDetails
+            ?.contactPersonEmail ??
+        '';
+    cacRegNoControllerImporterBusinessWeb.text =
+        model
+            .getMarketplaceUpgradeResponseModel
+            ?.data
+            ?.kyc
+            ?.importer
+            ?.businessDetails
+            ?.businessWebsite ??
+        '';
+    cacRegNoControllerImporterTin.text =
+        model
+            .getMarketplaceUpgradeResponseModel
+            ?.data
+            ?.kyc
+            ?.importer
+            ?.businessDetails
+            ?.taxIdentificationNumber ??
+        "";
 
-  //   if (model.getDistributorKycResponseModel!.data!.level2 != null &&
-  //       model
-  //               .getDistributorKycResponseModel!
-  //               .data!
-  //               .level2!
-  //               .distributor!
-  //               .businessDetails!
-  //               .contactPersonPhoneNumber !=
-  //           '') {
-  //     cacRegNoControllerDistributorContactPersonNumber.text = model
-  //         .returnAddingPhoneNoStructureWith234Kyc(
-  //           model
-  //               .getDistributorKycResponseModel!
-  //               .data!
-  //               .level2!
-  //               .distributor!
-  //               .businessDetails!
-  //               .contactPersonPhoneNumber!,
-  //         );
-  //   } else {
-  //     cacRegNoControllerDistributorContactPersonNumber.text = '';
-  //   }
-  //   model.listOfAddedLocation =
-  //       (model
-  //                   .getDistributorKycResponseModel
-  //                   ?.data
-  //                   ?.level2
-  //                   ?.distributor
-  //                   ?.coverageAreas ??
-  //               [])
-  //           .map<CoverageAreas>((e) => CoverageAreas.fromJson(e.toJson()))
-  //           .toList();
-  //   await Future.delayed(Duration(seconds: 1));
-  //   final manPhoneNumber = model
-  //       .getDistributorKycResponseModel
-  //       ?.data
-  //       ?.level2
-  //       ?.manufacturer
-  //       ?.businessDetails
-  //       ?.contactPersonPhoneNumber;
+    if (model.getMarketplaceUpgradeResponseModel?.data?.kyc?.distributor !=
+            null &&
+        model
+                .getMarketplaceUpgradeResponseModel
+                ?.data
+                ?.kyc
+                ?.distributor!
+                .businessDetails!
+                .contactPersonPhoneNumber !=
+            '') {
+      cacRegNoControllerDistributorContactPersonNumber.text = model
+          .returnAddingPhoneNoStructureWith234Kyc(
+            model
+                .getMarketplaceUpgradeResponseModel!
+                .data!
+                .kyc!
+                .distributor!
+                .businessDetails!
+                .contactPersonPhoneNumber!,
+          );
+    } else {
+      cacRegNoControllerDistributorContactPersonNumber.text = '';
+    }
+    model.listOfAddedLocation =
+        (model
+                    .getMarketplaceUpgradeResponseModel
+                    ?.data
+                    ?.kyc
+                    ?.distributor
+                    ?.coverageAreas ??
+                [])
+            .map<CoverageAreas>((e) => CoverageAreas.fromJson(e.toJson()))
+            .toList();
+    await Future.delayed(Duration(seconds: 1));
+    final manPhoneNumber = model
+        .getMarketplaceUpgradeResponseModel
+        ?.data
+        ?.kyc
+        ?.manufacturer
+        ?.businessDetails
+        ?.contactPersonPhoneNumber;
 
-  //   if (manPhoneNumber != null && manPhoneNumber.trim().isNotEmpty) {
-  //     cacRegNoControllerManufacturerContactPersonNumber.text = model
-  //         .returnAddingPhoneNoStructureWith234Kyc(manPhoneNumber);
-  //   } else {
-  //     cacRegNoControllerManufacturerContactPersonNumber.text = '';
-  //   }
+    if (manPhoneNumber != null && manPhoneNumber.trim().isNotEmpty) {
+      cacRegNoControllerManufacturerContactPersonNumber.text = model
+          .returnAddingPhoneNoStructureWith234Kyc(manPhoneNumber);
+    } else {
+      cacRegNoControllerManufacturerContactPersonNumber.text = '';
+    }
 
-  //   final impPhoneNumber = model
-  //       .getDistributorKycResponseModel
-  //       ?.data
-  //       ?.level2
-  //       ?.manufacturer
-  //       ?.businessDetails
-  //       ?.contactPersonPhoneNumber;
+    final impPhoneNumber = model
+        .getMarketplaceUpgradeResponseModel
+        ?.data
+        ?.kyc
+        ?.importer
+        ?.businessDetails
+        ?.contactPersonPhoneNumber;
 
-  //   if (impPhoneNumber != null && impPhoneNumber.trim().isNotEmpty) {
-  //     cacRegNoControllerImporterContactPersonNumber.text = model
-  //         .returnAddingPhoneNoStructureWith234Kyc(impPhoneNumber);
-  //   } else {
-  //     cacRegNoControllerDistributorContactPersonNumber.text = '';
-  //   }
+    if (impPhoneNumber != null && impPhoneNumber.trim().isNotEmpty) {
+      cacRegNoControllerImporterContactPersonNumber.text = model
+          .returnAddingPhoneNoStructureWith234Kyc(impPhoneNumber);
+    } else {
+      cacRegNoControllerImporterContactPersonNumber.text = '';
+    }
 
-  //   ///
-  //   if (model.getDistributorKycResponseModel != null &&
-  //       model.getDistributorKycResponseModel!.data!.level2 != null) {
-  //     final level2 = model.getDistributorKycResponseModel!.data!.level2;
-  //     if (level2?.distributor?.documents?.cacCertificate != null) {
-  //       model
-  //           .secondLevelDistributorKycEntityModelCAC
-  //           ?.distributor
-  //           ?.documents
-  //           ?.cacCertificate = CacCertificate.fromJson(
-  //         level2?.distributor?.documents?.cacCertificate?.toJson() ?? {},
-  //       );
-  //     }
-  //     if (level2?.distributor?.documents?.pharmaceuticalDistributionLicense !=
-  //         null) {
-  //       model
-  //               .secondLevelDistributorKycEntityModelPharmLin
-  //               ?.distributor
-  //               ?.documents
-  //               ?.pharmaceuticalDistributionLicense =
-  //           PharmaceuticalDistributionLicense.fromJson(
-  //             model
-  //                     .getDistributorKycResponseModel
-  //                     ?.data
-  //                     ?.level2
-  //                     ?.distributor
-  //                     ?.documents
-  //                     ?.pharmaceuticalDistributionLicense
-  //                     ?.toJson() ??
-  //                 {},
-  //           );
-  //     }
-  //     if (level2?.distributor?.documents?.nafdacPermit != null) {
-  //       model
-  //           .secondLevelDistributorKycEntityModelNAF
-  //           ?.distributor
-  //           ?.documents
-  //           ?.nafdacPermit = NafdacPermit.fromJson(
-  //         model
-  //                 .getDistributorKycResponseModel!
-  //                 .data
-  //                 ?.level2
-  //                 ?.distributor
-  //                 ?.documents
-  //                 ?.nafdacPermit
-  //                 ?.toJson() ??
-  //             {},
-  //       );
-  //     }
-  //     if (level2?.distributor?.documents?.pharmacyCouncilLicense != null) {
-  //       model
-  //           .secondLevelDistributorKycEntityModelPharmCouncilLin
-  //           ?.distributor
-  //           ?.documents
-  //           ?.pharmacyCouncilLicense = PharmacyCouncilLicense.fromJson(
-  //         model
-  //                 .getDistributorKycResponseModel
-  //                 ?.data
-  //                 ?.level2
-  //                 ?.distributor
-  //                 ?.documents
-  //                 ?.pharmacyCouncilLicense
-  //                 ?.toJson() ??
-  //             {},
-  //       );
-  //     }
-  //     if (level2?.distributor?.documents?.companyLogo != null) {
-  //       model
-  //           .secondLevelDistributorKycEntityModelLogo
-  //           ?.distributor
-  //           ?.documents
-  //           ?.companyLogo = CompanyLogo.fromJson(
-  //         model
-  //                 .getDistributorKycResponseModel
-  //                 ?.data
-  //                 ?.level2
-  //                 ?.distributor
-  //                 ?.documents
-  //                 ?.companyLogo
-  //                 ?.toJson() ??
-  //             {},
-  //       );
-  //     }
+    ///
+    if (model.getMarketplaceUpgradeResponseModel != null &&
+        model.getMarketplaceUpgradeResponseModel!.data!.kyc != null) {
+      final level2 = model.getMarketplaceUpgradeResponseModel!.data!.kyc;
+      if (level2?.distributor?.documents?.cacCertificate != null) {
+        model
+            .secondLevelDistributorKycEntityModelCAC
+            ?.distributor
+            ?.documents
+            ?.cacCertificate = CacCertificate.fromJson(
+          level2?.distributor?.documents?.cacCertificate?.toJson() ?? {},
+        );
+      }
+      if (level2?.distributor?.documents?.pharmaceuticalDistributionLicense !=
+          null) {
+        model
+                .secondLevelDistributorKycEntityModelPharmLin
+                ?.distributor
+                ?.documents
+                ?.pharmaceuticalDistributionLicense =
+            PharmaceuticalDistributionLicense.fromJson(
+              model
+                      .getMarketplaceUpgradeResponseModel
+                      ?.data
+                      ?.kyc
+                      ?.distributor
+                      ?.documents
+                      ?.pharmaceuticalDistributionLicense
+                      ?.toJson() ??
+                  {},
+            );
+      }
+      if (level2?.distributor?.documents?.nafdacPermit != null) {
+        model
+            .secondLevelDistributorKycEntityModelNAF
+            ?.distributor
+            ?.documents
+            ?.nafdacPermit = NafdacPermit.fromJson(
+          model
+                  .getMarketplaceUpgradeResponseModel!
+                  .data
+                  ?.kyc
+                  ?.distributor
+                  ?.documents
+                  ?.nafdacPermit
+                  ?.toJson() ??
+              {},
+        );
+      }
+      if (level2?.distributor?.documents?.pharmacyCouncilLicense != null) {
+        model
+            .secondLevelDistributorKycEntityModelPharmCouncilLin
+            ?.distributor
+            ?.documents
+            ?.pharmacyCouncilLicense = PharmacyCouncilLicense.fromJson(
+          model
+                  .getMarketplaceUpgradeResponseModel
+                  ?.data
+                  ?.kyc
+                  ?.distributor
+                  ?.documents
+                  ?.pharmacyCouncilLicense
+                  ?.toJson() ??
+              {},
+        );
+      }
+      if (level2?.distributor?.documents?.companyLogo != null) {
+        model
+            .secondLevelDistributorKycEntityModelLogo
+            ?.distributor
+            ?.documents
+            ?.companyLogo = CompanyLogo.fromJson(
+          model
+                  .getMarketplaceUpgradeResponseModel
+                  ?.data
+                  ?.kyc
+                  ?.distributor
+                  ?.documents
+                  ?.companyLogo
+                  ?.toJson() ??
+              {},
+        );
+      }
 
-  //     if (level2?.manufacturer?.documents?.cacCertificate != null) {
-  //       model
-  //           .secondLevelDistributorKycEntityModelManCAC
-  //           ?.manufacturer
-  //           ?.documents
-  //           ?.cacCertificate = CacCertificate.fromJson(
-  //         model
-  //                 .getDistributorKycResponseModel
-  //                 ?.data
-  //                 ?.level2
-  //                 ?.manufacturer
-  //                 ?.documents
-  //                 ?.cacCertificate
-  //                 ?.toJson() ??
-  //             {},
-  //       );
-  //     }
-  //     if (level2?.manufacturer?.documents?.gmpCertificate != null) {
-  //       model
-  //           .secondLevelDistributorKycEntityModelManGMP
-  //           ?.manufacturer
-  //           ?.documents
-  //           ?.gmpCertificate = GmpCertificate.fromJson(
-  //         model
-  //                 .getDistributorKycResponseModel
-  //                 ?.data
-  //                 ?.level2
-  //                 ?.manufacturer
-  //                 ?.documents
-  //                 ?.gmpCertificate
-  //                 ?.toJson() ??
-  //             {},
-  //       );
-  //     }
-  //     if (level2?.manufacturer?.documents?.nafdacManufacturingLicense != null) {
-  //       model
-  //           .secondLevelDistributorKycEntityModelManNAF
-  //           ?.manufacturer
-  //           ?.documents
-  //           ?.nafdacManufacturingLicense = NafdacManufacturingLicense.fromJson(
-  //         model
-  //                 .getDistributorKycResponseModel
-  //                 ?.data
-  //                 ?.level2
-  //                 ?.manufacturer
-  //                 ?.documents
-  //                 ?.nafdacManufacturingLicense
-  //                 ?.toJson() ??
-  //             {},
-  //       );
-  //     }
-  //     if (level2?.manufacturer?.documents?.productRegistrationEvidence !=
-  //         null) {
-  //       model
-  //               .secondLevelDistributorKycEntityModelManProd
-  //               ?.manufacturer
-  //               ?.documents
-  //               ?.productRegistrationEvidence =
-  //           ProductRegistrationEvidence.fromJson(
-  //             model
-  //                     .getDistributorKycResponseModel
-  //                     ?.data
-  //                     ?.level2
-  //                     ?.manufacturer
-  //                     ?.documents
-  //                     ?.productRegistrationEvidence
-  //                     ?.toJson() ??
-  //                 {},
-  //           );
-  //     }
-  //     if (level2?.manufacturer?.documents?.companyLogo != null) {
-  //       model
-  //           .secondLevelDistributorKycEntityModelManLogo
-  //           ?.manufacturer
-  //           ?.documents
-  //           ?.companyLogo = CompanyLogo.fromJson(
-  //         model
-  //                 .getDistributorKycResponseModel
-  //                 ?.data
-  //                 ?.level2
-  //                 ?.manufacturer
-  //                 ?.documents
-  //                 ?.companyLogo
-  //                 ?.toJson() ??
-  //             {},
-  //       );
-  //     }
-  //     if (level2?.importer?.documents?.cacCertificate != null) {
-  //       model
-  //           .secondLevelDistributorKycEntityModelImpCAC
-  //           ?.importer
-  //           ?.documents
-  //           ?.cacCertificate = CacCertificate.fromJson(
-  //         model
-  //                 .getDistributorKycResponseModel
-  //                 ?.data
-  //                 ?.level2
-  //                 ?.importer
-  //                 ?.documents
-  //                 ?.cacCertificate
-  //                 ?.toJson() ??
-  //             {},
-  //       );
-  //     }
-  //     if (level2?.importer?.documents?.importPermit != null) {
-  //       model
-  //           .secondLevelDistributorKycEntityModelImpPermit
-  //           ?.importer
-  //           ?.documents
-  //           ?.importPermit = ImportPermit.fromJson(
-  //         model
-  //                 .getDistributorKycResponseModel
-  //                 ?.data
-  //                 ?.level2
-  //                 ?.importer
-  //                 ?.documents
-  //                 ?.importPermit
-  //                 ?.toJson() ??
-  //             {},
-  //       );
-  //     }
-  //     if (level2?.importer?.documents?.manufacturerAuthorizationLetter !=
-  //         null) {
-  //       model
-  //               .secondLevelDistributorKycEntityModelImpManAuthLetter
-  //               ?.importer
-  //               ?.documents
-  //               ?.manufacturerAuthorizationLetter =
-  //           ManufacturerAuthorizationLetter.fromJson(
-  //             model
-  //                     .getDistributorKycResponseModel
-  //                     ?.data
-  //                     ?.level2
-  //                     ?.importer
-  //                     ?.documents
-  //                     ?.manufacturerAuthorizationLetter
-  //                     ?.toJson() ??
-  //                 {},
-  //           );
-  //     }
-  //     if (level2?.importer?.documents?.companyLogo != null) {
-  //       model
-  //           .secondLevelDistributorKycEntityModelImpLogo
-  //           ?.importer
-  //           ?.documents
-  //           ?.companyLogo = CompanyLogo.fromJson(
-  //         model
-  //                 .getDistributorKycResponseModel
-  //                 ?.data
-  //                 ?.level2
-  //                 ?.importer
-  //                 ?.documents
-  //                 ?.companyLogo
-  //                 ?.toJson() ??
-  //             {},
-  //       );
-  //     }
-  //   }
+      if (level2?.manufacturer?.documents?.cacCertificate != null) {
+        model
+            .secondLevelDistributorKycEntityModelManCAC
+            ?.manufacturer
+            ?.documents
+            ?.cacCertificate = CacCertificate.fromJson(
+          model
+                  .getMarketplaceUpgradeResponseModel
+                  ?.data
+                  ?.kyc
+                  ?.manufacturer
+                  ?.documents
+                  ?.cacCertificate
+                  ?.toJson() ??
+              {},
+        );
+      }
+      if (level2?.manufacturer?.documents?.gmpCertificate != null) {
+        model
+            .secondLevelDistributorKycEntityModelManGMP
+            ?.manufacturer
+            ?.documents
+            ?.gmpCertificate = GmpCertificate.fromJson(
+          model
+                  .getMarketplaceUpgradeResponseModel
+                  ?.data
+                  ?.kyc
+                  ?.manufacturer
+                  ?.documents
+                  ?.gmpCertificate
+                  ?.toJson() ??
+              {},
+        );
+      }
+      if (level2?.manufacturer?.documents?.nafdacManufacturingLicense != null) {
+        model
+            .secondLevelDistributorKycEntityModelManNAF
+            ?.manufacturer
+            ?.documents
+            ?.nafdacManufacturingLicense = NafdacManufacturingLicense.fromJson(
+          model
+                  .getMarketplaceUpgradeResponseModel
+                  ?.data
+                  ?.kyc
+                  ?.manufacturer
+                  ?.documents
+                  ?.nafdacManufacturingLicense
+                  ?.toJson() ??
+              {},
+        );
+      }
+      if (level2?.manufacturer?.documents?.productRegistrationEvidence !=
+          null) {
+        model
+                .secondLevelDistributorKycEntityModelManProd
+                ?.manufacturer
+                ?.documents
+                ?.productRegistrationEvidence =
+            ProductRegistrationEvidence.fromJson(
+              model
+                      .getMarketplaceUpgradeResponseModel
+                      ?.data
+                      ?.kyc
+                      ?.manufacturer
+                      ?.documents
+                      ?.productRegistrationEvidence
+                      ?.toJson() ??
+                  {},
+            );
+      }
+      if (level2?.manufacturer?.documents?.companyLogo != null) {
+        model
+            .secondLevelDistributorKycEntityModelManLogo
+            ?.manufacturer
+            ?.documents
+            ?.companyLogo = CompanyLogo.fromJson(
+          model
+                  .getMarketplaceUpgradeResponseModel
+                  ?.data
+                  ?.kyc
+                  ?.manufacturer
+                  ?.documents
+                  ?.companyLogo
+                  ?.toJson() ??
+              {},
+        );
+      }
+      if (level2?.importer?.documents?.cacCertificate != null) {
+        model
+            .secondLevelDistributorKycEntityModelImpCAC
+            ?.importer
+            ?.documents
+            ?.cacCertificate = CacCertificate.fromJson(
+          model
+                  .getMarketplaceUpgradeResponseModel
+                  ?.data
+                  ?.kyc
+                  ?.importer
+                  ?.documents
+                  ?.cacCertificate
+                  ?.toJson() ??
+              {},
+        );
+      }
+      if (level2?.importer?.documents?.importPermit != null) {
+        model
+            .secondLevelDistributorKycEntityModelImpPermit
+            ?.importer
+            ?.documents
+            ?.importPermit = ImportPermit.fromJson(
+          model
+                  .getMarketplaceUpgradeResponseModel
+                  ?.data
+                  ?.kyc
+                  ?.importer
+                  ?.documents
+                  ?.importPermit
+                  ?.toJson() ??
+              {},
+        );
+      }
+      if (level2?.importer?.documents?.manufacturerAuthorizationLetter !=
+          null) {
+        model
+                .secondLevelDistributorKycEntityModelImpManAuthLetter
+                ?.importer
+                ?.documents
+                ?.manufacturerAuthorizationLetter =
+            ManufacturerAuthorizationLetter.fromJson(
+              model
+                      .getMarketplaceUpgradeResponseModel
+                      ?.data
+                      ?.kyc
+                      ?.importer
+                      ?.documents
+                      ?.manufacturerAuthorizationLetter
+                      ?.toJson() ??
+                  {},
+            );
+      }
+      if (level2?.importer?.documents?.companyLogo != null) {
+        model
+            .secondLevelDistributorKycEntityModelImpLogo
+            ?.importer
+            ?.documents
+            ?.companyLogo = CompanyLogo.fromJson(
+          model
+                  .getMarketplaceUpgradeResponseModel
+                  ?.data
+                  ?.kyc
+                  ?.importer
+                  ?.documents
+                  ?.companyLogo
+                  ?.toJson() ??
+              {},
+        );
+      }
+    }
 
-  //   model.notifyListeners();
-  // }
-
+    model.notifyListeners();
+  }
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<PharmViewModel>.reactive(
       viewModelBuilder: () => PharmViewModel(),
       onViewModelReady: (model) async {
-        await model.getPharmacyKyc(context);
-        // getStuffs(model);
+        await model.getMarketplaceUpgrade(context);
+        getStuffs(model);
       },
       disposeViewModel: false,
       builder: (_, PharmViewModel model, _) {
@@ -715,31 +733,29 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              // model
-                              //             .getDistributorKycResponseModel
-                              //             ?.data
-                              //             ?.kycLevels?[1]
-                              //             .status
-                              //             ?.toLowerCase() ==
-                              //         'approved'
-                              //     ? Container(
-                              //         width: 14.w,
-                              //         height: 14.w,
-                              //         margin: EdgeInsets.only(top: 1.h),
-                              //         decoration: const BoxDecoration(
-                              //           color: Color(0xFF58C58A),
-                              //           shape: BoxShape.circle,
-                              //         ),
-                              //         child: Icon(
-                              //           Icons.check,
-                              //           size: 9.sp,
-                              //           color: Colors.white,
-                              //         ),
-                              //       )
-                              //     : !isExpanded
-                              //     ? SvgPicture.asset(AppImage.open_padlock)
-                              //     :
-                                   SvgPicture.asset(AppImage.open_padlock),
+                              model
+                                          .getMarketplaceUpgradeResponseModel
+                                          ?.data
+                                          ?.status
+                                          ?.toLowerCase() ==
+                                      'approved'
+                                  ? Container(
+                                      width: 14.w,
+                                      height: 14.w,
+                                      margin: EdgeInsets.only(top: 1.h),
+                                      decoration: const BoxDecoration(
+                                        color: Color(0xFF58C58A),
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: Icon(
+                                        Icons.check,
+                                        size: 9.sp,
+                                        color: Colors.white,
+                                      ),
+                                    )
+                                  : !isExpanded
+                                  ? SvgPicture.asset(AppImage.open_padlock)
+                                  : SvgPicture.asset(AppImage.open_padlock),
 
                               SizedBox(width: 8.w),
 
@@ -765,7 +781,7 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                     child: TextView(
                                       text:
                                           'Add a business category to your account.',
-                                          maxLines: 2,
+                                      maxLines: 2,
                                       textStyle: TextStyle(
                                         fontSize: 13.22.sp,
                                         fontWeight: FontWeight.w400,
@@ -776,53 +792,53 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                       ),
                                     ),
                                   ),
-                                  // SizedBox(height: 10.h),
-                                  // !isExpanded
-                                  //     ? Row(
-                                  //         children: [
-                                  //           Container(
-                                  //             padding: EdgeInsets.symmetric(
-                                  //               horizontal: 12.w,
-                                  //               vertical: 5.0.w,
-                                  //             ),
-                                  //             decoration: BoxDecoration(
-                                  //               color: AppColors.primary,
-                                  //               borderRadius:
-                                  //                   BorderRadius.circular(22.r),
-                                  //             ),
-                                  //             child: TextView(
-                                  //               text: 'Continue',
-                                  //               textStyle: TextStyle(
-                                  //                 fontSize: 12.22.sp,
-                                  //                 fontWeight: FontWeight.w400,
-                                  //                 color: AppColors.white,
-                                  //                 fontFamily: 'DMSans',
-                                  //               ),
-                                  //             ),
-                                  //           ),
-                                  //           SizedBox(width: 10.w),
-                                  //           TextView(
-                                  //             text: 'Start Over',
-                                  //             textStyle: TextStyle(
-                                  //               fontSize: 14.22.sp,
-                                  //               decoration:
-                                  //                   TextDecoration.underline,
-                                  //               decorationColor:
-                                  //                   AppColors.primary,
-                                  //               fontWeight: FontWeight.w400,
-                                  //               color: AppColors.primary,
-                                  //               fontFamily: 'DMSans',
-                                  //             ),
-                                  //           ),
-                                  //         ],
-                                  //       )
-                                  //     : SizedBox.shrink(),
+                                  SizedBox(height: 10.h),
+                                  !isExpanded
+                                      ? Row(
+                                          children: [
+                                            Container(
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal: 12.w,
+                                                vertical: 5.0.w,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                color: AppColors.primary,
+                                                borderRadius:
+                                                    BorderRadius.circular(22.r),
+                                              ),
+                                              child: TextView(
+                                                text: 'Continue',
+                                                textStyle: TextStyle(
+                                                  fontSize: 12.22.sp,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: AppColors.white,
+                                                  fontFamily: 'DMSans',
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(width: 10.w),
+                                            TextView(
+                                              text: 'Start Over',
+                                              textStyle: TextStyle(
+                                                fontSize: 14.22.sp,
+                                                decoration:
+                                                    TextDecoration.underline,
+                                                decorationColor:
+                                                    AppColors.primary,
+                                                fontWeight: FontWeight.w400,
+                                                color: AppColors.primary,
+                                                fontFamily: 'DMSans',
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      : SizedBox.shrink(),
                                 ],
                               ),
 
                               const Spacer(),
                               !isExpanded
-                                  ?  AnimatedRotation(
+                                  ? AnimatedRotation(
                                       turns: isExpanded ? 0.5 : 0,
                                       duration: const Duration(
                                         milliseconds: 300,
@@ -881,10 +897,10 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                 ),
                                 decoration: BoxDecoration(
                                   color: model.kycStatusColor(
-                                     model.getPharmacyKycResponseModel
+                                    model
+                                            .getMarketplaceUpgradeResponseModel
                                             ?.data
-                                            ?.kycLevels![1]
-                                            .status ??
+                                            ?.status ??
                                         '',
                                   ),
                                   borderRadius: BorderRadius.circular(10.r),
@@ -892,10 +908,10 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                     model.getPharmacyKycResponseModel
+                                    model
+                                                .getMarketplaceUpgradeResponseModel
                                                 ?.data
-                                                ?.kycLevels?[1]
-                                                .status
+                                                ?.status
                                                 ?.toLowerCase() ==
                                             'approved'
                                         ? Container(
@@ -916,10 +932,10 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                             Icons.info_outline,
                                             size: 18.90.sp,
                                             color: model.kycStatusColorIcon(
-                                               model.getPharmacyKycResponseModel
+                                              model
+                                                      .getMarketplaceUpgradeResponseModel
                                                       ?.data
-                                                      ?.kycLevels?[1]
-                                                      .status ??
+                                                      ?.status ??
                                                   "",
                                             ),
                                           ),
@@ -928,10 +944,10 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                     Expanded(
                                       child: Text(
                                         model.upgradeStatusText(
-                                           model.getPharmacyKycResponseModel
+                                          model
+                                                  .getMarketplaceUpgradeResponseModel
                                                   ?.data
-                                                  ?.kycLevels?[1]
-                                                  .status ??
+                                                  ?.status ??
                                               "",
                                         ),
                                         style: TextStyle(
@@ -1045,16 +1061,16 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                     setState(() {
                                                       isSwitchedDistributor =
                                                           val;
-                                                      // if (isSwitchedDistributor) {
-                                                      //   model.businessTypes.add(
-                                                      //     'DISTRIBUTOR',
-                                                      //   );
-                                                      // } else {
-                                                      //   model.businessTypes
-                                                      //       .remove(
-                                                      //         'DISTRIBUTOR',
-                                                      //       );
-                                                      // }
+                                                      if (isSwitchedDistributor) {
+                                                        model.businessTypes.add(
+                                                          'DISTRIBUTOR',
+                                                        );
+                                                      } else {
+                                                        model.businessTypes
+                                                            .remove(
+                                                              'DISTRIBUTOR',
+                                                            );
+                                                      }
                                                       model.notifyListeners();
                                                     });
                                                   },
@@ -1479,136 +1495,138 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                         ],
                                                       ),
                                                       SizedBox(height: 10.h),
-                                                      // model.getHealthcareProviderKycResponseModel!.data!.level2 !=
-                                                      //                 null &&
-                                                      //             model
-                                                      //                     .getHealthcareProviderKycResponseModel!
-                                                      //                     .data!
-                                                      //                     .level2!
-                                                      //                     .distributor!
-                                                      //                     .documents!
-                                                      //                     .cacCertificate !=
-                                                      //                 null ||
-                                                      //         model.secondLevelDistributorKycEntityModelCAC !=
-                                                      //                 null &&
-                                                      //             model
-                                                      //                     .secondLevelDistributorKycEntityModelCAC!
-                                                      //                     .distributor !=
-                                                      //                 null &&
-                                                      //             model
-                                                      //                     .secondLevelDistributorKycEntityModelCAC!
-                                                      //                     .distributor!
-                                                      //                     .documents!
-                                                      //                     .cacCertificate !=
-                                                      //                 null
-                                                      //     ? Container(
-                                                      //         padding:
-                                                      //             EdgeInsets.all(
-                                                      //               10.w,
-                                                      //             ),
-                                                      //         decoration: BoxDecoration(
-                                                      //           border: Border.all(
-                                                      //             color: AppColors
-                                                      //                 .tintColor,
-                                                      //           ),
-                                                      //           borderRadius:
-                                                      //               BorderRadius.circular(
-                                                      //                 12,
-                                                      //               ),
-                                                      //         ),
-                                                      //         child: Row(
-                                                      //           children: [
-                                                      //             SvgPicture.asset(
-                                                      //               AppImage
-                                                      //                   .kyc_file,
-                                                      //             ),
-                                                      //             SizedBox(
-                                                      //               width:
-                                                      //                   14.20.w,
-                                                      //             ),
-                                                      //             SizedBox(
-                                                      //               width: 80.w,
-                                                      //               child: TextView(
-                                                      //                 text:
-                                                      //                     'CAC Certificate.jpg',
-                                                      //                 maxLines:
-                                                      //                     1,
-                                                      //                 textOverflow:
-                                                      //                     TextOverflow
-                                                      //                         .ellipsis,
-                                                      //                 textStyle: TextStyle(
-                                                      //                   fontFamily:
-                                                      //                       'Arial',
-                                                      //                   fontSize:
-                                                      //                       13.2.sp,
-                                                      //                   fontWeight:
-                                                      //                       FontWeight.w400,
-                                                      //                   color: AppColors
-                                                      //                       .black,
-                                                      //                 ),
-                                                      //               ),
-                                                      //             ),
-                                                      //             Spacer(),
-                                                      //             GestureDetector(
-                                                      //               onTap: () => Navigator.push(
-                                                      //                 context,
-                                                      //                 MaterialPageRoute(
-                                                      //                   builder: (_) => ImageWebViewScreen(
-                                                      //                     imageUrl:
-                                                      //                         model.getDistributorKycResponseModel?.data?.level2?.distributor?.documents?.cacCertificate?.url ??
-                                                      //                         model.secondLevelDistributorKycEntityModelCAC!.distributor?.documents?.cacCertificate?.url ??
-                                                      //                         '',
-                                                      //                   ),
-                                                      //                 ),
-                                                      //               ),
-                                                      //               child: SvgPicture.asset(
-                                                      //                 AppImage
-                                                      //                     .kyc_eye,
-                                                      //               ),
-                                                      //             ),
-                                                      //             model.secondLevelDistributorKycEntityModelCAC!.distributor?.documents?.cacCertificate !=
-                                                      //                     null
-                                                      //                 ? GestureDetector(
-                                                      //                     onTap: () => model.pickImageDistributorKycCAC(
-                                                      //                       context,
-                                                      //                     ),
-                                                      //                     child:
-                                                      //                         model.isLoadingCAC
-                                                      //                         ? SizedBox(
-                                                      //                             width: 10.w,
-                                                      //                             height: 10.h,
-                                                      //                             child: CircularProgressIndicator(
-                                                      //                               color: AppColors.primary,
-                                                      //                               strokeWidth: 2.w,
-                                                      //                             ),
-                                                      //                           )
-                                                      //                         : SvgPicture.asset(
-                                                      //                             AppImage.upload_arr_up,
-                                                      //                           ),
-                                                      //                   )
-                                                      //                 : SizedBox.shrink(),
-                                                      //             SizedBox(
-                                                      //               width:
-                                                      //                   8.10.w,
-                                                      //             ),
-                                                      //             model.secondLevelDistributorKycEntityModelCAC!.distributor?.documents?.cacCertificate !=
-                                                      //                     null
-                                                      //                 ? GestureDetector(
-                                                      //                     onTap: () {
-                                                      //                       model.secondLevelDistributorKycEntityModelCAC!.distributor?.documents?.cacCertificate =
-                                                      //                           null;
-                                                      //                       model.notifyListeners();
-                                                      //                     },
-                                                      //                     child: SvgPicture.asset(
-                                                      //                       AppImage.delete,
-                                                      //                     ),
-                                                      //                   )
-                                                      //                 : SizedBox.shrink(),
-                                                      //           ],
-                                                      //         ),
-                                                      //       )
-                                                      //     : 
-                                                          SizedBox(
+                                                      model.getMarketplaceUpgradeResponseModel!.data!.kyc !=
+                                                                      null &&
+                                                                  model
+                                                                          .getMarketplaceUpgradeResponseModel!
+                                                                          .data!
+                                                                          .kyc!
+                                                                          .distributor!
+                                                                          .documents!
+                                                                          .cacCertificate !=
+                                                                      null ||
+                                                              model.secondLevelDistributorKycEntityModelCAC !=
+                                                                      null &&
+                                                                  model
+                                                                          .secondLevelDistributorKycEntityModelCAC!
+                                                                          .distributor !=
+                                                                      null &&
+                                                                  model
+                                                                          .secondLevelDistributorKycEntityModelCAC!
+                                                                          .distributor!
+                                                                          .documents!
+                                                                          .cacCertificate !=
+                                                                      null
+                                                          ? Container(
+                                                              padding:
+                                                                  EdgeInsets.all(
+                                                                    10.w,
+                                                                  ),
+                                                              decoration: BoxDecoration(
+                                                                border: Border.all(
+                                                                  color: AppColors
+                                                                      .tintColor,
+                                                                ),
+                                                                borderRadius:
+                                                                    BorderRadius.circular(
+                                                                      12,
+                                                                    ),
+                                                              ),
+                                                              child: Row(
+                                                                children: [
+                                                                  SvgPicture.asset(
+                                                                    AppImage
+                                                                        .kyc_file,
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width:
+                                                                        14.20.w,
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width: 80.w,
+                                                                    child: TextView(
+                                                                      text:
+                                                                          'CAC Certificate.jpg',
+                                                                      maxLines:
+                                                                          1,
+                                                                      textOverflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                      textStyle: TextStyle(
+                                                                        fontFamily:
+                                                                            'Arial',
+                                                                        fontSize:
+                                                                            13.2.sp,
+                                                                        fontWeight:
+                                                                            FontWeight.w400,
+                                                                        color: AppColors
+                                                                            .black,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  Spacer(),
+                                                                  GestureDetector(
+                                                                    onTap: () => Navigator.push(
+                                                                      context,
+                                                                      MaterialPageRoute(
+                                                                        builder: (_) => ImageWebViewScreen(
+                                                                          imageUrl:
+                                                                              model.getMarketplaceUpgradeResponseModel!.data!.kyc?.distributor?.documents?.cacCertificate?.url ??
+                                                                              model.secondLevelDistributorKycEntityModelCAC!.distributor?.documents?.cacCertificate?.url ??
+                                                                              '',
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    child: SvgPicture.asset(
+                                                                      AppImage
+                                                                          .kyc_eye,
+                                                                    ),
+                                                                  ),
+                                                                  model.secondLevelDistributorKycEntityModelCAC!.distributor?.documents?.cacCertificate !=
+                                                                          null
+                                                                      ? Padding(
+                                                                        padding:  EdgeInsets.only(left:10.0.w),
+                                                                        child: GestureDetector(
+                                                                            onTap: () => model.pickImageDistributorKycCAC(
+                                                                              context,
+                                                                            ),
+                                                                            child:
+                                                                                model.isLoadingCAC
+                                                                                ? SizedBox(
+                                                                                    width: 10.w,
+                                                                                    height: 10.h,
+                                                                                    child: CircularProgressIndicator(
+                                                                                      color: AppColors.primary,
+                                                                                      strokeWidth: 2.w,
+                                                                                    ),
+                                                                                  )
+                                                                                : SvgPicture.asset(
+                                                                                    AppImage.upload_arr_up,
+                                                                                  ),
+                                                                          ),
+                                                                      )
+                                                                      : SizedBox.shrink(),
+                                                                  SizedBox(
+                                                                    width:
+                                                                        8.10.w,
+                                                                  ),
+                                                                  model.secondLevelDistributorKycEntityModelCAC!.distributor?.documents?.cacCertificate !=
+                                                                          null
+                                                                      ? GestureDetector(
+                                                                          onTap: () {
+                                                                            model.secondLevelDistributorKycEntityModelCAC!.distributor?.documents?.cacCertificate =
+                                                                                null;
+                                                                            model.notifyListeners();
+                                                                          },
+                                                                          child: SvgPicture.asset(
+                                                                            AppImage.delete,
+                                                                          ),
+                                                                        )
+                                                                      : SizedBox.shrink(),
+                                                                ],
+                                                              ),
+                                                            )
+                                                          : SizedBox(
                                                               width: double
                                                                   .infinity,
                                                               child: DottedBorder(
@@ -1627,10 +1645,10 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                                       .primary,
                                                                 ),
                                                                 child: GestureDetector(
-                                                                  // onTap: () => model
-                                                                  //     .pickImageDistributorKycCAC(
-                                                                  //       context,
-                                                                  //     ),
+                                                                  onTap: () => model
+                                                                      .pickImageDistributorKycCAC(
+                                                                        context,
+                                                                      ),
                                                                   child: Container(
                                                                     width: double
                                                                         .infinity,
@@ -1748,140 +1766,142 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                         ],
                                                       ),
                                                       SizedBox(height: 10.h),
-                                                      // model.getDistributorKycResponseModel!.data!.level2 !=
-                                                      //                 null &&
-                                                      //             model
-                                                      //                     .getDistributorKycResponseModel!
-                                                      //                     .data!
-                                                      //                     .level2!
-                                                      //                     .distributor!
-                                                      //                     .documents!
-                                                      //                     .pharmaceuticalDistributionLicense !=
-                                                      //                 null ||
-                                                      //         model.secondLevelDistributorKycEntityModelPharmLin !=
-                                                      //                 null &&
-                                                      //             model
-                                                      //                     .secondLevelDistributorKycEntityModelPharmLin!
-                                                      //                     .distributor !=
-                                                      //                 null &&
-                                                      //             model
-                                                      //                     .secondLevelDistributorKycEntityModelPharmLin!
-                                                      //                     .distributor!
-                                                      //                     .documents!
-                                                      //                     .pharmaceuticalDistributionLicense !=
-                                                      //                 null
-                                                      //     ? Container(
-                                                      //         padding:
-                                                      //             EdgeInsets.all(
-                                                      //               10.w,
-                                                      //             ),
-                                                      //         decoration: BoxDecoration(
-                                                      //           border: Border.all(
-                                                      //             color: AppColors
-                                                      //                 .tintColor,
-                                                      //           ),
-                                                      //           borderRadius:
-                                                      //               BorderRadius.circular(
-                                                      //                 12,
-                                                      //               ),
-                                                      //         ),
-                                                      //         child: Row(
-                                                      //           children: [
-                                                      //             SvgPicture.asset(
-                                                      //               AppImage
-                                                      //                   .kyc_file,
-                                                      //             ),
-                                                      //             SizedBox(
-                                                      //               width:
-                                                      //                   14.20.w,
-                                                      //             ),
-                                                      //             SizedBox(
-                                                      //               width: 80.w,
-                                                      //               child: TextView(
-                                                      //                 text:
-                                                      //                     'Pharm Distributor Lincense.jpg',
-                                                      //                 maxLines:
-                                                      //                     1,
-                                                      //                 textOverflow:
-                                                      //                     TextOverflow
-                                                      //                         .ellipsis,
-                                                      //                 textStyle: TextStyle(
-                                                      //                   fontFamily:
-                                                      //                       'Arial',
-                                                      //                   fontSize:
-                                                      //                       13.2.sp,
-                                                      //                   fontWeight:
-                                                      //                       FontWeight.w400,
-                                                      //                   color: AppColors
-                                                      //                       .black,
-                                                      //                 ),
-                                                      //               ),
-                                                      //             ),
-                                                      //             Spacer(),
-                                                      //             GestureDetector(
-                                                      //               onTap: () => Navigator.push(
-                                                      //                 context,
-                                                      //                 MaterialPageRoute(
-                                                      //                   builder: (_) => ImageWebViewScreen(
-                                                      //                     imageUrl:
-                                                      //                         // model.getHealthcareProviderKycResponseModel?.data?.level2?.healthcareProvider?.documents?.pharmaceuticalDistributionLicense?.url ??
-                                                      //                         // model.secondLevelHealthcareProviderKycEntityModelPharmLin!.healthcareProvider!.documents!.pharmaceuticalDistributionLicense?.url ??
-                                                      //                         '',
-                                                      //                   ),
-                                                      //                 ),
-                                                      //               ),
-                                                      //               child: SvgPicture.asset(
-                                                      //                 AppImage
-                                                      //                     .kyc_eye,
-                                                      //               ),
-                                                      //             ),
-                                                      //             model.secondLevelDistributorKycEntityModelPharmLin!.distributor !=
-                                                      //                         null &&
-                                                      //                     model.secondLevelDistributorKycEntityModelPharmLin!.distributor!.documents!.pharmaceuticalDistributionLicense !=
-                                                      //                         null
-                                                      //                 ? GestureDetector(
-                                                      //                     onTap: () => model.pickImageDistributorKycPharmLin(
-                                                      //                       context,
-                                                      //                     ),
-                                                      //                     child:
-                                                      //                         model.isLoadingGMP
-                                                      //                         ? SizedBox(
-                                                      //                             width: 10.w,
-                                                      //                             height: 10.h,
-                                                      //                             child: CircularProgressIndicator(
-                                                      //                               color: AppColors.primary,
-                                                      //                               strokeWidth: 2.w,
-                                                      //                             ),
-                                                      //                           )
-                                                      //                         : SvgPicture.asset(
-                                                      //                             AppImage.upload_arr_up,
-                                                      //                           ),
-                                                      //                   )
-                                                      //                 : SizedBox.shrink(),
-                                                      //             SizedBox(
-                                                      //               width:
-                                                      //                   8.10.w,
-                                                      //             ),
-                                                      //             model.secondLevelDistributorKycEntityModelPharmLin!.distributor !=
-                                                      //                         null &&
-                                                      //                     model.secondLevelDistributorKycEntityModelPharmLin!.distributor!.documents!.pharmaceuticalDistributionLicense !=
-                                                      //                         null
-                                                      //                 ? GestureDetector(
-                                                      //                     onTap: () {
-                                                      //                       model.secondLevelDistributorKycEntityModelPharmLin!.distributor!.documents!.pharmaceuticalDistributionLicense =
-                                                      //                           null;
-                                                      //                       model.notifyListeners();
-                                                      //                     },
-                                                      //                     child: SvgPicture.asset(
-                                                      //                       AppImage.delete,
-                                                      //                     ),
-                                                      //                   )
-                                                      //                 : SizedBox.shrink(),
-                                                      //           ],
-                                                      //         ),
-                                                      //       )
-                                                      //     : 
-                                                          SizedBox(
+                                                      model.getMarketplaceUpgradeResponseModel!.data!.kyc !=
+                                                                      null &&
+                                                                  model
+                                                                          .getMarketplaceUpgradeResponseModel!
+                                                                          .data!
+                                                                          .kyc!
+                                                                          .distributor!
+                                                                          .documents!
+                                                                          .pharmaceuticalDistributionLicense !=
+                                                                      null ||
+                                                              model.secondLevelDistributorKycEntityModelPharmLin !=
+                                                                      null &&
+                                                                  model
+                                                                          .secondLevelDistributorKycEntityModelPharmLin!
+                                                                          .distributor !=
+                                                                      null &&
+                                                                  model
+                                                                          .secondLevelDistributorKycEntityModelPharmLin!
+                                                                          .distributor!
+                                                                          .documents!
+                                                                          .pharmaceuticalDistributionLicense !=
+                                                                      null
+                                                          ? Container(
+                                                              padding:
+                                                                  EdgeInsets.all(
+                                                                    10.w,
+                                                                  ),
+                                                              decoration: BoxDecoration(
+                                                                border: Border.all(
+                                                                  color: AppColors
+                                                                      .tintColor,
+                                                                ),
+                                                                borderRadius:
+                                                                    BorderRadius.circular(
+                                                                      12,
+                                                                    ),
+                                                              ),
+                                                              child: Row(
+                                                                children: [
+                                                                  SvgPicture.asset(
+                                                                    AppImage
+                                                                        .kyc_file,
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width:
+                                                                        14.20.w,
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width: 80.w,
+                                                                    child: TextView(
+                                                                      text:
+                                                                          'Pharm Distributor Lincense.jpg',
+                                                                      maxLines:
+                                                                          1,
+                                                                      textOverflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                      textStyle: TextStyle(
+                                                                        fontFamily:
+                                                                            'Arial',
+                                                                        fontSize:
+                                                                            13.2.sp,
+                                                                        fontWeight:
+                                                                            FontWeight.w400,
+                                                                        color: AppColors
+                                                                            .black,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  Spacer(),
+                                                                  GestureDetector(
+                                                                    onTap: () => Navigator.push(
+                                                                      context,
+                                                                      MaterialPageRoute(
+                                                                        builder: (_) => ImageWebViewScreen(
+                                                                          imageUrl:
+                                                                              model.getMarketplaceUpgradeResponseModel!.data!.kyc?.distributor?.documents?.pharmaceuticalDistributionLicense?.url ??
+                                                                              model.secondLevelDistributorKycEntityModelPharmLin!.distributor!.documents!.pharmaceuticalDistributionLicense?.url ??
+                                                                              '',
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    child: SvgPicture.asset(
+                                                                      AppImage
+                                                                          .kyc_eye,
+                                                                    ),
+                                                                  ),
+                                                                  model.secondLevelDistributorKycEntityModelPharmLin!.distributor !=
+                                                                              null &&
+                                                                          model.secondLevelDistributorKycEntityModelPharmLin!.distributor!.documents!.pharmaceuticalDistributionLicense !=
+                                                                              null
+                                                                      ? Padding(
+                                                                        padding:  EdgeInsets.only(left:10.0.w),
+                                                                        child: GestureDetector(
+                                                                            onTap: () => model.pickImageDistributorKycPharmLin(
+                                                                              context,
+                                                                            ),
+                                                                            child:
+                                                                                model.isLoadingGMP
+                                                                                ? SizedBox(
+                                                                                    width: 10.w,
+                                                                                    height: 10.h,
+                                                                                    child: CircularProgressIndicator(
+                                                                                      color: AppColors.primary,
+                                                                                      strokeWidth: 2.w,
+                                                                                    ),
+                                                                                  )
+                                                                                : SvgPicture.asset(
+                                                                                    AppImage.upload_arr_up,
+                                                                                  ),
+                                                                          ),
+                                                                      )
+                                                                      : SizedBox.shrink(),
+                                                                  SizedBox(
+                                                                    width:
+                                                                        8.10.w,
+                                                                  ),
+                                                                  model.secondLevelDistributorKycEntityModelPharmLin!.distributor !=
+                                                                              null &&
+                                                                          model.secondLevelDistributorKycEntityModelPharmLin!.distributor!.documents!.pharmaceuticalDistributionLicense !=
+                                                                              null
+                                                                      ? GestureDetector(
+                                                                          onTap: () {
+                                                                            model.secondLevelDistributorKycEntityModelPharmLin!.distributor!.documents!.pharmaceuticalDistributionLicense =
+                                                                                null;
+                                                                            model.notifyListeners();
+                                                                          },
+                                                                          child: SvgPicture.asset(
+                                                                            AppImage.delete,
+                                                                          ),
+                                                                        )
+                                                                      : SizedBox.shrink(),
+                                                                ],
+                                                              ),
+                                                            )
+                                                          : SizedBox(
                                                               width: double
                                                                   .infinity,
                                                               child: DottedBorder(
@@ -1900,10 +1920,10 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                                       .primary,
                                                                 ),
                                                                 child: GestureDetector(
-                                                                  // onTap: () => model
-                                                                  //     .pickImageDistributorKycPharmLin(
-                                                                  //       context,
-                                                                  //     ),
+                                                                  onTap: () => model
+                                                                      .pickImageDistributorKycPharmLin(
+                                                                        context,
+                                                                      ),
                                                                   child: Container(
                                                                     width: double
                                                                         .infinity,
@@ -1927,17 +1947,16 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                                           MainAxisAlignment
                                                                               .start,
                                                                       children: [
-                                                                        // model.isLoadingGMP
-                                                                        //     ? SizedBox(
-                                                                        //         width: 20.w,
-                                                                        //         height: 20.h,
-                                                                        //         child: CircularProgressIndicator(
-                                                                        //           color: AppColors.primary,
-                                                                        //           strokeWidth: 2.w,
-                                                                        //         ),
-                                                                        //       )
-                                                                        //     : 
-                                                                            SvgPicture.asset(
+                                                                        model.isLoadingGMP
+                                                                            ? SizedBox(
+                                                                                width: 20.w,
+                                                                                height: 20.h,
+                                                                                child: CircularProgressIndicator(
+                                                                                  color: AppColors.primary,
+                                                                                  strokeWidth: 2.w,
+                                                                                ),
+                                                                              )
+                                                                            : SvgPicture.asset(
                                                                                 AppImage.upload_doc,
                                                                               ),
                                                                         SizedBox(
@@ -2021,136 +2040,138 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                         ],
                                                       ),
                                                       SizedBox(height: 10.h),
-                                                      // model.getDistributorKycResponseModel!.data!.level2 !=
-                                                      //                 null &&
-                                                      //             model
-                                                      //                     .getDistributorKycResponseModel!
-                                                      //                     .data!
-                                                      //                     .level2!
-                                                      //                     .distributor!
-                                                      //                     .documents!
-                                                      //                     .nafdacPermit !=
-                                                      //                 null ||
-                                                      //         model.secondLevelDistributorKycEntityModelNAF !=
-                                                      //                 null &&
-                                                      //             model
-                                                      //                     .secondLevelDistributorKycEntityModelNAF!
-                                                      //                     .distributor !=
-                                                      //                 null &&
-                                                      //             model
-                                                      //                     .secondLevelDistributorKycEntityModelNAF!
-                                                      //                     .distributor!
-                                                      //                     .documents!
-                                                      //                     .nafdacPermit !=
-                                                      //                 null
-                                                      //     ? Container(
-                                                      //         padding:
-                                                      //             EdgeInsets.all(
-                                                      //               10.w,
-                                                      //             ),
-                                                      //         decoration: BoxDecoration(
-                                                      //           border: Border.all(
-                                                      //             color: AppColors
-                                                      //                 .tintColor,
-                                                      //           ),
-                                                      //           borderRadius:
-                                                      //               BorderRadius.circular(
-                                                      //                 12,
-                                                      //               ),
-                                                      //         ),
-                                                      //         child: Row(
-                                                      //           children: [
-                                                      //             SvgPicture.asset(
-                                                      //               AppImage
-                                                      //                   .kyc_file,
-                                                      //             ),
-                                                      //             SizedBox(
-                                                      //               width:
-                                                      //                   14.20.w,
-                                                      //             ),
-                                                      //             SizedBox(
-                                                      //               width: 80.w,
-                                                      //               child: TextView(
-                                                      //                 text:
-                                                      //                     'NAFDAC Permit.jpg',
-                                                      //                 maxLines:
-                                                      //                     1,
-                                                      //                 textOverflow:
-                                                      //                     TextOverflow
-                                                      //                         .ellipsis,
-                                                      //                 textStyle: TextStyle(
-                                                      //                   fontFamily:
-                                                      //                       'Arial',
-                                                      //                   fontSize:
-                                                      //                       13.2.sp,
-                                                      //                   fontWeight:
-                                                      //                       FontWeight.w400,
-                                                      //                   color: AppColors
-                                                      //                       .black,
-                                                      //                 ),
-                                                      //               ),
-                                                      //             ),
-                                                      //             Spacer(),
-                                                      //             GestureDetector(
-                                                      //               onTap: () => Navigator.push(
-                                                      //                 context,
-                                                      //                 MaterialPageRoute(
-                                                      //                   builder: (_) => ImageWebViewScreen(
-                                                      //                     imageUrl:
-                                                      //                         model.getDistributorKycResponseModel?.data?.level2?.distributor?.documents?.nafdacPermit?.url ??
-                                                      //                         model.secondLevelDistributorKycEntityModelNAF?.distributor?.documents?.nafdacPermit?.url ??
-                                                      //                         '',
-                                                      //                   ),
-                                                      //                 ),
-                                                      //               ),
-                                                      //               child: SvgPicture.asset(
-                                                      //                 AppImage
-                                                      //                     .kyc_eye,
-                                                      //               ),
-                                                      //             ),
-                                                      //             model.secondLevelDistributorKycEntityModelNAF?.distributor?.documents?.nafdacPermit !=
-                                                      //                     null
-                                                      //                 ? GestureDetector(
-                                                      //                     onTap: () => model.pickImageDistributorKycNAFPermit(
-                                                      //                       context,
-                                                      //                     ),
-                                                      //                     child:
-                                                      //                         model.isLoadingNAF
-                                                      //                         ? SizedBox(
-                                                      //                             width: 10.w,
-                                                      //                             height: 10.h,
-                                                      //                             child: CircularProgressIndicator(
-                                                      //                               color: AppColors.primary,
-                                                      //                               strokeWidth: 2.w,
-                                                      //                             ),
-                                                      //                           )
-                                                      //                         : SvgPicture.asset(
-                                                      //                             AppImage.upload_arr_up,
-                                                      //                           ),
-                                                      //                   )
-                                                      //                 : SizedBox.shrink(),
-                                                      //             SizedBox(
-                                                      //               width:
-                                                      //                   8.10.w,
-                                                      //             ),
-                                                      //             model.secondLevelDistributorKycEntityModelNAF?.distributor?.documents?.nafdacPermit !=
-                                                      //                     null
-                                                      //                 ? GestureDetector(
-                                                      //                     onTap: () {
-                                                      //                       model.secondLevelDistributorKycEntityModelNAF?.distributor?.documents?.nafdacPermit =
-                                                      //                           null;
-                                                      //                       model.notifyListeners();
-                                                      //                     },
-                                                      //                     child: SvgPicture.asset(
-                                                      //                       AppImage.delete,
-                                                      //                     ),
-                                                      //                   )
-                                                      //                 : SizedBox.shrink(),
-                                                      //           ],
-                                                      //         ),
-                                                      //       )
-                                                      //     : 
-                                                          SizedBox(
+                                                      model.getMarketplaceUpgradeResponseModel!.data!.kyc !=
+                                                                      null &&
+                                                                  model
+                                                                          .getMarketplaceUpgradeResponseModel!
+                                                                          .data!
+                                                                          .kyc!
+                                                                          .distributor!
+                                                                          .documents!
+                                                                          .nafdacPermit !=
+                                                                      null ||
+                                                              model.secondLevelDistributorKycEntityModelNAF !=
+                                                                      null &&
+                                                                  model
+                                                                          .secondLevelDistributorKycEntityModelNAF!
+                                                                          .distributor !=
+                                                                      null &&
+                                                                  model
+                                                                          .secondLevelDistributorKycEntityModelNAF!
+                                                                          .distributor!
+                                                                          .documents!
+                                                                          .nafdacPermit !=
+                                                                      null
+                                                          ? Container(
+                                                              padding:
+                                                                  EdgeInsets.all(
+                                                                    10.w,
+                                                                  ),
+                                                              decoration: BoxDecoration(
+                                                                border: Border.all(
+                                                                  color: AppColors
+                                                                      .tintColor,
+                                                                ),
+                                                                borderRadius:
+                                                                    BorderRadius.circular(
+                                                                      12,
+                                                                    ),
+                                                              ),
+                                                              child: Row(
+                                                                children: [
+                                                                  SvgPicture.asset(
+                                                                    AppImage
+                                                                        .kyc_file,
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width:
+                                                                        14.20.w,
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width: 80.w,
+                                                                    child: TextView(
+                                                                      text:
+                                                                          'NAFDAC Permit.jpg',
+                                                                      maxLines:
+                                                                          1,
+                                                                      textOverflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                      textStyle: TextStyle(
+                                                                        fontFamily:
+                                                                            'Arial',
+                                                                        fontSize:
+                                                                            13.2.sp,
+                                                                        fontWeight:
+                                                                            FontWeight.w400,
+                                                                        color: AppColors
+                                                                            .black,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  Spacer(),
+                                                                  GestureDetector(
+                                                                    onTap: () => Navigator.push(
+                                                                      context,
+                                                                      MaterialPageRoute(
+                                                                        builder: (_) => ImageWebViewScreen(
+                                                                          imageUrl:
+                                                                              model.getMarketplaceUpgradeResponseModel!.data!.kyc?.distributor?.documents?.nafdacPermit?.url ??
+                                                                              model.secondLevelDistributorKycEntityModelNAF?.distributor?.documents?.nafdacPermit?.url ??
+                                                                              '',
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    child: SvgPicture.asset(
+                                                                      AppImage
+                                                                          .kyc_eye,
+                                                                    ),
+                                                                  ),
+                                                                  model.secondLevelDistributorKycEntityModelNAF?.distributor?.documents?.nafdacPermit !=
+                                                                          null
+                                                                      ? Padding(
+                                                                        padding:  EdgeInsets.only(left:10.0.w),
+                                                                        child: GestureDetector(
+                                                                            onTap: () => model.pickImageDistributorKycNAFPermit(
+                                                                              context,
+                                                                            ),
+                                                                            child:
+                                                                                model.isLoadingNAF
+                                                                                ? SizedBox(
+                                                                                    width: 10.w,
+                                                                                    height: 10.h,
+                                                                                    child: CircularProgressIndicator(
+                                                                                      color: AppColors.primary,
+                                                                                      strokeWidth: 2.w,
+                                                                                    ),
+                                                                                  )
+                                                                                : SvgPicture.asset(
+                                                                                    AppImage.upload_arr_up,
+                                                                                  ),
+                                                                          ),
+                                                                      )
+                                                                      : SizedBox.shrink(),
+                                                                  SizedBox(
+                                                                    width:
+                                                                        8.10.w,
+                                                                  ),
+                                                                  model.secondLevelDistributorKycEntityModelNAF?.distributor?.documents?.nafdacPermit !=
+                                                                          null
+                                                                      ? GestureDetector(
+                                                                          onTap: () {
+                                                                            model.secondLevelDistributorKycEntityModelNAF?.distributor?.documents?.nafdacPermit =
+                                                                                null;
+                                                                            model.notifyListeners();
+                                                                          },
+                                                                          child: SvgPicture.asset(
+                                                                            AppImage.delete,
+                                                                          ),
+                                                                        )
+                                                                      : SizedBox.shrink(),
+                                                                ],
+                                                              ),
+                                                            )
+                                                          : SizedBox(
                                                               width: double
                                                                   .infinity,
                                                               child: DottedBorder(
@@ -2169,10 +2190,10 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                                       .primary,
                                                                 ),
                                                                 child: GestureDetector(
-                                                                  // onTap: () => model
-                                                                  //     .pickImageDistributorKycNAFPermit(
-                                                                  //       context,
-                                                                  //     ),
+                                                                  onTap: () => model
+                                                                      .pickImageDistributorKycNAFPermit(
+                                                                        context,
+                                                                      ),
                                                                   child: Container(
                                                                     width: double
                                                                         .infinity,
@@ -2196,17 +2217,16 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                                           MainAxisAlignment
                                                                               .start,
                                                                       children: [
-                                                                        // model.isLoadingNAF
-                                                                        //     ? SizedBox(
-                                                                        //         width: 20.w,
-                                                                        //         height: 20.h,
-                                                                        //         child: CircularProgressIndicator(
-                                                                        //           color: AppColors.primary,
-                                                                        //           strokeWidth: 2.w,
-                                                                        //         ),
-                                                                        //       )
-                                                                        //     : 
-                                                                            SvgPicture.asset(
+                                                                        model.isLoadingNAF
+                                                                            ? SizedBox(
+                                                                                width: 20.w,
+                                                                                height: 20.h,
+                                                                                child: CircularProgressIndicator(
+                                                                                  color: AppColors.primary,
+                                                                                  strokeWidth: 2.w,
+                                                                                ),
+                                                                              )
+                                                                            : SvgPicture.asset(
                                                                                 AppImage.upload_doc,
                                                                               ),
                                                                         SizedBox(
@@ -2290,136 +2310,138 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                         ],
                                                       ),
                                                       SizedBox(height: 10.h),
-                                                      // model.getDistributorKycResponseModel!.data!.level2 !=
-                                                      //                 null &&
-                                                      //             model
-                                                      //                     .getDistributorKycResponseModel!
-                                                      //                     .data!
-                                                      //                     .level2!
-                                                      //                     .distributor!
-                                                      //                     .documents!
-                                                      //                     .pharmacyCouncilLicense !=
-                                                      //                 null ||
-                                                      //         model.secondLevelDistributorKycEntityModelPharmCouncilLin !=
-                                                      //                 null &&
-                                                      //             model
-                                                      //                     .secondLevelDistributorKycEntityModelPharmCouncilLin!
-                                                      //                     .distributor !=
-                                                      //                 null &&
-                                                      //             model
-                                                      //                     .secondLevelDistributorKycEntityModelPharmCouncilLin!
-                                                      //                     .distributor!
-                                                      //                     .documents!
-                                                      //                     .pharmacyCouncilLicense !=
-                                                      //                 null
-                                                      //     ? Container(
-                                                      //         padding:
-                                                      //             EdgeInsets.all(
-                                                      //               10.w,
-                                                      //             ),
-                                                      //         decoration: BoxDecoration(
-                                                      //           border: Border.all(
-                                                      //             color: AppColors
-                                                      //                 .tintColor,
-                                                      //           ),
-                                                      //           borderRadius:
-                                                      //               BorderRadius.circular(
-                                                      //                 12,
-                                                      //               ),
-                                                      //         ),
-                                                      //         child: Row(
-                                                      //           children: [
-                                                      //             SvgPicture.asset(
-                                                      //               AppImage
-                                                      //                   .kyc_file,
-                                                      //             ),
-                                                      //             SizedBox(
-                                                      //               width:
-                                                      //                   14.20.w,
-                                                      //             ),
-                                                      //             SizedBox(
-                                                      //               width: 80.w,
-                                                      //               child: TextView(
-                                                      //                 text:
-                                                      //                     'Pharm Counsil Lincense.jpg',
-                                                      //                 maxLines:
-                                                      //                     1,
-                                                      //                 textOverflow:
-                                                      //                     TextOverflow
-                                                      //                         .ellipsis,
-                                                      //                 textStyle: TextStyle(
-                                                      //                   fontFamily:
-                                                      //                       'Arial',
-                                                      //                   fontSize:
-                                                      //                       13.2.sp,
-                                                      //                   fontWeight:
-                                                      //                       FontWeight.w400,
-                                                      //                   color: AppColors
-                                                      //                       .black,
-                                                      //                 ),
-                                                      //               ),
-                                                      //             ),
-                                                      //             Spacer(),
-                                                      //             GestureDetector(
-                                                      //               onTap: () => Navigator.push(
-                                                      //                 context,
-                                                      //                 MaterialPageRoute(
-                                                      //                   builder: (_) => ImageWebViewScreen(
-                                                      //                     imageUrl:
-                                                      //                         model.getDistributorKycResponseModel?.data?.level2?.distributor?.documents?.pharmacyCouncilLicense?.url ??
-                                                      //                         model.secondLevelDistributorKycEntityModelPharmCouncilLin?.distributor?.documents?.pharmacyCouncilLicense?.url ??
-                                                      //                         '',
-                                                      //                   ),
-                                                      //                 ),
-                                                      //               ),
-                                                      //               child: SvgPicture.asset(
-                                                      //                 AppImage
-                                                      //                     .kyc_eye,
-                                                      //               ),
-                                                      //             ),
-                                                      //             model.secondLevelDistributorKycEntityModelPharmCouncilLin?.distributor?.documents?.pharmacyCouncilLicense !=
-                                                      //                     null
-                                                      //                 ? GestureDetector(
-                                                      //                     onTap: () => model.pickImageDistributorKycPharmCouncilLin(
-                                                      //                       context,
-                                                      //                     ),
-                                                      //                     child:
-                                                      //                         model.isLoadingProd
-                                                      //                         ? SizedBox(
-                                                      //                             width: 10.w,
-                                                      //                             height: 10.h,
-                                                      //                             child: CircularProgressIndicator(
-                                                      //                               color: AppColors.primary,
-                                                      //                               strokeWidth: 2.w,
-                                                      //                             ),
-                                                      //                           )
-                                                      //                         : SvgPicture.asset(
-                                                      //                             AppImage.upload_arr_up,
-                                                      //                           ),
-                                                      //                   )
-                                                      //                 : SizedBox.shrink(),
-                                                      //             SizedBox(
-                                                      //               width:
-                                                      //                   8.10.w,
-                                                      //             ),
-                                                      //             model.secondLevelDistributorKycEntityModelPharmCouncilLin?.distributor?.documents?.pharmacyCouncilLicense !=
-                                                      //                     null
-                                                      //                 ? GestureDetector(
-                                                      //                     onTap: () {
-                                                      //                       model.secondLevelDistributorKycEntityModelPharmCouncilLin?.distributor?.documents?.pharmacyCouncilLicense =
-                                                      //                           null;
-                                                      //                       model.notifyListeners();
-                                                      //                     },
-                                                      //                     child: SvgPicture.asset(
-                                                      //                       AppImage.delete,
-                                                      //                     ),
-                                                      //                   )
-                                                      //                 : SizedBox.shrink(),
-                                                      //           ],
-                                                      //         ),
-                                                      //       )
-                                                      //     : 
-                                                          SizedBox(
+                                                      model.getMarketplaceUpgradeResponseModel!.data!.kyc !=
+                                                                      null &&
+                                                                  model
+                                                                          .getMarketplaceUpgradeResponseModel!
+                                                                          .data!
+                                                                          .kyc!
+                                                                          .distributor!
+                                                                          .documents!
+                                                                          .pharmacyCouncilLicense !=
+                                                                      null ||
+                                                              model.secondLevelDistributorKycEntityModelPharmCouncilLin !=
+                                                                      null &&
+                                                                  model
+                                                                          .secondLevelDistributorKycEntityModelPharmCouncilLin!
+                                                                          .distributor !=
+                                                                      null &&
+                                                                  model
+                                                                          .secondLevelDistributorKycEntityModelPharmCouncilLin!
+                                                                          .distributor!
+                                                                          .documents!
+                                                                          .pharmacyCouncilLicense !=
+                                                                      null
+                                                          ? Container(
+                                                              padding:
+                                                                  EdgeInsets.all(
+                                                                    10.w,
+                                                                  ),
+                                                              decoration: BoxDecoration(
+                                                                border: Border.all(
+                                                                  color: AppColors
+                                                                      .tintColor,
+                                                                ),
+                                                                borderRadius:
+                                                                    BorderRadius.circular(
+                                                                      12,
+                                                                    ),
+                                                              ),
+                                                              child: Row(
+                                                                children: [
+                                                                  SvgPicture.asset(
+                                                                    AppImage
+                                                                        .kyc_file,
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width:
+                                                                        14.20.w,
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width: 80.w,
+                                                                    child: TextView(
+                                                                      text:
+                                                                          'Pharm Counsil Lincense.jpg',
+                                                                      maxLines:
+                                                                          1,
+                                                                      textOverflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                      textStyle: TextStyle(
+                                                                        fontFamily:
+                                                                            'Arial',
+                                                                        fontSize:
+                                                                            13.2.sp,
+                                                                        fontWeight:
+                                                                            FontWeight.w400,
+                                                                        color: AppColors
+                                                                            .black,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  Spacer(),
+                                                                  GestureDetector(
+                                                                    onTap: () => Navigator.push(
+                                                                      context,
+                                                                      MaterialPageRoute(
+                                                                        builder: (_) => ImageWebViewScreen(
+                                                                          imageUrl:
+                                                                              model.getMarketplaceUpgradeResponseModel!.data!.kyc?.distributor?.documents?.pharmacyCouncilLicense?.url ??
+                                                                              model.secondLevelDistributorKycEntityModelPharmCouncilLin?.distributor?.documents?.pharmacyCouncilLicense?.url ??
+                                                                              '',
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    child: SvgPicture.asset(
+                                                                      AppImage
+                                                                          .kyc_eye,
+                                                                    ),
+                                                                  ),
+                                                                  model.secondLevelDistributorKycEntityModelPharmCouncilLin?.distributor?.documents?.pharmacyCouncilLicense !=
+                                                                          null
+                                                                      ? Padding(
+                                                                        padding:  EdgeInsets.only(left:10.0.w),
+                                                                        child: GestureDetector(
+                                                                            onTap: () => model.pickImageDistributorKycPharmCouncilLin(
+                                                                              context,
+                                                                            ),
+                                                                            child:
+                                                                                model.isLoadingProd
+                                                                                ? SizedBox(
+                                                                                    width: 10.w,
+                                                                                    height: 10.h,
+                                                                                    child: CircularProgressIndicator(
+                                                                                      color: AppColors.primary,
+                                                                                      strokeWidth: 2.w,
+                                                                                    ),
+                                                                                  )
+                                                                                : SvgPicture.asset(
+                                                                                    AppImage.upload_arr_up,
+                                                                                  ),
+                                                                          ),
+                                                                      )
+                                                                      : SizedBox.shrink(),
+                                                                  SizedBox(
+                                                                    width:
+                                                                        8.10.w,
+                                                                  ),
+                                                                  model.secondLevelDistributorKycEntityModelPharmCouncilLin?.distributor?.documents?.pharmacyCouncilLicense !=
+                                                                          null
+                                                                      ? GestureDetector(
+                                                                          onTap: () {
+                                                                            model.secondLevelDistributorKycEntityModelPharmCouncilLin?.distributor?.documents?.pharmacyCouncilLicense =
+                                                                                null;
+                                                                            model.notifyListeners();
+                                                                          },
+                                                                          child: SvgPicture.asset(
+                                                                            AppImage.delete,
+                                                                          ),
+                                                                        )
+                                                                      : SizedBox.shrink(),
+                                                                ],
+                                                              ),
+                                                            )
+                                                          : SizedBox(
                                                               width: double
                                                                   .infinity,
                                                               child: DottedBorder(
@@ -2438,10 +2460,10 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                                       .primary,
                                                                 ),
                                                                 child: GestureDetector(
-                                                                  // onTap: () => model
-                                                                  //     .pickImageDistributorKycPharmCouncilLin(
-                                                                  //       context,
-                                                                  //     ),
+                                                                  onTap: () => model
+                                                                      .pickImageDistributorKycPharmCouncilLin(
+                                                                        context,
+                                                                      ),
                                                                   child: Container(
                                                                     width: double
                                                                         .infinity,
@@ -2465,17 +2487,16 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                                           MainAxisAlignment
                                                                               .start,
                                                                       children: [
-                                                                        // model.isLoadingProd
-                                                                        //     ? SizedBox(
-                                                                        //         width: 20.w,
-                                                                        //         height: 20.h,
-                                                                        //         child: CircularProgressIndicator(
-                                                                        //           color: AppColors.primary,
-                                                                        //           strokeWidth: 2.w,
-                                                                        //         ),
-                                                                        //       )
-                                                                        //     : 
-                                                                            SvgPicture.asset(
+                                                                        model.isLoadingProd
+                                                                            ? SizedBox(
+                                                                                width: 20.w,
+                                                                                height: 20.h,
+                                                                                child: CircularProgressIndicator(
+                                                                                  color: AppColors.primary,
+                                                                                  strokeWidth: 2.w,
+                                                                                ),
+                                                                              )
+                                                                            : SvgPicture.asset(
                                                                                 AppImage.upload_doc,
                                                                               ),
                                                                         SizedBox(
@@ -2559,136 +2580,139 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                         ],
                                                       ),
                                                       SizedBox(height: 10.h),
-                                                      // model.getDistributorKycResponseModel!.data!.level2 !=
-                                                      //                 null &&
-                                                      //             model
-                                                      //                     .getDistributorKycResponseModel!
-                                                      //                     .data!
-                                                      //                     .level2!
-                                                      //                     .distributor!
-                                                      //                     .documents!
-                                                      //                     .companyLogo !=
-                                                      //                 null ||
-                                                      //         model.secondLevelDistributorKycEntityModelLogo !=
-                                                      //                 null &&
-                                                      //             model
-                                                      //                     .secondLevelDistributorKycEntityModelLogo!
-                                                      //                     .distributor !=
-                                                      //                 null &&
-                                                      //             model
-                                                      //                     .secondLevelDistributorKycEntityModelLogo!
-                                                      //                     .distributor!
-                                                      //                     .documents!
-                                                      //                     .companyLogo !=
-                                                      //                 null
-                                                      //     ? Container(
-                                                      //         padding:
-                                                      //             EdgeInsets.all(
-                                                      //               10.w,
-                                                      //             ),
-                                                      //         decoration: BoxDecoration(
-                                                      //           border: Border.all(
-                                                      //             color: AppColors
-                                                      //                 .tintColor,
-                                                      //           ),
-                                                      //           borderRadius:
-                                                      //               BorderRadius.circular(
-                                                      //                 12,
-                                                      //               ),
-                                                      //         ),
-                                                      //         child: Row(
-                                                      //           children: [
-                                                      //             SvgPicture.asset(
-                                                      //               AppImage
-                                                      //                   .kyc_file,
-                                                      //             ),
-                                                      //             SizedBox(
-                                                      //               width:
-                                                      //                   14.20.w,
-                                                      //             ),
-                                                      //             SizedBox(
-                                                      //               width: 80.w,
-                                                      //               child: TextView(
-                                                      //                 text:
-                                                      //                     'Company Logo.jpg',
-                                                      //                 maxLines:
-                                                      //                     1,
-                                                      //                 textOverflow:
-                                                      //                     TextOverflow
-                                                      //                         .ellipsis,
-                                                      //                 textStyle: TextStyle(
-                                                      //                   fontFamily:
-                                                      //                       'Arial',
-                                                      //                   fontSize:
-                                                      //                       13.2.sp,
-                                                      //                   fontWeight:
-                                                      //                       FontWeight.w400,
-                                                      //                   color: AppColors
-                                                      //                       .black,
-                                                      //                 ),
-                                                      //               ),
-                                                      //             ),
-                                                      //             Spacer(),
-                                                      //             GestureDetector(
-                                                      //               onTap: () => Navigator.push(
-                                                      //                 context,
-                                                      //                 MaterialPageRoute(
-                                                      //                   builder: (_) => ImageWebViewScreen(
-                                                      //                     imageUrl:
-                                                      //                         model.getDistributorKycResponseModel?.data?.level2?.distributor?.documents?.companyLogo?.url ??
-                                                      //                         model.secondLevelDistributorKycEntityModelLogo?.distributor?.documents?.companyLogo?.url ??
-                                                      //                         '',
-                                                      //                   ),
-                                                      //                 ),
-                                                      //               ),
-                                                      //               child: SvgPicture.asset(
-                                                      //                 AppImage
-                                                      //                     .kyc_eye,
-                                                      //               ),
-                                                      //             ),
-                                                      //             model.secondLevelDistributorKycEntityModelLogo?.distributor?.documents?.companyLogo !=
-                                                      //                     null
-                                                      //                 ? GestureDetector(
-                                                      //                     onTap: () => model.pickImageDistributorKycLogo(
-                                                      //                       context,
-                                                      //                     ),
-                                                      //                     child:
-                                                      //                         model.isLoadingLogo
-                                                      //                         ? SizedBox(
-                                                      //                             width: 10.w,
-                                                      //                             height: 10.h,
-                                                      //                             child: CircularProgressIndicator(
-                                                      //                               color: AppColors.primary,
-                                                      //                               strokeWidth: 2.w,
-                                                      //                             ),
-                                                      //                           )
-                                                      //                         : SvgPicture.asset(
-                                                      //                             AppImage.upload_arr_up,
-                                                      //                           ),
-                                                      //                   )
-                                                      //                 : SizedBox.shrink(),
-                                                      //             SizedBox(
-                                                      //               width:
-                                                      //                   8.10.w,
-                                                      //             ),
-                                                      //             model.secondLevelDistributorKycEntityModelLogo?.distributor?.documents?.companyLogo !=
-                                                      //                     null
-                                                      //                 ? GestureDetector(
-                                                      //                     onTap: () {
-                                                      //                       model.secondLevelDistributorKycEntityModelLogo?.distributor?.documents?.companyLogo =
-                                                      //                           null;
-                                                      //                       model.notifyListeners();
-                                                      //                     },
-                                                      //                     child: SvgPicture.asset(
-                                                      //                       AppImage.delete,
-                                                      //                     ),
-                                                      //                   )
-                                                      //                 : SizedBox.shrink(),
-                                                      //           ],
-                                                      //         ),
-                                                      //       )
-                                                      //     : 
-                                                          SizedBox(
+
+                                                      model.getMarketplaceUpgradeResponseModel!.data!.kyc !=
+                                                                      null &&
+                                                                  model
+                                                                          .getMarketplaceUpgradeResponseModel!
+                                                                          .data!
+                                                                          .kyc!
+                                                                          .distributor!
+                                                                          .documents!
+                                                                          .companyLogo !=
+                                                                      null ||
+                                                              model.secondLevelDistributorKycEntityModelLogo !=
+                                                                      null &&
+                                                                  model
+                                                                          .secondLevelDistributorKycEntityModelLogo!
+                                                                          .distributor !=
+                                                                      null &&
+                                                                  model
+                                                                          .secondLevelDistributorKycEntityModelLogo!
+                                                                          .distributor!
+                                                                          .documents!
+                                                                          .companyLogo !=
+                                                                      null
+                                                          ? Container(
+                                                              padding:
+                                                                  EdgeInsets.all(
+                                                                    10.w,
+                                                                  ),
+                                                              decoration: BoxDecoration(
+                                                                border: Border.all(
+                                                                  color: AppColors
+                                                                      .tintColor,
+                                                                ),
+                                                                borderRadius:
+                                                                    BorderRadius.circular(
+                                                                      12,
+                                                                    ),
+                                                              ),
+                                                              child: Row(
+                                                                children: [
+                                                                  SvgPicture.asset(
+                                                                    AppImage
+                                                                        .kyc_file,
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width:
+                                                                        14.20.w,
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width: 80.w,
+                                                                    child: TextView(
+                                                                      text:
+                                                                          'Company Logo.jpg',
+                                                                      maxLines:
+                                                                          1,
+                                                                      textOverflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                      textStyle: TextStyle(
+                                                                        fontFamily:
+                                                                            'Arial',
+                                                                        fontSize:
+                                                                            13.2.sp,
+                                                                        fontWeight:
+                                                                            FontWeight.w400,
+                                                                        color: AppColors
+                                                                            .black,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  Spacer(),
+                                                                  GestureDetector(
+                                                                    onTap: () => Navigator.push(
+                                                                      context,
+                                                                      MaterialPageRoute(
+                                                                        builder: (_) => ImageWebViewScreen(
+                                                                          imageUrl:
+                                                                              model.getMarketplaceUpgradeResponseModel!.data!.kyc?.distributor?.documents?.companyLogo?.url ??
+                                                                              model.secondLevelDistributorKycEntityModelLogo?.distributor?.documents?.companyLogo?.url ??
+                                                                              '',
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    child: SvgPicture.asset(
+                                                                      AppImage
+                                                                          .kyc_eye,
+                                                                    ),
+                                                                  ),
+                                                                  model.secondLevelDistributorKycEntityModelLogo?.distributor?.documents?.companyLogo !=
+                                                                          null
+                                                                      ? Padding(
+                                                                        padding:  EdgeInsets.only(left:10.0.w),
+                                                                        child: GestureDetector(
+                                                                            onTap: () => model.pickImageDistributorKycLogo(
+                                                                              context,
+                                                                            ),
+                                                                            child:
+                                                                                model.isLoadingLogo
+                                                                                ? SizedBox(
+                                                                                    width: 10.w,
+                                                                                    height: 10.h,
+                                                                                    child: CircularProgressIndicator(
+                                                                                      color: AppColors.primary,
+                                                                                      strokeWidth: 2.w,
+                                                                                    ),
+                                                                                  )
+                                                                                : SvgPicture.asset(
+                                                                                    AppImage.upload_arr_up,
+                                                                                  ),
+                                                                          ),
+                                                                      )
+                                                                      : SizedBox.shrink(),
+                                                                  SizedBox(
+                                                                    width:
+                                                                        8.10.w,
+                                                                  ),
+                                                                  model.secondLevelDistributorKycEntityModelLogo?.distributor?.documents?.companyLogo !=
+                                                                          null
+                                                                      ? GestureDetector(
+                                                                          onTap: () {
+                                                                            model.secondLevelDistributorKycEntityModelLogo?.distributor?.documents?.companyLogo =
+                                                                                null;
+                                                                            model.notifyListeners();
+                                                                          },
+                                                                          child: SvgPicture.asset(
+                                                                            AppImage.delete,
+                                                                          ),
+                                                                        )
+                                                                      : SizedBox.shrink(),
+                                                                ],
+                                                              ),
+                                                            )
+                                                          : SizedBox(
                                                               width: double
                                                                   .infinity,
                                                               child: DottedBorder(
@@ -2707,10 +2731,10 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                                       .primary,
                                                                 ),
                                                                 child: GestureDetector(
-                                                                  // onTap: () => model
-                                                                  //     .pickImageDistributorKycLogo(
-                                                                  //       context,
-                                                                  //     ),
+                                                                  onTap: () => model
+                                                                      .pickImageDistributorKycLogo(
+                                                                        context,
+                                                                      ),
                                                                   child: Container(
                                                                     width: double
                                                                         .infinity,
@@ -2734,17 +2758,16 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                                           MainAxisAlignment
                                                                               .start,
                                                                       children: [
-                                                                        // model.isLoadingLogo
-                                                                        //     ? SizedBox(
-                                                                        //         width: 20.w,
-                                                                        //         height: 20.h,
-                                                                        //         child: CircularProgressIndicator(
-                                                                        //           color: AppColors.primary,
-                                                                        //           strokeWidth: 2.w,
-                                                                        //         ),
-                                                                        //       )
-                                                                        //     : 
-                                                                            SvgPicture.asset(
+                                                                        model.isLoadingLogo
+                                                                            ? SizedBox(
+                                                                                width: 20.w,
+                                                                                height: 20.h,
+                                                                                child: CircularProgressIndicator(
+                                                                                  color: AppColors.primary,
+                                                                                  strokeWidth: 2.w,
+                                                                                ),
+                                                                              )
+                                                                            : SvgPicture.asset(
                                                                                 AppImage.upload_doc,
                                                                               ),
                                                                         SizedBox(
@@ -2791,685 +2814,689 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                               ),
                                                             ),
                                                       SizedBox(height: 20.h),
-                                                      // if (model
-                                                      //         .getDistributorKycResponseModel!
-                                                      //         .data!
-                                                      //         .level2 !=
-                                                      //     null)
-                                                      //   Row(
-                                                      //     mainAxisAlignment:
-                                                      //         MainAxisAlignment
-                                                      //             .spaceBetween,
-                                                      //     children: [
-                                                      //       Row(
-                                                      //         children: [
-                                                      //           TextView(
-                                                      //             text:
-                                                      //                 'Area/Location ',
-                                                      //             textStyle: TextStyle(
-                                                      //               fontSize:
-                                                      //                   15.86
-                                                      //                       .sp,
-                                                      //               fontWeight:
-                                                      //                   FontWeight
-                                                      //                       .w600,
-                                                      //               color: AppColors
-                                                      //                   .reminder1,
-                                                      //               fontFamily:
-                                                      //                   'DMSans',
-                                                      //             ),
-                                                      //           ),
-                                                      //           SizedBox(
-                                                      //             width: 6.10.w,
-                                                      //           ),
-                                                      //           Container(
-                                                      //             padding: EdgeInsets.symmetric(
-                                                      //               horizontal:
-                                                      //                   6.2.w,
-                                                      //             ),
-                                                      //             decoration: BoxDecoration(
-                                                      //               borderRadius:
-                                                      //                   BorderRadius.circular(
-                                                      //                     22,
-                                                      //                   ),
-                                                      //               border: Border.all(
-                                                      //                 color: AppColors
-                                                      //                     .primary1,
-                                                      //               ),
-                                                      //             ),
-                                                      //             child: TextView(
-                                                      //               text:'',
-                                                      //                   // '${model.getHealthcareProviderKycResponseModel?.data?.level2?.distributor?.coverageAreas?.length??0}',
-                                                      //               textStyle: TextStyle(
-                                                      //                 fontSize:
-                                                      //                     12.6.sp,
-                                                      //                 fontWeight:
-                                                      //                     FontWeight
-                                                      //                         .w300,
-                                                      //                 color: AppColors
-                                                      //                     .primary1,
-                                                      //                 fontFamily:
-                                                      //                     'DMSans',
-                                                      //               ),
-                                                      //             ),
-                                                      //           ),
-                                                      //         ],
-                                                      //       ),
-                                                      //       IconButton(
-                                                      //         onPressed:  model
-                                                      //                 .getDistributorKycResponseModel!
-                                                      //                 .data!
-                                                      //                 .level2!
-                                                      //                 .distributor!
-                                                      //                 .coverageAreas!=null &&
-                                                      //             model
-                                                      //                 .getDistributorKycResponseModel!
-                                                      //                 .data!
-                                                      //                 .level2!
-                                                      //                 .distributor!
-                                                      //                 .coverageAreas!
-                                                      //                 .isNotEmpty
-                                                      //             ? () {}
-                                                      //             : () {
-                                                      //                 model
-                                                      //                     .stateController
-                                                      //                     .clear();
-                                                      //                 model
-                                                      //                     .lgaListCopy
-                                                      //                     .clear();
-                                                      //                 model.showLGAAndStateDialog(
-                                                      //                   context,
-                                                      //                 );
-                                                      //               },
-                                                      //         icon: Icon(
-                                                      //           Icons.add,
-                                                      //           color:model
-                                                      //                 .getDistributorKycResponseModel!
-                                                      //                 .data!
-                                                      //                 .level2!
-                                                      //                 .distributor!
-                                                      //                 .coverageAreas==null ||
-                                                      //               model
-                                                      //                   .getDistributorKycResponseModel!
-                                                      //                   .data!
-                                                      //                   .level2!
-                                                      //                   .distributor!
-                                                      //                   .coverageAreas!
-                                                      //                   .isNotEmpty
-                                                      //               ? AppColors
-                                                      //                     .reminder1
-                                                      //                     .withOpacity(
-                                                      //                       .3,
-                                                      //                     )
-                                                      //               : AppColors
-                                                      //                     .reminder1,
-                                                      //           size: 22.sp,
-                                                      //         ),
-                                                      //       ),
-                                                      //     ],
-                                                      //   ),
+
+                                                      if (model
+                                                              .getMarketplaceUpgradeResponseModel!
+                                                              .data!
+                                                              .kyc !=
+                                                          null)
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: [
+                                                            Row(
+                                                              children: [
+                                                                TextView(
+                                                                  text:
+                                                                      'Area/Location ',
+                                                                  textStyle: TextStyle(
+                                                                    fontSize:
+                                                                        15.86
+                                                                            .sp,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w600,
+                                                                    color: AppColors
+                                                                        .reminder1,
+                                                                    fontFamily:
+                                                                        'DMSans',
+                                                                  ),
+                                                                ),
+                                                                SizedBox(
+                                                                  width: 6.10.w,
+                                                                ),
+                                                                Container(
+                                                                  padding: EdgeInsets.symmetric(
+                                                                    horizontal:
+                                                                        6.2.w,
+                                                                  ),
+                                                                  decoration: BoxDecoration(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                          22,
+                                                                        ),
+                                                                    border: Border.all(
+                                                                      color: AppColors
+                                                                          .primary1,
+                                                                    ),
+                                                                  ),
+                                                                  child: TextView(
+                                                                    text:
+                                                                        '${model.getMarketplaceUpgradeResponseModel?.data!.kyc?.distributor?.coverageAreas?.length ?? 0}',
+                                                                    textStyle: TextStyle(
+                                                                      fontSize:
+                                                                          12.6.sp,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w300,
+                                                                      color: AppColors
+                                                                          .primary1,
+                                                                      fontFamily:
+                                                                          'DMSans',
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            IconButton(
+                                                              onPressed:
+                                                                  model
+                                                                              .getMarketplaceUpgradeResponseModel!
+                                                                              .data!
+                                                                              .kyc!
+                                                                              .distributor!
+                                                                              .coverageAreas !=
+                                                                          null &&
+                                                                      model
+                                                                          .getMarketplaceUpgradeResponseModel!
+                                                                          .data!
+                                                                          .kyc!
+                                                                          .distributor!
+                                                                          .coverageAreas!
+                                                                          .isNotEmpty
+                                                                  ? () {}
+                                                                  : () {
+                                                                      model
+                                                                          .stateController
+                                                                          .clear();
+                                                                      model
+                                                                          .lgaListCopy
+                                                                          .clear();
+                                                                      model.showLGAAndStateDialog(
+                                                                        context,
+                                                                      );
+                                                                    },
+                                                              icon: Icon(
+                                                                Icons.add,
+                                                                color:
+                                                                    model.getMarketplaceUpgradeResponseModel!.data!.kyc!.distributor!.coverageAreas ==
+                                                                            null ||
+                                                                        model
+                                                                            .getMarketplaceUpgradeResponseModel!
+                                                                            .data!
+                                                                            .kyc!
+                                                                            .distributor!
+                                                                            .coverageAreas!
+                                                                            .isNotEmpty
+                                                                    ? AppColors
+                                                                          .reminder1
+                                                                          .withOpacity(
+                                                                            .3,
+                                                                          )
+                                                                    : AppColors
+                                                                          .reminder1,
+                                                                size: 22.sp,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+
                                                       Divider(
                                                         color: AppColors.f1,
                                                       ),
-                                                      // if (model.getDistributorKycResponseModel !=
-                                                      //         null &&
-                                                      //     model
-                                                      //             .getDistributorKycResponseModel!
-                                                      //             .data!
-                                                      //             .level2 !=
-                                                      //         null &&model
-                                                      //                 .getDistributorKycResponseModel!
-                                                      //                 .data!
-                                                      //                 .level2!
-                                                      //                 .distributor!=null &&  model
-                                                      //                 .getDistributorKycResponseModel!
-                                                      //                 .data!
-                                                      //                 .level2!
-                                                      //                 .distributor!
-                                                      //                 .coverageAreas!=null &&
-                                                      //     model
-                                                      //         .getDistributorKycResponseModel!
-                                                      //         .data!
-                                                      //         .level2!
-                                                      //         .distributor!
-                                                      //         .coverageAreas!
-                                                      //         .isNotEmpty)
-                                                      //   ...model.getDistributorKycResponseModel!.data!.level2!.distributor!.coverageAreas!.map(
-                                                      //     (o) => Container(
-                                                      //       width:
-                                                      //           double.infinity,
-                                                      //       margin:
-                                                      //           EdgeInsets.only(
-                                                      //             bottom: 12.w,
-                                                      //           ),
-                                                      //       padding:
-                                                      //           EdgeInsets.all(
-                                                      //             16.w,
-                                                      //           ),
-                                                      //       decoration:
-                                                      //           BoxDecoration(
-                                                      //             borderRadius:
-                                                      //                 BorderRadius.circular(
-                                                      //                   12,
-                                                      //                 ),
-                                                      //             color:
-                                                      //                 AppColors
-                                                      //                     .grey,
-                                                      //           ),
-                                                      //       child: Column(
-                                                      //         crossAxisAlignment:
-                                                      //             CrossAxisAlignment
-                                                      //                 .start,
-                                                      //         children: [
-                                                      //           TextView(
-                                                      //             text:
-                                                      //                 o.state ??
-                                                      //                 '',
-                                                      //             textStyle: TextStyle(
-                                                      //               fontSize:
-                                                      //                   13.86
-                                                      //                       .sp,
-                                                      //               fontWeight:
-                                                      //                   FontWeight
-                                                      //                       .w600,
-                                                      //               color: AppColors
-                                                      //                   .reminder1,
-                                                      //               fontFamily:
-                                                      //                   'DMSans',
-                                                      //             ),
-                                                      //           ),
-                                                      //           SizedBox(
-                                                      //             height: 7.2.h,
-                                                      //           ),
 
-                                                      //           AnimatedSize(
-                                                      //             duration:
-                                                      //                 const Duration(
-                                                      //                   milliseconds:
-                                                      //                       300,
-                                                      //                 ),
-                                                      //             curve: Curves
-                                                      //                 .easeInOut,
-                                                      //             child:
-                                                      //                 model.coverageAreas ==
-                                                      //                     o
-                                                      //                 ? Wrap(
-                                                      //                     children: [
-                                                      //                       ...o.lgas!.map(
-                                                      //                         (
-                                                      //                           e,
-                                                      //                         ) => TextView(
-                                                      //                           text: '$e, ',
-                                                      //                           textStyle: TextStyle(
-                                                      //                             fontSize: 13.86.sp,
-                                                      //                             fontWeight: FontWeight.w200,
-                                                      //                             color: AppColors.infoGrey,
-                                                      //                             fontFamily: 'DMSans',
-                                                      //                           ),
-                                                      //                         ),
-                                                      //                       ),
-                                                      //                     ],
-                                                      //                   )
-                                                      //                 : Text(
-                                                      //                     o.lgas!
-                                                      //                         .map(
-                                                      //                           (
-                                                      //                             e,
-                                                      //                           ) => '$e,',
-                                                      //                         )
-                                                      //                         .join(
-                                                      //                           ' ',
-                                                      //                         ),
-                                                      //                     maxLines:
-                                                      //                         1,
-                                                      //                     overflow:
-                                                      //                         TextOverflow.ellipsis,
-                                                      //                     style: TextStyle(
-                                                      //                       fontSize:
-                                                      //                           13.86.sp,
-                                                      //                       fontWeight:
-                                                      //                           FontWeight.w200,
-                                                      //                       color:
-                                                      //                           AppColors.infoGrey,
-                                                      //                       fontFamily:
-                                                      //                           'DMSans',
-                                                      //                     ),
-                                                      //                   ),
-                                                      //           ),
-                                                      //           SizedBox(
-                                                      //             height: 10.h,
-                                                      //           ),
-                                                      //           GestureDetector(
-                                                      //             onTap: () {
-                                                      //               if (model
-                                                      //                       .coverageAreas ==
-                                                      //                   o) {
-                                                      //                 model.coverageAreas =
-                                                      //                     null;
-                                                      //               } else {
-                                                      //                 model.coverageAreas =
-                                                      //                     o;
-                                                      //               }
-                                                      //               model
-                                                      //                   .notifyListeners();
-                                                      //             },
-                                                      //             child: TextView(
-                                                      //               text:
-                                                      //                   model.coverageAreas ==
-                                                      //                       o
-                                                      //                   ? 'Hide'
-                                                      //                   : 'See all',
-                                                      //               textStyle: TextStyle(
-                                                      //                 decoration:
-                                                      //                     TextDecoration
-                                                      //                         .underline,
-                                                      //                 decorationColor:
-                                                      //                     model.coverageAreas ==
-                                                      //                         o
-                                                      //                     ? AppColors.primary
-                                                      //                     : AppColors.reminder1,
-                                                      //                 fontSize:
-                                                      //                     12.86
-                                                      //                         .sp,
-                                                      //                 fontWeight:
-                                                      //                     FontWeight
-                                                      //                         .w500,
-                                                      //                 color:
-                                                      //                     model.coverageAreas ==
-                                                      //                         o
-                                                      //                     ? AppColors.primary
-                                                      //                     : AppColors.reminder1,
-                                                      //                 fontFamily:
-                                                      //                     'DMSans',
-                                                      //               ),
-                                                      //             ),
-                                                      //           ),
-                                                      //           SizedBox(
-                                                      //             height: 10.h,
-                                                      //           ),
-                                                      //           Row(
-                                                      //             mainAxisAlignment:
-                                                      //                 MainAxisAlignment
-                                                      //                     .end,
-                                                      //             children: [
-                                                      //               GestureDetector(
-                                                      //                 onTap:
-                                                      //                     model
-                                                      //                         .getDistributorKycResponseModel!
-                                                      //                         .data!
-                                                      //                         .level2!
-                                                      //                         .distributor!
-                                                      //                         .coverageAreas!
-                                                      //                         .isNotEmpty
-                                                      //                     ? () {}
-                                                      //                     : () {
-                                                      //                         model.stateController.text =
-                                                      //                             o.state ??
-                                                      //                             '';
-                                                      //                         model.showLGAAndStateDialog(
-                                                      //                           context,
-                                                      //                           isEdit: true,
-                                                      //                           editState: o.state,
-                                                      //                           editLgas: o.lgas,
-                                                      //                         );
-                                                      //                         model.notifyListeners();
-                                                      //                       },
-                                                      //                 child: SvgPicture.asset(
-                                                      //                   AppImage
-                                                      //                       .round_edit,
-                                                      //                   height:
-                                                      //                       22.h,
-                                                      //                   width:
-                                                      //                       22.h,
-                                                      //                 ),
-                                                      //               ),
-                                                      //               SizedBox(
-                                                      //                 width:
-                                                      //                     10.h,
-                                                      //               ),
-                                                      //               GestureDetector(
-                                                      //                 onTap:
-                                                      //                     model
-                                                      //                         .getDistributorKycResponseModel!
-                                                      //                         .data!
-                                                      //                         .level2!
-                                                      //                         .distributor!
-                                                      //                         .coverageAreas!
-                                                      //                         .isNotEmpty
-                                                      //                     ? () {}
-                                                      //                     : () {
-                                                      //                         model.getDistributorKycResponseModel!.data!.level2!.distributor!.coverageAreas!.remove(
-                                                      //                           o,
-                                                      //                         );
-                                                      //                         setState(
-                                                      //                           () {},
-                                                      //                         );
-                                                      //                         model.notifyListeners();
-                                                      //                       },
-                                                      //                 child: SvgPicture.asset(
-                                                      //                   AppImage
-                                                      //                       .delete,
-                                                      //                   height:
-                                                      //                       20.h,
-                                                      //                   width:
-                                                      //                       20.h,
-                                                      //                   color:
-                                                      //                       model.getDistributorKycResponseModel!.data!.level2!.distributor!.coverageAreas!.isNotEmpty
-                                                      //                       ? AppColors.red.withOpacity(.3)
-                                                      //                       : AppColors.red,
-                                                      //                 ),
-                                                      //               ),
-                                                      //             ],
-                                                      //           ),
-                                                      //         ],
-                                                      //       ),
-                                                      //     ),
-                                                      //   ),
+                                                      if (model.getMarketplaceUpgradeResponseModel !=
+                                                              null &&
+                                                          model
+                                                                  .getMarketplaceUpgradeResponseModel!
+                                                                  .data!
+                                                                  .kyc !=
+                                                              null &&
+                                                          model
+                                                                  .getMarketplaceUpgradeResponseModel!
+                                                                  .data!
+                                                                  .kyc!
+                                                                  .distributor !=
+                                                              null &&
+                                                          model
+                                                                  .getMarketplaceUpgradeResponseModel!
+                                                                  .data!
+                                                                  .kyc!
+                                                                  .distributor!
+                                                                  .coverageAreas !=
+                                                              null &&
+                                                          model
+                                                              .getMarketplaceUpgradeResponseModel!
+                                                              .data!
+                                                              .kyc!
+                                                              .distributor!
+                                                              .coverageAreas!
+                                                              .isNotEmpty)
+                                                        ...model.getMarketplaceUpgradeResponseModel!.data!.kyc!.distributor!.coverageAreas!.map(
+                                                          (o) => Container(
+                                                            width:
+                                                                double.infinity,
+                                                            margin:
+                                                                EdgeInsets.only(
+                                                                  bottom: 12.w,
+                                                                ),
+                                                            padding:
+                                                                EdgeInsets.all(
+                                                                  16.w,
+                                                                ),
+                                                            decoration:
+                                                                BoxDecoration(
+                                                                  borderRadius:
+                                                                      BorderRadius.circular(
+                                                                        12,
+                                                                      ),
+                                                                  color:
+                                                                      AppColors
+                                                                          .grey,
+                                                                ),
+                                                            child: Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                TextView(
+                                                                  text:
+                                                                      o.state ??
+                                                                      '',
+                                                                  textStyle: TextStyle(
+                                                                    fontSize:
+                                                                        13.86
+                                                                            .sp,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w600,
+                                                                    color: AppColors
+                                                                        .reminder1,
+                                                                    fontFamily:
+                                                                        'DMSans',
+                                                                  ),
+                                                                ),
+                                                                SizedBox(
+                                                                  height: 7.2.h,
+                                                                ),
 
-                                                      // if (model
-                                                      //                 .getDistributorKycResponseModel!
-                                                      //                 .data!
-                                                      //                 .level2 ==
-                                                      //             null &&
-                                                      //         model.coverageAreaIndex ==
-                                                      //             1 ||
-                                                      //     model
-                                                      //                 .getDistributorKycResponseModel!
-                                                      //                 .data!
-                                                      //                 .level2 ==
-                                                      //             null &&
-                                                      //         model.coverageAreaIndex ==
-                                                      //             null)
-                                                      //   Column(
-                                                      //     children: [
-                                                      //       Row(
-                                                      //         mainAxisAlignment:
-                                                      //             MainAxisAlignment
-                                                      //                 .spaceBetween,
-                                                      //         children: [
-                                                      //           Row(
-                                                      //             children: [
-                                                      //               TextView(
-                                                      //                 text:
-                                                      //                     'Area/Location ',
-                                                      //                 textStyle: TextStyle(
-                                                      //                   fontSize:
-                                                      //                       15.86.sp,
-                                                      //                   fontWeight:
-                                                      //                       FontWeight.w600,
-                                                      //                   color: AppColors
-                                                      //                       .reminder1,
-                                                      //                   fontFamily:
-                                                      //                       'DMSans',
-                                                      //                 ),
-                                                      //               ),
-                                                      //               SizedBox(
-                                                      //                 width:
-                                                      //                     6.10.w,
-                                                      //               ),
-                                                      //               Container(
-                                                      //                 padding: EdgeInsets.symmetric(
-                                                      //                   horizontal:
-                                                      //                       6.2.w,
-                                                      //                 ),
-                                                      //                 decoration: BoxDecoration(
-                                                      //                   borderRadius:
-                                                      //                       BorderRadius.circular(
-                                                      //                         22,
-                                                      //                       ),
-                                                      //                   border: Border.all(
-                                                      //                     color:
-                                                      //                         AppColors.primary1,
-                                                      //                   ),
-                                                      //                 ),
-                                                      //                 child: TextView(
-                                                      //                   text:
-                                                      //                       '${model.listOfAddedLocation.length}',
-                                                      //                   textStyle: TextStyle(
-                                                      //                     fontSize:
-                                                      //                         12.6.sp,
-                                                      //                     fontWeight:
-                                                      //                         FontWeight.w300,
-                                                      //                     color:
-                                                      //                         AppColors.primary1,
-                                                      //                     fontFamily:
-                                                      //                         'DMSans',
-                                                      //                   ),
-                                                      //                 ),
-                                                      //               ),
-                                                      //             ],
-                                                      //           ),
-                                                      //           IconButton(
-                                                      //             onPressed: () {
-                                                      //               model
-                                                      //                   .stateController
-                                                      //                   .clear();
-                                                      //               model
-                                                      //                   .lgaListCopy
-                                                      //                   .clear();
-                                                      //               model.showLGAAndStateDialog(
-                                                      //                 context,
-                                                      //                 covAreaIndex:
-                                                      //                     1,
-                                                      //               );
-                                                      //             },
-                                                      //             icon: Icon(
-                                                      //               Icons.add,
-                                                      //               color: AppColors
-                                                      //                   .reminder1,
-                                                      //               size: 22.sp,
-                                                      //             ),
-                                                      //           ),
-                                                      //         ],
-                                                      //       ),
-                                                      //       Divider(
-                                                      //         color:
-                                                      //             AppColors.f1,
-                                                      //       ),
-                                                      //       if (model
-                                                      //           .listOfAddedLocation
-                                                      //           .isNotEmpty)
-                                                      //         ...model.listOfAddedLocation.map(
-                                                      //           (
-                                                      //             o,
-                                                      //           ) => Container(
-                                                      //             width: double
-                                                      //                 .infinity,
-                                                      //             margin:
-                                                      //                 EdgeInsets.only(
-                                                      //                   bottom:
-                                                      //                       12.w,
-                                                      //                 ),
-                                                      //             padding:
-                                                      //                 EdgeInsets.all(
-                                                      //                   16.w,
-                                                      //                 ),
-                                                      //             decoration: BoxDecoration(
-                                                      //               borderRadius:
-                                                      //                   BorderRadius.circular(
-                                                      //                     12,
-                                                      //                   ),
-                                                      //               color:
-                                                      //                   AppColors
-                                                      //                       .grey,
-                                                      //             ),
-                                                      //             child: Column(
-                                                      //               crossAxisAlignment:
-                                                      //                   CrossAxisAlignment
-                                                      //                       .start,
-                                                      //               children: [
-                                                      //                 TextView(
-                                                      //                   text:
-                                                      //                       o.state ??
-                                                      //                       '',
-                                                      //                   textStyle: TextStyle(
-                                                      //                     fontSize:
-                                                      //                         13.86.sp,
-                                                      //                     fontWeight:
-                                                      //                         FontWeight.w600,
-                                                      //                     color:
-                                                      //                         AppColors.reminder1,
-                                                      //                     fontFamily:
-                                                      //                         'DMSans',
-                                                      //                   ),
-                                                      //                 ),
-                                                      //                 SizedBox(
-                                                      //                   height:
-                                                      //                       7.2.h,
-                                                      //                 ),
+                                                                AnimatedSize(
+                                                                  duration:
+                                                                      const Duration(
+                                                                        milliseconds:
+                                                                            300,
+                                                                      ),
+                                                                  curve: Curves
+                                                                      .easeInOut,
+                                                                  child:
+                                                                      model.coverageAreas ==
+                                                                          o
+                                                                      ? Wrap(
+                                                                          children: [
+                                                                            ...o.lgas!.map(
+                                                                              (
+                                                                                e,
+                                                                              ) => TextView(
+                                                                                text: '$e, ',
+                                                                                textStyle: TextStyle(
+                                                                                  fontSize: 13.86.sp,
+                                                                                  fontWeight: FontWeight.w200,
+                                                                                  color: AppColors.infoGrey,
+                                                                                  fontFamily: 'DMSans',
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ],
+                                                                        )
+                                                                      : Text(
+                                                                          o.lgas!
+                                                                              .map(
+                                                                                (
+                                                                                  e,
+                                                                                ) => '$e,',
+                                                                              )
+                                                                              .join(
+                                                                                ' ',
+                                                                              ),
+                                                                          maxLines:
+                                                                              1,
+                                                                          overflow:
+                                                                              TextOverflow.ellipsis,
+                                                                          style: TextStyle(
+                                                                            fontSize:
+                                                                                13.86.sp,
+                                                                            fontWeight:
+                                                                                FontWeight.w200,
+                                                                            color:
+                                                                                AppColors.infoGrey,
+                                                                            fontFamily:
+                                                                                'DMSans',
+                                                                          ),
+                                                                        ),
+                                                                ),
+                                                                SizedBox(
+                                                                  height: 10.h,
+                                                                ),
+                                                                GestureDetector(
+                                                                  onTap: () {
+                                                                    if (model
+                                                                            .coverageAreas ==
+                                                                        o) {
+                                                                      model.coverageAreas =
+                                                                          null;
+                                                                    } else {
+                                                                      model.coverageAreas =
+                                                                          o;
+                                                                    }
+                                                                    model
+                                                                        .notifyListeners();
+                                                                  },
+                                                                  child: TextView(
+                                                                    text:
+                                                                        model.coverageAreas ==
+                                                                            o
+                                                                        ? 'Hide'
+                                                                        : 'See all',
+                                                                    textStyle: TextStyle(
+                                                                      decoration:
+                                                                          TextDecoration
+                                                                              .underline,
+                                                                      decorationColor:
+                                                                          model.coverageAreas ==
+                                                                              o
+                                                                          ? AppColors.primary
+                                                                          : AppColors.reminder1,
+                                                                      fontSize:
+                                                                          12.86
+                                                                              .sp,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500,
+                                                                      color:
+                                                                          model.coverageAreas ==
+                                                                              o
+                                                                          ? AppColors.primary
+                                                                          : AppColors.reminder1,
+                                                                      fontFamily:
+                                                                          'DMSans',
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                SizedBox(
+                                                                  height: 10.h,
+                                                                ),
+                                                                Row(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .end,
+                                                                  children: [
+                                                                    GestureDetector(
+                                                                      onTap:
+                                                                          model
+                                                                              .getMarketplaceUpgradeResponseModel!
+                                                                              .data!
+                                                                              .kyc!
+                                                                              .distributor!
+                                                                              .coverageAreas!
+                                                                              .isNotEmpty
+                                                                          ? () {}
+                                                                          : () {
+                                                                              model.stateController.text =
+                                                                                  o.state ??
+                                                                                  '';
+                                                                              model.showLGAAndStateDialog(
+                                                                                context,
+                                                                                isEdit: true,
+                                                                                editState: o.state,
+                                                                                editLgas: o.lgas,
+                                                                              );
+                                                                              model.notifyListeners();
+                                                                            },
+                                                                      child: SvgPicture.asset(
+                                                                        AppImage
+                                                                            .round_edit,
+                                                                        height:
+                                                                            22.h,
+                                                                        width:
+                                                                            22.h,
+                                                                      ),
+                                                                    ),
+                                                                    SizedBox(
+                                                                      width:
+                                                                          10.h,
+                                                                    ),
+                                                                    GestureDetector(
+                                                                      onTap:
+                                                                          model
+                                                                              .getMarketplaceUpgradeResponseModel!
+                                                                              .data!
+                                                                              .kyc!
+                                                                              .distributor!
+                                                                              .coverageAreas!
+                                                                              .isNotEmpty
+                                                                          ? () {}
+                                                                          : () {
+                                                                              model.getMarketplaceUpgradeResponseModel!.data!.kyc!.distributor!.coverageAreas!.remove(
+                                                                                o,
+                                                                              );
+                                                                              setState(
+                                                                                () {},
+                                                                              );
+                                                                              model.notifyListeners();
+                                                                            },
+                                                                      child: SvgPicture.asset(
+                                                                        AppImage
+                                                                            .delete,
+                                                                        height:
+                                                                            20.h,
+                                                                        width:
+                                                                            20.h,
+                                                                        color:
+                                                                            model.getMarketplaceUpgradeResponseModel!.data!.kyc!.distributor!.coverageAreas!.isNotEmpty
+                                                                            ? AppColors.red.withOpacity(.3)
+                                                                            : AppColors.red,
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ),
 
-                                                      //                 AnimatedSize(
-                                                      //                   duration: const Duration(
-                                                      //                     milliseconds:
-                                                      //                         300,
-                                                      //                   ),
-                                                      //                   curve: Curves
-                                                      //                       .easeInOut,
-                                                      //                   child:
-                                                      //                       model.coverageAreasMap ==
-                                                      //                           o
-                                                      //                       ? Wrap(
-                                                      //                           children: [
-                                                      //                             ...o.lgas!.map(
-                                                      //                               (
-                                                      //                                 e,
-                                                      //                               ) => TextView(
-                                                      //                                 text: '$e, ',
-                                                      //                                 textStyle: TextStyle(
-                                                      //                                   fontSize: 13.86.sp,
-                                                      //                                   fontWeight: FontWeight.w200,
-                                                      //                                   color: AppColors.infoGrey,
-                                                      //                                   fontFamily: 'DMSans',
-                                                      //                                 ),
-                                                      //                               ),
-                                                      //                             ),
-                                                      //                           ],
-                                                      //                         )
-                                                      //                       : Text(
-                                                      //                           o.lgas!
-                                                      //                               .map(
-                                                      //                                 (
-                                                      //                                   e,
-                                                      //                                 ) => e.toString(),
-                                                      //                               )
-                                                      //                               .join(
-                                                      //                                 ', ',
-                                                      //                               ),
-                                                      //                           maxLines: 1,
-                                                      //                           overflow: TextOverflow.ellipsis,
-                                                      //                           style: TextStyle(
-                                                      //                             fontSize: 13.86.sp,
-                                                      //                             fontWeight: FontWeight.w200,
-                                                      //                             color: AppColors.infoGrey,
-                                                      //                             fontFamily: 'DMSans',
-                                                      //                           ),
-                                                      //                         ),
-                                                      //                 ),
-                                                      //                 SizedBox(
-                                                      //                   height:
-                                                      //                       10.h,
-                                                      //                 ),
-                                                      //                 GestureDetector(
-                                                      //                   onTap: () {
-                                                      //                     if (model.coverageAreasMap ==
-                                                      //                         o) {
-                                                      //                       model.coverageAreasMap =
-                                                      //                           null;
-                                                      //                     } else {
-                                                      //                       model.coverageAreasMap =
-                                                      //                           o;
-                                                      //                     }
-                                                      //                     model
-                                                      //                         .notifyListeners();
-                                                      //                   },
-                                                      //                   child: TextView(
-                                                      //                     text:
-                                                      //                         model.coverageAreasMap ==
-                                                      //                             o
-                                                      //                         ? 'Hide'
-                                                      //                         : 'See all',
-                                                      //                     textStyle: TextStyle(
-                                                      //                       decoration:
-                                                      //                           TextDecoration.underline,
-                                                      //                       decorationColor:
-                                                      //                           model.coverageAreasMap ==
-                                                      //                               o
-                                                      //                           ? AppColors.primary
-                                                      //                           : AppColors.reminder1,
-                                                      //                       fontSize:
-                                                      //                           12.86.sp,
-                                                      //                       fontWeight:
-                                                      //                           FontWeight.w500,
-                                                      //                       color:
-                                                      //                           model.coverageAreasMap ==
-                                                      //                               o
-                                                      //                           ? AppColors.primary
-                                                      //                           : AppColors.reminder1,
-                                                      //                       fontFamily:
-                                                      //                           'DMSans',
-                                                      //                     ),
-                                                      //                   ),
-                                                      //                 ),
-                                                      //                 SizedBox(
-                                                      //                   height:
-                                                      //                       10.h,
-                                                      //                 ),
-                                                      //                 Row(
-                                                      //                   mainAxisAlignment:
-                                                      //                       MainAxisAlignment.end,
-                                                      //                   children: [
-                                                      //                     GestureDetector(
-                                                      //                       onTap: () {
-                                                      //                         model.stateController.text =
-                                                      //                             o.state ??
-                                                      //                             '';
-                                                      //                         model.showLGAAndStateDialog(
-                                                      //                           context,
-                                                      //                           isEdit: true,
-                                                      //                           editState: o.state,
-                                                      //                           editLgas: o.lgas,
-                                                      //                         );
-                                                      //                         model.notifyListeners();
-                                                      //                       },
-                                                      //                       child: SvgPicture.asset(
-                                                      //                         AppImage.round_edit,
-                                                      //                         height: 22.h,
-                                                      //                         width: 22.h,
-                                                      //                       ),
-                                                      //                     ),
-                                                      //                     SizedBox(
-                                                      //                       width:
-                                                      //                           10.h,
-                                                      //                     ),
-                                                      //                     GestureDetector(
-                                                      //                       onTap: () {
-                                                      //                         model.listOfAddedLocation.remove(
-                                                      //                           o,
-                                                      //                         );
-                                                      //                         setState(
-                                                      //                           () {},
-                                                      //                         );
-                                                      //                         model.notifyListeners();
-                                                      //                       },
-                                                      //                       child: SvgPicture.asset(
-                                                      //                         AppImage.delete,
-                                                      //                         height: 20.h,
-                                                      //                         width: 20.h,
-                                                      //                       ),
-                                                      //                     ),
-                                                      //                   ],
-                                                      //                 ),
-                                                      //               ],
-                                                      //             ),
-                                                      //           ),
-                                                      //         ),
-                                                      //     ],
-                                                      //   ),
-                                                    
+                                                      if (model
+                                                                      .getMarketplaceUpgradeResponseModel!
+                                                                      .data!
+                                                                      .kyc ==
+                                                                  null &&
+                                                              model.coverageAreaIndex ==
+                                                                  1 ||
+                                                          model
+                                                                      .getMarketplaceUpgradeResponseModel!
+                                                                      .data!
+                                                                      .kyc ==
+                                                                  null &&
+                                                              model.coverageAreaIndex ==
+                                                                  null)
+                                                        Column(
+                                                          children: [
+                                                            Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceBetween,
+                                                              children: [
+                                                                Row(
+                                                                  children: [
+                                                                    TextView(
+                                                                      text:
+                                                                          'Area/Location ',
+                                                                      textStyle: TextStyle(
+                                                                        fontSize:
+                                                                            15.86.sp,
+                                                                        fontWeight:
+                                                                            FontWeight.w600,
+                                                                        color: AppColors
+                                                                            .reminder1,
+                                                                        fontFamily:
+                                                                            'DMSans',
+                                                                      ),
+                                                                    ),
+                                                                    SizedBox(
+                                                                      width:
+                                                                          6.10.w,
+                                                                    ),
+                                                                    Container(
+                                                                      padding: EdgeInsets.symmetric(
+                                                                        horizontal:
+                                                                            6.2.w,
+                                                                      ),
+                                                                      decoration: BoxDecoration(
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(
+                                                                              22,
+                                                                            ),
+                                                                        border: Border.all(
+                                                                          color:
+                                                                              AppColors.primary1,
+                                                                        ),
+                                                                      ),
+                                                                      child: TextView(
+                                                                        text:
+                                                                            '${model.listOfAddedLocation.length}',
+                                                                        textStyle: TextStyle(
+                                                                          fontSize:
+                                                                              12.6.sp,
+                                                                          fontWeight:
+                                                                              FontWeight.w300,
+                                                                          color:
+                                                                              AppColors.primary1,
+                                                                          fontFamily:
+                                                                              'DMSans',
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                IconButton(
+                                                                  onPressed: () {
+                                                                    model
+                                                                        .stateController
+                                                                        .clear();
+                                                                    model
+                                                                        .lgaListCopy
+                                                                        .clear();
+                                                                    model.showLGAAndStateDialog(
+                                                                      context,
+                                                                      covAreaIndex:
+                                                                          1,
+                                                                    );
+                                                                  },
+                                                                  icon: Icon(
+                                                                    Icons.add,
+                                                                    color: AppColors
+                                                                        .reminder1,
+                                                                    size: 22.sp,
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            Divider(
+                                                              color:
+                                                                  AppColors.f1,
+                                                            ),
+                                                            if (model
+                                                                .listOfAddedLocation
+                                                                .isNotEmpty)
+                                                              ...model.listOfAddedLocation.map(
+                                                                (
+                                                                  o,
+                                                                ) => Container(
+                                                                  width: double
+                                                                      .infinity,
+                                                                  margin:
+                                                                      EdgeInsets.only(
+                                                                        bottom:
+                                                                            12.w,
+                                                                      ),
+                                                                  padding:
+                                                                      EdgeInsets.all(
+                                                                        16.w,
+                                                                      ),
+                                                                  decoration: BoxDecoration(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                          12,
+                                                                        ),
+                                                                    color:
+                                                                        AppColors
+                                                                            .grey,
+                                                                  ),
+                                                                  child: Column(
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .start,
+                                                                    children: [
+                                                                      TextView(
+                                                                        text:
+                                                                            o.state ??
+                                                                            '',
+                                                                        textStyle: TextStyle(
+                                                                          fontSize:
+                                                                              13.86.sp,
+                                                                          fontWeight:
+                                                                              FontWeight.w600,
+                                                                          color:
+                                                                              AppColors.reminder1,
+                                                                          fontFamily:
+                                                                              'DMSans',
+                                                                        ),
+                                                                      ),
+                                                                      SizedBox(
+                                                                        height:
+                                                                            7.2.h,
+                                                                      ),
+
+                                                                      AnimatedSize(
+                                                                        duration: const Duration(
+                                                                          milliseconds:
+                                                                              300,
+                                                                        ),
+                                                                        curve: Curves
+                                                                            .easeInOut,
+                                                                        child:
+                                                                            model.coverageAreasMap ==
+                                                                                o
+                                                                            ? Wrap(
+                                                                                children: [
+                                                                                  ...o.lgas!.map(
+                                                                                    (
+                                                                                      e,
+                                                                                    ) => TextView(
+                                                                                      text: '$e, ',
+                                                                                      textStyle: TextStyle(
+                                                                                        fontSize: 13.86.sp,
+                                                                                        fontWeight: FontWeight.w200,
+                                                                                        color: AppColors.infoGrey,
+                                                                                        fontFamily: 'DMSans',
+                                                                                      ),
+                                                                                    ),
+                                                                                  ),
+                                                                                ],
+                                                                              )
+                                                                            : Text(
+                                                                                o.lgas!
+                                                                                    .map(
+                                                                                      (
+                                                                                        e,
+                                                                                      ) => e.toString(),
+                                                                                    )
+                                                                                    .join(
+                                                                                      ', ',
+                                                                                    ),
+                                                                                maxLines: 1,
+                                                                                overflow: TextOverflow.ellipsis,
+                                                                                style: TextStyle(
+                                                                                  fontSize: 13.86.sp,
+                                                                                  fontWeight: FontWeight.w200,
+                                                                                  color: AppColors.infoGrey,
+                                                                                  fontFamily: 'DMSans',
+                                                                                ),
+                                                                              ),
+                                                                      ),
+                                                                      SizedBox(
+                                                                        height:
+                                                                            10.h,
+                                                                      ),
+                                                                      GestureDetector(
+                                                                        onTap: () {
+                                                                          if (model.coverageAreasMap ==
+                                                                              o) {
+                                                                            model.coverageAreasMap =
+                                                                                null;
+                                                                          } else {
+                                                                            model.coverageAreasMap =
+                                                                                o;
+                                                                          }
+                                                                          model
+                                                                              .notifyListeners();
+                                                                        },
+                                                                        child: TextView(
+                                                                          text:
+                                                                              model.coverageAreasMap ==
+                                                                                  o
+                                                                              ? 'Hide'
+                                                                              : 'See all',
+                                                                          textStyle: TextStyle(
+                                                                            decoration:
+                                                                                TextDecoration.underline,
+                                                                            decorationColor:
+                                                                                model.coverageAreasMap ==
+                                                                                    o
+                                                                                ? AppColors.primary
+                                                                                : AppColors.reminder1,
+                                                                            fontSize:
+                                                                                12.86.sp,
+                                                                            fontWeight:
+                                                                                FontWeight.w500,
+                                                                            color:
+                                                                                model.coverageAreasMap ==
+                                                                                    o
+                                                                                ? AppColors.primary
+                                                                                : AppColors.reminder1,
+                                                                            fontFamily:
+                                                                                'DMSans',
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                      SizedBox(
+                                                                        height:
+                                                                            10.h,
+                                                                      ),
+                                                                      Row(
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.end,
+                                                                        children: [
+                                                                          GestureDetector(
+                                                                            onTap: () {
+                                                                              model.stateController.text =
+                                                                                  o.state ??
+                                                                                  '';
+                                                                              model.showLGAAndStateDialog(
+                                                                                context,
+                                                                                isEdit: true,
+                                                                                editState: o.state,
+                                                                                editLgas: o.lgas,
+                                                                              );
+                                                                              model.notifyListeners();
+                                                                            },
+                                                                            child: SvgPicture.asset(
+                                                                              AppImage.round_edit,
+                                                                              height: 22.h,
+                                                                              width: 22.h,
+                                                                            ),
+                                                                          ),
+                                                                          SizedBox(
+                                                                            width:
+                                                                                10.h,
+                                                                          ),
+                                                                          GestureDetector(
+                                                                            onTap: () {
+                                                                              model.listOfAddedLocation.remove(
+                                                                                o,
+                                                                              );
+                                                                              setState(
+                                                                                () {},
+                                                                              );
+                                                                              model.notifyListeners();
+                                                                            },
+                                                                            child: SvgPicture.asset(
+                                                                              AppImage.delete,
+                                                                              height: 20.h,
+                                                                              width: 20.h,
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                          ],
+                                                        ),
                                                     ],
                                                   )
-                                                : 
-                                                SizedBox.shrink(),
+                                                : SizedBox.shrink(),
                                           ],
                                         ),
                                       ),
@@ -3539,16 +3566,16 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                     setState(() {
                                                       isSwitchedManufaturer =
                                                           val;
-                                                    //   if (isSwitchedManufaturer) {
-                                                    //     model.businessTypes.add(
-                                                    //       'MANUFACTURER',
-                                                    //     );
-                                                    //   } else {
-                                                    //     model.businessTypes
-                                                    //         .remove(
-                                                    //           'MANUFACTURER',
-                                                    //         );
-                                                    //   }
+                                                      if (isSwitchedManufaturer) {
+                                                        model.businessTypes.add(
+                                                          'MANUFACTURER',
+                                                        );
+                                                      } else {
+                                                        model.businessTypes
+                                                            .remove(
+                                                              'MANUFACTURER',
+                                                            );
+                                                      }
                                                       model.notifyListeners();
                                                     });
                                                   },
@@ -3938,104 +3965,143 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                         ],
                                                       ),
                                                       SizedBox(height: 10.h),
-                                                      // model.getHealthcareProviderKycResponseModel!.data!.level2 !=
-                                                      //                 null &&
-                                                      //             model
-                                                      //                     .getHealthcareProviderKycResponseModel!
-                                                      //                     .data!
-                                                      //                     .level2!
-                                                      //                     .manufacturer !=
-                                                      //                 null &&
-                                                      //             model
-                                                      //                     .getDistributorKycResponseModel!
-                                                      //                     .data!
-                                                      //                     .level2!
-                                                      //                     .manufacturer!
-                                                      //                     .documents!
-                                                      //                     .cacCertificate !=
-                                                      //                 null ||
-                                                      //         model.secondLevelDistributorKycEntityModelManCAC !=
-                                                      //                 null &&
-                                                      //             model
-                                                      //                     .secondLevelDistributorKycEntityModelManCAC!
-                                                      //                     .manufacturer !=
-                                                      //                 null &&
-                                                      //             model
-                                                      //                     .secondLevelDistributorKycEntityModelManCAC!
-                                                      //                     .manufacturer!
-                                                      //                     .documents!
-                                                      //                     .cacCertificate !=
-                                                      //                 null
-                                                      //     ? Container(
-                                                      //         padding:
-                                                      //             EdgeInsets.all(
-                                                      //               10.w,
-                                                      //             ),
-                                                      //         decoration: BoxDecoration(
-                                                      //           border: Border.all(
-                                                      //             color: AppColors
-                                                      //                 .tintColor,
-                                                      //           ),
-                                                      //           borderRadius:
-                                                      //               BorderRadius.circular(
-                                                      //                 12,
-                                                      //               ),
-                                                      //         ),
-                                                      //         child: Row(
-                                                      //           children: [
-                                                      //             SvgPicture.asset(
-                                                      //               AppImage
-                                                      //                   .kyc_file,
-                                                      //             ),
-                                                      //             SizedBox(
-                                                      //               width:
-                                                      //                   14.20.w,
-                                                      //             ),
-                                                      //             SizedBox(
-                                                      //               width: 80.w,
-                                                      //               child: TextView(
-                                                      //                 text:
-                                                      //                     'CAC Certificate.jpg',
-                                                      //                 maxLines:
-                                                      //                     1,
-                                                      //                 textOverflow:
-                                                      //                     TextOverflow
-                                                      //                         .ellipsis,
-                                                      //                 textStyle: TextStyle(
-                                                      //                   fontFamily:
-                                                      //                       'Arial',
-                                                      //                   fontSize:
-                                                      //                       13.2.sp,
-                                                      //                   fontWeight:
-                                                      //                       FontWeight.w400,
-                                                      //                   color: AppColors
-                                                      //                       .black,
-                                                      //                 ),
-                                                      //               ),
-                                                      //             ),
-                                                      //             Spacer(),
-                                                      //             GestureDetector(
-                                                      //               onTap: () => Navigator.push(
-                                                      //                 context,
-                                                      //                 MaterialPageRoute(
-                                                      //                   builder: (_) => ImageWebViewScreen(
-                                                      //                     imageUrl:
-                                                      //                         model.getDistributorKycResponseModel?.data?.level2?.manufacturer?.documents?.cacCertificate?.url ??
-                                                      //                         model.secondLevelDistributorKycEntityModelManCAC?.manufacturer?.documents?.cacCertificate?.url ??
-                                                      //                         '',
-                                                      //                   ),
-                                                      //                 ),
-                                                      //               ),
-                                                      //               child: SvgPicture.asset(
-                                                      //                 AppImage
-                                                      //                     .kyc_eye,
-                                                      //               ),
-                                                      //             ),
-                                                      //           ],
-                                                      //         ),
-                                                      //       )
-                                                      //     : 
-                                                          SizedBox(
+                                                      model.getMarketplaceUpgradeResponseModel!.data!.kyc !=
+                                                                      null &&
+                                                                  model
+                                                                          .getMarketplaceUpgradeResponseModel!
+                                                                          .data!
+                                                                          .kyc!
+                                                                          .manufacturer !=
+                                                                      null &&
+                                                                  model
+                                                                          .getMarketplaceUpgradeResponseModel!
+                                                                          .data!
+                                                                          .kyc!
+                                                                          .manufacturer!
+                                                                          .documents!
+                                                                          .cacCertificate !=
+                                                                      null ||
+                                                              model.secondLevelDistributorKycEntityModelManCAC !=
+                                                                      null &&
+                                                                  model
+                                                                          .secondLevelDistributorKycEntityModelManCAC!
+                                                                          .manufacturer !=
+                                                                      null &&
+                                                                  model
+                                                                          .secondLevelDistributorKycEntityModelManCAC!
+                                                                          .manufacturer!
+                                                                          .documents!
+                                                                          .cacCertificate !=
+                                                                      null
+                                                          ? Container(
+                                                              padding:
+                                                                  EdgeInsets.all(
+                                                                    10.w,
+                                                                  ),
+                                                              decoration: BoxDecoration(
+                                                                border: Border.all(
+                                                                  color: AppColors
+                                                                      .tintColor,
+                                                                ),
+                                                                borderRadius:
+                                                                    BorderRadius.circular(
+                                                                      12,
+                                                                    ),
+                                                              ),
+                                                              child: Row(
+                                                                children: [
+                                                                  SvgPicture.asset(
+                                                                    AppImage
+                                                                        .kyc_file,
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width:
+                                                                        14.20.w,
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width: 80.w,
+                                                                    child: TextView(
+                                                                      text:
+                                                                          'CAC Certificate.jpg',
+                                                                      maxLines:
+                                                                          1,
+                                                                      textOverflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                      textStyle: TextStyle(
+                                                                        fontFamily:
+                                                                            'Arial',
+                                                                        fontSize:
+                                                                            13.2.sp,
+                                                                        fontWeight:
+                                                                            FontWeight.w400,
+                                                                        color: AppColors
+                                                                            .black,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  Spacer(),
+                                                                  GestureDetector(
+                                                                    onTap: () => Navigator.push(
+                                                                      context,
+                                                                      MaterialPageRoute(
+                                                                        builder: (_) => ImageWebViewScreen(
+                                                                          imageUrl:
+                                                                              model.getMarketplaceUpgradeResponseModel!.data!.kyc?.manufacturer?.documents?.cacCertificate?.url ??
+                                                                              model.secondLevelDistributorKycEntityModelManCAC?.manufacturer?.documents?.cacCertificate?.url ??
+                                                                              '',
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    child: SvgPicture.asset(
+                                                                      AppImage
+                                                                          .kyc_eye,
+                                                                    ),
+                                                                  ),
+                                                                  model.secondLevelDistributorKycEntityModelManCAC?.manufacturer?.documents?.companyLogo !=
+                                                                          null
+                                                                      ? Padding(
+                                                                        padding:  EdgeInsets.only(left:10.0.w),child: GestureDetector(
+                                                                            onTap: () => model.pickImageManufacturerKycCAC(
+                                                                              context,
+                                                                            ),
+                                                                            child:
+                                                                                model.isLoadingCAC
+                                                                                ? SizedBox(
+                                                                                    width: 10.w,
+                                                                                    height: 10.h,
+                                                                                    child: CircularProgressIndicator(
+                                                                                      color: AppColors.primary,
+                                                                                      strokeWidth: 2.w,
+                                                                                    ),
+                                                                                  )
+                                                                                : SvgPicture.asset(
+                                                                                    AppImage.upload_arr_up,
+                                                                                  ),
+                                                                          ),
+                                                                      )
+                                                                      : SizedBox.shrink(),
+                                                                  SizedBox(
+                                                                    width:
+                                                                        8.10.w,
+                                                                  ),
+                                                                  model.secondLevelDistributorKycEntityModelManCAC?.manufacturer?.documents?.companyLogo !=
+                                                                          null
+                                                                      ? GestureDetector(
+                                                                          onTap: () {
+                                                                            model.secondLevelDistributorKycEntityModelManCAC?.manufacturer?.documents?.companyLogo =
+                                                                                null;
+                                                                            model.notifyListeners();
+                                                                          },
+                                                                          child: SvgPicture.asset(
+                                                                            AppImage.delete,
+                                                                          ),
+                                                                        )
+                                                                      : SizedBox.shrink(),
+                                                                ],
+                                                              ),
+                                                            )
+                                                          : SizedBox(
                                                               width: double
                                                                   .infinity,
                                                               child: DottedBorder(
@@ -4054,10 +4120,10 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                                       .primary,
                                                                 ),
                                                                 child: GestureDetector(
-                                                                  // onTap: () => model
-                                                                  //     .pickImageManufacturerKycCAC(
-                                                                  //       context,
-                                                                  //     ),
+                                                                  onTap: () => model
+                                                                      .pickImageManufacturerKycCAC(
+                                                                        context,
+                                                                      ),
                                                                   child: Container(
                                                                     width: double
                                                                         .infinity,
@@ -4174,105 +4240,147 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                         ],
                                                       ),
                                                       SizedBox(height: 10.h),
-                                                      // model.getDistributorKycResponseModel!.data!.level2 !=
-                                                      //                 null &&
-                                                      //             model
-                                                      //                     .getDistributorKycResponseModel!
-                                                      //                     .data!
-                                                      //                     .level2!
-                                                      //                     .manufacturer !=
-                                                      //                 null &&
-                                                      //             model
-                                                      //                     .getDistributorKycResponseModel!
-                                                      //                     .data!
-                                                      //                     .level2!
-                                                      //                     .manufacturer!
-                                                      //                     .documents!
-                                                      //                     .gmpCertificate !=
-                                                      //                 null ||
-                                                      //         model.secondLevelDistributorKycEntityModelManGMP !=
-                                                      //                 null &&
-                                                      //             model
-                                                      //                     .secondLevelDistributorKycEntityModelManGMP!
-                                                      //                     .manufacturer !=
-                                                      //                 null &&
-                                                      //             model
-                                                      //                     .secondLevelDistributorKycEntityModelManGMP!
-                                                      //                     .manufacturer!
-                                                      //                     .documents!
-                                                      //                     .gmpCertificate !=
-                                                      //                 null
-                                                      //     ? Container(
-                                                      //         padding:
-                                                      //             EdgeInsets.all(
-                                                      //               10.w,
-                                                      //             ),
-                                                      //         decoration: BoxDecoration(
-                                                      //           border: Border.all(
-                                                      //             color: AppColors
-                                                      //                 .tintColor,
-                                                      //           ),
-                                                      //           borderRadius:
-                                                      //               BorderRadius.circular(
-                                                      //                 12,
-                                                      //               ),
-                                                      //         ),
-                                                      //         child: Row(
-                                                      //           children: [
-                                                      //             SvgPicture.asset(
-                                                      //               AppImage
-                                                      //                   .kyc_file,
-                                                      //             ),
-                                                      //             SizedBox(
-                                                      //               width:
-                                                      //                   14.20.w,
-                                                      //             ),
-                                                      //             SizedBox(
-                                                      //               width: 80.w,
-                                                      //               child: TextView(
-                                                      //                 text:
-                                                      //                     'GMP Certificate.jpg',
-                                                      //                 maxLines:
-                                                      //                     1,
-                                                      //                 textOverflow:
-                                                      //                     TextOverflow
-                                                      //                         .ellipsis,
-                                                      //                 textStyle: TextStyle(
-                                                      //                   fontFamily:
-                                                      //                       'Arial',
-                                                      //                   fontSize:
-                                                      //                       13.2.sp,
-                                                      //                   fontWeight:
-                                                      //                       FontWeight.w400,
-                                                      //                   color: AppColors
-                                                      //                       .black,
-                                                      //                 ),
-                                                      //               ),
-                                                      //             ),
-                                                      //             Spacer(),
-                                                      //             GestureDetector(
-                                                      //               onTap: () => Navigator.push(
-                                                      //                 context,
-                                                      //                 MaterialPageRoute(
-                                                      //                   builder: (_) => ImageWebViewScreen(
-                                                      //                     imageUrl:
-                                                      //                         model.getDistributorKycResponseModel?.data?.level2?.manufacturer?.documents?.gmpCertificate?.url ??
-                                                      //                         model.secondLevelDistributorKycEntityModelManGMP?.manufacturer?.documents?.gmpCertificate?.url ??
-                                                      //                         ''
-                                                      //                             '',
-                                                      //                   ),
-                                                      //                 ),
-                                                      //               ),
-                                                      //               child: SvgPicture.asset(
-                                                      //                 AppImage
-                                                      //                     .kyc_eye,
-                                                      //               ),
-                                                      //             ),
-                                                      //           ],
-                                                      //         ),
-                                                      //       )
-                                                      //     : 
-                                                          SizedBox(
+
+                                                      model.getMarketplaceUpgradeResponseModel!.data!.kyc !=
+                                                                      null &&
+                                                                  model
+                                                                          .getMarketplaceUpgradeResponseModel!
+                                                                          .data!
+                                                                          .kyc!
+                                                                          .manufacturer !=
+                                                                      null &&
+                                                                  model
+                                                                          .getMarketplaceUpgradeResponseModel!
+                                                                          .data!
+                                                                          .kyc!
+                                                                          .manufacturer!
+                                                                          .documents!
+                                                                          .gmpCertificate !=
+                                                                      null ||
+                                                              model.secondLevelDistributorKycEntityModelManGMP !=
+                                                                      null &&
+                                                                  model
+                                                                          .secondLevelDistributorKycEntityModelManGMP!
+                                                                          .manufacturer !=
+                                                                      null &&
+                                                                  model
+                                                                          .secondLevelDistributorKycEntityModelManGMP!
+                                                                          .manufacturer!
+                                                                          .documents!
+                                                                          .gmpCertificate !=
+                                                                      null
+                                                          ? Container(
+                                                              padding:
+                                                                  EdgeInsets.all(
+                                                                    10.w,
+                                                                  ),
+                                                              decoration: BoxDecoration(
+                                                                border: Border.all(
+                                                                  color: AppColors
+                                                                      .tintColor,
+                                                                ),
+                                                                borderRadius:
+                                                                    BorderRadius.circular(
+                                                                      12,
+                                                                    ),
+                                                              ),
+                                                              child: Row(
+                                                                children: [
+                                                                  SvgPicture.asset(
+                                                                    AppImage
+                                                                        .kyc_file,
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width:
+                                                                        14.20.w,
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width: 80.w,
+                                                                    child: TextView(
+                                                                      text:
+                                                                          'GMP Certificate.jpg',
+                                                                      maxLines:
+                                                                          1,
+                                                                      textOverflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                      textStyle: TextStyle(
+                                                                        fontFamily:
+                                                                            'Arial',
+                                                                        fontSize:
+                                                                            13.2.sp,
+                                                                        fontWeight:
+                                                                            FontWeight.w400,
+                                                                        color: AppColors
+                                                                            .black,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  Spacer(),
+                                                                  GestureDetector(
+                                                                    onTap: () => Navigator.push(
+                                                                      context,
+                                                                      MaterialPageRoute(
+                                                                        builder: (_) => ImageWebViewScreen(
+                                                                          imageUrl:
+                                                                              model.getMarketplaceUpgradeResponseModel!.data!.kyc?.manufacturer?.documents?.gmpCertificate?.url ??
+                                                                              model.secondLevelDistributorKycEntityModelManGMP?.manufacturer?.documents?.gmpCertificate?.url ??
+                                                                              ''
+                                                                                  '',
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    child: SvgPicture.asset(
+                                                                      AppImage
+                                                                          .kyc_eye,
+                                                                    ),
+                                                                  ),
+                                                                  model.secondLevelDistributorKycEntityModelManGMP?.manufacturer?.documents?.gmpCertificate !=
+                                                                          null
+                                                                      ? Padding(
+                                                                        padding:  EdgeInsets.only(left:10.0.w),
+                                                                        child: GestureDetector(
+                                                                            onTap: () => model.pickImageManufacturerKycGMP(
+                                                                              context,
+                                                                            ),
+                                                                            child:
+                                                                                model.isLoadingGMP
+                                                                                ? SizedBox(
+                                                                                    width: 10.w,
+                                                                                    height: 10.h,
+                                                                                    child: CircularProgressIndicator(
+                                                                                      color: AppColors.primary,
+                                                                                      strokeWidth: 2.w,
+                                                                                    ),
+                                                                                  )
+                                                                                : SvgPicture.asset(
+                                                                                    AppImage.upload_arr_up,
+                                                                                  ),
+                                                                          ),
+                                                                      )
+                                                                      : SizedBox.shrink(),
+                                                                  SizedBox(
+                                                                    width:
+                                                                        8.10.w,
+                                                                  ),
+                                                                  model.secondLevelDistributorKycEntityModelManGMP?.manufacturer?.documents?.gmpCertificate !=
+                                                                          null
+                                                                      ? GestureDetector(
+                                                                          onTap: () {
+                                                                            model.secondLevelDistributorKycEntityModelManGMP?.manufacturer?.documents?.gmpCertificate =
+                                                                                null;
+                                                                            model.notifyListeners();
+                                                                          },
+                                                                          child: SvgPicture.asset(
+                                                                            AppImage.delete,
+                                                                          ),
+                                                                        )
+                                                                      : SizedBox.shrink(),
+                                                                
+                                                                ],
+                                                              ),
+                                                            )
+                                                          : SizedBox(
                                                               width: double
                                                                   .infinity,
                                                               child: DottedBorder(
@@ -4291,10 +4399,10 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                                       .primary,
                                                                 ),
                                                                 child: GestureDetector(
-                                                                  // onTap: () => model
-                                                                  //     .pickImageManufacturerKycGMP(
-                                                                  //       context,
-                                                                  //     ),
+                                                                  onTap: () => model
+                                                                      .pickImageManufacturerKycGMP(
+                                                                        context,
+                                                                      ),
                                                                   child: Container(
                                                                     width: double
                                                                         .infinity,
@@ -4318,17 +4426,16 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                                           MainAxisAlignment
                                                                               .start,
                                                                       children: [
-                                                                        // model.isLoadingGMP
-                                                                        //     ? SizedBox(
-                                                                        //         width: 20.w,
-                                                                        //         height: 20.h,
-                                                                        //         child: CircularProgressIndicator(
-                                                                        //           color: AppColors.primary,
-                                                                        //           strokeWidth: 2.w,
-                                                                        //         ),
-                                                                        //       )
-                                                                        //     : 
-                                                                            SvgPicture.asset(
+                                                                        model.isLoadingGMP
+                                                                            ? SizedBox(
+                                                                                width: 20.w,
+                                                                                height: 20.h,
+                                                                                child: CircularProgressIndicator(
+                                                                                  color: AppColors.primary,
+                                                                                  strokeWidth: 2.w,
+                                                                                ),
+                                                                              )
+                                                                            : SvgPicture.asset(
                                                                                 AppImage.upload_doc,
                                                                               ),
                                                                         SizedBox(
@@ -4412,104 +4519,145 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                         ],
                                                       ),
                                                       SizedBox(height: 10.h),
-                                                      // model.getDistributorKycResponseModel!.data!.level2 !=
-                                                      //                 null &&
-                                                      //             model
-                                                      //                     .getDistributorKycResponseModel!
-                                                      //                     .data!
-                                                      //                     .level2!
-                                                      //                     .manufacturer !=
-                                                      //                 null &&
-                                                      //             model
-                                                      //                     .getDistributorKycResponseModel!
-                                                      //                     .data!
-                                                      //                     .level2!
-                                                      //                     .manufacturer!
-                                                      //                     .documents!
-                                                      //                     .nafdacManufacturingLicense !=
-                                                      //                 null ||
-                                                      //         model.secondLevelDistributorKycEntityModelManNAF !=
-                                                      //                 null &&
-                                                      //             model
-                                                      //                     .secondLevelDistributorKycEntityModelManNAF!
-                                                      //                     .manufacturer !=
-                                                      //                 null &&
-                                                      //             model
-                                                      //                     .secondLevelDistributorKycEntityModelManNAF!
-                                                      //                     .manufacturer!
-                                                      //                     .documents!
-                                                      //                     .nafdacManufacturingLicense !=
-                                                      //                 null
-                                                      //     ? Container(
-                                                      //         padding:
-                                                      //             EdgeInsets.all(
-                                                      //               10.w,
-                                                      //             ),
-                                                      //         decoration: BoxDecoration(
-                                                      //           border: Border.all(
-                                                      //             color: AppColors
-                                                      //                 .tintColor,
-                                                      //           ),
-                                                      //           borderRadius:
-                                                      //               BorderRadius.circular(
-                                                      //                 12,
-                                                      //               ),
-                                                      //         ),
-                                                      //         child: Row(
-                                                      //           children: [
-                                                      //             SvgPicture.asset(
-                                                      //               AppImage
-                                                      //                   .kyc_file,
-                                                      //             ),
-                                                      //             SizedBox(
-                                                      //               width:
-                                                      //                   14.20.w,
-                                                      //             ),
-                                                      //             SizedBox(
-                                                      //               width: 80.w,
-                                                      //               child: TextView(
-                                                      //                 text:
-                                                      //                     'NAFDAC Manufacturing License.jpg',
-                                                      //                 maxLines:
-                                                      //                     1,
-                                                      //                 textOverflow:
-                                                      //                     TextOverflow
-                                                      //                         .ellipsis,
-                                                      //                 textStyle: TextStyle(
-                                                      //                   fontFamily:
-                                                      //                       'Arial',
-                                                      //                   fontSize:
-                                                      //                       13.2.sp,
-                                                      //                   fontWeight:
-                                                      //                       FontWeight.w400,
-                                                      //                   color: AppColors
-                                                      //                       .black,
-                                                      //                 ),
-                                                      //               ),
-                                                      //             ),
-                                                      //             Spacer(),
-                                                      //             GestureDetector(
-                                                      //               onTap: () => Navigator.push(
-                                                      //                 context,
-                                                      //                 MaterialPageRoute(
-                                                      //                   builder: (_) => ImageWebViewScreen(
-                                                      //                     imageUrl:
-                                                      //                         model.getDistributorKycResponseModel?.data?.level2?.manufacturer?.documents?.nafdacManufacturingLicense?.url ??
-                                                      //                         model.secondLevelDistributorKycEntityModelManNAF?.manufacturer?.documents?.nafdacManufacturingLicense?.url ??
-                                                      //                         '',
-                                                      //                   ),
-                                                      //                 ),
-                                                      //               ),
-                                                      //               child: SvgPicture.asset(
-                                                      //                 AppImage
-                                                      //                     .kyc_eye,
-                                                      //               ),
-                                                      //             ),
-                                                      //           ],
-                                                      //         ),
-                                                      //       )
-                                                      //     : 
-                                                          SizedBox(
+                                                      model.getMarketplaceUpgradeResponseModel!.data!.kyc !=
+                                                                      null &&
+                                                                  model
+                                                                          .getMarketplaceUpgradeResponseModel!
+                                                                          .data!
+                                                                          .kyc!
+                                                                          .manufacturer !=
+                                                                      null &&
+                                                                  model
+                                                                          .getMarketplaceUpgradeResponseModel!
+                                                                          .data!
+                                                                          .kyc!
+                                                                          .manufacturer!
+                                                                          .documents!
+                                                                          .nafdacManufacturingLicense !=
+                                                                      null ||
+                                                              model.secondLevelDistributorKycEntityModelManNAF !=
+                                                                      null &&
+                                                                  model
+                                                                          .secondLevelDistributorKycEntityModelManNAF!
+                                                                          .manufacturer !=
+                                                                      null &&
+                                                                  model
+                                                                          .secondLevelDistributorKycEntityModelManNAF!
+                                                                          .manufacturer!
+                                                                          .documents!
+                                                                          .nafdacManufacturingLicense !=
+                                                                      null
+                                                          ? Container(
+                                                              padding:
+                                                                  EdgeInsets.all(
+                                                                    10.w,
+                                                                  ),
+                                                              decoration: BoxDecoration(
+                                                                border: Border.all(
+                                                                  color: AppColors
+                                                                      .tintColor,
+                                                                ),
+                                                                borderRadius:
+                                                                    BorderRadius.circular(
+                                                                      12,
+                                                                    ),
+                                                              ),
+                                                              child: Row(
+                                                                children: [
+                                                                  SvgPicture.asset(
+                                                                    AppImage
+                                                                        .kyc_file,
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width:
+                                                                        14.20.w,
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width: 80.w,
+                                                                    child: TextView(
+                                                                      text:
+                                                                          'NAFDAC Manufacturing License.jpg',
+                                                                      maxLines:
+                                                                          1,
+                                                                      textOverflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                      textStyle: TextStyle(
+                                                                        fontFamily:
+                                                                            'Arial',
+                                                                        fontSize:
+                                                                            13.2.sp,
+                                                                        fontWeight:
+                                                                            FontWeight.w400,
+                                                                        color: AppColors
+                                                                            .black,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  Spacer(),
+                                                                  GestureDetector(
+                                                                    onTap: () => Navigator.push(
+                                                                      context,
+                                                                      MaterialPageRoute(
+                                                                        builder: (_) => ImageWebViewScreen(
+                                                                          imageUrl:
+                                                                              model.getMarketplaceUpgradeResponseModel!.data!.kyc?.manufacturer?.documents?.nafdacManufacturingLicense?.url ??
+                                                                              model.secondLevelDistributorKycEntityModelManNAF?.manufacturer?.documents?.nafdacManufacturingLicense?.url ??
+                                                                              '',
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    child: SvgPicture.asset(
+                                                                      AppImage
+                                                                          .kyc_eye,
+                                                                    ),
+                                                                  ),
+
+                                                                  model.secondLevelDistributorKycEntityModelManNAF?.manufacturer?.documents?.nafdacManufacturingLicense !=
+                                                                          null
+                                                                      ? Padding(
+                                                                        padding:  EdgeInsets.only(left:10.0.w),
+                                                                        child: GestureDetector(
+                                                                            onTap: () => model.pickImageManufacturerKycNAFManLin(
+                                                                              context,
+                                                                            ),
+                                                                            child:
+                                                                                model.isLoadingNAF
+                                                                                ? SizedBox(
+                                                                                    width: 10.w,
+                                                                                    height: 10.h,
+                                                                                    child: CircularProgressIndicator(
+                                                                                      color: AppColors.primary,
+                                                                                      strokeWidth: 2.w,
+                                                                                    ),
+                                                                                  )
+                                                                                : SvgPicture.asset(
+                                                                                    AppImage.upload_arr_up,
+                                                                                  ),
+                                                                          ),
+                                                                      )
+                                                                      : SizedBox.shrink(),
+                                                                  SizedBox(
+                                                                    width:
+                                                                        8.10.w,
+                                                                  ),
+                                                                  model.secondLevelDistributorKycEntityModelManNAF?.manufacturer?.documents?.nafdacManufacturingLicense !=
+                                                                          null
+                                                                      ? GestureDetector(
+                                                                          onTap: () {
+                                                                            model.secondLevelDistributorKycEntityModelManNAF?.manufacturer?.documents?.nafdacManufacturingLicense =
+                                                                                null;
+                                                                            model.notifyListeners();
+                                                                          },
+                                                                          child: SvgPicture.asset(
+                                                                            AppImage.delete,
+                                                                          ),
+                                                                        )
+                                                                      : SizedBox.shrink(),
+                                                                ],
+                                                              ),
+                                                            )
+                                                          : SizedBox(
                                                               width: double
                                                                   .infinity,
                                                               child: DottedBorder(
@@ -4528,10 +4676,10 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                                       .primary,
                                                                 ),
                                                                 child: GestureDetector(
-                                                                  // onTap: () => model
-                                                                  //     .pickImageManufacturerKycNAFManLin(
-                                                                  //       context,
-                                                                  //     ),
+                                                                  onTap: () => model
+                                                                      .pickImageManufacturerKycNAFManLin(
+                                                                        context,
+                                                                      ),
                                                                   child: Container(
                                                                     width: double
                                                                         .infinity,
@@ -4555,17 +4703,16 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                                           MainAxisAlignment
                                                                               .start,
                                                                       children: [
-                                                                        // model.isLoadingNAF
-                                                                        //     ? SizedBox(
-                                                                        //         width: 20.w,
-                                                                        //         height: 20.h,
-                                                                        //         child: CircularProgressIndicator(
-                                                                        //           color: AppColors.primary,
-                                                                        //           strokeWidth: 2.w,
-                                                                        //         ),
-                                                                        //       )
-                                                                        //     : 
-                                                                            SvgPicture.asset(
+                                                                        model.isLoadingNAF
+                                                                            ? SizedBox(
+                                                                                width: 20.w,
+                                                                                height: 20.h,
+                                                                                child: CircularProgressIndicator(
+                                                                                  color: AppColors.primary,
+                                                                                  strokeWidth: 2.w,
+                                                                                ),
+                                                                              )
+                                                                            : SvgPicture.asset(
                                                                                 AppImage.upload_doc,
                                                                               ),
                                                                         SizedBox(
@@ -4650,104 +4797,146 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                         ],
                                                       ),
                                                       SizedBox(height: 10.h),
-                                                      // model.getDistributorKycResponseModel!.data!.level2 !=
-                                                      //                 null &&
-                                                      //             model
-                                                      //                     .getDistributorKycResponseModel!
-                                                      //                     .data!
-                                                      //                     .level2!
-                                                      //                     .manufacturer !=
-                                                      //                 null &&
-                                                      //             model
-                                                      //                     .getDistributorKycResponseModel!
-                                                      //                     .data!
-                                                      //                     .level2!
-                                                      //                     .manufacturer!
-                                                      //                     .documents!
-                                                      //                     .productRegistrationEvidence !=
-                                                      //                 null ||
-                                                      //         model.secondLevelDistributorKycEntityModelManProd !=
-                                                      //                 null &&
-                                                      //             model
-                                                      //                     .secondLevelDistributorKycEntityModelManProd!
-                                                      //                     .manufacturer !=
-                                                      //                 null &&
-                                                      //             model
-                                                      //                     .secondLevelDistributorKycEntityModelManProd!
-                                                      //                     .manufacturer!
-                                                      //                     .documents!
-                                                      //                     .productRegistrationEvidence !=
-                                                      //                 null
-                                                      //     ? Container(
-                                                      //         padding:
-                                                      //             EdgeInsets.all(
-                                                      //               10.w,
-                                                      //             ),
-                                                      //         decoration: BoxDecoration(
-                                                      //           border: Border.all(
-                                                      //             color: AppColors
-                                                      //                 .tintColor,
-                                                      //           ),
-                                                      //           borderRadius:
-                                                      //               BorderRadius.circular(
-                                                      //                 12,
-                                                      //               ),
-                                                      //         ),
-                                                      //         child: Row(
-                                                      //           children: [
-                                                      //             SvgPicture.asset(
-                                                      //               AppImage
-                                                      //                   .kyc_file,
-                                                      //             ),
-                                                      //             SizedBox(
-                                                      //               width:
-                                                      //                   14.20.w,
-                                                      //             ),
-                                                      //             SizedBox(
-                                                      //               width: 80.w,
-                                                      //               child: TextView(
-                                                      //                 text:
-                                                      //                     'Product Registration Evidence.jpg',
-                                                      //                 maxLines:
-                                                      //                     1,
-                                                      //                 textOverflow:
-                                                      //                     TextOverflow
-                                                      //                         .ellipsis,
-                                                      //                 textStyle: TextStyle(
-                                                      //                   fontFamily:
-                                                      //                       'Arial',
-                                                      //                   fontSize:
-                                                      //                       13.2.sp,
-                                                      //                   fontWeight:
-                                                      //                       FontWeight.w400,
-                                                      //                   color: AppColors
-                                                      //                       .black,
-                                                      //                 ),
-                                                      //               ),
-                                                      //             ),
-                                                      //             Spacer(),
-                                                      //             GestureDetector(
-                                                      //               onTap: () => Navigator.push(
-                                                      //                 context,
-                                                      //                 MaterialPageRoute(
-                                                      //                   builder: (_) => ImageWebViewScreen(
-                                                      //                     imageUrl:
-                                                      //                         model.getDistributorKycResponseModel?.data?.level2?.manufacturer?.documents?.productRegistrationEvidence?.url ??
-                                                      //                         model.secondLevelDistributorKycEntityModelManProd?.manufacturer?.documents?.productRegistrationEvidence?.url ??
-                                                      //                         '',
-                                                      //                   ),
-                                                      //                 ),
-                                                      //               ),
-                                                      //               child: SvgPicture.asset(
-                                                      //                 AppImage
-                                                      //                     .kyc_eye,
-                                                      //               ),
-                                                      //             ),
-                                                      //           ],
-                                                      //         ),
-                                                      //       )
-                                                      //     : 
-                                                          SizedBox(
+
+                                                      model.getMarketplaceUpgradeResponseModel!.data!.kyc !=
+                                                                      null &&
+                                                                  model
+                                                                          .getMarketplaceUpgradeResponseModel!
+                                                                          .data!
+                                                                          .kyc!
+                                                                          .manufacturer !=
+                                                                      null &&
+                                                                  model
+                                                                          .getMarketplaceUpgradeResponseModel!
+                                                                          .data!
+                                                                          .kyc!
+                                                                          .manufacturer!
+                                                                          .documents!
+                                                                          .productRegistrationEvidence !=
+                                                                      null ||
+                                                              model.secondLevelDistributorKycEntityModelManProd !=
+                                                                      null &&
+                                                                  model
+                                                                          .secondLevelDistributorKycEntityModelManProd!
+                                                                          .manufacturer !=
+                                                                      null &&
+                                                                  model
+                                                                          .secondLevelDistributorKycEntityModelManProd!
+                                                                          .manufacturer!
+                                                                          .documents!
+                                                                          .productRegistrationEvidence !=
+                                                                      null
+                                                          ? Container(
+                                                              padding:
+                                                                  EdgeInsets.all(
+                                                                    10.w,
+                                                                  ),
+                                                              decoration: BoxDecoration(
+                                                                border: Border.all(
+                                                                  color: AppColors
+                                                                      .tintColor,
+                                                                ),
+                                                                borderRadius:
+                                                                    BorderRadius.circular(
+                                                                      12,
+                                                                    ),
+                                                              ),
+                                                              child: Row(
+                                                                children: [
+                                                                  SvgPicture.asset(
+                                                                    AppImage
+                                                                        .kyc_file,
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width:
+                                                                        14.20.w,
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width: 80.w,
+                                                                    child: TextView(
+                                                                      text:
+                                                                          'Product Registration Evidence.jpg',
+                                                                      maxLines:
+                                                                          1,
+                                                                      textOverflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                      textStyle: TextStyle(
+                                                                        fontFamily:
+                                                                            'Arial',
+                                                                        fontSize:
+                                                                            13.2.sp,
+                                                                        fontWeight:
+                                                                            FontWeight.w400,
+                                                                        color: AppColors
+                                                                            .black,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  Spacer(),
+                                                                  GestureDetector(
+                                                                    onTap: () => Navigator.push(
+                                                                      context,
+                                                                      MaterialPageRoute(
+                                                                        builder: (_) => ImageWebViewScreen(
+                                                                          imageUrl:
+                                                                              model.getMarketplaceUpgradeResponseModel!.data!.kyc?.manufacturer?.documents?.productRegistrationEvidence?.url ??
+                                                                              model.secondLevelDistributorKycEntityModelManProd?.manufacturer?.documents?.productRegistrationEvidence?.url ??
+                                                                              '',
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    child: SvgPicture.asset(
+                                                                      AppImage
+                                                                          .kyc_eye,
+                                                                    ),
+                                                                  ),
+
+                                                                  model.secondLevelDistributorKycEntityModelManProd?.manufacturer?.documents?.productRegistrationEvidence !=
+                                                                          null
+                                                                      ? Padding(
+                                                                        padding:  EdgeInsets.only(left:10.0.w),
+                                                                        child: GestureDetector(
+                                                                            onTap: () => model.pickImageManufacturerKycProdRegEvi(
+                                                                              context,
+                                                                            ),
+                                                                            child:
+                                                                                model.isLoadingProd
+                                                                                ? SizedBox(
+                                                                                    width: 10.w,
+                                                                                    height: 10.h,
+                                                                                    child: CircularProgressIndicator(
+                                                                                      color: AppColors.primary,
+                                                                                      strokeWidth: 2.w,
+                                                                                    ),
+                                                                                  )
+                                                                                : SvgPicture.asset(
+                                                                                    AppImage.upload_arr_up,
+                                                                                  ),
+                                                                          ),
+                                                                      )
+                                                                      : SizedBox.shrink(),
+                                                                  SizedBox(
+                                                                    width:
+                                                                        8.10.w,
+                                                                  ),
+                                                                  model.secondLevelDistributorKycEntityModelManProd?.manufacturer?.documents?.productRegistrationEvidence !=
+                                                                          null
+                                                                      ? GestureDetector(
+                                                                          onTap: () {
+                                                                            model.secondLevelDistributorKycEntityModelManProd?.manufacturer?.documents?.productRegistrationEvidence =
+                                                                                null;
+                                                                            model.notifyListeners();
+                                                                          },
+                                                                          child: SvgPicture.asset(
+                                                                            AppImage.delete,
+                                                                          ),
+                                                                        )
+                                                                      : SizedBox.shrink(),
+                                                                ],
+                                                              ),
+                                                            )
+                                                          : SizedBox(
                                                               width: double
                                                                   .infinity,
                                                               child: DottedBorder(
@@ -4766,10 +4955,10 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                                       .primary,
                                                                 ),
                                                                 child: GestureDetector(
-                                                                  // onTap: () => model
-                                                                  //     .pickImageManufacturerKycProdRegEvi(
-                                                                  //       context,
-                                                                  //     ),
+                                                                  onTap: () => model
+                                                                      .pickImageManufacturerKycProdRegEvi(
+                                                                        context,
+                                                                      ),
                                                                   child: Container(
                                                                     width: double
                                                                         .infinity,
@@ -4793,17 +4982,16 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                                           MainAxisAlignment
                                                                               .start,
                                                                       children: [
-                                                                        // model.isLoadingProd
-                                                                        //     ? SizedBox(
-                                                                        //         width: 20.w,
-                                                                        //         height: 20.h,
-                                                                        //         child: CircularProgressIndicator(
-                                                                        //           color: AppColors.primary,
-                                                                        //           strokeWidth: 2.w,
-                                                                        //         ),
-                                                                        //       )
-                                                                        //     : 
-                                                                            SvgPicture.asset(
+                                                                        model.isLoadingProd
+                                                                            ? SizedBox(
+                                                                                width: 20.w,
+                                                                                height: 20.h,
+                                                                                child: CircularProgressIndicator(
+                                                                                  color: AppColors.primary,
+                                                                                  strokeWidth: 2.w,
+                                                                                ),
+                                                                              )
+                                                                            : SvgPicture.asset(
                                                                                 AppImage.upload_doc,
                                                                               ),
                                                                         SizedBox(
@@ -4887,104 +5075,146 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                         ],
                                                       ),
                                                       SizedBox(height: 10.h),
-                                                      // model.getDistributorKycResponseModel!.data!.level2 !=
-                                                      //                 null &&
-                                                      //             model
-                                                      //                     .getDistributorKycResponseModel!
-                                                      //                     .data!
-                                                      //                     .level2!
-                                                      //                     .manufacturer !=
-                                                      //                 null &&
-                                                      //             model
-                                                      //                     .getDistributorKycResponseModel!
-                                                      //                     .data!
-                                                      //                     .level2!
-                                                      //                     .manufacturer!
-                                                      //                     .documents!
-                                                      //                     .companyLogo !=
-                                                      //                 null ||
-                                                      //         model.secondLevelDistributorKycEntityModelManLogo !=
-                                                      //                 null &&
-                                                      //             model
-                                                      //                     .secondLevelDistributorKycEntityModelManLogo!
-                                                      //                     .manufacturer !=
-                                                      //                 null &&
-                                                      //             model
-                                                      //                     .secondLevelDistributorKycEntityModelManLogo!
-                                                      //                     .manufacturer!
-                                                      //                     .documents!
-                                                      //                     .companyLogo !=
-                                                      //                 null
-                                                      //     ? Container(
-                                                      //         padding:
-                                                      //             EdgeInsets.all(
-                                                      //               10.w,
-                                                      //             ),
-                                                      //         decoration: BoxDecoration(
-                                                      //           border: Border.all(
-                                                      //             color: AppColors
-                                                      //                 .tintColor,
-                                                      //           ),
-                                                      //           borderRadius:
-                                                      //               BorderRadius.circular(
-                                                      //                 12,
-                                                      //               ),
-                                                      //         ),
-                                                      //         child: Row(
-                                                      //           children: [
-                                                      //             SvgPicture.asset(
-                                                      //               AppImage
-                                                      //                   .kyc_file,
-                                                      //             ),
-                                                      //             SizedBox(
-                                                      //               width:
-                                                      //                   14.20.w,
-                                                      //             ),
-                                                      //             SizedBox(
-                                                      //               width: 80.w,
-                                                      //               child: TextView(
-                                                      //                 text:
-                                                      //                     'Company Logo.jpg',
-                                                      //                 maxLines:
-                                                      //                     1,
-                                                      //                 textOverflow:
-                                                      //                     TextOverflow
-                                                      //                         .ellipsis,
-                                                      //                 textStyle: TextStyle(
-                                                      //                   fontFamily:
-                                                      //                       'Arial',
-                                                      //                   fontSize:
-                                                      //                       13.2.sp,
-                                                      //                   fontWeight:
-                                                      //                       FontWeight.w400,
-                                                      //                   color: AppColors
-                                                      //                       .black,
-                                                      //                 ),
-                                                      //               ),
-                                                      //             ),
-                                                      //             Spacer(),
-                                                      //             GestureDetector(
-                                                      //               onTap: () => Navigator.push(
-                                                      //                 context,
-                                                      //                 MaterialPageRoute(
-                                                      //                   builder: (_) => ImageWebViewScreen(
-                                                      //                     imageUrl:
-                                                      //                         model.getDistributorKycResponseModel?.data?.level2?.manufacturer?.documents?.companyLogo?.url ??
-                                                      //                         model.secondLevelDistributorKycEntityModelManLogo?.manufacturer?.documents?.companyLogo?.url ??
-                                                      //                         '',
-                                                      //                   ),
-                                                      //                 ),
-                                                      //               ),
-                                                      //               child: SvgPicture.asset(
-                                                      //                 AppImage
-                                                      //                     .kyc_eye,
-                                                      //               ),
-                                                      //             ),
-                                                      //           ],
-                                                      //         ),
-                                                      //       )
-                                                      //     : 
-                                                          SizedBox(
+
+                                                      model.getMarketplaceUpgradeResponseModel!.data!.kyc !=
+                                                                      null &&
+                                                                  model
+                                                                          .getMarketplaceUpgradeResponseModel!
+                                                                          .data!
+                                                                          .kyc!
+                                                                          .manufacturer !=
+                                                                      null &&
+                                                                  model
+                                                                          .getMarketplaceUpgradeResponseModel!
+                                                                          .data!
+                                                                          .kyc!
+                                                                          .manufacturer!
+                                                                          .documents!
+                                                                          .companyLogo !=
+                                                                      null ||
+                                                              model.secondLevelDistributorKycEntityModelManLogo !=
+                                                                      null &&
+                                                                  model
+                                                                          .secondLevelDistributorKycEntityModelManLogo!
+                                                                          .manufacturer !=
+                                                                      null &&
+                                                                  model
+                                                                          .secondLevelDistributorKycEntityModelManLogo!
+                                                                          .manufacturer!
+                                                                          .documents!
+                                                                          .companyLogo !=
+                                                                      null
+                                                          ? Container(
+                                                              padding:
+                                                                  EdgeInsets.all(
+                                                                    10.w,
+                                                                  ),
+                                                              decoration: BoxDecoration(
+                                                                border: Border.all(
+                                                                  color: AppColors
+                                                                      .tintColor,
+                                                                ),
+                                                                borderRadius:
+                                                                    BorderRadius.circular(
+                                                                      12,
+                                                                    ),
+                                                              ),
+                                                              child: Row(
+                                                                children: [
+                                                                  SvgPicture.asset(
+                                                                    AppImage
+                                                                        .kyc_file,
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width:
+                                                                        14.20.w,
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width: 80.w,
+                                                                    child: TextView(
+                                                                      text:
+                                                                          'Company Logo.jpg',
+                                                                      maxLines:
+                                                                          1,
+                                                                      textOverflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                      textStyle: TextStyle(
+                                                                        fontFamily:
+                                                                            'Arial',
+                                                                        fontSize:
+                                                                            13.2.sp,
+                                                                        fontWeight:
+                                                                            FontWeight.w400,
+                                                                        color: AppColors
+                                                                            .black,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  Spacer(),
+                                                                  GestureDetector(
+                                                                    onTap: () => Navigator.push(
+                                                                      context,
+                                                                      MaterialPageRoute(
+                                                                        builder: (_) => ImageWebViewScreen(
+                                                                          imageUrl:
+                                                                              model.getMarketplaceUpgradeResponseModel!.data!.kyc?.manufacturer?.documents?.companyLogo?.url ??
+                                                                              model.secondLevelDistributorKycEntityModelManLogo?.manufacturer?.documents?.companyLogo?.url ??
+                                                                              '',
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    child: SvgPicture.asset(
+                                                                      AppImage
+                                                                          .kyc_eye,
+                                                                    ),
+                                                                  ),
+
+                                                                  model.secondLevelDistributorKycEntityModelManLogo?.manufacturer?.documents?.companyLogo !=
+                                                                          null
+                                                                      ? Padding(
+                                                                        padding:  EdgeInsets.only(left:10.0.w),
+                                                                        child: GestureDetector(
+                                                                            onTap: () => model.pickImageManufacturerKycComLogo(
+                                                                              context,
+                                                                            ),
+                                                                            child:
+                                                                                model.isLoadingLogo
+                                                                                ? SizedBox(
+                                                                                    width: 10.w,
+                                                                                    height: 10.h,
+                                                                                    child: CircularProgressIndicator(
+                                                                                      color: AppColors.primary,
+                                                                                      strokeWidth: 2.w,
+                                                                                    ),
+                                                                                  )
+                                                                                : SvgPicture.asset(
+                                                                                    AppImage.upload_arr_up,
+                                                                                  ),
+                                                                          ),
+                                                                      )
+                                                                      : SizedBox.shrink(),
+                                                                  SizedBox(
+                                                                    width:
+                                                                        8.10.w,
+                                                                  ),
+                                                                  model.secondLevelDistributorKycEntityModelManLogo?.manufacturer?.documents?.companyLogo !=
+                                                                          null
+                                                                      ? GestureDetector(
+                                                                          onTap: () {
+                                                                            model.secondLevelDistributorKycEntityModelManLogo?.manufacturer?.documents?.companyLogo =
+                                                                                null;
+                                                                            model.notifyListeners();
+                                                                          },
+                                                                          child: SvgPicture.asset(
+                                                                            AppImage.delete,
+                                                                          ),
+                                                                        )
+                                                                      : SizedBox.shrink(),
+                                                                ],
+                                                              ),
+                                                            )
+                                                          : SizedBox(
                                                               width: double
                                                                   .infinity,
                                                               child: DottedBorder(
@@ -5003,10 +5233,10 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                                       .primary,
                                                                 ),
                                                                 child: GestureDetector(
-                                                                  // onTap: () => model
-                                                                  //     .pickImageManufacturerKycComLogo(
-                                                                  //       context,
-                                                                  //     ),
+                                                                  onTap: () => model
+                                                                      .pickImageManufacturerKycComLogo(
+                                                                        context,
+                                                                      ),
                                                                   child: Container(
                                                                     width: double
                                                                         .infinity,
@@ -5030,17 +5260,16 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                                           MainAxisAlignment
                                                                               .start,
                                                                       children: [
-                                                                        // model.isLoadingLogo
-                                                                        //     ? SizedBox(
-                                                                        //         width: 20.w,
-                                                                        //         height: 20.h,
-                                                                        //         child: CircularProgressIndicator(
-                                                                        //           color: AppColors.primary,
-                                                                        //           strokeWidth: 2.w,
-                                                                        //         ),
-                                                                        //       )
-                                                                        //     : 
-                                                                            SvgPicture.asset(
+                                                                        model.isLoadingLogo
+                                                                            ? SizedBox(
+                                                                                width: 20.w,
+                                                                                height: 20.h,
+                                                                                child: CircularProgressIndicator(
+                                                                                  color: AppColors.primary,
+                                                                                  strokeWidth: 2.w,
+                                                                                ),
+                                                                              )
+                                                                            : SvgPicture.asset(
                                                                                 AppImage.upload_doc,
                                                                               ),
                                                                         SizedBox(
@@ -5086,7 +5315,6 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                                 ),
                                                               ),
                                                             ),
-
                                                     ],
                                                   )
                                                 : SizedBox.shrink(),
@@ -5157,14 +5385,14 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                   onChanged: (bool val) {
                                                     setState(() {
                                                       isSwitchedImporter = val;
-                                                    //   if (isSwitchedImporter) {
-                                                    //     model.businessTypes.add(
-                                                    //       'IMPORTER',
-                                                    //     );
-                                                    //   } else {
-                                                    //     model.businessTypes
-                                                    //         .remove('IMPORTER');
-                                                    //   }
+                                                      if (isSwitchedImporter) {
+                                                        model.businessTypes.add(
+                                                          'IMPORTER',
+                                                        );
+                                                      } else {
+                                                        model.businessTypes
+                                                            .remove('IMPORTER');
+                                                      }
                                                       model.notifyListeners();
                                                     });
                                                   },
@@ -5494,104 +5722,145 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                         ],
                                                       ),
                                                       SizedBox(height: 10.h),
-                                                      // model.getDistributorKycResponseModel!.data!.level2 !=
-                                                      //                 null &&
-                                                      //             model
-                                                      //                     .getDistributorKycResponseModel!
-                                                      //                     .data!
-                                                      //                     .level2!
-                                                      //                     .importer !=
-                                                      //                 null &&
-                                                      //             model
-                                                      //                     .getDistributorKycResponseModel!
-                                                      //                     .data!
-                                                      //                     .level2!
-                                                      //                     .importer!
-                                                      //                     .documents!
-                                                      //                     .cacCertificate !=
-                                                      //                 null ||
-                                                      //         model.secondLevelDistributorKycEntityModelImpCAC !=
-                                                      //                 null &&
-                                                      //             model
-                                                      //                     .secondLevelDistributorKycEntityModelImpCAC!
-                                                      //                     .importer !=
-                                                      //                 null &&
-                                                      //             model
-                                                      //                     .secondLevelDistributorKycEntityModelImpCAC!
-                                                      //                     .importer!
-                                                      //                     .documents!
-                                                      //                     .cacCertificate !=
-                                                      //                 null
-                                                      //     ? Container(
-                                                      //         padding:
-                                                      //             EdgeInsets.all(
-                                                      //               10.w,
-                                                      //             ),
-                                                      //         decoration: BoxDecoration(
-                                                      //           border: Border.all(
-                                                      //             color: AppColors
-                                                      //                 .tintColor,
-                                                      //           ),
-                                                      //           borderRadius:
-                                                      //               BorderRadius.circular(
-                                                      //                 12,
-                                                      //               ),
-                                                      //         ),
-                                                      //         child: Row(
-                                                      //           children: [
-                                                      //             SvgPicture.asset(
-                                                      //               AppImage
-                                                      //                   .kyc_file,
-                                                      //             ),
-                                                      //             SizedBox(
-                                                      //               width:
-                                                      //                   14.20.w,
-                                                      //             ),
-                                                      //             SizedBox(
-                                                      //               width: 80.w,
-                                                      //               child: TextView(
-                                                      //                 text:
-                                                      //                     'CAC Certificate.jpg',
-                                                      //                 maxLines:
-                                                      //                     1,
-                                                      //                 textOverflow:
-                                                      //                     TextOverflow
-                                                      //                         .ellipsis,
-                                                      //                 textStyle: TextStyle(
-                                                      //                   fontFamily:
-                                                      //                       'Arial',
-                                                      //                   fontSize:
-                                                      //                       13.2.sp,
-                                                      //                   fontWeight:
-                                                      //                       FontWeight.w400,
-                                                      //                   color: AppColors
-                                                      //                       .black,
-                                                      //                 ),
-                                                      //               ),
-                                                      //             ),
-                                                      //             Spacer(),
-                                                      //             GestureDetector(
-                                                      //               onTap: () => Navigator.push(
-                                                      //                 context,
-                                                      //                 MaterialPageRoute(
-                                                      //                   builder: (_) => ImageWebViewScreen(
-                                                      //                     imageUrl:
-                                                      //                         model.getDistributorKycResponseModel?.data?.level2?.importer?.documents?.cacCertificate?.url ??
-                                                      //                         model.secondLevelDistributorKycEntityModelImpCAC?.importer?.documents?.cacCertificate?.url ??
-                                                      //                         '',
-                                                      //                   ),
-                                                      //                 ),
-                                                      //               ),
-                                                      //               child: SvgPicture.asset(
-                                                      //                 AppImage
-                                                      //                     .kyc_eye,
-                                                      //               ),
-                                                      //             ),
-                                                      //           ],
-                                                      //         ),
-                                                      //       )
-                                                      //     : 
-                                                          SizedBox(
+
+                                                      model.getMarketplaceUpgradeResponseModel!.data!.kyc !=
+                                                                      null &&
+                                                                  model
+                                                                          .getMarketplaceUpgradeResponseModel!
+                                                                          .data!
+                                                                          .kyc!
+                                                                          .importer !=
+                                                                      null &&
+                                                                  model
+                                                                          .getMarketplaceUpgradeResponseModel!
+                                                                          .data!
+                                                                          .kyc!
+                                                                          .importer!
+                                                                          .documents!
+                                                                          .cacCertificate !=
+                                                                      null ||
+                                                              model.secondLevelDistributorKycEntityModelImpCAC !=
+                                                                      null &&
+                                                                  model
+                                                                          .secondLevelDistributorKycEntityModelImpCAC!
+                                                                          .importer !=
+                                                                      null &&
+                                                                  model
+                                                                          .secondLevelDistributorKycEntityModelImpCAC!
+                                                                          .importer!
+                                                                          .documents!
+                                                                          .cacCertificate !=
+                                                                      null
+                                                          ? Container(
+                                                              padding:
+                                                                  EdgeInsets.all(
+                                                                    10.w,
+                                                                  ),
+                                                              decoration: BoxDecoration(
+                                                                border: Border.all(
+                                                                  color: AppColors
+                                                                      .tintColor,
+                                                                ),
+                                                                borderRadius:
+                                                                    BorderRadius.circular(
+                                                                      12,
+                                                                    ),
+                                                              ),
+                                                              child: Row(
+                                                                children: [
+                                                                  SvgPicture.asset(
+                                                                    AppImage
+                                                                        .kyc_file,
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width:
+                                                                        14.20.w,
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width: 80.w,
+                                                                    child: TextView(
+                                                                      text:
+                                                                          'CAC Certificate.jpg',
+                                                                      maxLines:
+                                                                          1,
+                                                                      textOverflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                      textStyle: TextStyle(
+                                                                        fontFamily:
+                                                                            'Arial',
+                                                                        fontSize:
+                                                                            13.2.sp,
+                                                                        fontWeight:
+                                                                            FontWeight.w400,
+                                                                        color: AppColors
+                                                                            .black,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  Spacer(),
+                                                                  GestureDetector(
+                                                                    onTap: () => Navigator.push(
+                                                                      context,
+                                                                      MaterialPageRoute(
+                                                                        builder: (_) => ImageWebViewScreen(
+                                                                          imageUrl:
+                                                                              model.getMarketplaceUpgradeResponseModel!.data!.kyc?.importer?.documents?.cacCertificate?.url ??
+                                                                              model.secondLevelDistributorKycEntityModelImpCAC?.importer?.documents?.cacCertificate?.url ??
+                                                                              '',
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    child: SvgPicture.asset(
+                                                                      AppImage
+                                                                          .kyc_eye,
+                                                                    ),
+                                                                  ),
+                                                                  model.secondLevelDistributorKycEntityModelImpCAC?.importer?.documents?.cacCertificate !=
+                                                                          null
+                                                                      ? Padding(
+                                                                        padding: EdgeInsets.only(left:10.0.w),
+                                                                        child: GestureDetector(
+                                                                            onTap: () => model.pickImageImporterKycCAC(
+                                                                              context,
+                                                                            ),
+                                                                            child:
+                                                                                model.isLoadingCAC
+                                                                                ? SizedBox(
+                                                                                    width: 10.w,
+                                                                                    height: 10.h,
+                                                                                    child: CircularProgressIndicator(
+                                                                                      color: AppColors.primary,
+                                                                                      strokeWidth: 2.w,
+                                                                                    ),
+                                                                                  )
+                                                                                : SvgPicture.asset(
+                                                                                    AppImage.upload_arr_up,
+                                                                                  ),
+                                                                          ),
+                                                                      )
+                                                                      : SizedBox.shrink(),
+                                                                  SizedBox(
+                                                                    width:
+                                                                        8.10.w,
+                                                                  ),
+                                                                  model.secondLevelDistributorKycEntityModelImpCAC?.importer?.documents?.cacCertificate !=
+                                                                          null
+                                                                      ? GestureDetector(
+                                                                          onTap: () {
+                                                                            model.secondLevelDistributorKycEntityModelImpCAC?.importer?.documents?.cacCertificate =
+                                                                                null;
+                                                                            model.notifyListeners();
+                                                                          },
+                                                                          child: SvgPicture.asset(
+                                                                            AppImage.delete,
+                                                                          ),
+                                                                        )
+                                                                      : SizedBox.shrink(),
+                                                                ],
+                                                              ),
+                                                            )
+                                                          : SizedBox(
                                                               width: double
                                                                   .infinity,
                                                               child: DottedBorder(
@@ -5610,10 +5879,10 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                                       .primary,
                                                                 ),
                                                                 child: GestureDetector(
-                                                                  // onTap: () => model
-                                                                  //     .pickImageImporterKycCAC(
-                                                                  //       context,
-                                                                  //     ),
+                                                                  onTap: () => model
+                                                                      .pickImageImporterKycCAC(
+                                                                        context,
+                                                                      ),
                                                                   child: Container(
                                                                     width: double
                                                                         .infinity,
@@ -5731,104 +6000,145 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                       ),
                                                       SizedBox(height: 10.h),
 
-                                                      // model.getDistributorKycResponseModel!.data!.level2 !=
-                                                      //                 null &&
-                                                      //             model
-                                                      //                     .getDistributorKycResponseModel!
-                                                      //                     .data!
-                                                      //                     .level2!
-                                                      //                     .importer !=
-                                                      //                 null &&
-                                                      //             model
-                                                      //                     .getDistributorKycResponseModel!
-                                                      //                     .data!
-                                                      //                     .level2!
-                                                      //                     .importer!
-                                                      //                     .documents!
-                                                      //                     .importPermit !=
-                                                      //                 null ||
-                                                      //         model.secondLevelDistributorKycEntityModelImpPermit !=
-                                                      //                 null &&
-                                                      //             model
-                                                      //                     .secondLevelDistributorKycEntityModelImpPermit!
-                                                      //                     .importer !=
-                                                      //                 null &&
-                                                      //             model
-                                                      //                     .secondLevelDistributorKycEntityModelImpPermit!
-                                                      //                     .importer!
-                                                      //                     .documents!
-                                                      //                     .importPermit !=
-                                                      //                 null
-                                                      //     ? Container(
-                                                      //         padding:
-                                                      //             EdgeInsets.all(
-                                                      //               10.w,
-                                                      //             ),
-                                                      //         decoration: BoxDecoration(
-                                                      //           border: Border.all(
-                                                      //             color: AppColors
-                                                      //                 .tintColor,
-                                                      //           ),
-                                                      //           borderRadius:
-                                                      //               BorderRadius.circular(
-                                                      //                 12,
-                                                      //               ),
-                                                      //         ),
-                                                      //         child: Row(
-                                                      //           children: [
-                                                      //             SvgPicture.asset(
-                                                      //               AppImage
-                                                      //                   .kyc_file,
-                                                      //             ),
-                                                      //             SizedBox(
-                                                      //               width:
-                                                      //                   14.20.w,
-                                                      //             ),
-                                                      //             SizedBox(
-                                                      //               width: 80.w,
-                                                      //               child: TextView(
-                                                      //                 text:
-                                                      //                     'Import Permit.jpg',
-                                                      //                 maxLines:
-                                                      //                     1,
-                                                      //                 textOverflow:
-                                                      //                     TextOverflow
-                                                      //                         .ellipsis,
-                                                      //                 textStyle: TextStyle(
-                                                      //                   fontFamily:
-                                                      //                       'Arial',
-                                                      //                   fontSize:
-                                                      //                       13.2.sp,
-                                                      //                   fontWeight:
-                                                      //                       FontWeight.w400,
-                                                      //                   color: AppColors
-                                                      //                       .black,
-                                                      //                 ),
-                                                      //               ),
-                                                      //             ),
-                                                      //             Spacer(),
-                                                      //             GestureDetector(
-                                                      //               onTap: () => Navigator.push(
-                                                      //                 context,
-                                                      //                 MaterialPageRoute(
-                                                      //                   builder: (_) => ImageWebViewScreen(
-                                                      //                     imageUrl:
-                                                      //                         model.getDistributorKycResponseModel?.data?.level2?.importer?.documents?.importPermit?.url ??
-                                                      //                         model.secondLevelDistributorKycEntityModelImpPermit?.importer?.documents?.importPermit?.url ??
-                                                      //                         '',
-                                                      //                   ),
-                                                      //                 ),
-                                                      //               ),
-                                                      //               child: SvgPicture.asset(
-                                                      //                 AppImage
-                                                      //                     .kyc_eye,
-                                                      //               ),
-                                                      //             ),
-                                                      //           ],
-                                                      //         ),
-                                                      //       )
-                                                      //     : 
-                                                          SizedBox(
+                                                      model.getMarketplaceUpgradeResponseModel!.data!.kyc !=
+                                                                      null &&
+                                                                  model
+                                                                          .getMarketplaceUpgradeResponseModel!
+                                                                          .data!
+                                                                          .kyc!
+                                                                          .importer !=
+                                                                      null &&
+                                                                  model
+                                                                          .getMarketplaceUpgradeResponseModel!
+                                                                          .data!
+                                                                          .kyc!
+                                                                          .importer!
+                                                                          .documents!
+                                                                          .importPermit !=
+                                                                      null ||
+                                                              model.secondLevelDistributorKycEntityModelImpPermit !=
+                                                                      null &&
+                                                                  model
+                                                                          .secondLevelDistributorKycEntityModelImpPermit!
+                                                                          .importer !=
+                                                                      null &&
+                                                                  model
+                                                                          .secondLevelDistributorKycEntityModelImpPermit!
+                                                                          .importer!
+                                                                          .documents!
+                                                                          .importPermit !=
+                                                                      null
+                                                          ? Container(
+                                                              padding:
+                                                                  EdgeInsets.all(
+                                                                    10.w,
+                                                                  ),
+                                                              decoration: BoxDecoration(
+                                                                border: Border.all(
+                                                                  color: AppColors
+                                                                      .tintColor,
+                                                                ),
+                                                                borderRadius:
+                                                                    BorderRadius.circular(
+                                                                      12,
+                                                                    ),
+                                                              ),
+                                                              child: Row(
+                                                                children: [
+                                                                  SvgPicture.asset(
+                                                                    AppImage
+                                                                        .kyc_file,
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width:
+                                                                        14.20.w,
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width: 80.w,
+                                                                    child: TextView(
+                                                                      text:
+                                                                          'Import Permit.jpg',
+                                                                      maxLines:
+                                                                          1,
+                                                                      textOverflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                      textStyle: TextStyle(
+                                                                        fontFamily:
+                                                                            'Arial',
+                                                                        fontSize:
+                                                                            13.2.sp,
+                                                                        fontWeight:
+                                                                            FontWeight.w400,
+                                                                        color: AppColors
+                                                                            .black,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  Spacer(),
+                                                                  GestureDetector(
+                                                                    onTap: () => Navigator.push(
+                                                                      context,
+                                                                      MaterialPageRoute(
+                                                                        builder: (_) => ImageWebViewScreen(
+                                                                          imageUrl:
+                                                                              model.getMarketplaceUpgradeResponseModel!.data!.kyc?.importer?.documents?.importPermit?.url ??
+                                                                              model.secondLevelDistributorKycEntityModelImpPermit?.importer?.documents?.importPermit?.url ??
+                                                                              '',
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    child: SvgPicture.asset(
+                                                                      AppImage
+                                                                          .kyc_eye,
+                                                                    ),
+                                                                  ),
+
+                                                                  model.secondLevelDistributorKycEntityModelImpPermit?.importer?.documents?.importPermit !=
+                                                                          null
+                                                                      ? Padding(
+                                                                        padding:  EdgeInsets.only(left:10.0.w),
+                                                                        child: GestureDetector(
+                                                                            onTap: () => model.pickImageImporterKycPermit(
+                                                                              context,
+                                                                            ),
+                                                                            child:
+                                                                                model.isLoadingCAC
+                                                                                ? SizedBox(
+                                                                                    width: 10.w,
+                                                                                    height: 10.h,
+                                                                                    child: CircularProgressIndicator(
+                                                                                      color: AppColors.primary,
+                                                                                      strokeWidth: 2.w,
+                                                                                    ),
+                                                                                  )
+                                                                                : SvgPicture.asset(
+                                                                                    AppImage.upload_arr_up,
+                                                                                  ),
+                                                                          ),
+                                                                      )
+                                                                      : SizedBox.shrink(),
+                                                                  SizedBox(
+                                                                    width:
+                                                                        8.10.w,
+                                                                  ),
+                                                                  model.secondLevelDistributorKycEntityModelImpPermit?.importer?.documents?.importPermit !=
+                                                                          null
+                                                                      ? GestureDetector(
+                                                                          onTap: () {
+                                                                            model.secondLevelDistributorKycEntityModelImpPermit?.importer?.documents?.importPermit =
+                                                                                null;
+                                                                            model.notifyListeners();
+                                                                          },
+                                                                          child: SvgPicture.asset(
+                                                                            AppImage.delete,
+                                                                          ),
+                                                                        )
+                                                                      : SizedBox.shrink(),
+                                                                ],
+                                                              ),
+                                                            )
+                                                          : SizedBox(
                                                               width: double
                                                                   .infinity,
                                                               child: DottedBorder(
@@ -5847,10 +6157,10 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                                       .primary,
                                                                 ),
                                                                 child: GestureDetector(
-                                                                  // onTap: () => model
-                                                                  //     .pickImageImporterKycPermit(
-                                                                  //       context,
-                                                                  //     ),
+                                                                  onTap: () => model
+                                                                      .pickImageImporterKycPermit(
+                                                                        context,
+                                                                      ),
                                                                   child: Container(
                                                                     width: double
                                                                         .infinity,
@@ -5874,17 +6184,16 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                                           MainAxisAlignment
                                                                               .start,
                                                                       children: [
-                                                                        // model.isLoadingProd
-                                                                        //     ? SizedBox(
-                                                                        //         width: 20.w,
-                                                                        //         height: 20.h,
-                                                                        //         child: CircularProgressIndicator(
-                                                                        //           color: AppColors.primary,
-                                                                        //           strokeWidth: 2.w,
-                                                                        //         ),
-                                                                        //       )
-                                                                        //     : 
-                                                                            SvgPicture.asset(
+                                                                        model.isLoadingProd
+                                                                            ? SizedBox(
+                                                                                width: 20.w,
+                                                                                height: 20.h,
+                                                                                child: CircularProgressIndicator(
+                                                                                  color: AppColors.primary,
+                                                                                  strokeWidth: 2.w,
+                                                                                ),
+                                                                              )
+                                                                            : SvgPicture.asset(
                                                                                 AppImage.upload_doc,
                                                                               ),
                                                                         SizedBox(
@@ -5969,104 +6278,144 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                       ),
                                                       SizedBox(height: 10.h),
 
-                                                      // model.getDistributorKycResponseModel!.data!.level2 !=
-                                                      //                 null &&
-                                                      //             model
-                                                      //                     .getDistributorKycResponseModel!
-                                                      //                     .data!
-                                                      //                     .level2!
-                                                      //                     .importer !=
-                                                      //                 null &&
-                                                      //             model
-                                                      //                     .getDistributorKycResponseModel!
-                                                      //                     .data!
-                                                      //                     .level2!
-                                                      //                     .importer!
-                                                      //                     .documents!
-                                                      //                     .manufacturerAuthorizationLetter !=
-                                                      //                 null ||
-                                                      //         model.secondLevelDistributorKycEntityModelImpManAuthLetter !=
-                                                      //                 null &&
-                                                      //             model
-                                                      //                     .secondLevelDistributorKycEntityModelImpManAuthLetter!
-                                                      //                     .importer !=
-                                                      //                 null &&
-                                                      //             model
-                                                      //                     .secondLevelDistributorKycEntityModelImpManAuthLetter!
-                                                      //                     .importer!
-                                                      //                     .documents!
-                                                      //                     .manufacturerAuthorizationLetter !=
-                                                      //                 null
-                                                      //     ? Container(
-                                                      //         padding:
-                                                      //             EdgeInsets.all(
-                                                      //               10.w,
-                                                      //             ),
-                                                      //         decoration: BoxDecoration(
-                                                      //           border: Border.all(
-                                                      //             color: AppColors
-                                                      //                 .tintColor,
-                                                      //           ),
-                                                      //           borderRadius:
-                                                      //               BorderRadius.circular(
-                                                      //                 12,
-                                                      //               ),
-                                                      //         ),
-                                                      //         child: Row(
-                                                      //           children: [
-                                                      //             SvgPicture.asset(
-                                                      //               AppImage
-                                                      //                   .kyc_file,
-                                                      //             ),
-                                                      //             SizedBox(
-                                                      //               width:
-                                                      //                   14.20.w,
-                                                      //             ),
-                                                      //             SizedBox(
-                                                      //               width: 80.w,
-                                                      //               child: TextView(
-                                                      //                 text:
-                                                      //                     'Manufacturer Authorization Letter.jpg',
-                                                      //                 maxLines:
-                                                      //                     1,
-                                                      //                 textOverflow:
-                                                      //                     TextOverflow
-                                                      //                         .ellipsis,
-                                                      //                 textStyle: TextStyle(
-                                                      //                   fontFamily:
-                                                      //                       'Arial',
-                                                      //                   fontSize:
-                                                      //                       13.2.sp,
-                                                      //                   fontWeight:
-                                                      //                       FontWeight.w400,
-                                                      //                   color: AppColors
-                                                      //                       .black,
-                                                      //                 ),
-                                                      //               ),
-                                                      //             ),
-                                                      //             Spacer(),
-                                                      //             GestureDetector(
-                                                      //               onTap: () => Navigator.push(
-                                                      //                 context,
-                                                      //                 MaterialPageRoute(
-                                                      //                   builder: (_) => ImageWebViewScreen(
-                                                      //                     imageUrl:
-                                                      //                         model.getDistributorKycResponseModel?.data?.level2?.importer?.documents?.manufacturerAuthorizationLetter?.url ??
-                                                      //                         model.secondLevelDistributorKycEntityModelImpManAuthLetter?.importer?.documents?.manufacturerAuthorizationLetter?.url ??
-                                                      //                         '',
-                                                      //                   ),
-                                                      //                 ),
-                                                      //               ),
-                                                      //               child: SvgPicture.asset(
-                                                      //                 AppImage
-                                                      //                     .kyc_eye,
-                                                      //               ),
-                                                      //             ),
-                                                      //           ],
-                                                      //         ),
-                                                      //       )
-                                                      //     :
-                                                           SizedBox(
+                                                      model.getMarketplaceUpgradeResponseModel!.data!.kyc !=
+                                                                      null &&
+                                                                  model
+                                                                          .getMarketplaceUpgradeResponseModel!
+                                                                          .data!
+                                                                          .kyc!
+                                                                          .importer !=
+                                                                      null &&
+                                                                  model
+                                                                          .getMarketplaceUpgradeResponseModel!
+                                                                          .data!
+                                                                          .kyc!
+                                                                          .importer!
+                                                                          .documents!
+                                                                          .manufacturerAuthorizationLetter !=
+                                                                      null ||
+                                                              model.secondLevelDistributorKycEntityModelImpManAuthLetter !=
+                                                                      null &&
+                                                                  model
+                                                                          .secondLevelDistributorKycEntityModelImpManAuthLetter!
+                                                                          .importer !=
+                                                                      null &&
+                                                                  model
+                                                                          .secondLevelDistributorKycEntityModelImpManAuthLetter!
+                                                                          .importer!
+                                                                          .documents!
+                                                                          .manufacturerAuthorizationLetter !=
+                                                                      null
+                                                          ? Container(
+                                                              padding:
+                                                                  EdgeInsets.all(
+                                                                    10.w,
+                                                                  ),
+                                                              decoration: BoxDecoration(
+                                                                border: Border.all(
+                                                                  color: AppColors
+                                                                      .tintColor,
+                                                                ),
+                                                                borderRadius:
+                                                                    BorderRadius.circular(
+                                                                      12,
+                                                                    ),
+                                                              ),
+                                                              child: Row(
+                                                                children: [
+                                                                  SvgPicture.asset(
+                                                                    AppImage
+                                                                        .kyc_file,
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width:
+                                                                        14.20.w,
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width: 80.w,
+                                                                    child: TextView(
+                                                                      text:
+                                                                          'Manufacturer Authorization Letter.jpg',
+                                                                      maxLines:
+                                                                          1,
+                                                                      textOverflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                      textStyle: TextStyle(
+                                                                        fontFamily:
+                                                                            'Arial',
+                                                                        fontSize:
+                                                                            13.2.sp,
+                                                                        fontWeight:
+                                                                            FontWeight.w400,
+                                                                        color: AppColors
+                                                                            .black,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  Spacer(),
+                                                                  GestureDetector(
+                                                                    onTap: () => Navigator.push(
+                                                                      context,
+                                                                      MaterialPageRoute(
+                                                                        builder: (_) => ImageWebViewScreen(
+                                                                          imageUrl:
+                                                                              model.getMarketplaceUpgradeResponseModel!.data!.kyc?.importer?.documents?.manufacturerAuthorizationLetter?.url ??
+                                                                              model.secondLevelDistributorKycEntityModelImpManAuthLetter?.importer?.documents?.manufacturerAuthorizationLetter?.url ??
+                                                                              '',
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    child: SvgPicture.asset(
+                                                                      AppImage
+                                                                          .kyc_eye,
+                                                                    ),
+                                                                  ),
+                                                                  model.secondLevelDistributorKycEntityModelImpManAuthLetter?.importer?.documents?.manufacturerAuthorizationLetter !=
+                                                                          null
+                                                                      ? Padding(
+                                                                        padding:  EdgeInsets.only(left:10.0.w),
+                                                                        child: GestureDetector(
+                                                                            onTap: () => model.pickImageImporterKycManAuthLetter(
+                                                                              context,
+                                                                            ),
+                                                                            child:
+                                                                                model.isLoadingNAF
+                                                                                ? SizedBox(
+                                                                                    width: 10.w,
+                                                                                    height: 10.h,
+                                                                                    child: CircularProgressIndicator(
+                                                                                      color: AppColors.primary,
+                                                                                      strokeWidth: 2.w,
+                                                                                    ),
+                                                                                  )
+                                                                                : SvgPicture.asset(
+                                                                                    AppImage.upload_arr_up,
+                                                                                  ),
+                                                                          ),
+                                                                      )
+                                                                      : SizedBox.shrink(),
+                                                                  SizedBox(
+                                                                    width:
+                                                                        8.10.w,
+                                                                  ),
+                                                                  model.secondLevelDistributorKycEntityModelImpManAuthLetter?.importer?.documents?.manufacturerAuthorizationLetter !=
+                                                                          null
+                                                                      ? GestureDetector(
+                                                                          onTap: () {
+                                                                            model.secondLevelDistributorKycEntityModelImpManAuthLetter?.importer?.documents?.manufacturerAuthorizationLetter =
+                                                                                null;
+                                                                            model.notifyListeners();
+                                                                          },
+                                                                          child: SvgPicture.asset(
+                                                                            AppImage.delete,
+                                                                          ),
+                                                                        )
+                                                                      : SizedBox.shrink(),
+                                                                ],
+                                                              ),
+                                                            )
+                                                          : SizedBox(
                                                               width: double
                                                                   .infinity,
                                                               child: DottedBorder(
@@ -6085,10 +6434,10 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                                       .primary,
                                                                 ),
                                                                 child: GestureDetector(
-                                                                  // onTap: () => model
-                                                                  //     .pickImageImporterKycManAuthLetter(
-                                                                  //       context,
-                                                                  //     ),
+                                                                  onTap: () => model
+                                                                      .pickImageImporterKycManAuthLetter(
+                                                                        context,
+                                                                      ),
                                                                   child: Container(
                                                                     width: double
                                                                         .infinity,
@@ -6112,17 +6461,16 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                                           MainAxisAlignment
                                                                               .start,
                                                                       children: [
-                                                                        // model.isLoadingNAF
-                                                                        //     ? SizedBox(
-                                                                        //         width: 20.w,
-                                                                        //         height: 20.h,
-                                                                        //         child: CircularProgressIndicator(
-                                                                        //           color: AppColors.primary,
-                                                                        //           strokeWidth: 2.w,
-                                                                        //         ),
-                                                                        //       )
-                                                                        //     : 
-                                                                            SvgPicture.asset(
+                                                                        model.isLoadingNAF
+                                                                            ? SizedBox(
+                                                                                width: 20.w,
+                                                                                height: 20.h,
+                                                                                child: CircularProgressIndicator(
+                                                                                  color: AppColors.primary,
+                                                                                  strokeWidth: 2.w,
+                                                                                ),
+                                                                              )
+                                                                            : SvgPicture.asset(
                                                                                 AppImage.upload_doc,
                                                                               ),
                                                                         SizedBox(
@@ -6206,104 +6554,145 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                         ],
                                                       ),
                                                       SizedBox(height: 10.h),
-                                                      // model.getDistributorKycResponseModel!.data!.level2 !=
-                                                      //                 null &&
-                                                      //             model
-                                                      //                     .getDistributorKycResponseModel!
-                                                      //                     .data!
-                                                      //                     .level2!
-                                                      //                     .importer !=
-                                                      //                 null &&
-                                                      //             model
-                                                      //                     .getDistributorKycResponseModel!
-                                                      //                     .data!
-                                                      //                     .level2!
-                                                      //                     .importer!
-                                                      //                     .documents!
-                                                      //                     .companyLogo !=
-                                                      //                 null ||
-                                                      //         model.secondLevelDistributorKycEntityModelImpLogo !=
-                                                      //                 null &&
-                                                      //             model
-                                                      //                     .secondLevelDistributorKycEntityModelImpLogo!
-                                                      //                     .importer !=
-                                                      //                 null &&
-                                                      //             model
-                                                      //                     .secondLevelDistributorKycEntityModelImpLogo!
-                                                      //                     .importer!
-                                                      //                     .documents!
-                                                      //                     .companyLogo !=
-                                                      //                 null
-                                                      //     ? Container(
-                                                      //         padding:
-                                                      //             EdgeInsets.all(
-                                                      //               10.w,
-                                                      //             ),
-                                                      //         decoration: BoxDecoration(
-                                                      //           border: Border.all(
-                                                      //             color: AppColors
-                                                      //                 .tintColor,
-                                                      //           ),
-                                                      //           borderRadius:
-                                                      //               BorderRadius.circular(
-                                                      //                 12,
-                                                      //               ),
-                                                      //         ),
-                                                      //         child: Row(
-                                                      //           children: [
-                                                      //             SvgPicture.asset(
-                                                      //               AppImage
-                                                      //                   .kyc_file,
-                                                      //             ),
-                                                      //             SizedBox(
-                                                      //               width:
-                                                      //                   14.20.w,
-                                                      //             ),
-                                                      //             SizedBox(
-                                                      //               width: 80.w,
-                                                      //               child: TextView(
-                                                      //                 text:
-                                                      //                     'Company Logo.jpg',
-                                                      //                 maxLines:
-                                                      //                     1,
-                                                      //                 textOverflow:
-                                                      //                     TextOverflow
-                                                      //                         .ellipsis,
-                                                      //                 textStyle: TextStyle(
-                                                      //                   fontFamily:
-                                                      //                       'Arial',
-                                                      //                   fontSize:
-                                                      //                       13.2.sp,
-                                                      //                   fontWeight:
-                                                      //                       FontWeight.w400,
-                                                      //                   color: AppColors
-                                                      //                       .black,
-                                                      //                 ),
-                                                      //               ),
-                                                      //             ),
-                                                      //             Spacer(),
-                                                      //             GestureDetector(
-                                                      //               onTap: () => Navigator.push(
-                                                      //                 context,
-                                                      //                 MaterialPageRoute(
-                                                      //                   builder: (_) => ImageWebViewScreen(
-                                                      //                     imageUrl:
-                                                      //                         model.getDistributorKycResponseModel?.data?.level2?.importer?.documents?.companyLogo?.url ??
-                                                      //                         model.secondLevelDistributorKycEntityModelImpLogo?.importer?.documents?.companyLogo?.url ??
-                                                      //                         '',
-                                                      //                   ),
-                                                      //                 ),
-                                                      //               ),
-                                                      //               child: SvgPicture.asset(
-                                                      //                 AppImage
-                                                      //                     .kyc_eye,
-                                                      //               ),
-                                                      //             ),
-                                                      //           ],
-                                                      //         ),
-                                                      //       )
-                                                      //     : 
-                                                          SizedBox(
+                                                      model.getMarketplaceUpgradeResponseModel!.data!.kyc !=
+                                                                      null &&
+                                                                  model
+                                                                          .getMarketplaceUpgradeResponseModel!
+                                                                          .data!
+                                                                          .kyc!
+                                                                          .importer !=
+                                                                      null &&
+                                                                  model
+                                                                          .getMarketplaceUpgradeResponseModel!
+                                                                          .data!
+                                                                          .kyc!
+                                                                          .importer!
+                                                                          .documents!
+                                                                          .companyLogo !=
+                                                                      null ||
+                                                              model.secondLevelDistributorKycEntityModelImpLogo !=
+                                                                      null &&
+                                                                  model
+                                                                          .secondLevelDistributorKycEntityModelImpLogo!
+                                                                          .importer !=
+                                                                      null &&
+                                                                  model
+                                                                          .secondLevelDistributorKycEntityModelImpLogo!
+                                                                          .importer!
+                                                                          .documents!
+                                                                          .companyLogo !=
+                                                                      null
+                                                          ? Container(
+                                                              padding:
+                                                                  EdgeInsets.all(
+                                                                    10.w,
+                                                                  ),
+                                                              decoration: BoxDecoration(
+                                                                border: Border.all(
+                                                                  color: AppColors
+                                                                      .tintColor,
+                                                                ),
+                                                                borderRadius:
+                                                                    BorderRadius.circular(
+                                                                      12,
+                                                                    ),
+                                                              ),
+                                                              child: Row(
+                                                                children: [
+                                                                  SvgPicture.asset(
+                                                                    AppImage
+                                                                        .kyc_file,
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width:
+                                                                        14.20.w,
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width: 80.w,
+                                                                    child: TextView(
+                                                                      text:
+                                                                          'Company Logo.jpg',
+                                                                      maxLines:
+                                                                          1,
+                                                                      textOverflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                      textStyle: TextStyle(
+                                                                        fontFamily:
+                                                                            'Arial',
+                                                                        fontSize:
+                                                                            13.2.sp,
+                                                                        fontWeight:
+                                                                            FontWeight.w400,
+                                                                        color: AppColors
+                                                                            .black,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  Spacer(),
+                                                                  GestureDetector(
+                                                                    onTap: () => Navigator.push(
+                                                                      context,
+                                                                      MaterialPageRoute(
+                                                                        builder: (_) => ImageWebViewScreen(
+                                                                          imageUrl:
+                                                                              model.getMarketplaceUpgradeResponseModel!.data!.kyc?.importer?.documents?.companyLogo?.url ??
+                                                                              model.secondLevelDistributorKycEntityModelImpLogo?.importer?.documents?.companyLogo?.url ??
+                                                                              '',
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    child: SvgPicture.asset(
+                                                                      AppImage
+                                                                          .kyc_eye,
+                                                                    ),
+                                                                  ),
+
+                                                                  model.secondLevelDistributorKycEntityModelImpLogo?.importer?.documents?.companyLogo !=
+                                                                          null
+                                                                      ? Padding(
+                                                                        padding:  EdgeInsets.only(left:10.0.w),
+                                                                        child: GestureDetector(
+                                                                            onTap: () => model.pickImageImporterKycLogo(
+                                                                              context,
+                                                                            ),
+                                                                            child:
+                                                                                model.isLoadingLogo
+                                                                                ? SizedBox(
+                                                                                    width: 10.w,
+                                                                                    height: 10.h,
+                                                                                    child: CircularProgressIndicator(
+                                                                                      color: AppColors.primary,
+                                                                                      strokeWidth: 2.w,
+                                                                                    ),
+                                                                                  )
+                                                                                : SvgPicture.asset(
+                                                                                    AppImage.upload_arr_up,
+                                                                                  ),
+                                                                          ),
+                                                                      )
+                                                                      : SizedBox.shrink(),
+                                                                  SizedBox(
+                                                                    width:
+                                                                        8.10.w,
+                                                                  ),
+                                                                  model.secondLevelDistributorKycEntityModelImpLogo?.importer?.documents?.companyLogo !=
+                                                                          null
+                                                                      ? GestureDetector(
+                                                                          onTap: () {
+                                                                            model.secondLevelDistributorKycEntityModelImpLogo?.importer?.documents?.companyLogo =
+                                                                                null;
+                                                                            model.notifyListeners();
+                                                                          },
+                                                                          child: SvgPicture.asset(
+                                                                            AppImage.delete,
+                                                                          ),
+                                                                        )
+                                                                      : SizedBox.shrink(),
+                                                                ],
+                                                              ),
+                                                            )
+                                                          : SizedBox(
                                                               width: double
                                                                   .infinity,
                                                               child: DottedBorder(
@@ -6322,10 +6711,10 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                                       .primary,
                                                                 ),
                                                                 child: GestureDetector(
-                                                                  // onTap: () => model
-                                                                  //     .pickImageImporterKycLogo(
-                                                                  //       context,
-                                                                  //     ),
+                                                                  onTap: () => model
+                                                                      .pickImageImporterKycLogo(
+                                                                        context,
+                                                                      ),
                                                                   child: Container(
                                                                     width: double
                                                                         .infinity,
@@ -6349,17 +6738,16 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                                           MainAxisAlignment
                                                                               .start,
                                                                       children: [
-                                                                        // model.isLoadingLogo
-                                                                        //     ? SizedBox(
-                                                                        //         width: 20.w,
-                                                                        //         height: 20.h,
-                                                                        //         child: CircularProgressIndicator(
-                                                                        //           color: AppColors.primary,
-                                                                        //           strokeWidth: 2.w,
-                                                                        //         ),
-                                                                        //       )
-                                                                        //     :
-                                                                             SvgPicture.asset(
+                                                                        model.isLoadingLogo
+                                                                            ? SizedBox(
+                                                                                width: 20.w,
+                                                                                height: 20.h,
+                                                                                child: CircularProgressIndicator(
+                                                                                  color: AppColors.primary,
+                                                                                  strokeWidth: 2.w,
+                                                                                ),
+                                                                              )
+                                                                            : SvgPicture.asset(
                                                                                 AppImage.upload_doc,
                                                                               ),
                                                                         SizedBox(
@@ -6405,30 +6793,27 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                                 ),
                                                               ),
                                                             ),
-                                                            ],
+                                                    ],
                                                   )
                                                 : SizedBox.shrink(),
                                           ],
                                         ),
                                       ),
 
-                                      // model
-                                      //                 .getDistributorKycResponseModel
-                                      //                 ?.data
-                                      //                 ?.kycLevels?[1]
-                                      //                 .status
-                                      //                 ?.toLowerCase() ==
-                                      //             'approved' ||
-                                      //         model
-                                      //                 .getDistributorKycResponseModel
-                                      //                 ?.data
-                                      //                 ?.kycLevels?[1]
-                                      //                 .status
-                                      //                 ?.toLowerCase() ==
-                                      //             'UNDER_REVIEW'.toLowerCase()
-                                      //     ? SizedBox.shrink()
-                                      //     : 
-                                          Column(
+                                      model
+                                                      .getMarketplaceUpgradeResponseModel!
+                                                      .data!
+                                                      .status
+                                                      ?.toLowerCase() ==
+                                                  'approved' ||
+                                              model
+                                                      .getMarketplaceUpgradeResponseModel!
+                                                      .data!
+                                                      .status
+                                                      ?.toLowerCase() ==
+                                                  'UNDER_REVIEW'.toLowerCase()
+                                          ? SizedBox.shrink()
+                                          : Column(
                                               children: [
                                                 SizedBox(height: 30.h),
                                                 ButtonWidget(
@@ -6440,386 +6825,366 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                   isLoading: model.isLoading,
                                                   buttonBorderColor:
                                                       AppColors.primary,
-                                                  // onPressed: () => model.saveLevelTwoManAndDistributorKycProgress(
-                                                  //   context: context,
-                                                  //   kycEntity: SecondLevelDistributorKycEntityModel(
-                                                  //     businessTypes:
-                                                  //         model.businessTypes,
-                                                  //     distributor:
-                                                  //         !isSwitchedDistributor
-                                                  //         ? null
-                                                  //         : Distributor(
-                                                  //             businessDetails: BusinessDetails(
-                                                  //               cacRegistrationNumber:
-                                                  //                   cleanValue(
-                                                  //                     cacRegNoControllerDistributor
-                                                  //                         .text
-                                                  //                         .trim(),
-                                                  //                   ),
-                                                  //               businessAddress:
-                                                  //                   cacRegNoControllerDistributorBusinessAddress
-                                                  //                       .text
-                                                  //                       .trim(),
-                                                  //               contactPersonName:
-                                                  //                   cacRegNoControllerDistributorContactPerson
-                                                  //                       .text
-                                                  //                       .trim(),
-                                                  //               contactPersonEmail:
-                                                  //                   cacRegNoControllerDistributorContactPersonEmail
-                                                  //                       .text
-                                                  //                       .trim(),
-                                                  //               contactPersonPhoneNumber:
-                                                  //                   cacRegNoControllerDistributorContactPersonNumber
-                                                  //                           .text !=
-                                                  //                       ''
-                                                  //                   ? model.returnAddingPhoneNoStructureWith234Kyc(
-                                                  //                       cacRegNoControllerDistributorContactPersonNumber
-                                                  //                           .text
-                                                  //                           .trim(),
-                                                  //                     )
-                                                  //                   : '',
-                                                  //               businessWebsite:
-                                                  //                   cacRegNoControllerDistributorBusinessWeb
-                                                  //                       .text
-                                                  //                       .trim(),
-                                                  //               taxIdentificationNumber:
-                                                  //                   cacRegNoControllerDistributorTin
-                                                  //                       .text
-                                                  //                       .trim(),
-                                                  //               pharmaceuticalDistributionLicenseNumber:
-                                                  //                   cacRegNoControllerDistributorLincense
-                                                  //                       .text
-                                                  //                       .trim(),
-                                                  //               pharmacyCouncilLicenseNumber:
-                                                  //                   cacRegNoControllerDistributorCouncilLincense
-                                                  //                       .text
-                                                  //                       .trim(),
-                                                  //               nafdacPermitNumber:
-                                                  //                   cacRegNoControllerDistributorNafPermit
-                                                  //                       .text
-                                                  //                       .trim(),
-                                                  //               productRegistrationEvidenceNumber:
-                                                  //                   null,
-                                                  //               importPermitNumber:
-                                                  //                   null,
-                                                  //               nafdacManufacturingLicenseNumber:
-                                                  //                   null,
-                                                  //               gmpCertificateNumber:
-                                                  //                   null,
-                                                  //             ),
-                                                  //             documents: DisDocuments(
-                                                  //               // gmpCertificate: null,
-                                                  //               // manufacturerAuthorizationLetter: null,
-                                                  //               // nafdacManufacturingLicense: null,
-                                                  //               // productRegistrationEvidence: null,
-                                                  //               // importPermit: null,
-                                                  //               cacCertificate:
-                                                  //                   model.secondLevelDistributorKycEntityModelCAC ==
-                                                  //                           null ||
-                                                  //                       model.secondLevelDistributorKycEntityModelCAC!.distributor ==
-                                                  //                           null ||
-                                                  //                       model.secondLevelDistributorKycEntityModelCAC!.distributor!.documents!.cacCertificate ==
-                                                  //                           null
-                                                  //                   ? null
-                                                  //                   : model
-                                                  //                         .secondLevelDistributorKycEntityModelCAC!
-                                                  //                         .distributor!
-                                                  //                         .documents!
-                                                  //                         .cacCertificate!,
-                                                  //               pharmaceuticalDistributionLicense:
-                                                  //                   model.secondLevelDistributorKycEntityModelPharmLin ==
-                                                  //                           null ||
-                                                  //                       model.secondLevelDistributorKycEntityModelPharmLin!.distributor ==
-                                                  //                           null ||model
-                                                  //                         .secondLevelDistributorKycEntityModelPharmLin!
-                                                  //                         .distributor!
-                                                  //                         .documents!
-                                                  //                         .pharmaceuticalDistributionLicense==null
-                                                  //                   ? null
-                                                  //                   : model
-                                                  //                         .secondLevelDistributorKycEntityModelPharmLin!
-                                                  //                         .distributor!
-                                                  //                         .documents!
-                                                  //                         .pharmaceuticalDistributionLicense!,
-                                                  //               nafdacPermit:
-                                                  //                   model.secondLevelDistributorKycEntityModelNAF ==
-                                                  //                           null ||
-                                                  //                       model.secondLevelDistributorKycEntityModelNAF!.distributor ==
-                                                  //                           null ||model
-                                                  //                         .secondLevelDistributorKycEntityModelNAF!
-                                                  //                         .distributor!
-                                                  //                         .documents!
-                                                  //                         .nafdacPermit==null
-                                                  //                   ? null
-                                                  //                   : model
-                                                  //                         .secondLevelDistributorKycEntityModelNAF!
-                                                  //                         .distributor!
-                                                  //                         .documents!
-                                                  //                         .nafdacPermit!,
-                                                  //               pharmacyCouncilLicense:
-                                                  //                   model.secondLevelDistributorKycEntityModelPharmCouncilLin ==
-                                                  //                           null ||
-                                                  //                       model.secondLevelDistributorKycEntityModelPharmCouncilLin!.distributor ==
-                                                  //                           null || model
-                                                  //                         .secondLevelDistributorKycEntityModelPharmCouncilLin!
-                                                  //                         .distributor!
-                                                  //                         .documents!
-                                                  //                         .pharmacyCouncilLicense == null
-                                                  //                   ? null
-                                                  //                   : model
-                                                  //                         .secondLevelDistributorKycEntityModelPharmCouncilLin!
-                                                  //                         .distributor!
-                                                  //                         .documents!
-                                                  //                         .pharmacyCouncilLicense!,
-                                                  //               companyLogo:
-                                                  //                   model.secondLevelDistributorKycEntityModelLogo ==
-                                                  //                           null ||
-                                                  //                       model.secondLevelDistributorKycEntityModelLogo!.distributor ==
-                                                  //                           null || model
-                                                  //                         .secondLevelDistributorKycEntityModelLogo!
-                                                  //                         .distributor!
-                                                  //                         .documents!
-                                                  //                         .companyLogo == null
-                                                  //                   ? null
-                                                  //                   : model
-                                                  //                         .secondLevelDistributorKycEntityModelLogo!
-                                                  //                         .distributor!
-                                                  //                         .documents!
-                                                  //                         .companyLogo!,
-                                                  //             ),
-                                                  //             coverageAreas: model
-                                                  //                 .listOfAddedLocation,
-                                                  //             // .map(
-                                                  //             //   (e) =>
-                                                  //             //       CoverageAreas.fromJson(
-                                                  //             //         e,
-                                                  //             //       ),
-                                                  //             // )
-                                                  //             // .toList(),
-                                                  //           ),
-                                                  //     manufacturer:
-                                                  //         !isSwitchedManufaturer
-                                                  //         ? null
-                                                  //         : Manufacturer(
-                                                  //             businessDetails: BusinessDetails(
-                                                  //               cacRegistrationNumber:
-                                                  //                   cacRegNoManufacturerController
-                                                  //                       .text
-                                                  //                       .trim(),
-                                                  //               businessAddress:
-                                                  //                   cacRegNoControllerManufacturerBusinessAddress
-                                                  //                       .text
-                                                  //                       .trim(),
-                                                  //               contactPersonName:
-                                                  //                   cacRegNoControllerManufacturerContactPerson
-                                                  //                       .text
-                                                  //                       .trim(),
-                                                  //               contactPersonEmail:
-                                                  //                   cacRegNoControllerManufacturerContactPersonEmail
-                                                  //                       .text
-                                                  //                       .trim(),
-                                                  //               contactPersonPhoneNumber:
-                                                  //                   cacRegNoControllerManufacturerContactPersonNumber
-                                                  //                           .text !=
-                                                  //                       ''
-                                                  //                   ? model.returnAddingPhoneNoStructureWith234Kyc(
-                                                  //                       cacRegNoControllerManufacturerContactPersonNumber
-                                                  //                           .text
-                                                  //                           .trim(),
-                                                  //                     )
-                                                  //                   : '',
-                                                  //               businessWebsite:
-                                                  //                   cacRegNoControllerManufacturerBusinessWeb
-                                                  //                       .text
-                                                  //                       .trim(),
-                                                  //               taxIdentificationNumber:
-                                                  //                   cacRegNoControllerManufacturerTin
-                                                  //                       .text
-                                                  //                       .trim(),
-                                                  //               gmpCertificateNumber:
-                                                  //                   cacRegNoControllerManufacturerCertificateNum
-                                                  //                       .text
-                                                  //                       .trim(),
-                                                  //               nafdacManufacturingLicenseNumber:
-                                                  //                   cacRegNoControllerManufacturerLincenseNumber
-                                                  //                       .text
-                                                  //                       .trim(),
-                                                  //               productRegistrationEvidenceNumber:
-                                                  //                   cacRegNoControllerManufacturerProdNumber
-                                                  //                       .text
-                                                  //                       .trim(),
-                                                  //               pharmaceuticalDistributionLicenseNumber:
-                                                  //                   null,
-                                                  //               pharmacyCouncilLicenseNumber:
-                                                  //                   null,
-                                                  //               importPermitNumber:
-                                                  //                   null,
-                                                  //               nafdacPermitNumber:
-                                                  //                   null,
-                                                  //             ),
-                                                  //             documents: ManDocuments(
-                                                  //               cacCertificate:
-                                                  //                   model.secondLevelDistributorKycEntityModelManCAC ==
-                                                  //                           null ||
-                                                  //                       model.secondLevelDistributorKycEntityModelManCAC!.manufacturer ==
-                                                  //                           null
-                                                  //                   ? null
-                                                  //                   : model
-                                                  //                         .secondLevelDistributorKycEntityModelManCAC!
-                                                  //                         .manufacturer!
-                                                  //                         .documents!
-                                                  //                         .cacCertificate!,
-                                                  //               gmpCertificate:
-                                                  //                   model.secondLevelDistributorKycEntityModelManGMP ==
-                                                  //                           null ||
-                                                  //                       model.secondLevelDistributorKycEntityModelManGMP!.manufacturer ==
-                                                  //                           null
-                                                  //                   ? null
-                                                  //                   : model
-                                                  //                         .secondLevelDistributorKycEntityModelManGMP!
-                                                  //                         .manufacturer!
-                                                  //                         .documents!
-                                                  //                         .gmpCertificate!,
-                                                  //               nafdacManufacturingLicense:
-                                                  //                   model.secondLevelDistributorKycEntityModelManNAF ==
-                                                  //                           null ||
-                                                  //                       model.secondLevelDistributorKycEntityModelManNAF!.manufacturer ==
-                                                  //                           null
-                                                  //                   ? null
-                                                  //                   : model
-                                                  //                         .secondLevelDistributorKycEntityModelManNAF!
-                                                  //                         .manufacturer!
-                                                  //                         .documents!
-                                                  //                         .nafdacManufacturingLicense!,
-                                                  //               productRegistrationEvidence:
-                                                  //                   model.secondLevelDistributorKycEntityModelManProd ==
-                                                  //                           null ||
-                                                  //                       model.secondLevelDistributorKycEntityModelManProd!.manufacturer ==
-                                                  //                           null
-                                                  //                   ? null
-                                                  //                   : model
-                                                  //                         .secondLevelDistributorKycEntityModelManProd!
-                                                  //                         .manufacturer!
-                                                  //                         .documents!
-                                                  //                         .productRegistrationEvidence!,
-                                                  //               companyLogo:
-                                                  //                   model.secondLevelDistributorKycEntityModelManLogo ==
-                                                  //                           null ||
-                                                  //                       model.secondLevelDistributorKycEntityModelManLogo!.manufacturer ==
-                                                  //                           null
-                                                  //                   ? null
-                                                  //                   : model
-                                                  //                         .secondLevelDistributorKycEntityModelManLogo!
-                                                  //                         .manufacturer!
-                                                  //                         .documents!
-                                                  //                         .companyLogo!,
-                                                  //             ),
-                                                  //           ),
-                                                  //     importer:
-                                                  //         !isSwitchedImporter
-                                                  //         ? null
-                                                  //         : Importer(
-                                                  //             businessDetails: BusinessDetails(
-                                                  //               cacRegistrationNumber:
-                                                  //                   cacRegNoImporterController
-                                                  //                       .text
-                                                  //                       .trim(),
-                                                  //               businessAddress:
-                                                  //                   cacRegNoControllerImporterBusinessAddress
-                                                  //                       .text
-                                                  //                       .trim(),
-                                                  //               contactPersonName:
-                                                  //                   cacRegNoControllerImporterContactPerson
-                                                  //                       .text
-                                                  //                       .trim(),
-                                                  //               contactPersonEmail:
-                                                  //                   cacRegNoControllerImporterContactPersonEmail
-                                                  //                       .text
-                                                  //                       .trim(),
-                                                  //               contactPersonPhoneNumber:
-                                                  //                   cacRegNoControllerImporterContactPersonNumber
-                                                  //                           .text !=
-                                                  //                       ''
-                                                  //                   ? model.returnAddingPhoneNoStructureWith234Kyc(
-                                                  //                       cacRegNoControllerImporterContactPersonNumber
-                                                  //                           .text
-                                                  //                           .trim(),
-                                                  //                     )
-                                                  //                   : '',
-                                                  //               businessWebsite:
-                                                  //                   cacRegNoControllerImporterBusinessWeb
-                                                  //                       .text
-                                                  //                       .trim(),
-                                                  //               taxIdentificationNumber:
-                                                  //                   cacRegNoControllerImporterTin
-                                                  //                       .text
-                                                  //                       .trim(),
-                                                  //               importPermitNumber:
-                                                  //                   cacRegNoControllerImporterCertificateNum
-                                                  //                       .text
-                                                  //                       .trim(),
-                                                  //               pharmaceuticalDistributionLicenseNumber:
-                                                  //                   null,
-                                                  //               pharmacyCouncilLicenseNumber:
-                                                  //                   null,
-                                                  //               productRegistrationEvidenceNumber:
-                                                  //                   null,
-                                                  //               nafdacPermitNumber:
-                                                  //                   null,
-                                                  //               gmpCertificateNumber:
-                                                  //                   null,
-                                                  //               nafdacManufacturingLicenseNumber:
-                                                  //                   null,
-                                                  //             ),
-                                                  //             documents: ImpDocuments(
-                                                  //               cacCertificate:
-                                                  //                   model.secondLevelDistributorKycEntityModelImpCAC ==
-                                                  //                           null ||
-                                                  //                       model.secondLevelDistributorKycEntityModelImpCAC!.importer ==
-                                                  //                           null
-                                                  //                   ? null
-                                                  //                   : model
-                                                  //                         .secondLevelDistributorKycEntityModelImpCAC!
-                                                  //                         .importer!
-                                                  //                         .documents!
-                                                  //                         .cacCertificate!,
-                                                  //               importPermit:
-                                                  //                   model.secondLevelDistributorKycEntityModelImpPermit ==
-                                                  //                           null ||
-                                                  //                       model.secondLevelDistributorKycEntityModelImpPermit!.importer ==
-                                                  //                           null
-                                                  //                   ? null
-                                                  //                   : model
-                                                  //                         .secondLevelDistributorKycEntityModelImpPermit!
-                                                  //                         .importer!
-                                                  //                         .documents!
-                                                  //                         .importPermit!,
-                                                  //               manufacturerAuthorizationLetter:
-                                                  //                   model.secondLevelDistributorKycEntityModelImpManAuthLetter ==
-                                                  //                           null ||
-                                                  //                       model.secondLevelDistributorKycEntityModelImpManAuthLetter!.importer ==
-                                                  //                           null
-                                                  //                   ? null
-                                                  //                   : model
-                                                  //                         .secondLevelDistributorKycEntityModelImpManAuthLetter!
-                                                  //                         .importer!
-                                                  //                         .documents!
-                                                  //                         .manufacturerAuthorizationLetter!,
-                                                  //               companyLogo:
-                                                  //                   model.secondLevelDistributorKycEntityModelImpLogo ==
-                                                  //                           null ||
-                                                  //                       model.secondLevelDistributorKycEntityModelImpLogo!.importer ==
-                                                  //                           null
-                                                  //                   ? null
-                                                  //                   : model
-                                                  //                         .secondLevelDistributorKycEntityModelImpLogo!
-                                                  //                         .importer!
-                                                  //                         .documents!
-                                                  //                         .companyLogo!,
-                                                  //             ),
-                                                  //           ),
-                                                  //   ),
-                                                  // ),
+                                                  onPressed: () => model.saveMarketplaceProfileUpgrade(
+                                                    context,
+                                                    kycEntity: SecondLevelDistributorKycEntityModel(
+                                                      businessTypes:
+                                                          model.businessTypes,
+                                                      distributor:
+                                                          !isSwitchedDistributor
+                                                          ? null
+                                                          : Distributor(
+                                                              businessDetails: BusinessDetails(
+                                                                cacRegistrationNumber:
+                                                                    cleanValue(
+                                                                      cacRegNoControllerDistributor
+                                                                          .text
+                                                                          .trim(),
+                                                                    ),
+                                                                businessAddress:
+                                                                    cacRegNoControllerDistributorBusinessAddress
+                                                                        .text
+                                                                        .trim(),
+                                                                contactPersonName:
+                                                                    cacRegNoControllerDistributorContactPerson
+                                                                        .text
+                                                                        .trim(),
+                                                                contactPersonEmail:
+                                                                    cacRegNoControllerDistributorContactPersonEmail
+                                                                        .text
+                                                                        .trim(),
+                                                                contactPersonPhoneNumber:
+                                                                    cacRegNoControllerDistributorContactPersonNumber
+                                                                            .text !=
+                                                                        ''
+                                                                    ? model.returnAddingPhoneNoStructureWith234Kyc(
+                                                                        cacRegNoControllerDistributorContactPersonNumber
+                                                                            .text
+                                                                            .trim(),
+                                                                      )
+                                                                    : '',
+                                                                businessWebsite:
+                                                                    cacRegNoControllerDistributorBusinessWeb
+                                                                        .text
+                                                                        .trim(),
+                                                                taxIdentificationNumber:
+                                                                    cacRegNoControllerDistributorTin
+                                                                        .text
+                                                                        .trim(),
+                                                                pharmaceuticalDistributionLicenseNumber:
+                                                                    cacRegNoControllerDistributorLincense
+                                                                        .text
+                                                                        .trim(),
+                                                                pharmacyCouncilLicenseNumber:
+                                                                    cacRegNoControllerDistributorCouncilLincense
+                                                                        .text
+                                                                        .trim(),
+                                                                nafdacPermitNumber:
+                                                                    cacRegNoControllerDistributorNafPermit
+                                                                        .text
+                                                                        .trim(),
+                                                                productRegistrationEvidenceNumber:
+                                                                    null,
+                                                                importPermitNumber:
+                                                                    null,
+                                                                nafdacManufacturingLicenseNumber:
+                                                                    null,
+                                                                gmpCertificateNumber:
+                                                                    null,
+                                                              ),
+                                                              documents: DisDocuments(
+                                                                cacCertificate:
+                                                                    model.secondLevelDistributorKycEntityModelCAC ==
+                                                                            null ||
+                                                                        model.secondLevelDistributorKycEntityModelCAC!.distributor ==
+                                                                            null ||
+                                                                        model.secondLevelDistributorKycEntityModelCAC!.distributor!.documents!.cacCertificate ==
+                                                                            null
+                                                                    ? null
+                                                                    : model
+                                                                          .secondLevelDistributorKycEntityModelCAC!
+                                                                          .distributor!
+                                                                          .documents!
+                                                                          .cacCertificate!,
+                                                                pharmaceuticalDistributionLicense:
+                                                                    model.secondLevelDistributorKycEntityModelPharmLin ==
+                                                                            null ||
+                                                                        model.secondLevelDistributorKycEntityModelPharmLin!.distributor ==
+                                                                            null ||
+                                                                        model.secondLevelDistributorKycEntityModelPharmLin!.distributor!.documents!.pharmaceuticalDistributionLicense ==
+                                                                            null
+                                                                    ? null
+                                                                    : model
+                                                                          .secondLevelDistributorKycEntityModelPharmLin!
+                                                                          .distributor!
+                                                                          .documents!
+                                                                          .pharmaceuticalDistributionLicense!,
+                                                                nafdacPermit:
+                                                                    model.secondLevelDistributorKycEntityModelNAF ==
+                                                                            null ||
+                                                                        model.secondLevelDistributorKycEntityModelNAF!.distributor ==
+                                                                            null ||
+                                                                        model.secondLevelDistributorKycEntityModelNAF!.distributor!.documents!.nafdacPermit ==
+                                                                            null
+                                                                    ? null
+                                                                    : model
+                                                                          .secondLevelDistributorKycEntityModelNAF!
+                                                                          .distributor!
+                                                                          .documents!
+                                                                          .nafdacPermit!,
+                                                                pharmacyCouncilLicense:
+                                                                    model.secondLevelDistributorKycEntityModelPharmCouncilLin ==
+                                                                            null ||
+                                                                        model.secondLevelDistributorKycEntityModelPharmCouncilLin!.distributor ==
+                                                                            null ||
+                                                                        model.secondLevelDistributorKycEntityModelPharmCouncilLin!.distributor!.documents!.pharmacyCouncilLicense ==
+                                                                            null
+                                                                    ? null
+                                                                    : model
+                                                                          .secondLevelDistributorKycEntityModelPharmCouncilLin!
+                                                                          .distributor!
+                                                                          .documents!
+                                                                          .pharmacyCouncilLicense!,
+                                                                companyLogo:
+                                                                    model.secondLevelDistributorKycEntityModelLogo ==
+                                                                            null ||
+                                                                        model.secondLevelDistributorKycEntityModelLogo!.distributor ==
+                                                                            null ||
+                                                                        model.secondLevelDistributorKycEntityModelLogo!.distributor!.documents!.companyLogo ==
+                                                                            null
+                                                                    ? null
+                                                                    : model
+                                                                          .secondLevelDistributorKycEntityModelLogo!
+                                                                          .distributor!
+                                                                          .documents!
+                                                                          .companyLogo!,
+                                                              ),
+                                                              coverageAreas: model
+                                                                  .listOfAddedLocation,
+                                                            ),
+                                                      manufacturer:
+                                                          !isSwitchedManufaturer
+                                                          ? null
+                                                          : Manufacturer(
+                                                              businessDetails: BusinessDetails(
+                                                                cacRegistrationNumber:
+                                                                    cacRegNoManufacturerController
+                                                                        .text
+                                                                        .trim(),
+                                                                businessAddress:
+                                                                    cacRegNoControllerManufacturerBusinessAddress
+                                                                        .text
+                                                                        .trim(),
+                                                                contactPersonName:
+                                                                    cacRegNoControllerManufacturerContactPerson
+                                                                        .text
+                                                                        .trim(),
+                                                                contactPersonEmail:
+                                                                    cacRegNoControllerManufacturerContactPersonEmail
+                                                                        .text
+                                                                        .trim(),
+                                                                contactPersonPhoneNumber:
+                                                                    cacRegNoControllerManufacturerContactPersonNumber
+                                                                            .text !=
+                                                                        ''
+                                                                    ? model.returnAddingPhoneNoStructureWith234Kyc(
+                                                                        cacRegNoControllerManufacturerContactPersonNumber
+                                                                            .text
+                                                                            .trim(),
+                                                                      )
+                                                                    : '',
+                                                                businessWebsite:
+                                                                    cacRegNoControllerManufacturerBusinessWeb
+                                                                        .text
+                                                                        .trim(),
+                                                                taxIdentificationNumber:
+                                                                    cacRegNoControllerManufacturerTin
+                                                                        .text
+                                                                        .trim(),
+                                                                gmpCertificateNumber:
+                                                                    cacRegNoControllerManufacturerCertificateNum
+                                                                        .text
+                                                                        .trim(),
+                                                                nafdacManufacturingLicenseNumber:
+                                                                    cacRegNoControllerManufacturerLincenseNumber
+                                                                        .text
+                                                                        .trim(),
+                                                                productRegistrationEvidenceNumber:
+                                                                    cacRegNoControllerManufacturerProdNumber
+                                                                        .text
+                                                                        .trim(),
+                                                                pharmaceuticalDistributionLicenseNumber:
+                                                                    null,
+                                                                pharmacyCouncilLicenseNumber:
+                                                                    null,
+                                                                importPermitNumber:
+                                                                    null,
+                                                                nafdacPermitNumber:
+                                                                    null,
+                                                              ),
+                                                              documents: ManDocuments(
+                                                                cacCertificate:
+                                                                    model.secondLevelDistributorKycEntityModelManCAC ==
+                                                                            null ||
+                                                                        model.secondLevelDistributorKycEntityModelManCAC!.manufacturer ==
+                                                                            null
+                                                                    ? null
+                                                                    : model
+                                                                          .secondLevelDistributorKycEntityModelManCAC!
+                                                                          .manufacturer!
+                                                                          .documents!
+                                                                          .cacCertificate!,
+                                                                gmpCertificate:
+                                                                    model.secondLevelDistributorKycEntityModelManGMP ==
+                                                                            null ||
+                                                                        model.secondLevelDistributorKycEntityModelManGMP!.manufacturer ==
+                                                                            null
+                                                                    ? null
+                                                                    : model
+                                                                          .secondLevelDistributorKycEntityModelManGMP!
+                                                                          .manufacturer!
+                                                                          .documents!
+                                                                          .gmpCertificate!,
+                                                                nafdacManufacturingLicense:
+                                                                    model.secondLevelDistributorKycEntityModelManNAF ==
+                                                                            null ||
+                                                                        model.secondLevelDistributorKycEntityModelManNAF!.manufacturer ==
+                                                                            null
+                                                                    ? null
+                                                                    : model
+                                                                          .secondLevelDistributorKycEntityModelManNAF!
+                                                                          .manufacturer!
+                                                                          .documents!
+                                                                          .nafdacManufacturingLicense!,
+                                                                productRegistrationEvidence:
+                                                                    model.secondLevelDistributorKycEntityModelManProd ==
+                                                                            null ||
+                                                                        model.secondLevelDistributorKycEntityModelManProd!.manufacturer ==
+                                                                            null
+                                                                    ? null
+                                                                    : model
+                                                                          .secondLevelDistributorKycEntityModelManProd!
+                                                                          .manufacturer!
+                                                                          .documents!
+                                                                          .productRegistrationEvidence!,
+                                                                companyLogo:
+                                                                    model.secondLevelDistributorKycEntityModelManLogo ==
+                                                                            null ||
+                                                                        model.secondLevelDistributorKycEntityModelManLogo!.manufacturer ==
+                                                                            null
+                                                                    ? null
+                                                                    : model
+                                                                          .secondLevelDistributorKycEntityModelManLogo!
+                                                                          .manufacturer!
+                                                                          .documents!
+                                                                          .companyLogo!,
+                                                              ),
+                                                            ),
+                                                      importer:
+                                                          !isSwitchedImporter
+                                                          ? null
+                                                          : Importer(
+                                                              businessDetails: BusinessDetails(
+                                                                cacRegistrationNumber:
+                                                                    cacRegNoImporterController
+                                                                        .text
+                                                                        .trim(),
+                                                                businessAddress:
+                                                                    cacRegNoControllerImporterBusinessAddress
+                                                                        .text
+                                                                        .trim(),
+                                                                contactPersonName:
+                                                                    cacRegNoControllerImporterContactPerson
+                                                                        .text
+                                                                        .trim(),
+                                                                contactPersonEmail:
+                                                                    cacRegNoControllerImporterContactPersonEmail
+                                                                        .text
+                                                                        .trim(),
+                                                                contactPersonPhoneNumber:
+                                                                    cacRegNoControllerImporterContactPersonNumber
+                                                                            .text !=
+                                                                        ''
+                                                                    ? model.returnAddingPhoneNoStructureWith234Kyc(
+                                                                        cacRegNoControllerImporterContactPersonNumber
+                                                                            .text
+                                                                            .trim(),
+                                                                      )
+                                                                    : '',
+                                                                businessWebsite:
+                                                                    cacRegNoControllerImporterBusinessWeb
+                                                                        .text
+                                                                        .trim(),
+                                                                taxIdentificationNumber:
+                                                                    cacRegNoControllerImporterTin
+                                                                        .text
+                                                                        .trim(),
+                                                                importPermitNumber:
+                                                                    cacRegNoControllerImporterCertificateNum
+                                                                        .text
+                                                                        .trim(),
+                                                                pharmaceuticalDistributionLicenseNumber:
+                                                                    null,
+                                                                pharmacyCouncilLicenseNumber:
+                                                                    null,
+                                                                productRegistrationEvidenceNumber:
+                                                                    null,
+                                                                nafdacPermitNumber:
+                                                                    null,
+                                                                gmpCertificateNumber:
+                                                                    null,
+                                                                nafdacManufacturingLicenseNumber:
+                                                                    null,
+                                                              ),
+                                                              documents: ImpDocuments(
+                                                                cacCertificate:
+                                                                    model.secondLevelDistributorKycEntityModelImpCAC ==
+                                                                            null ||
+                                                                        model.secondLevelDistributorKycEntityModelImpCAC!.importer ==
+                                                                            null
+                                                                    ? null
+                                                                    : model
+                                                                          .secondLevelDistributorKycEntityModelImpCAC!
+                                                                          .importer!
+                                                                          .documents!
+                                                                          .cacCertificate!,
+                                                                importPermit:
+                                                                    model.secondLevelDistributorKycEntityModelImpPermit ==
+                                                                            null ||
+                                                                        model.secondLevelDistributorKycEntityModelImpPermit!.importer ==
+                                                                            null
+                                                                    ? null
+                                                                    : model
+                                                                          .secondLevelDistributorKycEntityModelImpPermit!
+                                                                          .importer!
+                                                                          .documents!
+                                                                          .importPermit!,
+                                                                manufacturerAuthorizationLetter:
+                                                                    model.secondLevelDistributorKycEntityModelImpManAuthLetter ==
+                                                                            null ||
+                                                                        model.secondLevelDistributorKycEntityModelImpManAuthLetter!.importer ==
+                                                                            null
+                                                                    ? null
+                                                                    : model
+                                                                          .secondLevelDistributorKycEntityModelImpManAuthLetter!
+                                                                          .importer!
+                                                                          .documents!
+                                                                          .manufacturerAuthorizationLetter!,
+                                                                companyLogo:
+                                                                    model.secondLevelDistributorKycEntityModelImpLogo ==
+                                                                            null ||
+                                                                        model.secondLevelDistributorKycEntityModelImpLogo!.importer ==
+                                                                            null
+                                                                    ? null
+                                                                    : model
+                                                                          .secondLevelDistributorKycEntityModelImpLogo!
+                                                                          .importer!
+                                                                          .documents!
+                                                                          .companyLogo!,
+                                                              ),
+                                                            ),
+                                                    ),
+                                                  ),
                                                 ),
                                                 SizedBox(height: 20.h),
                                                 ButtonWidget(
@@ -6833,352 +7198,344 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                   isLoading: model.isLoading,
                                                   buttonBorderColor:
                                                       AppColors.transparent,
-                                                  // onPressed: () {
-                                                  //   if (formKey!.currentState!
-                                                  //       .validate()) {
-                                                  //     model.submitLevelTwoManAndDistributorKyc(
-                                                  //       context: context,
-                                                  //       kycEntity: SecondLevelDistributorKycEntityModel(
-                                                  //         businessTypes: model
-                                                  //             .businessTypes,
-                                                  //         distributor:
-                                                  //             !isSwitchedDistributor
-                                                  //             ? null
-                                                  //             : Distributor(
-                                                  //                 businessDetails: BusinessDetails(
-                                                  //                   cacRegistrationNumber:
-                                                  //                       cacRegNoControllerDistributor
-                                                  //                           .text
-                                                  //                           .trim(),
-                                                  //                   businessAddress:
-                                                  //                       cacRegNoControllerDistributorBusinessAddress
-                                                  //                           .text
-                                                  //                           .trim(),
-                                                  //                   contactPersonName:
-                                                  //                       cacRegNoControllerDistributorContactPerson
-                                                  //                           .text
-                                                  //                           .trim(),
-                                                  //                   contactPersonEmail:
-                                                  //                       cacRegNoControllerDistributorContactPersonEmail
-                                                  //                           .text
-                                                  //                           .trim(),
-                                                  //                   contactPersonPhoneNumber:
-                                                  //                       cacRegNoControllerDistributorContactPersonNumber.text !=
-                                                  //                           ''
-                                                  //                       ? model.returnAddingPhoneNoStructureWith234Kyc(
-                                                  //                           cacRegNoControllerDistributorContactPersonNumber.text.trim(),
-                                                  //                         )
-                                                  //                       : '',
-                                                  //                   businessWebsite:
-                                                  //                       cacRegNoControllerDistributorBusinessWeb
-                                                  //                           .text
-                                                  //                           .trim(),
-                                                  //                   taxIdentificationNumber:
-                                                  //                       cacRegNoControllerDistributorTin
-                                                  //                           .text
-                                                  //                           .trim(),
-                                                  //                   pharmaceuticalDistributionLicenseNumber:
-                                                  //                       cacRegNoControllerDistributorLincense
-                                                  //                           .text
-                                                  //                           .trim(),
-                                                  //                   pharmacyCouncilLicenseNumber:
-                                                  //                       cacRegNoControllerDistributorCouncilLincense
-                                                  //                           .text
-                                                  //                           .trim(),
-                                                  //                   nafdacPermitNumber:
-                                                  //                       cacRegNoControllerDistributorNafPermit
-                                                  //                           .text
-                                                  //                           .trim(),
-                                                  //                   productRegistrationEvidenceNumber:
-                                                  //                       null,
-                                                  //                   importPermitNumber:
-                                                  //                       null,
-                                                  //                   nafdacManufacturingLicenseNumber:
-                                                  //                       null,
-                                                  //                   gmpCertificateNumber:
-                                                  //                       null,
-                                                  //                 ),
-                                                  //                 documents: DisDocuments(
-                                                                    
-                                                  //                   cacCertificate:
-                                                  //                       model.secondLevelDistributorKycEntityModelCAC ==
-                                                  //                               null ||
-                                                  //                           model.secondLevelDistributorKycEntityModelCAC!.distributor ==
-                                                  //                               null
-                                                  //                       ? null
-                                                  //                       : model
-                                                  //                             .secondLevelDistributorKycEntityModelCAC!
-                                                  //                             .distributor!
-                                                  //                             .documents!
-                                                  //                             .cacCertificate!,
-                                                  //                   pharmaceuticalDistributionLicense:
-                                                  //                       model.secondLevelDistributorKycEntityModelPharmLin ==
-                                                  //                               null ||
-                                                  //                           model.secondLevelDistributorKycEntityModelPharmLin!.distributor ==
-                                                  //                               null
-                                                  //                       ? null
-                                                  //                       : model
-                                                  //                             .secondLevelDistributorKycEntityModelPharmLin!
-                                                  //                             .distributor!
-                                                  //                             .documents!
-                                                  //                             .pharmaceuticalDistributionLicense!,
-                                                  //                   nafdacPermit:
-                                                  //                       model.secondLevelDistributorKycEntityModelNAF ==
-                                                  //                               null ||
-                                                  //                           model.secondLevelDistributorKycEntityModelNAF!.distributor ==
-                                                  //                               null
-                                                  //                       ? null
-                                                  //                       : model
-                                                  //                             .secondLevelDistributorKycEntityModelNAF!
-                                                  //                             .distributor!
-                                                  //                             .documents!
-                                                  //                             .nafdacPermit!,
-                                                  //                   pharmacyCouncilLicense:
-                                                  //                       model.secondLevelDistributorKycEntityModelPharmCouncilLin ==
-                                                  //                               null ||
-                                                  //                           model.secondLevelDistributorKycEntityModelPharmCouncilLin!.distributor ==
-                                                  //                               null
-                                                  //                       ? null
-                                                  //                       : model
-                                                  //                             .secondLevelDistributorKycEntityModelPharmCouncilLin!
-                                                  //                             .distributor!
-                                                  //                             .documents!
-                                                  //                             .pharmacyCouncilLicense!,
-                                                  //                   companyLogo:
-                                                  //                       model.secondLevelDistributorKycEntityModelLogo ==
-                                                  //                               null ||
-                                                  //                           model.secondLevelDistributorKycEntityModelLogo!.distributor ==
-                                                  //                               null
-                                                  //                       ? null
-                                                  //                       : model
-                                                  //                             .secondLevelDistributorKycEntityModelLogo!
-                                                  //                             .distributor!
-                                                  //                             .documents!
-                                                  //                             .companyLogo!,
-                                                  //                 ),
-                                                  //                 coverageAreas:
-                                                  //                     model
-                                                  //                         .listOfAddedLocation,
-                                                  //                 // .map(
-                                                  //                 //   (e) =>
-                                                  //                 //       CoverageAreas.fromJson(
-                                                  //                 //         e,
-                                                  //                 //       ),
-                                                  //                 // )
-                                                  //                 // .toList(),
-                                                  //               ),
-                                                  //         manufacturer:
-                                                  //             !isSwitchedManufaturer
-                                                  //             ? null
-                                                  //             : Manufacturer(
-                                                  //                 businessDetails: BusinessDetails(
-                                                  //                   cacRegistrationNumber:
-                                                  //                       cacRegNoManufacturerController
-                                                  //                           .text
-                                                  //                           .trim(),
-                                                  //                   businessAddress:
-                                                  //                       cacRegNoControllerManufacturerBusinessAddress
-                                                  //                           .text
-                                                  //                           .trim(),
-                                                  //                   contactPersonName:
-                                                  //                       cacRegNoControllerManufacturerContactPerson
-                                                  //                           .text
-                                                  //                           .trim(),
-                                                  //                   contactPersonEmail:
-                                                  //                       cacRegNoControllerManufacturerContactPersonEmail
-                                                  //                           .text
-                                                  //                           .trim(),
-                                                  //                   contactPersonPhoneNumber:
-                                                  //                       cacRegNoControllerManufacturerContactPersonNumber.text !=
-                                                  //                           ''
-                                                  //                       ? model.returnAddingPhoneNoStructureWith234Kyc(
-                                                  //                           cacRegNoControllerManufacturerContactPersonNumber.text.trim(),
-                                                  //                         )
-                                                  //                       : '',
-                                                  //                   businessWebsite:
-                                                  //                       cacRegNoControllerManufacturerBusinessWeb
-                                                  //                           .text
-                                                  //                           .trim(),
-                                                  //                   taxIdentificationNumber:
-                                                  //                       cacRegNoControllerManufacturerTin
-                                                  //                           .text
-                                                  //                           .trim(),
-                                                  //                   gmpCertificateNumber:
-                                                  //                       cacRegNoControllerManufacturerCertificateNum
-                                                  //                           .text
-                                                  //                           .trim(),
-                                                  //                   nafdacManufacturingLicenseNumber:
-                                                  //                       cacRegNoControllerManufacturerLincenseNumber
-                                                  //                           .text
-                                                  //                           .trim(),
-                                                  //                   productRegistrationEvidenceNumber:
-                                                  //                       cacRegNoControllerManufacturerProdNumber
-                                                  //                           .text
-                                                  //                           .trim(),
-                                                  //                 ),
-                                                  //                 documents: ManDocuments(
-                                                  //                   cacCertificate:
-                                                  //                       model.secondLevelDistributorKycEntityModelManCAC ==
-                                                  //                               null ||
-                                                  //                           model.secondLevelDistributorKycEntityModelManCAC!.manufacturer ==
-                                                  //                               null
-                                                  //                       ? null
-                                                  //                       : model
-                                                  //                             .secondLevelDistributorKycEntityModelManCAC!
-                                                  //                             .manufacturer!
-                                                  //                             .documents!
-                                                  //                             .cacCertificate!,
-                                                  //                   gmpCertificate:
-                                                  //                       model.secondLevelDistributorKycEntityModelManGMP ==
-                                                  //                               null ||
-                                                  //                           model.secondLevelDistributorKycEntityModelManGMP!.manufacturer ==
-                                                  //                               null
-                                                  //                       ? null
-                                                  //                       : model
-                                                  //                             .secondLevelDistributorKycEntityModelManGMP!
-                                                  //                             .manufacturer!
-                                                  //                             .documents!
-                                                  //                             .gmpCertificate!,
-                                                  //                   nafdacManufacturingLicense:
-                                                  //                       model.secondLevelDistributorKycEntityModelManNAF ==
-                                                  //                               null ||
-                                                  //                           model.secondLevelDistributorKycEntityModelManNAF!.manufacturer ==
-                                                  //                               null
-                                                  //                       ? null
-                                                  //                       : model
-                                                  //                             .secondLevelDistributorKycEntityModelManNAF!
-                                                  //                             .manufacturer!
-                                                  //                             .documents!
-                                                  //                             .nafdacManufacturingLicense!,
-                                                  //                   productRegistrationEvidence:
-                                                  //                       model.secondLevelDistributorKycEntityModelManProd ==
-                                                  //                               null ||
-                                                  //                           model.secondLevelDistributorKycEntityModelManProd!.manufacturer ==
-                                                  //                               null
-                                                  //                       ? null
-                                                  //                       : model
-                                                  //                             .secondLevelDistributorKycEntityModelManProd!
-                                                  //                             .manufacturer!
-                                                  //                             .documents!
-                                                  //                             .productRegistrationEvidence!,
-                                                  //                   companyLogo:
-                                                  //                       model.secondLevelDistributorKycEntityModelManLogo ==
-                                                  //                               null ||
-                                                  //                           model.secondLevelDistributorKycEntityModelManLogo!.manufacturer ==
-                                                  //                               null
-                                                  //                       ? null
-                                                  //                       : model
-                                                  //                             .secondLevelDistributorKycEntityModelManLogo!
-                                                  //                             .manufacturer!
-                                                  //                             .documents!
-                                                  //                             .companyLogo!,
-                                                  //                 ),
-                                                  //               ),
-                                                  //         importer:
-                                                  //             !isSwitchedImporter
-                                                  //             ? null
-                                                  //             : Importer(
-                                                  //                 businessDetails: BusinessDetails(
-                                                  //                   cacRegistrationNumber:
-                                                  //                       cacRegNoImporterController
-                                                  //                           .text
-                                                  //                           .trim(),
-                                                  //                   businessAddress:
-                                                  //                       cacRegNoControllerImporterBusinessAddress
-                                                  //                           .text
-                                                  //                           .trim(),
-                                                  //                   contactPersonName:
-                                                  //                       cacRegNoControllerImporterContactPerson
-                                                  //                           .text
-                                                  //                           .trim(),
-                                                  //                   contactPersonEmail:
-                                                  //                       cacRegNoControllerImporterContactPersonEmail
-                                                  //                           .text
-                                                  //                           .trim(),
-                                                  //                   contactPersonPhoneNumber:
-                                                  //                       cacRegNoControllerImporterContactPersonNumber.text !=
-                                                  //                           ''
-                                                  //                       ? model.returnAddingPhoneNoStructureWith234Kyc(
-                                                  //                           cacRegNoControllerImporterContactPersonNumber.text.trim(),
-                                                  //                         )
-                                                  //                       : '',
-                                                  //                   businessWebsite:
-                                                  //                       cacRegNoControllerImporterBusinessWeb
-                                                  //                           .text
-                                                  //                           .trim(),
-                                                  //                   taxIdentificationNumber:
-                                                  //                       cacRegNoControllerImporterTin
-                                                  //                           .text
-                                                  //                           .trim(),
-                                                  //                   importPermitNumber:
-                                                  //                       cacRegNoControllerImporterCertificateNum
-                                                  //                           .text
-                                                  //                           .trim(),
+                                                  onPressed: () {
+                                                    if (formKey!.currentState!
+                                                        .validate()) {
+                                                      model.submitMarketplaceProfileUpgrade(
+                                                        context,
+                                                        kycEntity: SecondLevelDistributorKycEntityModel(
+                                                          businessTypes: model
+                                                              .businessTypes,
+                                                          distributor:
+                                                              !isSwitchedDistributor
+                                                              ? null
+                                                              : Distributor(
+                                                                  businessDetails: BusinessDetails(
+                                                                    cacRegistrationNumber:
+                                                                        cacRegNoControllerDistributor
+                                                                            .text
+                                                                            .trim(),
+                                                                    businessAddress:
+                                                                        cacRegNoControllerDistributorBusinessAddress
+                                                                            .text
+                                                                            .trim(),
+                                                                    contactPersonName:
+                                                                        cacRegNoControllerDistributorContactPerson
+                                                                            .text
+                                                                            .trim(),
+                                                                    contactPersonEmail:
+                                                                        cacRegNoControllerDistributorContactPersonEmail
+                                                                            .text
+                                                                            .trim(),
+                                                                    contactPersonPhoneNumber:
+                                                                        cacRegNoControllerDistributorContactPersonNumber.text !=
+                                                                            ''
+                                                                        ? model.returnAddingPhoneNoStructureWith234Kyc(
+                                                                            cacRegNoControllerDistributorContactPersonNumber.text.trim(),
+                                                                          )
+                                                                        : '',
+                                                                    businessWebsite:
+                                                                        cacRegNoControllerDistributorBusinessWeb
+                                                                            .text
+                                                                            .trim(),
+                                                                    taxIdentificationNumber:
+                                                                        cacRegNoControllerDistributorTin
+                                                                            .text
+                                                                            .trim(),
+                                                                    pharmaceuticalDistributionLicenseNumber:
+                                                                        cacRegNoControllerDistributorLincense
+                                                                            .text
+                                                                            .trim(),
+                                                                    pharmacyCouncilLicenseNumber:
+                                                                        cacRegNoControllerDistributorCouncilLincense
+                                                                            .text
+                                                                            .trim(),
+                                                                    nafdacPermitNumber:
+                                                                        cacRegNoControllerDistributorNafPermit
+                                                                            .text
+                                                                            .trim(),
+                                                                    productRegistrationEvidenceNumber:
+                                                                        null,
+                                                                    importPermitNumber:
+                                                                        null,
+                                                                    nafdacManufacturingLicenseNumber:
+                                                                        null,
+                                                                    gmpCertificateNumber:
+                                                                        null,
+                                                                  ),
+                                                                  documents: DisDocuments(
+                                                                    cacCertificate:
+                                                                        model.secondLevelDistributorKycEntityModelCAC ==
+                                                                                null ||
+                                                                            model.secondLevelDistributorKycEntityModelCAC!.distributor ==
+                                                                                null
+                                                                        ? null
+                                                                        : model
+                                                                              .secondLevelDistributorKycEntityModelCAC!
+                                                                              .distributor!
+                                                                              .documents!
+                                                                              .cacCertificate!,
+                                                                    pharmaceuticalDistributionLicense:
+                                                                        model.secondLevelDistributorKycEntityModelPharmLin ==
+                                                                                null ||
+                                                                            model.secondLevelDistributorKycEntityModelPharmLin!.distributor ==
+                                                                                null
+                                                                        ? null
+                                                                        : model
+                                                                              .secondLevelDistributorKycEntityModelPharmLin!
+                                                                              .distributor!
+                                                                              .documents!
+                                                                              .pharmaceuticalDistributionLicense!,
+                                                                    nafdacPermit:
+                                                                        model.secondLevelDistributorKycEntityModelNAF ==
+                                                                                null ||
+                                                                            model.secondLevelDistributorKycEntityModelNAF!.distributor ==
+                                                                                null
+                                                                        ? null
+                                                                        : model
+                                                                              .secondLevelDistributorKycEntityModelNAF!
+                                                                              .distributor!
+                                                                              .documents!
+                                                                              .nafdacPermit!,
+                                                                    pharmacyCouncilLicense:
+                                                                        model.secondLevelDistributorKycEntityModelPharmCouncilLin ==
+                                                                                null ||
+                                                                            model.secondLevelDistributorKycEntityModelPharmCouncilLin!.distributor ==
+                                                                                null
+                                                                        ? null
+                                                                        : model
+                                                                              .secondLevelDistributorKycEntityModelPharmCouncilLin!
+                                                                              .distributor!
+                                                                              .documents!
+                                                                              .pharmacyCouncilLicense!,
+                                                                    companyLogo:
+                                                                        model.secondLevelDistributorKycEntityModelLogo ==
+                                                                                null ||
+                                                                            model.secondLevelDistributorKycEntityModelLogo!.distributor ==
+                                                                                null
+                                                                        ? null
+                                                                        : model
+                                                                              .secondLevelDistributorKycEntityModelLogo!
+                                                                              .distributor!
+                                                                              .documents!
+                                                                              .companyLogo!,
+                                                                  ),
+                                                                  coverageAreas:
+                                                                      model
+                                                                          .listOfAddedLocation,
+                                                                ),
+                                                          manufacturer:
+                                                              !isSwitchedManufaturer
+                                                              ? null
+                                                              : Manufacturer(
+                                                                  businessDetails: BusinessDetails(
+                                                                    cacRegistrationNumber:
+                                                                        cacRegNoManufacturerController
+                                                                            .text
+                                                                            .trim(),
+                                                                    businessAddress:
+                                                                        cacRegNoControllerManufacturerBusinessAddress
+                                                                            .text
+                                                                            .trim(),
+                                                                    contactPersonName:
+                                                                        cacRegNoControllerManufacturerContactPerson
+                                                                            .text
+                                                                            .trim(),
+                                                                    contactPersonEmail:
+                                                                        cacRegNoControllerManufacturerContactPersonEmail
+                                                                            .text
+                                                                            .trim(),
+                                                                    contactPersonPhoneNumber:
+                                                                        cacRegNoControllerManufacturerContactPersonNumber.text !=
+                                                                            ''
+                                                                        ? model.returnAddingPhoneNoStructureWith234Kyc(
+                                                                            cacRegNoControllerManufacturerContactPersonNumber.text.trim(),
+                                                                          )
+                                                                        : '',
+                                                                    businessWebsite:
+                                                                        cacRegNoControllerManufacturerBusinessWeb
+                                                                            .text
+                                                                            .trim(),
+                                                                    taxIdentificationNumber:
+                                                                        cacRegNoControllerManufacturerTin
+                                                                            .text
+                                                                            .trim(),
+                                                                    gmpCertificateNumber:
+                                                                        cacRegNoControllerManufacturerCertificateNum
+                                                                            .text
+                                                                            .trim(),
+                                                                    nafdacManufacturingLicenseNumber:
+                                                                        cacRegNoControllerManufacturerLincenseNumber
+                                                                            .text
+                                                                            .trim(),
+                                                                    productRegistrationEvidenceNumber:
+                                                                        cacRegNoControllerManufacturerProdNumber
+                                                                            .text
+                                                                            .trim(),
+                                                                  ),
+                                                                  documents: ManDocuments(
+                                                                    cacCertificate:
+                                                                        model.secondLevelDistributorKycEntityModelManCAC ==
+                                                                                null ||
+                                                                            model.secondLevelDistributorKycEntityModelManCAC!.manufacturer ==
+                                                                                null
+                                                                        ? null
+                                                                        : model
+                                                                              .secondLevelDistributorKycEntityModelManCAC!
+                                                                              .manufacturer!
+                                                                              .documents!
+                                                                              .cacCertificate!,
+                                                                    gmpCertificate:
+                                                                        model.secondLevelDistributorKycEntityModelManGMP ==
+                                                                                null ||
+                                                                            model.secondLevelDistributorKycEntityModelManGMP!.manufacturer ==
+                                                                                null
+                                                                        ? null
+                                                                        : model
+                                                                              .secondLevelDistributorKycEntityModelManGMP!
+                                                                              .manufacturer!
+                                                                              .documents!
+                                                                              .gmpCertificate!,
+                                                                    nafdacManufacturingLicense:
+                                                                        model.secondLevelDistributorKycEntityModelManNAF ==
+                                                                                null ||
+                                                                            model.secondLevelDistributorKycEntityModelManNAF!.manufacturer ==
+                                                                                null
+                                                                        ? null
+                                                                        : model
+                                                                              .secondLevelDistributorKycEntityModelManNAF!
+                                                                              .manufacturer!
+                                                                              .documents!
+                                                                              .nafdacManufacturingLicense!,
+                                                                    productRegistrationEvidence:
+                                                                        model.secondLevelDistributorKycEntityModelManProd ==
+                                                                                null ||
+                                                                            model.secondLevelDistributorKycEntityModelManProd!.manufacturer ==
+                                                                                null
+                                                                        ? null
+                                                                        : model
+                                                                              .secondLevelDistributorKycEntityModelManProd!
+                                                                              .manufacturer!
+                                                                              .documents!
+                                                                              .productRegistrationEvidence!,
+                                                                    companyLogo:
+                                                                        model.secondLevelDistributorKycEntityModelManLogo ==
+                                                                                null ||
+                                                                            model.secondLevelDistributorKycEntityModelManLogo!.manufacturer ==
+                                                                                null
+                                                                        ? null
+                                                                        : model
+                                                                              .secondLevelDistributorKycEntityModelManLogo!
+                                                                              .manufacturer!
+                                                                              .documents!
+                                                                              .companyLogo!,
+                                                                  ),
+                                                                ),
+                                                          importer:
+                                                              !isSwitchedImporter
+                                                              ? null
+                                                              : Importer(
+                                                                  businessDetails: BusinessDetails(
+                                                                    cacRegistrationNumber:
+                                                                        cacRegNoImporterController
+                                                                            .text
+                                                                            .trim(),
+                                                                    businessAddress:
+                                                                        cacRegNoControllerImporterBusinessAddress
+                                                                            .text
+                                                                            .trim(),
+                                                                    contactPersonName:
+                                                                        cacRegNoControllerImporterContactPerson
+                                                                            .text
+                                                                            .trim(),
+                                                                    contactPersonEmail:
+                                                                        cacRegNoControllerImporterContactPersonEmail
+                                                                            .text
+                                                                            .trim(),
+                                                                    contactPersonPhoneNumber:
+                                                                        cacRegNoControllerImporterContactPersonNumber.text !=
+                                                                            ''
+                                                                        ? model.returnAddingPhoneNoStructureWith234Kyc(
+                                                                            cacRegNoControllerImporterContactPersonNumber.text.trim(),
+                                                                          )
+                                                                        : '',
+                                                                    businessWebsite:
+                                                                        cacRegNoControllerImporterBusinessWeb
+                                                                            .text
+                                                                            .trim(),
+                                                                    taxIdentificationNumber:
+                                                                        cacRegNoControllerImporterTin
+                                                                            .text
+                                                                            .trim(),
+                                                                    importPermitNumber:
+                                                                        cacRegNoControllerImporterCertificateNum
+                                                                            .text
+                                                                            .trim(),
 
-                                                  //                   pharmaceuticalDistributionLicenseNumber:
-                                                  //                       null,
-                                                  //                   pharmacyCouncilLicenseNumber:
-                                                  //                       null,
-                                                  //                   productRegistrationEvidenceNumber:
-                                                  //                       null,
-                                                  //                   nafdacPermitNumber:
-                                                  //                       null,
-                                                  //                   gmpCertificateNumber:
-                                                  //                       null,
-                                                  //                   nafdacManufacturingLicenseNumber:
-                                                  //                       null,
-                                                  //                 ),
-                                                  //                 documents: ImpDocuments(
-                                                  //                   cacCertificate:
-                                                  //                       model.secondLevelDistributorKycEntityModelImpCAC ==
-                                                  //                               null ||
-                                                  //                           model.secondLevelDistributorKycEntityModelImpCAC!.importer ==
-                                                  //                               null
-                                                  //                       ? null
-                                                  //                       : model
-                                                  //                             .secondLevelDistributorKycEntityModelImpCAC!
-                                                  //                             .importer!
-                                                  //                             .documents!
-                                                  //                             .cacCertificate!,
-                                                  //                   importPermit:
-                                                  //                       model.secondLevelDistributorKycEntityModelImpPermit ==
-                                                  //                               null ||
-                                                  //                           model.secondLevelDistributorKycEntityModelImpPermit!.importer ==
-                                                  //                               null
-                                                  //                       ? null
-                                                  //                       : model
-                                                  //                             .secondLevelDistributorKycEntityModelImpPermit!
-                                                  //                             .importer!
-                                                  //                             .documents!
-                                                  //                             .importPermit!,
-                                                  //                   manufacturerAuthorizationLetter:
-                                                  //                       model.secondLevelDistributorKycEntityModelImpManAuthLetter ==
-                                                  //                               null ||
-                                                  //                           model.secondLevelDistributorKycEntityModelImpManAuthLetter!.importer ==
-                                                  //                               null
-                                                  //                       ? null
-                                                  //                       : model
-                                                  //                             .secondLevelDistributorKycEntityModelImpManAuthLetter!
-                                                  //                             .importer!
-                                                  //                             .documents!
-                                                  //                             .manufacturerAuthorizationLetter!,
-                                                  //                   companyLogo:
-                                                  //                       model.secondLevelDistributorKycEntityModelImpLogo ==
-                                                  //                               null ||
-                                                  //                           model.secondLevelDistributorKycEntityModelImpLogo!.importer ==
-                                                  //                               null
-                                                  //                       ? null
-                                                  //                       : model
-                                                  //                             .secondLevelDistributorKycEntityModelImpLogo!
-                                                  //                             .importer!
-                                                  //                             .documents!
-                                                  //                             .companyLogo!,
-                                                  //                 ),
-                                                  //               ),
-                                                  //       ),
-                                                  //     );
-                                                  //   }
-                                                  // },
+                                                                    pharmaceuticalDistributionLicenseNumber:
+                                                                        null,
+                                                                    pharmacyCouncilLicenseNumber:
+                                                                        null,
+                                                                    productRegistrationEvidenceNumber:
+                                                                        null,
+                                                                    nafdacPermitNumber:
+                                                                        null,
+                                                                    gmpCertificateNumber:
+                                                                        null,
+                                                                    nafdacManufacturingLicenseNumber:
+                                                                        null,
+                                                                  ),
+                                                                  documents: ImpDocuments(
+                                                                    cacCertificate:
+                                                                        model.secondLevelDistributorKycEntityModelImpCAC ==
+                                                                                null ||
+                                                                            model.secondLevelDistributorKycEntityModelImpCAC!.importer ==
+                                                                                null
+                                                                        ? null
+                                                                        : model
+                                                                              .secondLevelDistributorKycEntityModelImpCAC!
+                                                                              .importer!
+                                                                              .documents!
+                                                                              .cacCertificate!,
+                                                                    importPermit:
+                                                                        model.secondLevelDistributorKycEntityModelImpPermit ==
+                                                                                null ||
+                                                                            model.secondLevelDistributorKycEntityModelImpPermit!.importer ==
+                                                                                null
+                                                                        ? null
+                                                                        : model
+                                                                              .secondLevelDistributorKycEntityModelImpPermit!
+                                                                              .importer!
+                                                                              .documents!
+                                                                              .importPermit!,
+                                                                    manufacturerAuthorizationLetter:
+                                                                        model.secondLevelDistributorKycEntityModelImpManAuthLetter ==
+                                                                                null ||
+                                                                            model.secondLevelDistributorKycEntityModelImpManAuthLetter!.importer ==
+                                                                                null
+                                                                        ? null
+                                                                        : model
+                                                                              .secondLevelDistributorKycEntityModelImpManAuthLetter!
+                                                                              .importer!
+                                                                              .documents!
+                                                                              .manufacturerAuthorizationLetter!,
+                                                                    companyLogo:
+                                                                        model.secondLevelDistributorKycEntityModelImpLogo ==
+                                                                                null ||
+                                                                            model.secondLevelDistributorKycEntityModelImpLogo!.importer ==
+                                                                                null
+                                                                        ? null
+                                                                        : model
+                                                                              .secondLevelDistributorKycEntityModelImpLogo!
+                                                                              .importer!
+                                                                              .documents!
+                                                                              .companyLogo!,
+                                                                  ),
+                                                                ),
+                                                        ),
+                                                      );
+                                                    }
+                                                  },
                                                 ),
                                                 SizedBox(height: 10.h),
                                               ],

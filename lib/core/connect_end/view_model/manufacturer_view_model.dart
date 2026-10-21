@@ -17,10 +17,8 @@ import 'package:medicate_app/core/connect_end/model/distributor_wholesale_catego
 import 'package:medicate_app/core/connect_end/model/forgot_password_response_model/forgot_password_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/get_distributor_kyc_response_model/coverage_areas.dart';
 import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/distributor.dart';
-// import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/import_permit.dart';
 import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/importer.dart';
 import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/manufacturer.dart';
-// import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/manufacturer_authorization_letter.dart';
 import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/nafdac_permit.dart';
 import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/pharmaceutical_distribution_license.dart';
 import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/pharmacy_council_license.dart';
@@ -74,7 +72,9 @@ import '../model/second_level_distributor_kyc_entity_model/cac_certificate.dart'
 import '../model/second_level_distributor_kyc_entity_model/company_logo.dart';
 import '../model/second_level_distributor_kyc_entity_model/gmp_certificate.dart';
 import '../model/second_level_distributor_kyc_entity_model/imp_documents.dart';
+import '../model/second_level_distributor_kyc_entity_model/import_permit.dart';
 import '../model/second_level_distributor_kyc_entity_model/man_documents.dart';
+import '../model/second_level_distributor_kyc_entity_model/manufacturer_authorization_letter.dart';
 import '../model/second_level_distributor_kyc_entity_model/nafdac_manufacturing_license.dart';
 import '../model/second_level_distributor_kyc_entity_model/product_registration_evidence.dart';
 import '../model/second_level_distributor_kyc_entity_model/second_level_distributor_kyc_entity_model.dart';
@@ -92,10 +92,6 @@ import 'package:medicate_app/core/connect_end/model/get_single_product_response_
     as im;
 import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/coverage_areas.dart'
     as cov;
-import 'package:medicate_app/core/connect_end/model/get_distributor_kyc_response_model/manufacturer_authorization_letter.dart'
-    as imp;
-import 'package:medicate_app/core/connect_end/model/get_distributor_kyc_response_model/import_permit.dart'
-    as impp;
 
 class ManufacturerViewModel extends BaseViewModel {
   final BuildContext? context;
@@ -4970,7 +4966,7 @@ class ManufacturerViewModel extends BaseViewModel {
               SecondLevelDistributorKycEntityModel(
                 importer: Importer(
                   documents: ImpDocuments(
-                    importPermit: impp.ImportPermit(
+                    importPermit: ImportPermit(
                       width: _uploadImageResponseModelImportPermit!.data!.width,
                       height:
                           _uploadImageResponseModelImportPermit!.data!.height,
@@ -5014,7 +5010,7 @@ class ManufacturerViewModel extends BaseViewModel {
                 importer: Importer(
                   documents: ImpDocuments(
                     manufacturerAuthorizationLetter:
-                        imp.ManufacturerAuthorizationLetter(
+                        ManufacturerAuthorizationLetter(
                           width: _uploadImageResponseModelManAuthLetter!
                               .data!
                               .width,

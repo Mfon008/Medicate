@@ -203,7 +203,8 @@ class _HMOForgotPinScreenState extends State<HMOForgotPinScreen> {
                               model.forgotPasswordHMO(
                                 context,
                                 forgotPassword: ResendOtpEntityModel(
-                                  phone: '+234${model.returnPhoneNoStructure(phoneController.text)}',
+                                  phone:
+                                      '+234${model.returnPhoneNoStructure(phoneController.text)}',
                                 ),
                               );
                             }

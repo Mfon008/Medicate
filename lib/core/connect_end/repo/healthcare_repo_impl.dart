@@ -16,6 +16,7 @@ import '../model/forgot_password_response_model/forgot_password_response_model.d
 import '../model/get_created_user_response_model/get_created_user_response_model.dart';
 import '../model/get_healthcare_practitioner_kyc_response_model/get_healthcare_practitioner_kyc_response_model.dart';
 import '../model/get_healthcare_provider_kyc_response_model/get_healthcare_provider_kyc_response_model.dart';
+import '../model/get_marketplace_upgrade_response_model/get_marketplace_upgrade_response_model.dart';
 import '../model/get_reminder_by_id/get_reminder_by_id.dart';
 import '../model/get_reminder_for_tenant_response_model/get_reminder_for_tenant_response_model.dart';
 import '../model/get_roles_response_model/get_roles_response_model.dart';
@@ -36,6 +37,7 @@ import '../model/resend_otp_entity_model.dart';
 import '../model/resend_otp_response_model/resend_otp_response_model.dart';
 import '../model/reset_password_entity_model.dart';
 import '../model/roles_entity_model.dart';
+import '../model/second_level_distributor_kyc_entity_model/second_level_distributor_kyc_entity_model.dart';
 import '../model/set_pin_entity_model.dart';
 import '../model/set_pin_pharm_response_model/set_pin_pharm_response_model.dart';
 import '../model/sign_up_phamary_response_model/sign_up_phamary_response_model.dart';
@@ -530,6 +532,25 @@ class HealthcareRepoImpl {
 
   Future<dynamic> deleteBusinessAddress(String id) async {
     final response = await _contract.deleteBusinessAddress(id);
+    return response;
+  }
+
+  Future<dynamic> saveMarketplaceProfileUpgrade(
+    SecondLevelDistributorKycEntityModel kycEntity,
+  ) async {
+    final response = await _contract.saveMarketplaceProfileUpgrade(kycEntity);
+    return response;
+  }
+
+  Future<dynamic> submitMarketplaceProfileUpgrade(
+    SecondLevelDistributorKycEntityModel kycEntity,
+  ) async {
+    final response = await _contract.submitMarketplaceProfileUpgrade(kycEntity);
+    return response;
+  }
+
+  Future<GetMarketplaceUpgradeResponseModel> getMarketplaceUpgrade() async {
+    final response = await _contract.getMarketplaceUpgrade();
     return response;
   }
 
