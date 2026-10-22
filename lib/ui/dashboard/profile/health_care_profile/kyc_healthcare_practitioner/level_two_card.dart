@@ -1331,21 +1331,21 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                       .bankDetails ==
                                                   null ||
                                               model
-                                                      .getHealthcareProviderKycResponseModel!
+                                                      .getHealthcarePractitionerKycResponseModel!
                                                       .data!
                                                       .level2!
                                                       .bankDetails!
                                                       .accountName ==
                                                   '' ||
                                               model
-                                                      .getHealthcareProviderKycResponseModel!
+                                                      .getHealthcarePractitionerKycResponseModel!
                                                       .data!
                                                       .level2!
                                                       .bankDetails!
                                                       .accountNumber ==
                                                   '' ||
                                               model
-                                                      .getHealthcareProviderKycResponseModel!
+                                                      .getHealthcarePractitionerKycResponseModel!
                                                       .data!
                                                       .level2!
                                                       .bankDetails!
@@ -1649,9 +1649,10 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                               .submitLevelTwoKycEntityModelTIN
                                                               ?.taxIdentificationNumberDocument !=
                                                           null;
+                                                      
 
                                                   if (isFormValid &&
-                                                      hasRequiredDocument) {
+                                                      hasRequiredDocument || hasRequiredDocument&& model.getHealthcarePractitionerKycResponseModel?.data?.level2?.bankDetails!=null) {
                                                     model.updateHealthCarePractitionerKycSubmit(
                                                       context,
                                                       updateKyc: SubmitHealthcareLevelTwoKycEntityModel(

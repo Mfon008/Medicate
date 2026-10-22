@@ -13,6 +13,7 @@ class UpdatePractitionerProfileEntityModel {
   String? country;
   String? state;
   String? lga;
+  String? website;
   String? meansOfIdType;
   MeansOfId? meansOfId;
   List<String>? servicesOffered;
@@ -30,6 +31,7 @@ class UpdatePractitionerProfileEntityModel {
     this.country,
     this.state,
     this.lga,
+    this.website,
     this.meansOfIdType,
     this.meansOfId,
     this.servicesOffered,
@@ -53,6 +55,7 @@ class UpdatePractitionerProfileEntityModel {
       country: json['country'] as String?,
       state: json['state'] as String?,
       lga: json['lga'] as String?,
+      website: json['website'] as String?,
       meansOfIdType: json['meansOfIdType'] as String?,
       meansOfId: json['meansOfId'] == null
           ? null
@@ -78,6 +81,7 @@ class UpdatePractitionerProfileEntityModel {
     'country': country,
     'state': state,
     'lga': lga,
+    'website': website,
     'meansOfIdType': meansOfIdType,
     'meansOfId': meansOfId?.toJson(),
     'servicesOffered': servicesOffered,

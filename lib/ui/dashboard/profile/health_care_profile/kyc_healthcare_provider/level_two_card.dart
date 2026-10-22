@@ -1492,82 +1492,90 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                             buttonBorderColor:
                                                 AppColors.transparent,
                                             onPressed: () {
-                                              // final isFormValid =
-                                              //     formKey.currentState
-                                              //         ?.validate() ??
-                                              //     false;
+                                              final isFormValid =
+                                                  formKey.currentState
+                                                      ?.validate() ??
+                                                  false;
 
-                                              // final hasRequiredDocument =
-                                              //     model
-                                              //             .submitLevelTwoKycEntityModelCAC
-                                              //             ?.medicalLicenseCertificate !=
-                                              //         null ||
-                                              //     model
-                                              //             .submitLevelTwoKycEntityModelTIN
-                                              //             ?.taxIdentificationNumberDocument !=
-                                              //         null ||
-                                              //     model
-                                              //             .submitLevelTwoKycEntityModelProof
-                                              //             ?.proofOfPhysicalAddress !=
-                                              //         null;
+                                              final hasRequiredDocument =
+                                                  model
+                                                          .submitLevelTwoKycEntityModelCAC
+                                                          ?.medicalLicenseCertificate !=
+                                                      null ||
+                                                  model
+                                                          .submitLevelTwoKycEntityModelTIN
+                                                          ?.taxIdentificationNumberDocument !=
+                                                      null ||
+                                                  model
+                                                          .submitLevelTwoKycEntityModelProof
+                                                          ?.proofOfPhysicalAddress !=
+                                                      null;
 
-                                              // if (isFormValid &&
-                                              //     hasRequiredDocument) {
-                                              model.updateHealthCareProviderKycSubmit(
-                                                context,
-                                                updateKyc: SubmitHealthcareLevelTwoKycEntityModel(
-                                                  medicalLicenseCertificate:
-                                                      model.submitLevelTwoKycEntityModelCAC ==
-                                                              null ||
-                                                          model
-                                                                  .submitLevelTwoKycEntityModelCAC!
-                                                                  .medicalLicenseCertificate ==
-                                                              null
-                                                      ? null
-                                                      : model
-                                                            .submitLevelTwoKycEntityModelCAC!
-                                                            .medicalLicenseCertificate!,
+                                              if (isFormValid &&
+                                                      hasRequiredDocument ||
+                                                  hasRequiredDocument &&
+                                                      model
+                                                              .getHealthcareProviderKycResponseModel
+                                                              ?.data
+                                                              ?.level2
+                                                              ?.bankDetails !=
+                                                          null) {
+                                                model.updateHealthCareProviderKycSubmit(
+                                                  context,
+                                                  updateKyc: SubmitHealthcareLevelTwoKycEntityModel(
+                                                    medicalLicenseCertificate:
+                                                        model.submitLevelTwoKycEntityModelCAC ==
+                                                                null ||
+                                                            model
+                                                                    .submitLevelTwoKycEntityModelCAC!
+                                                                    .medicalLicenseCertificate ==
+                                                                null
+                                                        ? null
+                                                        : model
+                                                              .submitLevelTwoKycEntityModelCAC!
+                                                              .medicalLicenseCertificate!,
 
-                                                  proofOfPhysicalAddress:
-                                                      model.submitLevelTwoKycEntityModelProof ==
-                                                              null ||
-                                                          model
-                                                                  .submitLevelTwoKycEntityModelProof!
-                                                                  .proofOfPhysicalAddress ==
-                                                              null
-                                                      ? null
-                                                      : model
-                                                            .submitLevelTwoKycEntityModelProof!
-                                                            .proofOfPhysicalAddress,
-                                                  taxIdentificationNumberDocument:
-                                                      model.submitLevelTwoKycEntityModelTIN ==
-                                                              null ||
-                                                          model
-                                                                  .submitLevelTwoKycEntityModelTIN!
-                                                                  .taxIdentificationNumberDocument ==
-                                                              null
-                                                      ? null
-                                                      : model
-                                                            .submitLevelTwoKycEntityModelTIN!
-                                                            .taxIdentificationNumberDocument,
+                                                    proofOfPhysicalAddress:
+                                                        model.submitLevelTwoKycEntityModelProof ==
+                                                                null ||
+                                                            model
+                                                                    .submitLevelTwoKycEntityModelProof!
+                                                                    .proofOfPhysicalAddress ==
+                                                                null
+                                                        ? null
+                                                        : model
+                                                              .submitLevelTwoKycEntityModelProof!
+                                                              .proofOfPhysicalAddress,
+                                                    taxIdentificationNumberDocument:
+                                                        model.submitLevelTwoKycEntityModelTIN ==
+                                                                null ||
+                                                            model
+                                                                    .submitLevelTwoKycEntityModelTIN!
+                                                                    .taxIdentificationNumberDocument ==
+                                                                null
+                                                        ? null
+                                                        : model
+                                                              .submitLevelTwoKycEntityModelTIN!
+                                                              .taxIdentificationNumberDocument,
 
-                                                  bankDetails: BankDetails(
-                                                    bankName: bankNameController
-                                                        .text
-                                                        .trim(),
-                                                    accountName:
-                                                        bankAccountNameController
-                                                            .text
-                                                            .trim(),
-                                                    accountNumber:
-                                                        bankAccountNoController
-                                                            .text
-                                                            .trim(),
+                                                    bankDetails: BankDetails(
+                                                      bankName:
+                                                          bankNameController
+                                                              .text
+                                                              .trim(),
+                                                      accountName:
+                                                          bankAccountNameController
+                                                              .text
+                                                              .trim(),
+                                                      accountNumber:
+                                                          bankAccountNoController
+                                                              .text
+                                                              .trim(),
+                                                    ),
                                                   ),
-                                                ),
-                                              );
+                                                );
+                                              }
                                             },
-                                            // },
                                           ),
                                           SizedBox(height: 10.h),
                                         ],
