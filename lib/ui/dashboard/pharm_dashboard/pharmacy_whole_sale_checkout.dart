@@ -570,9 +570,16 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                           children: [
                             GestureDetector(
                               onTap: () {
-                                model.isDeliveryAddressTap =
-                                    !model.isDeliveryAddressTap;
-                                model.notifyListeners();
+                                if (model
+                                        .getTetantResponseModel!
+                                        .data!
+                                        .businessAddresses!
+                                        .length >
+                                    1) {
+                                  model.isDeliveryAddressTap =
+                                      !model.isDeliveryAddressTap;
+                                  model.notifyListeners();
+                                }
                               },
                               child: Container(
                                 padding: model.isDeliveryAddressTap
@@ -614,7 +621,7 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                         SizedBox(height: 10.h),
                         model.isDeliveryAddressTap
                             ? Container(
-                                margin: EdgeInsets.only(top:10.h),
+                                margin: EdgeInsets.only(top: 10.h),
                                 width: double.infinity,
                                 padding: EdgeInsets.all(12.w),
                                 decoration: BoxDecoration(

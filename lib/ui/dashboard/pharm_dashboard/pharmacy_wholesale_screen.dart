@@ -835,7 +835,6 @@ class _PharmacyWholesaleScreenState extends State<PharmacyWholesaleScreen> {
                                       ),
                                       Spacer(),
                                       Container(
-                                        // height: 40.h,
                                         decoration: BoxDecoration(
                                           borderRadius: BorderRadius.circular(
                                             7.92.r,
