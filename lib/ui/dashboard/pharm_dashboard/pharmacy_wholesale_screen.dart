@@ -29,6 +29,7 @@ class PharmacyWholesaleScreen extends StatefulWidget {
 class _PharmacyWholesaleScreenState extends State<PharmacyWholesaleScreen> {
   int currentPage = 0;
   String? editingQuantityProductId;
+  bool? isExpiringSoon;
 
   @override
   Widget build(BuildContext context) {
@@ -180,17 +181,17 @@ class _PharmacyWholesaleScreenState extends State<PharmacyWholesaleScreen> {
                     color: AppColors.black,
                   ),
                 ),
-                SizedBox(height: 10.h),
-                TextView(
-                  text:
-                      'Order directly from partnered manufacturers and distributors. Tiered pricing, MOQ discounts, and scheduled or instant delivery.',
-                  textStyle: TextStyle(
-                    fontFamily: 'GoogleSans',
-                    fontSize: 14.20.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.black,
-                  ),
-                ),
+                // SizedBox(height: 10.h),
+                // TextView(
+                //   text:
+                //       'Order directly from partnered manufacturers and distributors. Tiered pricing, MOQ discounts, and scheduled or instant delivery.',
+                //   textStyle: TextStyle(
+                //     fontFamily: 'GoogleSans',
+                //     fontSize: 14.20.sp,
+                //     fontWeight: FontWeight.w400,
+                //     color: AppColors.black,
+                //   ),
+                // ),
                 SizedBox(height: 20.h),
                 if (model.getTetantResponseModel != null)
                   Container(
@@ -333,6 +334,11 @@ class _PharmacyWholesaleScreenState extends State<PharmacyWholesaleScreen> {
                     final int minimumQuantity = m.minimumOrderQuantity ?? 1;
                     int currentQuantity =
                         model.selectedQuantities[m.id] ?? minimumQuantity;
+                    final expiryDate = m.expiryDate!;
+
+                    isExpiringSoon =
+                        expiryDate.isBefore(DateTime.now()) &&
+                        expiryDate.difference(DateTime.now()).inDays <= 30;
                     return GestureDetector(
                       onTap: () => navigate.navigateTo(
                         Routes.pharmacyViewProductScreen,
@@ -634,7 +640,9 @@ class _PharmacyWholesaleScreenState extends State<PharmacyWholesaleScreen> {
                                           fontFamily: 'DMSans',
                                           fontSize: 15.20.sp,
                                           fontWeight: FontWeight.w500,
-                                          color: AppColors.reminder,
+                                          color: isExpiringSoon!
+                                              ? AppColors.red
+                                              : AppColors.reminder,
                                         ),
                                       ),
                                     ],

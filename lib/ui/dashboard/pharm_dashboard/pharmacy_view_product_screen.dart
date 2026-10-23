@@ -15,6 +15,7 @@ import '../../../core/connect_end/model/wholesale_add_to_cart_entity_model.dart'
 import '../../../core/core_folder/app/app.router.dart';
 import '../../../main.dart';
 import '../../widget/button.dart';
+import '../../widget/kyc_url_view.dart';
 import '../../widget/text.dart';
 
 class PharmacyViewProductScreen extends StatelessWidget {
@@ -36,7 +37,7 @@ class PharmacyViewProductScreen extends StatelessWidget {
           child: GlobalNavigator(),
         ),
         title: TextView(
-          text: 'View product',
+          text: 'View Product',
           textStyle: TextStyle(
             fontFamily: 'GoogleSans',
             fontSize: 17.2.sp,
@@ -320,109 +321,7 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            // model
-                            //         .getSingleMarketProductResponseModel!
-                            //         .data!
-                            //         .product!
-                            //         .nafdacVerification!
-                            //         .isVerified!
-                            //     ? Container(
-                            //         padding: EdgeInsets.symmetric(
-                            //           vertical: 2.60.w,
-                            //           horizontal: 10.w,
-                            //         ),
-                            //         decoration: BoxDecoration(
-                            //           borderRadius: BorderRadius.circular(20.r),
-                            //           border: Border.all(
-                            //             color: AppColors.app_green,
-                            //             width: 1.2,
-                            //           ),
-                            //         ),
-                            //         child: Row(
-                            //           mainAxisSize: MainAxisSize.min,
-                            //           children: [
-                            //             SvgPicture.asset(
-                            //               AppImage.validate,
-                            //               height: 14.6.h,
-                            //               width: 12.w,
-                            //             ),
-                            //             SizedBox(width: 6.2.w),
-                            //             TextView(
-                            //               text: 'Validated',
-                            //               textStyle: TextStyle(
-                            //                 fontFamily: 'DMSans',
-                            //                 fontSize: 14.60.sp,
-                            //                 fontWeight: FontWeight.w400,
-                            //                 color: AppColors.app_green,
-                            //               ),
-                            //             ),
-                            //           ],
-                            //         ),
-                            //       )
-                            //     : SizedBox.shrink(),
-
-                            model
-                                            .getSingleMarketProductResponseModel!
-                                            .data!
-                                            .product!
-                                            .additionalResourceDescription !=
-                                        '' ||
-                                    model
-                                            .getSingleMarketProductResponseModel!
-                                            .data!
-                                            .product!
-                                            .additionalResourceUrl !=
-                                        ''
-                                ? GestureDetector(
-                                    onTap: () => model.additionalResourceInfo(
-                                      context,
-                                      des: model
-                                          .getSingleMarketProductResponseModel!
-                                          .data!
-                                          .product!
-                                          .additionalResourceDescription,
-                                      desLink: model
-                                          .getSingleMarketProductResponseModel!
-                                          .data!
-                                          .product!
-                                          .additionalResourceUrl,
-                                    ),
-                                    child: Container(
-                                      padding: EdgeInsets.symmetric(
-                                        vertical: 2.60.w,
-                                        horizontal: 10.8.w,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: AppColors.skyBlue,
-                                        borderRadius: BorderRadius.circular(
-                                          20.r,
-                                        ),
-                                        border: Border.all(
-                                          color: AppColors.cool_blue,
-                                          width: 1.2,
-                                        ),
-                                      ),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          SvgPicture.asset(
-                                            AppImage.additional_info,
-                                          ),
-                                          SizedBox(width: 4.2.w),
-                                          TextView(
-                                            text: 'Additional Resource Info',
-                                            textStyle: TextStyle(
-                                              fontFamily: 'DMSans',
-                                              fontSize: 14.20.sp,
-                                              fontWeight: FontWeight.w500,
-                                              color: AppColors.primary,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  )
-                                : SizedBox.shrink(),
+                            
                           ],
                         ),
                         SizedBox(height: 10.h),
@@ -1064,7 +963,7 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                         ),
                                         SizedBox(height: 12.h),
                                         TextView(
-                                          text: 'Manufactured Date',
+                                          text: 'Manufactured Date:',
                                           textStyle: TextStyle(
                                             fontFamily: 'GoogleSans',
                                             fontSize: 12.90.sp,
@@ -1111,7 +1010,7 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                             fontFamily: 'GoogleSans',
                                             fontSize: 14.90.sp,
                                             fontWeight: FontWeight.w500,
-                                            color: AppColors.red,
+                                            color: AppColors.black,
                                           ),
                                         ),
                                         SizedBox(height: 12.h),
@@ -1155,119 +1054,6 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                         //   ],
                                         // ),
                                         // SizedBox(height: 12.h),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(height: 16.h),
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                vertical: 6.2.w,
-                                horizontal: 5.68.w,
-                              ),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10.r),
-                                border: Border.all(color: AppColors.infoGrey1),
-                              ),
-                              child: Column(
-                                children: [
-                                  Container(
-                                    width: double.infinity,
-                                    padding: EdgeInsets.all(14.w),
-                                    decoration: BoxDecoration(
-                                      color: AppColors.grey,
-                                      borderRadius: BorderRadius.circular(
-                                        8.0.r,
-                                      ),
-                                    ),
-                                    child: TextView(
-                                      text: 'Product Description',
-                                      textStyle: TextStyle(
-                                        fontFamily: 'GoogleSans',
-                                        fontSize: 14.90.sp,
-                                        fontWeight: FontWeight.w500,
-                                        color: AppColors.black,
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 5.68.w,
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Divider(color: AppColors.infoGrey1),
-                                        SizedBox(height: 5.10.h),
-                                        !model.isSeeMore
-                                            ? SizedBox(
-                                                height: 70.h,
-                                                child: TextView(
-                                                  text:
-                                                      model
-                                                          .getSingleMarketProductResponseModel
-                                                          ?.data
-                                                          ?.product
-                                                          ?.description ??
-                                                      '',
-                                                  textAlign: TextAlign.start,
-                                                  maxLines: 4,
-                                                  textOverflow:
-                                                      TextOverflow.ellipsis,
-                                                  textStyle: TextStyle(
-                                                    fontFamily: 'DMSans',
-                                                    fontSize: 15.40.sp,
-                                                    fontWeight: FontWeight.w400,
-                                                    color: AppColors.reminder,
-                                                  ),
-                                                ),
-                                              )
-                                            : TextView(
-                                                text:
-                                                    model
-                                                        .getSingleMarketProductResponseModel
-                                                        ?.data
-                                                        ?.product
-                                                        ?.description ??
-                                                    '',
-                                                textAlign: TextAlign.start,
-                                                textStyle: TextStyle(
-                                                  fontFamily: 'DMSans',
-                                                  fontSize: 15.40.sp,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: AppColors.reminder,
-                                                ),
-                                              ),
-
-                                        SizedBox(height: 6.2.h),
-                                        GestureDetector(
-                                          onTap: () {
-                                            model.isSeeMore = !model.isSeeMore;
-                                            model.notifyListeners();
-                                          },
-                                          child: Align(
-                                            alignment: Alignment.topLeft,
-                                            child: TextView(
-                                              text: model.isSeeMore
-                                                  ? 'View less'
-                                                  : 'View more',
-                                              textStyle: TextStyle(
-                                                fontFamily: 'DMSans',
-                                                decoration:
-                                                    TextDecoration.underline,
-                                                decorationColor:
-                                                    AppColors.primary1,
-                                                fontSize: 13.90.sp,
-                                                fontWeight: FontWeight.w500,
-                                                color: AppColors.primary1,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(height: 10.h),
                                       ],
                                     ),
                                   ),
@@ -1641,6 +1427,353 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                 ),
                               ],
                             ),
+                            SizedBox(height: 16.h),
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                vertical: 6.2.w,
+                                horizontal: 5.68.w,
+                              ),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10.r),
+                                border: Border.all(color: AppColors.infoGrey1),
+                              ),
+                              child: Column(
+                                children: [
+                                  Container(
+                                    width: double.infinity,
+                                    padding: EdgeInsets.all(8.0.w),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.grey,
+                                      borderRadius: BorderRadius.circular(
+                                        8.0.r,
+                                      ),
+                                    ),
+                                    child: IntrinsicHeight(
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          GestureDetector(
+                                            onTap: () {
+                                              model.desAddInfoTap = false;
+                                              model.notifyListeners();
+                                            },
+                                            child: Container(
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal: 12.w,
+                                                vertical: 5.0.w,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                color: !model.desAddInfoTap
+                                                    ? AppColors.appWhite
+                                                    : AppColors.grey,
+                                                border: Border.all(
+                                                  color:!model.desAddInfoTap?AppColors.primaryLight : AppColors.grey,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(20.r),
+                                              ),
+                                              child: TextView(
+                                                text: 'Description',
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'GoogleSans',
+                                                  fontSize: 14.90.sp,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: !model.desAddInfoTap
+                                                      ? AppColors.primary1
+                                                      : AppColors.reminder,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          VerticalDivider(
+                                            color: AppColors.white,
+                                            thickness: 2,
+                                            indent: 5,
+                                            endIndent: 5,
+                                          ),
+                                          GestureDetector(
+                                            onTap: () {
+                                              model.desAddInfoTap = true;
+                                              model.notifyListeners();
+                                            },
+                                            child: Container(
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal: 12.w,
+                                                vertical: 5.0.w,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                color: model.desAddInfoTap
+                                                    ? AppColors.appWhite
+                                                    : AppColors.grey,
+                                                border: Border.all(
+                                                  color:model.desAddInfoTap?AppColors.primaryLight :  AppColors.grey,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(20.r),
+                                              ),
+                                              child: TextView(
+                                                text: 'Additional Info',
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'GoogleSans',
+                                                  fontSize: 14.90.sp,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: model.desAddInfoTap
+                                                      ? AppColors.primary1
+                                                      : AppColors.reminder,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  !model.desAddInfoTap
+                                      ? Padding(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 5.68.w,
+                                          ),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Divider(
+                                                color: AppColors.infoGrey1,
+                                              ),
+                                              SizedBox(height: 5.10.h),
+                                              !model.isSeeMore
+                                                  ? SizedBox(
+                                                      height: 70.h,
+                                                      child: TextView(
+                                                        text:
+                                                            model
+                                                                .getSingleMarketProductResponseModel
+                                                                ?.data
+                                                                ?.product
+                                                                ?.description ??
+                                                            '',
+                                                        textAlign:
+                                                            TextAlign.start,
+                                                        maxLines: 4,
+                                                        textOverflow:
+                                                            TextOverflow
+                                                                .ellipsis,
+                                                        textStyle: TextStyle(
+                                                          fontFamily: 'DMSans',
+                                                          fontSize: 15.40.sp,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color: AppColors
+                                                              .reminder,
+                                                        ),
+                                                      ),
+                                                    )
+                                                  : TextView(
+                                                      text:
+                                                          model
+                                                              .getSingleMarketProductResponseModel
+                                                              ?.data
+                                                              ?.product
+                                                              ?.description ??
+                                                          '',
+                                                      textAlign:
+                                                          TextAlign.start,
+                                                      textStyle: TextStyle(
+                                                        fontFamily: 'DMSans',
+                                                        fontSize: 15.40.sp,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        color:
+                                                            AppColors.reminder,
+                                                      ),
+                                                    ),
+
+                                              SizedBox(height: 6.2.h),
+                                              GestureDetector(
+                                                onTap: () {
+                                                  model.isSeeMore =
+                                                      !model.isSeeMore;
+                                                  model.notifyListeners();
+                                                },
+                                                child: Align(
+                                                  alignment: Alignment.topLeft,
+                                                  child: TextView(
+                                                    text: model.isSeeMore
+                                                        ? 'View less'
+                                                        : 'View more',
+                                                    textStyle: TextStyle(
+                                                      fontFamily: 'DMSans',
+                                                      decoration: TextDecoration
+                                                          .underline,
+                                                      decorationColor:
+                                                          AppColors.primary1,
+                                                      fontSize: 13.90.sp,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      color: AppColors.primary1,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              SizedBox(height: 10.h),
+                                            ],
+                                          ),
+                                        )
+                                      : Padding(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 5.68.w,
+                                          ),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Divider(
+                                                color: AppColors.infoGrey1,
+                                              ),
+                                              SizedBox(height: 5.10.h),
+                                              !model.isSeeMore
+                                                  ? SizedBox(
+                                                      height: 70.h,
+                                                      child: TextView(
+                                                        text:
+                                                            model
+                                                                .getSingleMarketProductResponseModel
+                                                                ?.data
+                                                                ?.product
+                                                                ?.additionalResourceDescription ??
+                                                            '',
+                                                        textAlign:
+                                                            TextAlign.start,
+                                                        maxLines: 4,
+                                                        textOverflow:
+                                                            TextOverflow
+                                                                .ellipsis,
+                                                        textStyle: TextStyle(
+                                                          fontFamily: 'DMSans',
+                                                          fontSize: 15.40.sp,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color: AppColors
+                                                              .reminder,
+                                                        ),
+                                                      ),
+                                                    )
+                                                  : TextView(
+                                                      text:
+                                                          model
+                                                              .getSingleMarketProductResponseModel
+                                                              ?.data
+                                                              ?.product
+                                                              ?.additionalResourceDescription ??
+                                                          '',
+                                                      textAlign:
+                                                          TextAlign.start,
+                                                      textStyle: TextStyle(
+                                                        fontFamily: 'DMSans',
+                                                        fontSize: 15.40.sp,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        color:
+                                                            AppColors.reminder,
+                                                      ),
+                                                    ),
+
+                                              SizedBox(height: 6.2.h),
+                                              GestureDetector(
+                                                onTap: () {
+                                                  model.isSeeMore =
+                                                      !model.isSeeMore;
+                                                  model.notifyListeners();
+                                                },
+                                                child: Align(
+                                                  alignment: Alignment.topLeft,
+                                                  child: TextView(
+                                                    text: model.isSeeMore
+                                                        ? 'View less'
+                                                        : 'View more',
+                                                    textStyle: TextStyle(
+                                                      fontFamily: 'DMSans',
+                                                      decoration: TextDecoration
+                                                          .underline,
+                                                      decorationColor:
+                                                          AppColors.primary1,
+                                                      fontSize: 13.90.sp,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      color: AppColors.primary1,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+
+                                              SizedBox(height: 20.h),
+
+                                              SizedBox(
+                                                width: double.infinity,
+                                                child: ElevatedButton(
+                                                  onPressed: () {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (_) => WebViewScreen(
+                                                          imageUrl:
+                                                              model
+                                                                  .getSingleMarketProductResponseModel
+                                                                  ?.data
+                                                                  ?.product
+                                                                  ?.additionalResourceUrl ??
+                                                              '',
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                  style: ElevatedButton.styleFrom(
+                                                    backgroundColor:
+                                                        AppColors.primary,
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                          vertical: 8.w,
+                                                        ),
+                                                    shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            30,
+                                                          ),
+                                                    ),
+                                                  ),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      SvgPicture.asset(
+                                                        AppImage.open_link,
+                                                      ),
+                                                      SizedBox(width: 4.w),
+                                                      Text(
+                                                        "Open Link",
+                                                        style: TextStyle(
+                                                          fontSize: 16.sp,
+                                                          fontFamily: 'DMSans',
+                                                          color:
+                                                              AppColors.white,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                              SizedBox(height: 12.20.h),
+                                            ],
+                                          ),
+                                        ),
+                                ],
+                              ),
+                            ),
+
                             SizedBox(height: 20.h),
                             if (model
                                 .getSingleMarketProductResponseModel!

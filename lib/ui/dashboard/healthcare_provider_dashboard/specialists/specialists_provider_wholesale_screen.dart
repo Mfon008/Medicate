@@ -137,17 +137,17 @@ class _SpecialistsProviderWholesaleState
                     color: AppColors.black,
                   ),
                 ),
-                SizedBox(height: 10.h),
-                TextView(
-                  text:
-                      'Order directly from partnered manufacturers and distributors. Tiered pricing, MOQ discounts, and scheduled or instant delivery.',
-                  textStyle: TextStyle(
-                    fontFamily: 'GoogleSans',
-                    fontSize: 14.20.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.black,
-                  ),
-                ),
+                // SizedBox(height: 10.h),
+                // TextView(
+                //   text:
+                //       'Order directly from partnered manufacturers and distributors. Tiered pricing, MOQ discounts, and scheduled or instant delivery.',
+                //   textStyle: TextStyle(
+                //     fontFamily: 'GoogleSans',
+                //     fontSize: 14.20.sp,
+                //     fontWeight: FontWeight.w400,
+                //     color: AppColors.black,
+                //   ),
+                // ),
                 SizedBox(height: 20.h),
                 Row(
                   children: [

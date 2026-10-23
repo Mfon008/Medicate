@@ -119,7 +119,6 @@ class _WebViewScreenState extends State<WebViewScreen> {
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
-            Navigator.pop(context);
           },
           icon: Icon(
             Icons.arrow_back_ios,

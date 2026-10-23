@@ -27,6 +27,7 @@ class ProductScreen extends StatefulWidget {
 
 class _ProductScreenState extends State<ProductScreen> {
   bool isSwitched = false;
+  bool? isExpiringSoon;
 
   GlobalKey<FormState> formKeyBulkUploads = GlobalKey<FormState>();
 
@@ -116,7 +117,7 @@ class _ProductScreenState extends State<ProductScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           TextView(
-                            text: 'Products',
+                            text: 'Products Mgt',
                             textStyle: TextStyle(
                               fontFamily: 'DMSans',
                               fontSize: 18.2.sp,
@@ -325,6 +326,12 @@ class _ProductScreenState extends State<ProductScreen> {
                         ...model.getAllProductListResponseModel!.data!.products!.map((
                           e,
                         ) {
+                          final expiryDate = e.expiryDate!;
+
+                          isExpiringSoon =
+                              expiryDate.isBefore(DateTime.now()) &&
+                              expiryDate.difference(DateTime.now()).inDays <=
+                                  30;
                           return GestureDetector(
                             onTap: () {
                               navigate.navigateTo(
@@ -395,7 +402,9 @@ class _ProductScreenState extends State<ProductScreen> {
                                           fontFamily: 'DMSans',
                                           fontSize: 13.22.sp,
                                           fontWeight: FontWeight.w400,
-                                          color: AppColors.red,
+                                          color: isExpiringSoon!
+                                              ? AppColors.red
+                                              : AppColors.reminder,
                                         ),
                                       ),
                                       Spacer(),

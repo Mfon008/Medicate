@@ -119,7 +119,6 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
   );
 
   GlobalKey<FormState>? formKey = GlobalKey<FormState>();
-  // late final providerValue;
 
   Future<void> getStuffs(HealthCareViewModel model) async {
     model.businessTypes =
@@ -684,12 +683,6 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
     return ViewModelBuilder<HealthCareViewModel>.reactive(
       viewModelBuilder: () => HealthCareViewModel(),
       onViewModelReady: (model) async {
-        // if (widget.isHealthCareProvider == true) {
-        //   providerValue = model.getMarketplaceUpgradeResponseModel;
-        // } else {
-        //   // await model.getHealthCarePractitionerKyc(context);
-        //   providerValue = model.getHealthcarePractitionerKycResponseModel;
-        // }
         await model.getMarketplaceUpgrade(context);
         getStuffs(model);
       },

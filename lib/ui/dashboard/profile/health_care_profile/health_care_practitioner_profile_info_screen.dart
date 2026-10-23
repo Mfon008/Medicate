@@ -720,45 +720,45 @@ class _HealthCarePractitionerProfileInfoScreenState
                           },
                         ),
                         SizedBox(height: 20.h),
-                        TextView(
-                          text: 'Select service',
-                          textStyle: TextStyle(
-                            fontFamily: 'Arial',
-                            fontSize: 15.2.sp,
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.black,
-                          ),
-                        ),
-                        SizedBox(height: 20.h),
-                        ...List.generate(model.servicesPractitioner.length, (
-                          index,
-                        ) {
-                          return model.chooseNotChannelWidget(
-                            context,
-                            text: model.servicesPractitioner[index],
-                            isTapped: model.selectServicePractitioner.contains(
-                              model.servicesPractitioner[index],
-                            ), // ✅ reflect state
-                            onTap: () {
-                              if (model.selectServicePractitioner.contains(
-                                model.servicesPractitioner[index],
-                              )) {
-                                // unselect
-                                model.selectServicePractitioner.remove(
-                                  model.servicesPractitioner[index],
-                                );
-                              } else {
-                                // select
-                                model.selectServicePractitioner.add(
-                                  model.servicesPractitioner[index],
-                                );
-                              } // ✅ update selection
+                        // TextView(
+                        //   text: 'Select service',
+                        //   textStyle: TextStyle(
+                        //     fontFamily: 'Arial',
+                        //     fontSize: 15.2.sp,
+                        //     fontWeight: FontWeight.w400,
+                        //     color: AppColors.black,
+                        //   ),
+                        // ),
+                        // SizedBox(height: 20.h),
+                        // ...List.generate(model.servicesPractitioner.length, (
+                        //   index,
+                        // ) {
+                        //   return model.chooseNotChannelWidget(
+                        //     context,
+                        //     text: model.servicesPractitioner[index],
+                        //     isTapped: model.selectServicePractitioner.contains(
+                        //       model.servicesPractitioner[index],
+                        //     ), // ✅ reflect state
+                        //     onTap: () {
+                        //       if (model.selectServicePractitioner.contains(
+                        //         model.servicesPractitioner[index],
+                        //       )) {
+                        //         // unselect
+                        //         model.selectServicePractitioner.remove(
+                        //           model.servicesPractitioner[index],
+                        //         );
+                        //       } else {
+                        //         // select
+                        //         model.selectServicePractitioner.add(
+                        //           model.servicesPractitioner[index],
+                        //         );
+                        //       } // ✅ update selection
 
-                              model.notifyListeners();
-                            },
-                          );
-                        }),
-                        SizedBox(height: 30.h),
+                        //       model.notifyListeners();
+                        //     },
+                        //   );
+                        // }),
+                        // SizedBox(height: 30.h),
                         TextView(
                           text: 'Contact Details',
                           textStyle: TextStyle(

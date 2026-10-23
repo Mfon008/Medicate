@@ -358,139 +358,139 @@ class _LevelOneCardState extends State<LevelOneCard> {
                                       '--',
                                 ),
 
-                                SizedBox(height: 13.6.h),
+                                // SizedBox(height: 13.6.h),
 
-                                Padding(
-                                  padding: EdgeInsets.only(bottom: 16),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      TextView(
-                                        text: "Selected Services",
-                                        textStyle: TextStyle(
-                                          fontFamily: 'Arial',
-                                          fontSize: 13.6.sp,
-                                          fontWeight: FontWeight.w400,
-                                          color: AppColors.infoGrey,
-                                        ),
-                                      ),
-                                      SizedBox(height: 4.h),
+                                // Padding(
+                                //   padding: EdgeInsets.only(bottom: 16),
+                                //   child: Column(
+                                //     crossAxisAlignment:
+                                //         CrossAxisAlignment.start,
+                                //     children: [
+                                //       TextView(
+                                //         text: "Selected Services",
+                                //         textStyle: TextStyle(
+                                //           fontFamily: 'Arial',
+                                //           fontSize: 13.6.sp,
+                                //           fontWeight: FontWeight.w400,
+                                //           color: AppColors.infoGrey,
+                                //         ),
+                                //       ),
+                                //       SizedBox(height: 4.h),
 
-                                      widget.model!.getHealthcareProviderKycResponseModel !=
-                                                  null &&
-                                              widget
-                                                      .model!
-                                                      .getHealthcareProviderKycResponseModel!
-                                                      .data!
-                                                      .level1!
-                                                      .servicesOffered !=
-                                                  null &&
-                                              widget
-                                                  .model!
-                                                  .getHealthcareProviderKycResponseModel!
-                                                  .data!
-                                                  .level1!
-                                                  .servicesOffered!
-                                                  .isNotEmpty
-                                          ? Container(
-                                              height:
-                                                  widget
-                                                          .model!
-                                                          .getHealthcareProviderKycResponseModel!
-                                                          .data!
-                                                          .level1!
-                                                          .servicesOffered!
-                                                          .length >
-                                                      3
-                                                  ? 166.0.h
-                                                  : 120.h,
-                                              width: double.infinity,
-                                              padding: EdgeInsets.all(16.w),
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(12),
-                                                color: AppColors.grey,
-                                              ),
-                                              child: SingleChildScrollView(
-                                                child: Wrap(
-                                                  runSpacing: 10,
-                                                  spacing: 10,
-                                                  children: [
-                                                    ...widget
-                                                        .model!
-                                                        .getHealthcareProviderKycResponseModel!
-                                                        .data!
-                                                        .level1!
-                                                        .servicesOffered!
-                                                        .map(
-                                                          (e) => Row(
-                                                            mainAxisSize:
-                                                                MainAxisSize
-                                                                    .min,
-                                                            children: [
-                                                              Container(
-                                                                width: 14.w,
-                                                                height: 14.w,
-                                                                margin:
-                                                                    EdgeInsets.only(
-                                                                      top: 1.h,
-                                                                    ),
-                                                                decoration: BoxDecoration(
-                                                                  color: AppColors
-                                                                      .app_green,
-                                                                  shape: BoxShape
-                                                                      .circle,
-                                                                ),
-                                                                child: Icon(
-                                                                  Icons.check,
-                                                                  size: 9.sp,
-                                                                  color: Colors
-                                                                      .white,
-                                                                ),
-                                                              ),
-                                                              SizedBox(
-                                                                width: 2.w,
-                                                              ),
-                                                              TextView(
-                                                                text: '$e ',
-                                                                textStyle: TextStyle(
-                                                                  fontSize:
-                                                                      13.86.sp,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w200,
-                                                                  color: AppColors
-                                                                      .reminder,
-                                                                  fontFamily:
-                                                                      'DMSans',
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                  ],
-                                                ),
-                                              ),
-                                            )
-                                          : SizedBox(
-                                              width: 240.w,
-                                              child: TextView(
-                                                text: '--',
-                                                maxLines: 4,
-                                                textOverflow:
-                                                    TextOverflow.ellipsis,
-                                                textStyle: TextStyle(
-                                                  fontFamily: 'Arial',
-                                                  fontSize: 15.6.sp,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: AppColors.reminder1,
-                                                ),
-                                              ),
-                                            ),
-                                    ],
-                                  ),
-                                ),
+                                //       widget.model!.getHealthcareProviderKycResponseModel !=
+                                //                   null &&
+                                //               widget
+                                //                       .model!
+                                //                       .getHealthcareProviderKycResponseModel!
+                                //                       .data!
+                                //                       .level1!
+                                //                       .servicesOffered !=
+                                //                   null &&
+                                //               widget
+                                //                   .model!
+                                //                   .getHealthcareProviderKycResponseModel!
+                                //                   .data!
+                                //                   .level1!
+                                //                   .servicesOffered!
+                                //                   .isNotEmpty
+                                //           ? Container(
+                                //               height:
+                                //                   widget
+                                //                           .model!
+                                //                           .getHealthcareProviderKycResponseModel!
+                                //                           .data!
+                                //                           .level1!
+                                //                           .servicesOffered!
+                                //                           .length >
+                                //                       3
+                                //                   ? 166.0.h
+                                //                   : 120.h,
+                                //               width: double.infinity,
+                                //               padding: EdgeInsets.all(16.w),
+                                //               decoration: BoxDecoration(
+                                //                 borderRadius:
+                                //                     BorderRadius.circular(12),
+                                //                 color: AppColors.grey,
+                                //               ),
+                                //               child: SingleChildScrollView(
+                                //                 child: Wrap(
+                                //                   runSpacing: 10,
+                                //                   spacing: 10,
+                                //                   children: [
+                                //                     ...widget
+                                //                         .model!
+                                //                         .getHealthcareProviderKycResponseModel!
+                                //                         .data!
+                                //                         .level1!
+                                //                         .servicesOffered!
+                                //                         .map(
+                                //                           (e) => Row(
+                                //                             mainAxisSize:
+                                //                                 MainAxisSize
+                                //                                     .min,
+                                //                             children: [
+                                //                               Container(
+                                //                                 width: 14.w,
+                                //                                 height: 14.w,
+                                //                                 margin:
+                                //                                     EdgeInsets.only(
+                                //                                       top: 1.h,
+                                //                                     ),
+                                //                                 decoration: BoxDecoration(
+                                //                                   color: AppColors
+                                //                                       .app_green,
+                                //                                   shape: BoxShape
+                                //                                       .circle,
+                                //                                 ),
+                                //                                 child: Icon(
+                                //                                   Icons.check,
+                                //                                   size: 9.sp,
+                                //                                   color: Colors
+                                //                                       .white,
+                                //                                 ),
+                                //                               ),
+                                //                               SizedBox(
+                                //                                 width: 2.w,
+                                //                               ),
+                                //                               TextView(
+                                //                                 text: '$e ',
+                                //                                 textStyle: TextStyle(
+                                //                                   fontSize:
+                                //                                       13.86.sp,
+                                //                                   fontWeight:
+                                //                                       FontWeight
+                                //                                           .w200,
+                                //                                   color: AppColors
+                                //                                       .reminder,
+                                //                                   fontFamily:
+                                //                                       'DMSans',
+                                //                                 ),
+                                //                               ),
+                                //                             ],
+                                //                           ),
+                                //                         ),
+                                //                   ],
+                                //                 ),
+                                //               ),
+                                //             )
+                                //           : SizedBox(
+                                //               width: 240.w,
+                                //               child: TextView(
+                                //                 text: '--',
+                                //                 maxLines: 4,
+                                //                 textOverflow:
+                                //                     TextOverflow.ellipsis,
+                                //                 textStyle: TextStyle(
+                                //                   fontFamily: 'Arial',
+                                //                   fontSize: 15.6.sp,
+                                //                   fontWeight: FontWeight.w400,
+                                //                   color: AppColors.reminder1,
+                                //                 ),
+                                //               ),
+                                //             ),
+                                //     ],
+                                //   ),
+                                // ),
 
                                 SizedBox(height: 18.22.h),
                                 TextView(

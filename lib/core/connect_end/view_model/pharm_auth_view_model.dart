@@ -304,7 +304,7 @@ class PharmViewModel extends BaseViewModel {
   TextEditingController businessAddController = TextEditingController();
   TextEditingController stateBusController = TextEditingController();
   TextEditingController lgaBusController = TextEditingController();
-  TextEditingController countryBusController = TextEditingController();
+  TextEditingController countryBusController = TextEditingController(text:'Nigeria');
 
   List<String> lgaList = [];
   List<String> lgaListCopy = [];
@@ -1044,7 +1044,7 @@ class PharmViewModel extends BaseViewModel {
                                     ),
                                     SizedBox(width: 10.h),
                                     TextView(
-                                      text: '+234 801 234 5678',
+                                      text: 'NA',
                                       textStyle: TextStyle(
                                         fontFamily: 'DMSans',
                                         fontSize: 14.2.sp,
@@ -1066,7 +1066,7 @@ class PharmViewModel extends BaseViewModel {
                                     ),
                                     SizedBox(width: 10.h),
                                     TextView(
-                                      text: 'LAG/PHARM/2023/00789',
+                                      text: 'NA',
                                       textStyle: TextStyle(
                                         fontFamily: 'DMSans',
                                         fontSize: 14.2.sp,
@@ -1094,7 +1094,7 @@ class PharmViewModel extends BaseViewModel {
                                             CrossAxisAlignment.start,
                                         children: [
                                           TextView(
-                                            text: '12 Oluwole Street',
+                                            text: 'NA',
                                             textStyle: TextStyle(
                                               fontFamily: 'DMSans',
                                               fontSize: 14.2.sp,
@@ -1103,7 +1103,7 @@ class PharmViewModel extends BaseViewModel {
                                             ),
                                           ),
                                           TextView(
-                                            text: 'Ikeja, Lagos State, Nigeria',
+                                            text: 'NA',
                                             textStyle: TextStyle(
                                               fontFamily: 'DMSans',
                                               fontSize: 13.62.sp,
@@ -1513,6 +1513,10 @@ class PharmViewModel extends BaseViewModel {
       borderRadius: BorderRadius.circular(10),
     ),
   );
+
+  bool isDeliveryAddressTap = false;
+
+  bool desAddInfoTap = false;
 
   calculateDaysLeft() {
     if (getReminderByIdModel!.data!.medication!.endDateTime!

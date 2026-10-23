@@ -337,6 +337,7 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                           ),
                         ],
                       ),
+
                       SizedBox(height: 12.h),
                       GestureDetector(
                         onTap: () async {
@@ -549,7 +550,7 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                           children: [
                             SvgPicture.asset(
                               AppImage.locator,
-                              height: 12.h,
+                              height: 16.h,
                               width: 12.w,
                             ),
                             SizedBox(width: 12.w),
@@ -564,189 +565,294 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                             ),
                           ],
                         ),
-                        SizedBox(height: 6.0.h),
-                        if (model.getTetantResponseModel != null &&
-                            model
-                                .getTetantResponseModel!
-                                .data!
-                                .businessAddresses!
-                                .isNotEmpty)
-                          ...model.getTetantResponseModel!.data!.businessAddresses!.map(
-                            (e) => GestureDetector(
-                              onTap: () async {
-                                model.mapLocationAddressSelected = e;
-                                await Future.delayed(
-                                  Duration(microseconds: 10),
-                                );
-                                await model.updatePrimaryBusinessAddress(
-                                  context: context,
-                                  id: model.mapLocationAddressSelected!.id!,
-                                  isCheckout: true,
-                                );
-                                await model.getCheckoutDeliveryOption(
-                                  context: context,
-                                  checkoutDeliveryOption:
-                                      CheckoutDeliveryOptionEntityModel(
-                                        deliveryAddressId: model
-                                            .mapLocationAddressSelected!
-                                            .id,
-                                      ),
-                                );
-                                if (model.getCheckoutDeliveryOptionResponseModel !=
-                                        null &&
-                                    model
-                                        .getCheckoutDeliveryOptionResponseModel!
-                                        .data!
-                                        .methods!
-                                        .isNotEmpty) {
-                                  if (model.delivery == Delivery.instance &&
-                                      model
-                                              .getCheckoutDeliveryOptionResponseModel!
-                                              .data!
-                                              .methods![0]
-                                              .deliveryFee !=
-                                          null) {
-                                    model.deliveryFeeAmount = model
-                                        .getCheckoutDeliveryOptionResponseModel!
-                                        .data!
-                                        .methods![0]
-                                        .deliveryFee!;
-                                  } else if (model.delivery ==
-                                          Delivery.schedule &&
-                                      model
-                                              .getCheckoutDeliveryOptionResponseModel!
-                                              .data!
-                                              .methods![1]
-                                              .deliveryFee !=
-                                          null) {
-                                    model.deliveryFeeAmount = model
-                                        .getCheckoutDeliveryOptionResponseModel!
-                                        .data!
-                                        .methods![1]
-                                        .deliveryFee!;
-                                  } else {
-                                    model.deliveryFeeAmount = 0;
-                                  }
-                                  model.notifyListeners();
-                                } else {
-                                  model.deliveryFeeAmount = 0;
-                                }
-                                // if (model.delivery == Delivery.instance) {
-                                //   model.quoteInstantDelivery(
-                                //     context: context,
-                                //     instantDelivery:
-                                //         QuoteInstantDeliveryEntityModel(
-                                //           deliveryMethod: 'INSTANT',
-                                //           deliveryAddressId: model
-                                //               .mapLocationAddressSelected!
-                                //               .id,
-                                //         ),
-                                //   );
-                                // }
-                                // if (model.delivery == Delivery.schedule) {
-                                //   await model.quoteScheduleDelivery(
-                                //     context: context,
-                                //     scheduleDelivery:
-                                //         QuoteScheduleDeliveryEneityModel(
-                                //           deliveryMethod: 'SCHEDULED_BLOCK',
-                                //           deliveryAddressId: model
-                                //               .mapLocationAddressSelected!
-                                //               .id,
-                                //           deliveryDate: convertDate(
-                                //             model.dateTimeController.text,
-                                //           ),
-                                //           timeBlockStart:
-                                //               model.time!.startTime,
-                                //           timeBlockEnd: model.time!.endTime,
-                                //         ),
-                                //   );
-                                // } else {}
-
+                        SizedBox(height: 12.h),
+                        Row(
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                model.isDeliveryAddressTap =
+                                    !model.isDeliveryAddressTap;
                                 model.notifyListeners();
                               },
                               child: Container(
-                                width: double.infinity,
-                                margin: EdgeInsets.only(top: 14.w),
-                                padding: EdgeInsets.symmetric(
-                                  vertical: 10.w,
-                                  horizontal: 12.w,
-                                ),
+                                padding: model.isDeliveryAddressTap
+                                    ? EdgeInsets.all(1.0.w)
+                                    : EdgeInsets.all(6.0.w),
                                 decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(4.r),
+                                  color: model.isDeliveryAddressTap
+                                      ? AppColors.primary
+                                      : AppColors.transparent,
                                   border: Border.all(
-                                    color: model.mapLocationAddressSelected == e
-                                        ? AppColors.primary
-                                        : AppColors.infoGrey1,
+                                    color: model.isDeliveryAddressTap
+                                        ? AppColors.transparent
+                                        : AppColors.infoGrey,
+                                    width: .78,
                                   ),
-                                  borderRadius: BorderRadius.circular(12),
                                 ),
-                                child: Row(
-                                  children: [
-                                    model.mapLocationAddressSelected == e
-                                        ? Container(
-                                            padding: EdgeInsets.all(2.6.w),
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              border: Border.all(
-                                                color: AppColors.primary,
-                                                width: 2,
-                                              ),
-                                            ),
-                                            child: Container(
-                                              padding: EdgeInsets.all(3.2.w),
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                color: AppColors.primary,
-                                              ),
-                                            ),
-                                          )
-                                        : Container(
-                                            padding: EdgeInsets.all(6.w),
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              border: Border.all(
-                                                color: AppColors.infoGrey1,
-                                                width: 2,
-                                              ),
-                                            ),
-                                          ),
-
-                                    SizedBox(width: 10.w),
-
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          AutoScrollingText(
-                                            text: e.businessAddress ?? '',
-                                            textStyle: TextStyle(
-                                              fontFamily: 'DMSans',
-                                              fontSize: 14.20.sp,
-                                              fontWeight: FontWeight.w500,
-                                              color: AppColors.black,
-                                            ),
-                                          ),
-
-                                          SizedBox(height: 3.h),
-
-                                          AutoScrollingText(
-                                            text:
-                                                '${e.lga}, ${e.state}, ${e.country}',
-                                            textStyle: TextStyle(
-                                              fontFamily: 'DMSans',
-                                              fontSize: 13.20.sp,
-                                              fontWeight: FontWeight.w400,
-                                              color: AppColors.infoGrey,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                child: model.isDeliveryAddressTap
+                                    ? Icon(
+                                        Icons.check,
+                                        size: 12.sp,
+                                        color: AppColors.white,
+                                      )
+                                    : SizedBox.shrink(),
                               ),
                             ),
-                          ),
+                            SizedBox(width: 6.10.w),
+                            TextView(
+                              text: 'Split order across multiple addresses',
+                              textStyle: TextStyle(
+                                fontFamily: 'DMSans',
+                                fontSize: 12.sp,
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.black,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 10.h),
+                        model.isDeliveryAddressTap
+                            ? Container(
+                                margin: EdgeInsets.only(top:10.h),
+                                width: double.infinity,
+                                padding: EdgeInsets.all(12.w),
+                                decoration: BoxDecoration(
+                                  color: AppColors.nearDashboard,
+                                  borderRadius: BorderRadius.circular(12.r),
+                                  border: Border.all(
+                                    color: AppColors.infoGrey1,
+                                  ),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    TextView(
+                                      text: 'Order item',
+                                      textStyle: TextStyle(
+                                        fontFamily: 'DMSans',
+                                        fontSize: 16.20.sp,
+                                        fontWeight: FontWeight.w500,
+                                        color: AppColors.reminder,
+                                      ),
+                                    ),
+                                    SizedBox(height: 4.0.h),
+                                    Divider(color: AppColors.infoGrey1),
+                                    SizedBox(height: 2.0.h),
+                                  ],
+                                ),
+                              )
+                            : Column(
+                                children: [
+                                  if (model.getTetantResponseModel != null &&
+                                      model
+                                          .getTetantResponseModel!
+                                          .data!
+                                          .businessAddresses!
+                                          .isNotEmpty)
+                                    ...model.getTetantResponseModel!.data!.businessAddresses!.map(
+                                      (e) => GestureDetector(
+                                        onTap: () async {
+                                          model.mapLocationAddressSelected = e;
+                                          await Future.delayed(
+                                            Duration(microseconds: 10),
+                                          );
+                                          await model
+                                              .updatePrimaryBusinessAddress(
+                                                context: context,
+                                                id: model
+                                                    .mapLocationAddressSelected!
+                                                    .id!,
+                                                isCheckout: true,
+                                              );
+                                          await model.getCheckoutDeliveryOption(
+                                            context: context,
+                                            checkoutDeliveryOption:
+                                                CheckoutDeliveryOptionEntityModel(
+                                                  deliveryAddressId: model
+                                                      .mapLocationAddressSelected!
+                                                      .id,
+                                                ),
+                                          );
+                                          if (model.getCheckoutDeliveryOptionResponseModel !=
+                                                  null &&
+                                              model
+                                                  .getCheckoutDeliveryOptionResponseModel!
+                                                  .data!
+                                                  .methods!
+                                                  .isNotEmpty) {
+                                            if (model.delivery ==
+                                                    Delivery.instance &&
+                                                model
+                                                        .getCheckoutDeliveryOptionResponseModel!
+                                                        .data!
+                                                        .methods![0]
+                                                        .deliveryFee !=
+                                                    null) {
+                                              model.deliveryFeeAmount = model
+                                                  .getCheckoutDeliveryOptionResponseModel!
+                                                  .data!
+                                                  .methods![0]
+                                                  .deliveryFee!;
+                                            } else if (model.delivery ==
+                                                    Delivery.schedule &&
+                                                model
+                                                        .getCheckoutDeliveryOptionResponseModel!
+                                                        .data!
+                                                        .methods![1]
+                                                        .deliveryFee !=
+                                                    null) {
+                                              model.deliveryFeeAmount = model
+                                                  .getCheckoutDeliveryOptionResponseModel!
+                                                  .data!
+                                                  .methods![1]
+                                                  .deliveryFee!;
+                                            } else {
+                                              model.deliveryFeeAmount = 0;
+                                            }
+                                            model.notifyListeners();
+                                          } else {
+                                            model.deliveryFeeAmount = 0;
+                                          }
+                                          // if (model.delivery == Delivery.instance) {
+                                          //   model.quoteInstantDelivery(
+                                          //     context: context,
+                                          //     instantDelivery:
+                                          //         QuoteInstantDeliveryEntityModel(
+                                          //           deliveryMethod: 'INSTANT',
+                                          //           deliveryAddressId: model
+                                          //               .mapLocationAddressSelected!
+                                          //               .id,
+                                          //         ),
+                                          //   );
+                                          // }
+                                          // if (model.delivery == Delivery.schedule) {
+                                          //   await model.quoteScheduleDelivery(
+                                          //     context: context,
+                                          //     scheduleDelivery:
+                                          //         QuoteScheduleDeliveryEneityModel(
+                                          //           deliveryMethod: 'SCHEDULED_BLOCK',
+                                          //           deliveryAddressId: model
+                                          //               .mapLocationAddressSelected!
+                                          //               .id,
+                                          //           deliveryDate: convertDate(
+                                          //             model.dateTimeController.text,
+                                          //           ),
+                                          //           timeBlockStart:
+                                          //               model.time!.startTime,
+                                          //           timeBlockEnd: model.time!.endTime,
+                                          //         ),
+                                          //   );
+                                          // } else {}
+
+                                          model.notifyListeners();
+                                        },
+                                        child: Container(
+                                          width: double.infinity,
+                                          margin: EdgeInsets.only(top: 12.w),
+                                          padding: EdgeInsets.symmetric(
+                                            vertical: 10.w,
+                                            horizontal: 12.w,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                              color:
+                                                  model.mapLocationAddressSelected ==
+                                                      e
+                                                  ? AppColors.primary
+                                                  : AppColors.infoGrey1,
+                                            ),
+                                            borderRadius: BorderRadius.circular(
+                                              12,
+                                            ),
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              model.mapLocationAddressSelected ==
+                                                      e
+                                                  ? Container(
+                                                      padding: EdgeInsets.all(
+                                                        2.6.w,
+                                                      ),
+                                                      decoration: BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        border: Border.all(
+                                                          color:
+                                                              AppColors.primary,
+                                                          width: 2,
+                                                        ),
+                                                      ),
+                                                      child: Container(
+                                                        padding: EdgeInsets.all(
+                                                          3.2.w,
+                                                        ),
+                                                        decoration:
+                                                            BoxDecoration(
+                                                              shape: BoxShape
+                                                                  .circle,
+                                                              color: AppColors
+                                                                  .primary,
+                                                            ),
+                                                      ),
+                                                    )
+                                                  : Container(
+                                                      padding: EdgeInsets.all(
+                                                        6.w,
+                                                      ),
+                                                      decoration: BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        border: Border.all(
+                                                          color: AppColors
+                                                              .infoGrey1,
+                                                          width: 2,
+                                                        ),
+                                                      ),
+                                                    ),
+
+                                              SizedBox(width: 10.w),
+
+                                              Expanded(
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    AutoScrollingText(
+                                                      text:
+                                                          e.businessAddress ??
+                                                          '',
+                                                      textStyle: TextStyle(
+                                                        fontFamily: 'DMSans',
+                                                        fontSize: 14.20.sp,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color: AppColors.black,
+                                                      ),
+                                                    ),
+
+                                                    SizedBox(height: 3.h),
+
+                                                    AutoScrollingText(
+                                                      text:
+                                                          '${e.lga}, ${e.state}, ${e.country}',
+                                                      textStyle: TextStyle(
+                                                        fontFamily: 'DMSans',
+                                                        fontSize: 13.20.sp,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        color:
+                                                            AppColors.infoGrey,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              ),
                         model.delivery == Delivery.schedule
                             ? Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -971,6 +1077,7 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                               )
                             : SizedBox.shrink(),
                         SizedBox(height: 12.h),
+
                         TextFormWidget(
                           hint: 'Name of person receiving',
                           label: 'Full Name',

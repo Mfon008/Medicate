@@ -785,42 +785,42 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                             ),
                           ],
                         ),
-                        SizedBox(height: 20.h),
-                        TextView(
-                          text: 'Select service',
-                          textStyle: TextStyle(
-                            fontFamily: 'Arial',
-                            fontSize: 15.2.sp,
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.black,
-                          ),
-                        ),
+                        SizedBox(height: 12.20.h),
+                        // TextView(
+                        //   text: 'Select service',
+                        //   textStyle: TextStyle(
+                        //     fontFamily: 'Arial',
+                        //     fontSize: 15.2.sp,
+                        //     fontWeight: FontWeight.w400,
+                        //     color: AppColors.black,
+                        //   ),
+                        // ),
 
-                        SizedBox(height: 20.h),
-                        ...List.generate(model.services.length, (index) {
-                          return model.chooseNotChannelWidget(
-                            context,
-                            text: model.services[index],
-                            isTapped: model.selectService.contains(
-                              model.services[index],
-                            ), // ✅ reflect state
-                            onTap: () {
-                              if (model.selectService.contains(
-                                model.services[index],
-                              )) {
-                                // unselect
-                                model.selectService.remove(
-                                  model.services[index],
-                                );
-                              } else {
-                                // select
-                                model.selectService.add(model.services[index]);
-                              } // ✅ update selection
+                        // SizedBox(height: 20.h),
+                        // ...List.generate(model.services.length, (index) {
+                        //   return model.chooseNotChannelWidget(
+                        //     context,
+                        //     text: model.services[index],
+                        //     isTapped: model.selectService.contains(
+                        //       model.services[index],
+                        //     ), // ✅ reflect state
+                        //     onTap: () {
+                        //       if (model.selectService.contains(
+                        //         model.services[index],
+                        //       )) {
+                        //         // unselect
+                        //         model.selectService.remove(
+                        //           model.services[index],
+                        //         );
+                        //       } else {
+                        //         // select
+                        //         model.selectService.add(model.services[index]);
+                        //       } // ✅ update selection
 
-                              model.notifyListeners();
-                            },
-                          );
-                        }),
+                        //       model.notifyListeners();
+                        //     },
+                        //   );
+                        // }),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -846,7 +846,7 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                                       model.stateBusController.clear();
                                       model.lgaBusController.clear();
                                       model.businessAddController.clear();
-                                      model.countryBusController.clear();
+                                      // model.countryBusController.clear();
                                       final result = await model
                                           .showBusinessAreaLGAAndStateCountryDialog(
                                             context,
@@ -1045,7 +1045,7 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                                 );
                               }),
 
-                        SizedBox(height: 30.h),
+                        SizedBox(height: 20.h),
                         TextView(
                           text: 'Contact Details',
                           textStyle: TextStyle(
