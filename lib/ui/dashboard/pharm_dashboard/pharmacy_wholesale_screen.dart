@@ -173,7 +173,7 @@ class _PharmacyWholesaleScreenState extends State<PharmacyWholesaleScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 TextView(
-                  text: 'Marketplace',
+                  text: 'B2B Store',
                   textStyle: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 18.20.sp,

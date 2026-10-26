@@ -283,6 +283,8 @@ class PharmViewModel extends BaseViewModel {
   TextEditingController stateController = TextEditingController();
   TextEditingController deliveryAddressController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
+  TextEditingController nameOfPersonController = TextEditingController();
+  TextEditingController formIDController = TextEditingController();
   TextEditingController orderNotesController = TextEditingController();
   TextEditingController lgaController = TextEditingController();
   TextEditingController meansIdController = TextEditingController();
@@ -862,6 +864,13 @@ class PharmViewModel extends BaseViewModel {
     'Voter ID Card',
     'Asylum Seeker ID',
     'Alien ID Card',
+  ];
+
+  List formId = [
+    'Driver’s License',
+    'International Passport',
+    'National ID',
+    'Voter ID Card',
   ];
 
   selectedMeanIdText(text) {
@@ -4338,6 +4347,39 @@ class PharmViewModel extends BaseViewModel {
     child: Padding(
       padding: EdgeInsets.all(16.w),
       child: SvgPicture.asset(AppImage.arrow_down, height: 10.h, width: 10.w),
+    ),
+  );
+
+  getPopUpFormIdDialog(BuildContext context) => PopupMenuButton<String>(
+    onSelected: (String result) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Selected: $result')));
+    },
+    color: AppColors.white,
+    itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+      ...formId.map(
+        (o) => PopupMenuItem<String>(
+          value: o.toString().toLowerCase(),
+          child: TextView(
+            text: o,
+            textStyle: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 14.2.sp,
+              fontWeight: FontWeight.w400,
+              color: AppColors.deep,
+            ),
+          ),
+          onTap: () {
+            formIDController.text = o;
+            notifyListeners();
+          },
+        ),
+      ),
+    ],
+    child: Padding(
+      padding: EdgeInsets.all(16.w),
+      child: SvgPicture.asset(AppImage.arrow_down, height: 8.0.h, width: 8.0.w),
     ),
   );
 

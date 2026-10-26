@@ -253,7 +253,7 @@ class _LevelOneCardState extends State<LevelOneCard> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 InfoItem(
-                                  title: 'Pharmacy name',
+                                  title: 'Pharmacy Name',
                                   value:
                                       widget
                                           .model
@@ -511,7 +511,7 @@ class _LevelOneCardState extends State<LevelOneCard> {
                                 Divider(color: AppColors.f1),
                                 SizedBox(height: 18.22.h),
                                 InfoItem(
-                                  title: 'Contact person name',
+                                  title: 'Contact Person Name',
                                   value:
                                       widget
                                           .model
@@ -524,7 +524,7 @@ class _LevelOneCardState extends State<LevelOneCard> {
 
                                 SizedBox(height: 14.22.h),
                                 InfoItem(
-                                  title: 'Contact person email',
+                                  title: 'Contact Person Email',
                                   value:
                                       widget
                                           .model

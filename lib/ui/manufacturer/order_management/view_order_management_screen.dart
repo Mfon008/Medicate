@@ -39,7 +39,7 @@ class ViewOrderManagementScreen extends StatelessWidget {
               child: GlobalNavigator(),
             ),
             title: TextView(
-              text: 'View order',
+              text: 'View Order',
               textStyle: TextStyle(
                 fontFamily: 'GoogleSans',
                 fontSize: 17.2.sp,
@@ -538,7 +538,7 @@ class ViewOrderManagementScreen extends StatelessWidget {
                                       children: [
                                         SizedBox(height: 15.30.h),
                                         TextView(
-                                          text: 'Fulfilment timeline',
+                                          text: 'Fulfilment Timeline',
                                           textStyle: TextStyle(
                                             fontFamily: 'DMSans',
                                             fontSize: 15.80.sp,

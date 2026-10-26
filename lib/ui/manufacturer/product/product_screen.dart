@@ -117,11 +117,11 @@ class _ProductScreenState extends State<ProductScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           TextView(
-                            text: 'Products Mgt',
+                            text: 'Product Management',
                             textStyle: TextStyle(
                               fontFamily: 'DMSans',
                               fontSize: 18.2.sp,
-                              fontWeight: FontWeight.w700,
+                              fontWeight: FontWeight.w600,
                               color: AppColors.reminder,
                             ),
                           ),

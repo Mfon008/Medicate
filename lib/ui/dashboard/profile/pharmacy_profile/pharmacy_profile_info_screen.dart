@@ -339,7 +339,7 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                         ),
                         SizedBox(height: 20.h),
                         TextFormWidget(
-                          hint: 'Pharmacy name',
+                          hint: 'Pharmacy Name',
                           hintSize: 14,
                           borderColor: AppColors.transparent,
                           borderTopLeft: 10.r,
@@ -362,7 +362,7 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                         ),
                         SizedBox(height: 20.h),
                         TextFormWidget(
-                          hint: 'Pharmacy license number',
+                          hint: 'Pharmacy License Number',
                           hintSize: 14,
                           borderColor: AppColors.transparent,
                           borderTopLeft: 10.r,
@@ -385,7 +385,7 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                         ),
                         SizedBox(height: 20.h),
                         TextFormWidget(
-                          hint: 'Business address',
+                          hint: 'Business Address',
                           hintSize: 14,
                           borderColor: AppColors.transparent,
                           borderTopLeft: 10.r,
@@ -1061,7 +1061,7 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                         SizedBox(height: 6.h),
 
                         TextFormWidget(
-                          hint: 'Contact person name',
+                          hint: 'Contact Person Name',
                           hintSize: 14,
                           borderColor: AppColors.transparent,
                           borderTopLeft: 10.r,
@@ -1082,7 +1082,7 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                         ),
                         SizedBox(height: 20.h),
                         TextFormWidget(
-                          hint: 'Contact email',
+                          hint: 'Contact Email',
                           hintSize: 14,
                           borderColor: AppColors.transparent,
                           borderTopLeft: 10.r,

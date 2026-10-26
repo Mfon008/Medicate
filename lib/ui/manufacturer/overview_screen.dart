@@ -180,12 +180,6 @@ class OverviewScreen extends StatelessWidget {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(40.r),
                           color: const Color.fromARGB(176, 107, 192, 248),
-                          // gradient: LinearGradient(
-                          //   colors: [
-                          //     const Color.fromARGB(68, 255, 255, 255).withOpacity(.28),
-                          //     const Color.fromARGB(83, 255, 255, 255).withOpacity(.15),
-                          //   ],
-                          // ),
                           border: Border.all(
                             color: AppColors.white.withOpacity(.25),
                           ),
@@ -220,7 +214,7 @@ class OverviewScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       TextView(
-                        text: 'Enlisted products',
+                        text: 'Enlisted Products',
                         textStyle: TextStyle(
                           fontFamily: 'DMSans',
                           fontSize: 16.90.sp,
@@ -290,7 +284,7 @@ class OverviewScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       TextView(
-                        text: 'Open orders',
+                        text: 'Open Orders',
                         textStyle: TextStyle(
                           fontFamily: 'DMSans',
                           fontSize: 16.90.sp,
@@ -360,7 +354,7 @@ class OverviewScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       TextView(
-                        text: 'Delivered revenue',
+                        text: 'Delivered Revenue',
                         textStyle: TextStyle(
                           fontFamily: 'DMSans',
                           fontSize: 16.90.sp,
@@ -430,7 +424,7 @@ class OverviewScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       TextView(
-                        text: 'Total orders',
+                        text: 'Total Orders',
                         textStyle: TextStyle(
                           fontFamily: 'DMSans',
                           fontSize: 16.90.sp,
@@ -489,7 +483,7 @@ class OverviewScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       TextView(
-                        text: 'Recent orders',
+                        text: 'Recent Orders',
                         textStyle: TextStyle(
                           fontFamily: 'DMSans',
                           fontSize: 18.90.sp,
@@ -881,7 +875,7 @@ class OverviewScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       TextView(
-                        text: 'Quick actions',
+                        text: 'Quick Actions',
                         textStyle: TextStyle(
                           fontFamily: 'DMSans',
                           fontSize: 16.90.sp,
@@ -941,7 +935,7 @@ class OverviewScreen extends StatelessWidget {
                             ),
                             SizedBox(width: 7.10.w),
                             TextView(
-                              text: 'Fulfil open orders',
+                              text: 'Fulfil Open Orders',
                               textStyle: TextStyle(
                                 fontFamily: 'DMSans',
                                 fontSize: 14.90.sp,

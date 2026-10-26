@@ -1365,7 +1365,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                 children: [
                                                   TextView(
                                                     text:
-                                                        'Tax identification number',
+                                                        'Tax Identification Number',
                                                     textStyle: TextStyle(
                                                       fontFamily: 'Arial',
                                                       fontSize: 14.2.sp,
@@ -1749,7 +1749,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                   SizedBox(height: 6.h),
 
                                                   TextFormWidget(
-                                                    hint: 'Bank name',
+                                                    hint: 'Bank Name',
                                                     hintSize: 14,
                                                     borderColor:
                                                         AppColors.transparent,
@@ -1775,7 +1775,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                   ),
                                                   SizedBox(height: 20.h),
                                                   TextFormWidget(
-                                                    hint: 'Account number',
+                                                    hint: 'Account Number',
                                                     hintSize: 14,
                                                     borderColor:
                                                         AppColors.transparent,
@@ -1811,7 +1811,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                   ),
                                                   SizedBox(height: 20.h),
                                                   TextFormWidget(
-                                                    hint: 'Account name',
+                                                    hint: 'Account Name',
                                                     hintSize: 14,
                                                     borderColor:
                                                         AppColors.transparent,
@@ -1856,7 +1856,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                 Divider(color: AppColors.f1),
                                                 SizedBox(height: 18.22.h),
                                                 InfoItem(
-                                                  title: 'Bank name',
+                                                  title: 'Bank Name',
                                                   value:
                                                       model
                                                           .getPharmacyKycResponseModel
@@ -1869,7 +1869,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
 
                                                 SizedBox(height: 18.22.h),
                                                 InfoItem(
-                                                  title: 'Account number',
+                                                  title: 'Account Number',
                                                   value:
                                                       model
                                                           .getPharmacyKycResponseModel
@@ -1881,7 +1881,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                 ),
                                                 SizedBox(height: 18.22.h),
                                                 InfoItem(
-                                                  title: 'Account name',
+                                                  title: 'Account Name',
                                                   value:
                                                       model
                                                           .getPharmacyKycResponseModel

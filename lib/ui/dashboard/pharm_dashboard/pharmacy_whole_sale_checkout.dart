@@ -327,7 +327,7 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                           SvgPicture.asset(AppImage.delivery),
                           SizedBox(width: 12.w),
                           TextView(
-                            text: 'Delivery method',
+                            text: 'Delivery Method',
                             textStyle: TextStyle(
                               fontFamily: 'DMSans',
                               fontSize: 15.42.sp,
@@ -409,7 +409,7 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                                   ),
                                   SizedBox(width: 6.12.w),
                                   TextView(
-                                    text: 'Instant delivery',
+                                    text: 'Instant Delivery',
                                     textStyle: TextStyle(
                                       fontFamily: 'DMSans',
                                       fontSize: 13.62.sp,
@@ -502,7 +502,7 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                                   ),
                                   SizedBox(width: 6.12.w),
                                   TextView(
-                                    text: 'Scheduled block',
+                                    text: 'Scheduled Block',
                                     textStyle: TextStyle(
                                       fontFamily: 'DMSans',
                                       fontSize: 13.62.sp,
@@ -1098,7 +1098,7 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                           borderBottomRight: 10.r,
                           fillColor: AppColors.white,
                           isFilled: true,
-                          controller: model.phoneController,
+                          controller: model.nameOfPersonController,
                           prefixWidget: Padding(
                             padding: EdgeInsets.all(12.w),
                             child: SvgPicture.asset(
@@ -1176,20 +1176,13 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                           borderBottomRight: 10.r,
                           fillColor: AppColors.white,
                           isFilled: true,
-                          controller: model.phoneController,
-                          inputFormatters: [
-                            LengthLimitingTextInputFormatter(11),
-                            FilteringTextInputFormatter.digitsOnly,
-                          ],
-                          suffixWidget: Padding(
-                            padding: EdgeInsets.all(12.w),
-                            child: SvgPicture.asset(
-                              AppImage.arrow_down,
-                              color: AppColors.infoGrey,
-                              height: Platform.isAndroid ? 6.0.h : 8.0.h,
-                              width: Platform.isAndroid ? 6.0.w : 8.0.w,
-                            ),
-                          ),
+                          readOnly: true,
+                          controller: model.formIDController,
+                          // inputFormatters: [
+                          //   LengthLimitingTextInputFormatter(11),
+                          //   FilteringTextInputFormatter.digitsOnly,
+                          // ],
+                          suffixWidget: model.getPopUpFormIdDialog(context),
                           validator: AppValidator.validateString(),
                           style: TextStyle(
                             fontSize: 16.20.sp,

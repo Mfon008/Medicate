@@ -64,10 +64,29 @@ class PharmacyAddToCartScreen extends StatelessWidget {
                                     .data!
                                     .cart!
                                     .itemCount! >
-                                0
+                                1
                         ? TextView(
                             text:
-                                '${model.wholesaleGetProductAddedToCartResponseModel!.data!.cart!.itemCount} item(s)',
+                                '(${model.wholesaleGetProductAddedToCartResponseModel!.data!.cart!.itemCount} items)',
+                            textStyle: TextStyle(
+                              fontFamily: 'DMSans',
+                              fontSize: 17.20.sp,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.reminder,
+                              letterSpacing: -0.1,
+                            ),
+                          )
+                        : model.wholesaleGetProductAddedToCartResponseModel !=
+                                  null &&
+                              model
+                                      .wholesaleGetProductAddedToCartResponseModel!
+                                      .data!
+                                      .cart!
+                                      .itemCount! <
+                                  2
+                        ? TextView(
+                            text:
+                                '(${model.wholesaleGetProductAddedToCartResponseModel!.data!.cart!.itemCount} item)',
                             textStyle: TextStyle(
                               fontFamily: 'DMSans',
                               fontSize: 17.20.sp,

@@ -127,11 +127,11 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 TextView(
-                  text: 'Order Mgt',
+                  text: 'Order Management',
                   textStyle: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 18.20.sp,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.w600,
                     color: AppColors.black,
                   ),
                 ),
