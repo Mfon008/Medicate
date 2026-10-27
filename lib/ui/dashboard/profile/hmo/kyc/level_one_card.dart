@@ -316,7 +316,7 @@ class _LevelOneCardState extends State<LevelOneCard> {
 
                                 SizedBox(height: 13.6.h),
                                 InfoItem(
-                                  title: 'HMO name',
+                                  title: 'HMO Name',
                                   value:
                                       widget
                                           .model
@@ -343,7 +343,7 @@ class _LevelOneCardState extends State<LevelOneCard> {
                                 SizedBox(height: 13.6.h),
 
                                 InfoItem(
-                                  title: 'Business email',
+                                  title: 'Business Email',
                                   value:
                                       widget
                                           .model

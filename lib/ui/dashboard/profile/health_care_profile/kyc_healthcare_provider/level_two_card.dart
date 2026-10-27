@@ -411,7 +411,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                       width: 80.w,
                                                       child: TextView(
                                                         text:
-                                                            'Medical license & certificate.jpg',
+                                                            'Medical License & Certificate.jpg',
                                                         maxLines: 1,
                                                         textOverflow:
                                                             TextOverflow
@@ -633,7 +633,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                           clipBehavior: Clip.none,
                                           children: [
                                             TextView(
-                                              text: 'Tax identification number',
+                                              text: 'Tax Identification Number',
                                               textStyle: TextStyle(
                                                 fontFamily: 'Arial',
                                                 fontSize: 14.2.sp,
@@ -914,7 +914,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                           clipBehavior: Clip.none,
                                           children: [
                                             TextView(
-                                              text: 'Proof of physical address',
+                                              text: 'Proof of Physical Address',
                                               textStyle: TextStyle(
                                                 fontFamily: 'Arial',
                                                 fontSize: 14.2.sp,
@@ -974,7 +974,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                       width: 80.w,
                                                       child: TextView(
                                                         text:
-                                                            'Proof of address.jpg',
+                                                            'Proof of Address.jpg',
                                                         maxLines: 1,
                                                         textOverflow:
                                                             TextOverflow
@@ -1267,7 +1267,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                             SizedBox(height: 6.h),
 
                                             TextFormWidget(
-                                              hint: 'Bank name',
+                                              hint: 'Bank Name',
                                               hintSize: 14,
                                               borderColor:
                                                   AppColors.transparent,
@@ -1290,7 +1290,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                             ),
                                             SizedBox(height: 20.h),
                                             TextFormWidget(
-                                              hint: 'Account number',
+                                              hint: 'Account Number',
                                               hintSize: 14,
                                               borderColor:
                                                   AppColors.transparent,
@@ -1324,7 +1324,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                             ),
                                             SizedBox(height: 20.h),
                                             TextFormWidget(
-                                              hint: 'Account name',
+                                              hint: 'Account Name',
                                               hintSize: 14,
                                               borderColor:
                                                   AppColors.transparent,
@@ -1367,7 +1367,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                           Divider(color: AppColors.f1),
                                           SizedBox(height: 18.22.h),
                                           InfoItem(
-                                            title: 'Bank name',
+                                            title: 'Bank Name',
                                             value:
                                                 model
                                                     .getHealthcareProviderKycResponseModel
@@ -1380,7 +1380,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
 
                                           SizedBox(height: 18.22.h),
                                           InfoItem(
-                                            title: 'Account number',
+                                            title: 'Account Number',
                                             value:
                                                 model
                                                     .getHealthcareProviderKycResponseModel
@@ -1392,7 +1392,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                           ),
                                           SizedBox(height: 18.22.h),
                                           InfoItem(
-                                            title: 'Account name',
+                                            title: 'Account Name',
                                             value:
                                                 model
                                                     .getHealthcareProviderKycResponseModel

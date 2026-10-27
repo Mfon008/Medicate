@@ -203,7 +203,7 @@ class _LevelThreeCardState extends State<LevelThreeCard> {
                                   SizedBox(height: 2.h),
 
                                   TextView(
-                                    text: 'Settlement bank details',
+                                    text: 'Settlement Bank Details',
                                     textStyle: TextStyle(
                                       fontSize: 13.22.sp,
                                       fontWeight: FontWeight.w400,
@@ -722,7 +722,7 @@ class _LevelThreeCardState extends State<LevelThreeCard> {
                                             children: [
                                               TextView(
                                                 text:
-                                                    'Schedule of available plans',
+                                                    'Schedule of Available Plans',
                                                 textStyle: TextStyle(
                                                   fontFamily: 'Arial',
                                                   fontSize: 14.2.sp,
@@ -1016,8 +1016,8 @@ class _LevelThreeCardState extends State<LevelThreeCard> {
                                             children: [
                                               TextView(
                                                 text:
-                                                    'License of associated clinics/'
-                                                    'hospitals',
+                                                    'License of Associated Clinics/'
+                                                    'Hospitals',
                                                 textStyle: TextStyle(
                                                   fontFamily: 'Arial',
                                                   fontSize: 14.2.sp,

@@ -293,7 +293,7 @@ class _HealthCareProfileInfoScreenState
                         ),
                         SizedBox(height: 20.h),
                         TextFormWidget(
-                          hint: 'Type of healthcare provider',
+                          hint: 'Type of Healthcare Provider',
                           hintSize: 14,
                           borderColor: AppColors.transparent,
                           borderTopLeft: 10.r,
@@ -316,7 +316,7 @@ class _HealthCareProfileInfoScreenState
                         ),
                         SizedBox(height: 20.h),
                         TextFormWidget(
-                          hint: 'Healthcare facility name',
+                          hint: 'Healthcare Facility Name',
                           hintSize: 14,
                           borderColor: AppColors.transparent,
                           borderTopLeft: 10.r,
@@ -339,7 +339,7 @@ class _HealthCareProfileInfoScreenState
                         ),
                         SizedBox(height: 20.h),
                         TextFormWidget(
-                          hint: 'Registration number',
+                          hint: 'Registration Number',
                           hintSize: 14,
                           borderColor: AppColors.transparent,
                           borderTopLeft: 10.r,
@@ -960,7 +960,7 @@ class _HealthCareProfileInfoScreenState
                         ),
                         SizedBox(height: 6.h),
                         TextFormWidget(
-                          hint: 'Business address',
+                          hint: 'Business Address',
                           hintSize: 14,
                           borderColor: AppColors.transparent,
                           borderTopLeft: 10.r,
@@ -982,7 +982,7 @@ class _HealthCareProfileInfoScreenState
                         ),
                         SizedBox(height: 20.h),
                         TextFormWidget(
-                          hint: 'Business email',
+                          hint: 'Business Email',
                           hintSize: 14,
                           borderColor: AppColors.transparent,
                           borderTopLeft: 10.r,

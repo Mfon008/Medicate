@@ -154,7 +154,7 @@ class _HMOProfileInfoScreenState extends State<HMOProfileInfoScreen> {
                               clipBehavior: Clip.none,
                               children: [
                                 TextView(
-                                  text: 'Phone number',
+                                  text: 'Phone Number',
                                   textStyle: TextStyle(
                                     fontFamily: 'Arial',
                                     fontSize: 14.sp,
@@ -357,7 +357,7 @@ class _HMOProfileInfoScreenState extends State<HMOProfileInfoScreen> {
                         ),
                         SizedBox(height: 20.h),
                         TextFormWidget(
-                          hint: 'Business address',
+                          hint: 'Business Address',
                           hintSize: 14,
                           borderColor: AppColors.transparent,
                           borderTopLeft: 10.r,
@@ -381,7 +381,7 @@ class _HMOProfileInfoScreenState extends State<HMOProfileInfoScreen> {
                         SizedBox(height: 20.h),
 
                         TextFormWidget(
-                          hint: 'Business email',
+                          hint: 'Business Email',
                           hintSize: 14,
                           borderColor: AppColors.transparent,
                           borderTopLeft: 10.r,

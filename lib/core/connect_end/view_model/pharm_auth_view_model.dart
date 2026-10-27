@@ -189,6 +189,7 @@ class PharmViewModel extends BaseViewModel {
   TextEditingController quantityValueController = TextEditingController();
   GlobalKey<FormState> quantityValueFormKey = GlobalKey<FormState>();
   String? editingQuantityProductId;
+  BusinessAddresses? businessAddressInfo;
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -286,6 +287,10 @@ class PharmViewModel extends BaseViewModel {
   TextEditingController nameOfPersonController = TextEditingController();
   TextEditingController formIDController = TextEditingController();
   TextEditingController orderNotesController = TextEditingController();
+  List<TextEditingController> nameOfPersonControllerList = [TextEditingController()];
+  List<TextEditingController> phoneControllerList = [TextEditingController()];
+  List<TextEditingController> formIDControllerList = [TextEditingController()];
+  List<TextEditingController> orderNotesControllerList = [TextEditingController()];
   TextEditingController lgaController = TextEditingController();
   TextEditingController meansIdController = TextEditingController();
   GlobalKey<FormState> formKeyValidate2 = GlobalKey<FormState>();
@@ -4382,6 +4387,57 @@ class PharmViewModel extends BaseViewModel {
       child: SvgPicture.asset(AppImage.arrow_down, height: 8.0.h, width: 8.0.w),
     ),
   );
+
+  getPopUpFormIdDialogList({BuildContext? context, int? index}) => PopupMenuButton<String>(
+    onSelected: (String result) {
+      ScaffoldMessenger.of(
+        context!,
+      ).showSnackBar(SnackBar(content: Text('Selected: $result')));
+    },
+    color: AppColors.white,
+    itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+      ...formId.map(
+        (o) => PopupMenuItem<String>(
+          value: o.toString().toLowerCase(),
+          child: TextView(
+            text: o,
+            textStyle: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 14.2.sp,
+              fontWeight: FontWeight.w400,
+              color: AppColors.deep,
+            ),
+          ),
+          onTap: () {
+            formIDControllerList[index!].text = o;
+            notifyListeners();
+          },
+        ),
+      ),
+    ],
+    child: Padding(
+      padding: EdgeInsets.all(16.w),
+      child: SvgPicture.asset(AppImage.arrow_down, height: 8.0.h, width: 8.0.w),
+    ),
+  );
+
+  void initializeAddressControllers(int addressCount) {
+  while (nameOfPersonControllerList.length < addressCount) {
+    nameOfPersonControllerList.add(TextEditingController());
+  }
+
+  while (phoneControllerList.length < addressCount) {
+    phoneControllerList.add(TextEditingController());
+  }
+
+  while (formIDControllerList.length < addressCount) {
+    formIDControllerList.add(TextEditingController());
+  }
+
+  while (orderNotesControllerList.length < addressCount) {
+    orderNotesControllerList.add(TextEditingController());
+  }
+}
 
   formartFileImage(File? imageFile) {
     if (imageFile == null) return;

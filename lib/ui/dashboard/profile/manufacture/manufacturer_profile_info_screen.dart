@@ -179,7 +179,7 @@ class _ManufacturerProfileInfoScreenState
                               clipBehavior: Clip.none,
                               children: [
                                 TextView(
-                                  text: 'Phone number',
+                                  text: 'Phone Number',
                                   textStyle: TextStyle(
                                     fontFamily: 'Arial',
                                     fontSize: 14.sp,
@@ -310,7 +310,7 @@ class _ManufacturerProfileInfoScreenState
 
                         SizedBox(height: 20.h),
                         TextFormWidget(
-                          hint: 'Distributor/Manufacturer name',
+                          hint: 'Distributor/Manufacturer Name',
                           hintSize: 14,
                           borderColor: AppColors.transparent,
                           borderTopLeft: 10.r,

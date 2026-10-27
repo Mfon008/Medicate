@@ -303,7 +303,7 @@ class _LevelOneCardState extends State<LevelOneCard> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 InfoItem(
-                                  title: 'Distributor/Manufacturer name',
+                                  title: 'Distributor/Manufacturer Name',
                                   value:
                                       widget
                                           .model

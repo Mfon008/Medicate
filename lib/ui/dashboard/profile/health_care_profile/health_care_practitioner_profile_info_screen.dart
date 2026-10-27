@@ -338,7 +338,7 @@ class _HealthCarePractitionerProfileInfoScreenState
                         ),
                         SizedBox(height: 20.h),
                         TextFormWidget(
-                          hint: 'Healthcare professional',
+                          hint: 'Healthcare Professional',
                           hintSize: 14,
                           borderColor: AppColors.transparent,
                           borderTopLeft: 10.r,
@@ -361,7 +361,7 @@ class _HealthCarePractitionerProfileInfoScreenState
                         ),
                         SizedBox(height: 20.h),
                         TextFormWidget(
-                          hint: 'Healthcare facility name',
+                          hint: 'Healthcare Facility Name',
                           hintSize: 14,
                           borderColor: AppColors.transparent,
                           borderTopLeft: 10.r,
@@ -384,7 +384,7 @@ class _HealthCarePractitionerProfileInfoScreenState
                         ),
                         SizedBox(height: 20.h),
                         TextFormWidget(
-                          hint: 'License number',
+                          hint: 'License Number',
                           hintSize: 14,
                           borderColor: AppColors.transparent,
                           borderTopLeft: 10.r,
@@ -773,7 +773,7 @@ class _HealthCarePractitionerProfileInfoScreenState
                         ),
                         SizedBox(height: 6.h),
                         TextFormWidget(
-                          hint: 'Business address',
+                          hint: 'Business Address',
                           hintSize: 14,
                           borderColor: AppColors.transparent,
                           borderTopLeft: 10.r,
@@ -795,7 +795,7 @@ class _HealthCarePractitionerProfileInfoScreenState
                         ),
                         SizedBox(height: 20.h),
                         TextFormWidget(
-                          hint: 'Business email',
+                          hint: 'Business Email',
                           hintSize: 14,
                           borderColor: AppColors.transparent,
                           borderTopLeft: 10.r,
@@ -878,7 +878,7 @@ class _HealthCarePractitionerProfileInfoScreenState
                         // ),
                         // SizedBox(height: 20.h),
                         TextFormWidget(
-                          hint: 'Account number',
+                          hint: 'Account Number',
                           hintSize: 14,
                           borderColor: AppColors.transparent,
                           borderTopLeft: 10.r,

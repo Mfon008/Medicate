@@ -254,7 +254,7 @@ class _LevelOneCardState extends State<LevelOneCard> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 InfoItem(
-                                  title: 'Healthcare facility name',
+                                  title: 'Healthcare Facility naame',
                                   value:
                                       widget
                                           .model
@@ -282,7 +282,7 @@ class _LevelOneCardState extends State<LevelOneCard> {
                                 SizedBox(height: 13.6.h),
 
                                 InfoItem(
-                                  title: 'Type of healthcare practitioner',
+                                  title: 'Type of Healthcare Practitioner',
                                   value:
                                       widget
                                           .model
@@ -539,7 +539,7 @@ class _LevelOneCardState extends State<LevelOneCard> {
                                 Divider(color: AppColors.f1),
                                 SizedBox(height: 18.22.h),
                                 InfoItem(
-                                  title: 'Business address',
+                                  title: 'Business Address',
                                   value:
                                       widget
                                           .model
@@ -552,7 +552,7 @@ class _LevelOneCardState extends State<LevelOneCard> {
 
                                 SizedBox(height: 14.22.h),
                                 InfoItem(
-                                  title: 'business email',
+                                  title: 'Business Email',
                                   value:
                                       widget
                                           .model
