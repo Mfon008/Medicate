@@ -46,7 +46,7 @@ class _PharmacyWholeSaleCheckoutState extends State<PharmacyWholeSaleCheckout> {
       viewModelBuilder: () => PharmViewModel(),
       onViewModelReady: (model) async {
         await model.getTenant(context);
-        model.getWholesaleProductAddedToCart(context);
+        await model.getWholesaleProductAddedToCart(context);
         if (model.getTetantResponseModel != null &&
             model.getTetantResponseModel!.data!.businessAddresses!.isNotEmpty) {
           final primaryAddresses = model
@@ -82,8 +82,40 @@ class _PharmacyWholeSaleCheckoutState extends State<PharmacyWholeSaleCheckout> {
                     .methods![0]
                     .deliveryFee!;
               }
-              model.notifyListeners();
             }
+            model.approvedAddresses = model
+                .getTetantResponseModel!
+                .data!
+                .businessAddresses!
+                .where(
+                  (address) =>
+                      address.approvalStatus?.toLowerCase() == 'approved',
+                )
+                .toList();
+
+            model.cartItems = model
+                .wholesaleGetProductAddedToCartResponseModel!
+                .data!
+                .cart!
+                .items!;
+            await Future.delayed(Duration(seconds: 1));
+            model.initializeSplitQuantities(
+              approvedAddresses: model
+                  .getTetantResponseModel!
+                  .data!
+                  .businessAddresses!
+                  .where(
+                    (address) =>
+                        address.approvalStatus?.toLowerCase() == 'approved',
+                  )
+                  .toList(),
+              cartItems: model
+                  .wholesaleGetProductAddedToCartResponseModel!
+                  .data!
+                  .cart!
+                  .items!,
+            );
+            model.notifyListeners();
           }
         }
       },
@@ -175,10 +207,10 @@ class _PharmacyWholeSaleCheckoutState extends State<PharmacyWholeSaleCheckout> {
                                       padding: EdgeInsets.only(right: 10.w),
                                       child: Column(
                                         children: [
-                                          ...model.getTetantResponseModel!.data!.businessAddresses!.asMap().entries.map((
+                                          ...model.approvedAddresses.asMap().entries.map((
                                             o,
                                           ) {
-                                            final index = o.key;
+                                            final addressIndex = o.key;
                                             final e = o.value;
 
                                             return Column(
@@ -207,7 +239,7 @@ class _PharmacyWholeSaleCheckoutState extends State<PharmacyWholeSaleCheckout> {
                                                   alignment: Alignment.center,
                                                   child: TextView(
                                                     text:
-                                                        'Delivery ${index + 1}',
+                                                        'Delivery ${addressIndex + 1}',
                                                     textStyle: TextStyle(
                                                       fontSize: 13.50.sp,
                                                       fontWeight:
@@ -293,26 +325,47 @@ class _PharmacyWholeSaleCheckoutState extends State<PharmacyWholeSaleCheckout> {
                                                       ),
                                                       SizedBox(height: 10.h),
 
-                                                      ...List.generate(
-                                                        model
-                                                            .wholesaleGetProductAddedToCartResponseModel!
-                                                            .data!
-                                                            .cart!
-                                                            .items!
-                                                            .length,
-                                                        (index) => Padding(
+                                                      ...List.generate(model.cartItems.length, (
+                                                        index,
+                                                      ) {
+                                                        final product = model
+                                                            .cartItems[index];
+
+                                                        // final originalQuantity =
+                                                        //     product.quantity ??
+                                                        //     0;
+
+                                                        final distributedQuantity =
+                                                            model
+                                                                .getSplitQuantity(
+                                                                  address: e,
+                                                                  product:
+                                                                      product,
+                                                                );
+
+                                                        // Do not display products with zero allocated quantity.
+                                                        if (distributedQuantity ==
+                                                            0) {
+                                                          return const SizedBox.shrink();
+                                                        }
+
+                                                        final unitPrice =
+                                                            product.unitPrice ??
+                                                            0;
+
+                                                        final distributedTotal =
+                                                            unitPrice *
+                                                            distributedQuantity;
+                                                        return Padding(
                                                           padding: EdgeInsets.only(
                                                             bottom:
-                                                                index ==
+                                                                index <
                                                                     model
-                                                                            .wholesaleGetProductAddedToCartResponseModel!
-                                                                            .data!
-                                                                            .cart!
-                                                                            .items!
+                                                                            .cartItems
                                                                             .length -
                                                                         1
-                                                                ? 0
-                                                                : 9.h,
+                                                                ? 9.h
+                                                                : 0,
                                                           ),
                                                           child: Row(
                                                             crossAxisAlignment:
@@ -327,13 +380,10 @@ class _PharmacyWholeSaleCheckoutState extends State<PharmacyWholeSaleCheckout> {
                                                                   children: [
                                                                     TextView(
                                                                       text:
-                                                                          model
-                                                                              .wholesaleGetProductAddedToCartResponseModel!
-                                                                              .data!
-                                                                              .cart!
-                                                                              .items![index]
+                                                                          product
                                                                               .product
                                                                               ?.productName ??
+                                                                          '' ??
                                                                           '',
                                                                       maxLines:
                                                                           1,
@@ -357,7 +407,7 @@ class _PharmacyWholeSaleCheckoutState extends State<PharmacyWholeSaleCheckout> {
                                                                     ),
                                                                     TextView(
                                                                       text:
-                                                                          'Qty: ${model.wholesaleGetProductAddedToCartResponseModel!.data!.cart!.items![index].quantity} | ${formatNaira(model.wholesaleGetProductAddedToCartResponseModel!.data!.cart!.items![index].lineTotal!)}',
+                                                                          'Qty: $distributedQuantity | ${formatNaira(distributedTotal)}',
                                                                       maxLines:
                                                                           1,
                                                                       textOverflow:
@@ -384,12 +434,7 @@ class _PharmacyWholeSaleCheckoutState extends State<PharmacyWholeSaleCheckout> {
                                                                 width: 120,
                                                                 child: TextView(
                                                                   text: formatNaira(
-                                                                    model
-                                                                            .wholesaleGetProductAddedToCartResponseModel!
-                                                                            .data!
-                                                                            .cart!
-                                                                            .items![index]
-                                                                            .unitPrice ??
+                                                                    unitPrice ??
                                                                         0,
                                                                   ),
                                                                   textAlign:
@@ -415,8 +460,8 @@ class _PharmacyWholeSaleCheckoutState extends State<PharmacyWholeSaleCheckout> {
                                                               ),
                                                             ],
                                                           ),
-                                                        ),
-                                                      ),
+                                                        );
+                                                      }),
 
                                                       SizedBox(height: 10.h),
                                                       Divider(
@@ -994,7 +1039,12 @@ class _PharmacyWholeSaleCheckoutState extends State<PharmacyWholeSaleCheckout> {
                             ? Container(
                                 margin: EdgeInsets.only(top: 10.h),
                                 width: double.infinity,
-                                padding: EdgeInsets.fromLTRB(12.w, 12.r, 5.0.w, 12.w),
+                                padding: EdgeInsets.fromLTRB(
+                                  12.w,
+                                  12.r,
+                                  5.0.w,
+                                  12.w,
+                                ),
                                 decoration: BoxDecoration(
                                   color: AppColors.nearDashboard,
                                   borderRadius: BorderRadius.circular(12.r),
@@ -1051,15 +1101,16 @@ class _PharmacyWholeSaleCheckoutState extends State<PharmacyWholeSaleCheckout> {
                                               ),
                                               child: Column(
                                                 children: [
-                                                  ...model.getTetantResponseModel!.data!.businessAddresses!.asMap().entries.map((
+                                                  ...model.approvedAddresses.asMap().entries.map((
                                                     entry,
                                                   ) {
-                                                    final index = entry.key;
+                                                    final productIndex =
+                                                        entry.key;
                                                     final e = entry.value;
-                                                    final items = model
-                                                        .getTetantResponseModel!
-                                                        .data!
-                                                        .businessAddresses;
+                                                    // final items = model
+                                                    //     .getTetantResponseModel!
+                                                    //     .data!
+                                                    //     .businessAddresses;
                                                     final addressCount =
                                                         model
                                                             .getTetantResponseModel
@@ -1231,18 +1282,31 @@ class _PharmacyWholeSaleCheckoutState extends State<PharmacyWholeSaleCheckout> {
                                                                     ),
                                                                     child: Column(
                                                                       children: [
-                                                                        ...model.wholesaleGetProductAddedToCartResponseModel!.data!.cart!.items!.asMap().entries.map((
+                                                                        ...model.cartItems.asMap().entries.map((
                                                                           entry,
                                                                         ) {
                                                                           final index =
                                                                               entry.key;
-                                                                          final e =
+                                                                          final cartItem =
                                                                               entry.value;
                                                                           final items = model
                                                                               .wholesaleGetProductAddedToCartResponseModel!
                                                                               .data!
                                                                               .cart!
                                                                               .items!;
+
+                                                                          final quantity = model.getSplitQuantity(
+                                                                            address:
+                                                                                e,
+                                                                            product:
+                                                                                cartItem,
+                                                                          );
+
+                                                                          // Hide this product when this address has no allocated units.
+                                                                          if (quantity ==
+                                                                              0) {
+                                                                            return const SizedBox.shrink();
+                                                                          }
 
                                                                           return Column(
                                                                             children: [
@@ -1252,7 +1316,7 @@ class _PharmacyWholeSaleCheckoutState extends State<PharmacyWholeSaleCheckout> {
                                                                                     width: 180.w,
                                                                                     child: TextView(
                                                                                       text:
-                                                                                          e.product?.productName ??
+                                                                                          cartItem.product?.productName ??
                                                                                           '',
                                                                                       textOverflow: TextOverflow.ellipsis,
                                                                                       textStyle: TextStyle(
@@ -1266,19 +1330,30 @@ class _PharmacyWholeSaleCheckoutState extends State<PharmacyWholeSaleCheckout> {
                                                                                   SizedBox(
                                                                                     width: 12.w,
                                                                                   ),
-                                                                                  Container(
-                                                                                    width: 14.2.w,
-                                                                                    height: 14.2.h,
-                                                                                    decoration: BoxDecoration(
-                                                                                      color: AppColors.buttonGrey1,
-                                                                                      shape: BoxShape.circle,
-                                                                                    ),
-                                                                                    child: Center(
+                                                                                  GestureDetector(
+                                                                                    onTap: () {
+                                                                                      model.updateSplitQuantity(
+                                                                                        address: e,
+                                                                                        product: cartItem,
+                                                                                        delta: -1,
+                                                                                        approvedAddresses: model.approvedAddresses,
+                                                                                      );
+                                                                                    },
+                                                                                    child: Container(
+                                                                                      width: 18.w,
+                                                                                      height: 18.w,
+                                                                                      decoration: BoxDecoration(
+                                                                                        color:
+                                                                                            quantity >
+                                                                                                0
+                                                                                            ? AppColors.buttonGrey1
+                                                                                            : AppColors.infoGrey1,
+                                                                                        shape: BoxShape.circle,
+                                                                                      ),
                                                                                       child: Icon(
                                                                                         Icons.remove,
                                                                                         color: AppColors.white,
-                                                                                        size: 12.sp,
-                                                                                        weight: 20.r,
+                                                                                        size: 15.sp,
                                                                                       ),
                                                                                     ),
                                                                                   ),
@@ -1286,7 +1361,7 @@ class _PharmacyWholeSaleCheckoutState extends State<PharmacyWholeSaleCheckout> {
                                                                                     width: 10.w,
                                                                                   ),
                                                                                   TextView(
-                                                                                    text: e.quantity.toString(),
+                                                                                    text: quantity.toString(),
                                                                                     textOverflow: TextOverflow.ellipsis,
                                                                                     textStyle: TextStyle(
                                                                                       fontFamily: 'DMSans',
@@ -1298,19 +1373,31 @@ class _PharmacyWholeSaleCheckoutState extends State<PharmacyWholeSaleCheckout> {
                                                                                   SizedBox(
                                                                                     width: 10.w,
                                                                                   ),
-                                                                                  Container(
-                                                                                    width: 14.2.w,
-                                                                                    height: 14.2.h,
-                                                                                    decoration: BoxDecoration(
-                                                                                      color: AppColors.primary,
-                                                                                      shape: BoxShape.circle,
-                                                                                    ),
-                                                                                    child: Center(
+                                                                                  GestureDetector(
+                                                                                    onTap: () {
+                                                                                      final updated = model.updateSplitQuantity(
+                                                                                        address: e,
+                                                                                        product: cartItem,
+                                                                                        delta: 1,
+                                                                                        approvedAddresses: model.approvedAddresses,
+                                                                                      );
+
+                                                                                      if (!updated) {
+                                                                                        // No units are available to transfer from another address.
+                                                                                        // Optionally show a SnackBar explaining this.
+                                                                                      }
+                                                                                    },
+                                                                                    child: Container(
+                                                                                      width: 18.w,
+                                                                                      height: 18.w,
+                                                                                      decoration: BoxDecoration(
+                                                                                        color: AppColors.primary,
+                                                                                        shape: BoxShape.circle,
+                                                                                      ),
                                                                                       child: Icon(
                                                                                         Icons.add,
                                                                                         color: AppColors.white,
-                                                                                        size: 12.sp,
-                                                                                        weight: 20.r,
+                                                                                        size: 15.sp,
                                                                                       ),
                                                                                     ),
                                                                                   ),
@@ -1416,7 +1503,7 @@ class _PharmacyWholeSaleCheckoutState extends State<PharmacyWholeSaleCheckout> {
                                                                                     borderBottomRight: 10.r,
                                                                                     fillColor: AppColors.white,
                                                                                     isFilled: true,
-                                                                                    controller: model.nameOfPersonControllerList[index],
+                                                                                    controller: model.nameOfPersonControllerList[productIndex],
                                                                                     prefixWidget: Padding(
                                                                                       padding: EdgeInsets.all(
                                                                                         12.w,
@@ -1463,7 +1550,7 @@ class _PharmacyWholeSaleCheckoutState extends State<PharmacyWholeSaleCheckout> {
                                                                                     borderBottomRight: 10.r,
                                                                                     fillColor: AppColors.white,
                                                                                     isFilled: true,
-                                                                                    controller: model.phoneControllerList[index],
+                                                                                    controller: model.phoneControllerList[productIndex],
                                                                                     inputFormatters: [
                                                                                       LengthLimitingTextInputFormatter(
                                                                                         11,
@@ -1517,10 +1604,10 @@ class _PharmacyWholeSaleCheckoutState extends State<PharmacyWholeSaleCheckout> {
                                                                                     fillColor: AppColors.white,
                                                                                     isFilled: true,
                                                                                     readOnly: true,
-                                                                                    controller: model.formIDControllerList[index],
+                                                                                    controller: model.formIDControllerList[productIndex],
                                                                                     suffixWidget: model.getPopUpFormIdDialogList(
                                                                                       context: context,
-                                                                                      index: index,
+                                                                                      index: productIndex,
                                                                                     ),
                                                                                     validator: AppValidator.validateString(),
                                                                                     style: TextStyle(
@@ -1554,7 +1641,7 @@ class _PharmacyWholeSaleCheckoutState extends State<PharmacyWholeSaleCheckout> {
                                                                                     borderBottomRight: 10.r,
                                                                                     fillColor: AppColors.white,
                                                                                     isFilled: true,
-                                                                                    controller: model.orderNotesControllerList[index],
+                                                                                    controller: model.orderNotesControllerList[productIndex],
                                                                                     maxline: 4,
                                                                                     style: TextStyle(
                                                                                       fontSize: 16.20.sp,
@@ -1581,8 +1668,11 @@ class _PharmacyWholeSaleCheckoutState extends State<PharmacyWholeSaleCheckout> {
                                                                 ],
                                                               )
                                                             : SizedBox.shrink(),
-                                                        if (index !=
-                                                            items!.length - 1)
+                                                        if (productIndex <
+                                                            model
+                                                                    .approvedAddresses
+                                                                    .length -
+                                                                1)
                                                           Divider(
                                                             color: AppColors
                                                                 .infoGrey1,
@@ -1609,176 +1699,198 @@ class _PharmacyWholeSaleCheckoutState extends State<PharmacyWholeSaleCheckout> {
                                           .data!
                                           .businessAddresses!
                                           .isNotEmpty)
-                                    ...model.getTetantResponseModel!.data!.businessAddresses!.map(
-                                      (e) => GestureDetector(
-                                        onTap: () async {
-                                          model.mapLocationAddressSelected = e;
-                                          await Future.delayed(
-                                            Duration(microseconds: 10),
-                                          );
-                                          await model
-                                              .updatePrimaryBusinessAddress(
-                                                context: context,
-                                                id: model
-                                                    .mapLocationAddressSelected!
-                                                    .id!,
-                                                isCheckout: true,
+                                    ...model
+                                        .getTetantResponseModel!
+                                        .data!
+                                        .businessAddresses!
+                                        .where(
+                                          (w) =>
+                                              w.approvalStatus?.toLowerCase() ==
+                                              'approved',
+                                        )
+                                        .map(
+                                          (e) => GestureDetector(
+                                            onTap: () async {
+                                              model.mapLocationAddressSelected =
+                                                  e;
+                                              await Future.delayed(
+                                                Duration(microseconds: 10),
                                               );
-                                          await model.getCheckoutDeliveryOption(
-                                            context: context,
-                                            checkoutDeliveryOption:
-                                                CheckoutDeliveryOptionEntityModel(
-                                                  deliveryAddressId: model
-                                                      .mapLocationAddressSelected!
-                                                      .id,
+                                              await model
+                                                  .updatePrimaryBusinessAddress(
+                                                    context: context,
+                                                    id: model
+                                                        .mapLocationAddressSelected!
+                                                        .id!,
+                                                    isCheckout: true,
+                                                  );
+                                              await model.getCheckoutDeliveryOption(
+                                                context: context,
+                                                checkoutDeliveryOption:
+                                                    CheckoutDeliveryOptionEntityModel(
+                                                      deliveryAddressId: model
+                                                          .mapLocationAddressSelected!
+                                                          .id,
+                                                    ),
+                                              );
+                                              if (model.getCheckoutDeliveryOptionResponseModel !=
+                                                      null &&
+                                                  model
+                                                      .getCheckoutDeliveryOptionResponseModel!
+                                                      .data!
+                                                      .methods!
+                                                      .isNotEmpty) {
+                                                if (model.delivery ==
+                                                        Delivery.instance &&
+                                                    model
+                                                            .getCheckoutDeliveryOptionResponseModel!
+                                                            .data!
+                                                            .methods![0]
+                                                            .deliveryFee !=
+                                                        null) {
+                                                  model
+                                                      .deliveryFeeAmount = model
+                                                      .getCheckoutDeliveryOptionResponseModel!
+                                                      .data!
+                                                      .methods![0]
+                                                      .deliveryFee!;
+                                                } else if (model.delivery ==
+                                                        Delivery.schedule &&
+                                                    model
+                                                            .getCheckoutDeliveryOptionResponseModel!
+                                                            .data!
+                                                            .methods![1]
+                                                            .deliveryFee !=
+                                                        null) {
+                                                  model
+                                                      .deliveryFeeAmount = model
+                                                      .getCheckoutDeliveryOptionResponseModel!
+                                                      .data!
+                                                      .methods![1]
+                                                      .deliveryFee!;
+                                                } else {
+                                                  model.deliveryFeeAmount = 0;
+                                                }
+                                                model.notifyListeners();
+                                              } else {
+                                                model.deliveryFeeAmount = 0;
+                                              }
+                                              model.notifyListeners();
+                                            },
+                                            child: Container(
+                                              width: double.infinity,
+                                              margin: EdgeInsets.only(
+                                                top: 12.w,
+                                              ),
+                                              padding: EdgeInsets.symmetric(
+                                                vertical: 10.w,
+                                                horizontal: 12.w,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                border: Border.all(
+                                                  color:
+                                                      model.mapLocationAddressSelected ==
+                                                          e
+                                                      ? AppColors.primary
+                                                      : AppColors.infoGrey1,
                                                 ),
-                                          );
-                                          if (model.getCheckoutDeliveryOptionResponseModel !=
-                                                  null &&
-                                              model
-                                                  .getCheckoutDeliveryOptionResponseModel!
-                                                  .data!
-                                                  .methods!
-                                                  .isNotEmpty) {
-                                            if (model.delivery ==
-                                                    Delivery.instance &&
-                                                model
-                                                        .getCheckoutDeliveryOptionResponseModel!
-                                                        .data!
-                                                        .methods![0]
-                                                        .deliveryFee !=
-                                                    null) {
-                                              model.deliveryFeeAmount = model
-                                                  .getCheckoutDeliveryOptionResponseModel!
-                                                  .data!
-                                                  .methods![0]
-                                                  .deliveryFee!;
-                                            } else if (model.delivery ==
-                                                    Delivery.schedule &&
-                                                model
-                                                        .getCheckoutDeliveryOptionResponseModel!
-                                                        .data!
-                                                        .methods![1]
-                                                        .deliveryFee !=
-                                                    null) {
-                                              model.deliveryFeeAmount = model
-                                                  .getCheckoutDeliveryOptionResponseModel!
-                                                  .data!
-                                                  .methods![1]
-                                                  .deliveryFee!;
-                                            } else {
-                                              model.deliveryFeeAmount = 0;
-                                            }
-                                            model.notifyListeners();
-                                          } else {
-                                            model.deliveryFeeAmount = 0;
-                                          }
-                                          model.notifyListeners();
-                                        },
-                                        child: Container(
-                                          width: double.infinity,
-                                          margin: EdgeInsets.only(top: 12.w),
-                                          padding: EdgeInsets.symmetric(
-                                            vertical: 10.w,
-                                            horizontal: 12.w,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            border: Border.all(
-                                              color:
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                              ),
+                                              child: Row(
+                                                children: [
                                                   model.mapLocationAddressSelected ==
-                                                      e
-                                                  ? AppColors.primary
-                                                  : AppColors.infoGrey1,
-                                            ),
-                                            borderRadius: BorderRadius.circular(
-                                              12,
-                                            ),
-                                          ),
-                                          child: Row(
-                                            children: [
-                                              model.mapLocationAddressSelected ==
-                                                      e
-                                                  ? Container(
-                                                      padding: EdgeInsets.all(
-                                                        2.6.w,
-                                                      ),
-                                                      decoration: BoxDecoration(
-                                                        shape: BoxShape.circle,
-                                                        border: Border.all(
-                                                          color:
-                                                              AppColors.primary,
-                                                          width: 2,
-                                                        ),
-                                                      ),
-                                                      child: Container(
-                                                        padding: EdgeInsets.all(
-                                                          3.2.w,
-                                                        ),
-                                                        decoration:
-                                                            BoxDecoration(
-                                                              shape: BoxShape
-                                                                  .circle,
+                                                          e
+                                                      ? Container(
+                                                          padding:
+                                                              EdgeInsets.all(
+                                                                2.6.w,
+                                                              ),
+                                                          decoration: BoxDecoration(
+                                                            shape:
+                                                                BoxShape.circle,
+                                                            border: Border.all(
                                                               color: AppColors
                                                                   .primary,
+                                                              width: 2,
                                                             ),
-                                                      ),
-                                                    )
-                                                  : Container(
-                                                      padding: EdgeInsets.all(
-                                                        6.w,
-                                                      ),
-                                                      decoration: BoxDecoration(
-                                                        shape: BoxShape.circle,
-                                                        border: Border.all(
-                                                          color: AppColors
-                                                              .infoGrey1,
-                                                          width: 2,
+                                                          ),
+                                                          child: Container(
+                                                            padding:
+                                                                EdgeInsets.all(
+                                                                  3.2.w,
+                                                                ),
+                                                            decoration:
+                                                                BoxDecoration(
+                                                                  shape: BoxShape
+                                                                      .circle,
+                                                                  color: AppColors
+                                                                      .primary,
+                                                                ),
+                                                          ),
+                                                        )
+                                                      : Container(
+                                                          padding:
+                                                              EdgeInsets.all(
+                                                                6.w,
+                                                              ),
+                                                          decoration: BoxDecoration(
+                                                            shape:
+                                                                BoxShape.circle,
+                                                            border: Border.all(
+                                                              color: AppColors
+                                                                  .infoGrey1,
+                                                              width: 2,
+                                                            ),
+                                                          ),
                                                         ),
-                                                      ),
+
+                                                  SizedBox(width: 10.w),
+
+                                                  Expanded(
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        AutoScrollingText(
+                                                          text:
+                                                              e.businessAddress ??
+                                                              '',
+                                                          textStyle: TextStyle(
+                                                            fontFamily:
+                                                                'DMSans',
+                                                            fontSize: 14.20.sp,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                            color:
+                                                                AppColors.black,
+                                                          ),
+                                                        ),
+
+                                                        SizedBox(height: 3.h),
+
+                                                        AutoScrollingText(
+                                                          text:
+                                                              '${e.lga}, ${e.state}, ${e.country}',
+                                                          textStyle: TextStyle(
+                                                            fontFamily:
+                                                                'DMSans',
+                                                            fontSize: 13.20.sp,
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                            color: AppColors
+                                                                .infoGrey,
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
-
-                                              SizedBox(width: 10.w),
-
-                                              Expanded(
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    AutoScrollingText(
-                                                      text:
-                                                          e.businessAddress ??
-                                                          '',
-                                                      textStyle: TextStyle(
-                                                        fontFamily: 'DMSans',
-                                                        fontSize: 14.20.sp,
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                        color: AppColors.black,
-                                                      ),
-                                                    ),
-
-                                                    SizedBox(height: 3.h),
-
-                                                    AutoScrollingText(
-                                                      text:
-                                                          '${e.lga}, ${e.state}, ${e.country}',
-                                                      textStyle: TextStyle(
-                                                        fontFamily: 'DMSans',
-                                                        fontSize: 13.20.sp,
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        color:
-                                                            AppColors.infoGrey,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
+                                                  ),
+                                                ],
                                               ),
-                                            ],
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    ),
                                 ],
                               ),
                         model.delivery == Delivery.schedule

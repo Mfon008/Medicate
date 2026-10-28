@@ -287,10 +287,14 @@ class PharmViewModel extends BaseViewModel {
   TextEditingController nameOfPersonController = TextEditingController();
   TextEditingController formIDController = TextEditingController();
   TextEditingController orderNotesController = TextEditingController();
-  List<TextEditingController> nameOfPersonControllerList = [TextEditingController()];
+  List<TextEditingController> nameOfPersonControllerList = [
+    TextEditingController(),
+  ];
   List<TextEditingController> phoneControllerList = [TextEditingController()];
   List<TextEditingController> formIDControllerList = [TextEditingController()];
-  List<TextEditingController> orderNotesControllerList = [TextEditingController()];
+  List<TextEditingController> orderNotesControllerList = [
+    TextEditingController(),
+  ];
   TextEditingController lgaController = TextEditingController();
   TextEditingController meansIdController = TextEditingController();
   GlobalKey<FormState> formKeyValidate2 = GlobalKey<FormState>();
@@ -311,7 +315,9 @@ class PharmViewModel extends BaseViewModel {
   TextEditingController businessAddController = TextEditingController();
   TextEditingController stateBusController = TextEditingController();
   TextEditingController lgaBusController = TextEditingController();
-  TextEditingController countryBusController = TextEditingController(text:'Nigeria');
+  TextEditingController countryBusController = TextEditingController(
+    text: 'Nigeria',
+  );
 
   List<String> lgaList = [];
   List<String> lgaListCopy = [];
@@ -410,7 +416,6 @@ class PharmViewModel extends BaseViewModel {
   bool isTappedPhoneAdded = false;
   bool isTappedEmailAdded = false;
 
-
   UploadImageResponseModel? _uploadImageResponseModelDisCAC;
   UploadImageResponseModel? get uploadImageResponseModelDisCAC =>
       _uploadImageResponseModelDisCAC;
@@ -452,7 +457,7 @@ class PharmViewModel extends BaseViewModel {
   UploadImageResponseModel? _uploadImageResponseModelComLogo;
   UploadImageResponseModel? get uploadImageResponseModelComLogo =>
       _uploadImageResponseModelComLogo;
-  
+
   int? coverageAreaIndex;
   CoverageArea? coverageAreas;
 
@@ -467,7 +472,6 @@ class PharmViewModel extends BaseViewModel {
 
   bool _isLoadingLogo = false;
   bool get isLoadingLogo => _isLoadingLogo;
-  
 
   String startDateIso = '';
   String? searchProduct = '';
@@ -935,6 +939,8 @@ class PharmViewModel extends BaseViewModel {
   DateTime? pickedDatedStart;
   String? pickedDatedStartString;
   BusinessAddresses? profileUpdate;
+  List<BusinessAddresses> approvedAddresses = [];
+  var cartItems = [];
 
   SubmitLevelTwoKycEntityModel _submitLevelTwoKycEntityModelMeansOfId =
       SubmitLevelTwoKycEntityModel();
@@ -952,6 +958,82 @@ class PharmViewModel extends BaseViewModel {
       SubmitLevelTwoKycEntityModel();
   SubmitLevelTwoKycEntityModel? get submitLevelTwoKycEntityModelTIN =>
       _submitLevelTwoKycEntityModelTIN;
+
+  // Address ID -> Product ID -> Allocated quantity.
+  final Map<String, Map<String, int>> splitQuantities = {};
+
+  String _addressKey(BusinessAddresses address) {
+    return address.id.toString();
+  }
+
+  String _productKey(dynamic product) {
+    logger.d(product.product.toJson());
+    return product.product.id.toString();
+  }
+
+  int getSplitQuantity({required BusinessAddresses address, required dynamic product}) {
+    return splitQuantities[_addressKey(address)]?[_productKey(product)] ?? 0;
+  }
+
+  /// Initialize an even split. Call when entering split checkout
+  /// or when the address/cart data changes, not inside build().
+  void initializeSplitQuantities({
+    required List<dynamic> approvedAddresses,
+    required List<dynamic> cartItems,
+  }) {
+    splitQuantities.clear();
+
+    if (approvedAddresses.isEmpty) return;
+
+    for (final address in approvedAddresses) {
+      final addressKey = _addressKey(address);
+      splitQuantities[addressKey] = {};
+
+      for (final product in cartItems) {
+        final productKey = _productKey(product);
+        final quantity = (product.quantity as num?)?.toInt() ?? 0;
+
+        final base = quantity ~/ approvedAddresses.length;
+        final remainder = quantity % approvedAddresses.length;
+
+        final addressIndex = approvedAddresses.indexOf(address);
+        final allocated = base + (addressIndex < remainder ? 1 : 0);
+
+        splitQuantities[addressKey]![productKey] = allocated;
+      }
+    }
+
+    notifyListeners();
+  }
+
+  /// Adjust one address's quantity while preserving the original
+  /// total quantity across all approved addresses.
+  bool updateSplitQuantity({
+    required BusinessAddresses address,
+    required dynamic product,
+    required int delta,
+    required List<BusinessAddresses> approvedAddresses,
+  }) {
+  final currentQuantity = getSplitQuantity(
+    address: address,
+    product: product,
+  );
+
+  // Do not decrement below 1.
+  if (delta < 0 && currentQuantity <= 1) {
+    return false;
+  }
+
+  // Apply the increment or decrement.
+  final newQuantity = currentQuantity + delta;
+
+  splitQuantities[_addressKey(address)] ??= {};
+  splitQuantities[_addressKey(address)]![_productKey(product)] =
+      newQuantity;
+
+  notifyListeners();
+  return true;
+}
 
   void showManufacturerDetailDialog(BuildContext context, {Product? product}) {
     showDialog(
@@ -4388,56 +4470,61 @@ class PharmViewModel extends BaseViewModel {
     ),
   );
 
-  getPopUpFormIdDialogList({BuildContext? context, int? index}) => PopupMenuButton<String>(
-    onSelected: (String result) {
-      ScaffoldMessenger.of(
-        context!,
-      ).showSnackBar(SnackBar(content: Text('Selected: $result')));
-    },
-    color: AppColors.white,
-    itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-      ...formId.map(
-        (o) => PopupMenuItem<String>(
-          value: o.toString().toLowerCase(),
-          child: TextView(
-            text: o,
-            textStyle: TextStyle(
-              fontFamily: 'Arial',
-              fontSize: 14.2.sp,
-              fontWeight: FontWeight.w400,
-              color: AppColors.deep,
+  getPopUpFormIdDialogList({BuildContext? context, int? index}) =>
+      PopupMenuButton<String>(
+        onSelected: (String result) {
+          ScaffoldMessenger.of(
+            context!,
+          ).showSnackBar(SnackBar(content: Text('Selected: $result')));
+        },
+        color: AppColors.white,
+        itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+          ...formId.map(
+            (o) => PopupMenuItem<String>(
+              value: o.toString().toLowerCase(),
+              child: TextView(
+                text: o,
+                textStyle: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 14.2.sp,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.deep,
+                ),
+              ),
+              onTap: () {
+                formIDControllerList[index!].text = o;
+                notifyListeners();
+              },
             ),
           ),
-          onTap: () {
-            formIDControllerList[index!].text = o;
-            notifyListeners();
-          },
+        ],
+        child: Padding(
+          padding: EdgeInsets.all(16.w),
+          child: SvgPicture.asset(
+            AppImage.arrow_down,
+            height: 8.0.h,
+            width: 8.0.w,
+          ),
         ),
-      ),
-    ],
-    child: Padding(
-      padding: EdgeInsets.all(16.w),
-      child: SvgPicture.asset(AppImage.arrow_down, height: 8.0.h, width: 8.0.w),
-    ),
-  );
+      );
 
   void initializeAddressControllers(int addressCount) {
-  while (nameOfPersonControllerList.length < addressCount) {
-    nameOfPersonControllerList.add(TextEditingController());
-  }
+    while (nameOfPersonControllerList.length < addressCount) {
+      nameOfPersonControllerList.add(TextEditingController());
+    }
 
-  while (phoneControllerList.length < addressCount) {
-    phoneControllerList.add(TextEditingController());
-  }
+    while (phoneControllerList.length < addressCount) {
+      phoneControllerList.add(TextEditingController());
+    }
 
-  while (formIDControllerList.length < addressCount) {
-    formIDControllerList.add(TextEditingController());
-  }
+    while (formIDControllerList.length < addressCount) {
+      formIDControllerList.add(TextEditingController());
+    }
 
-  while (orderNotesControllerList.length < addressCount) {
-    orderNotesControllerList.add(TextEditingController());
+    while (orderNotesControllerList.length < addressCount) {
+      orderNotesControllerList.add(TextEditingController());
+    }
   }
-}
 
   formartFileImage(File? imageFile) {
     if (imageFile == null) return;
@@ -19732,6 +19819,11 @@ class PharmViewModel extends BaseViewModel {
                                 .getTetantResponseModel!
                                 .data!
                                 .businessAddresses!
+                                .where(
+                                  (w) =>
+                                      w.approvalStatus?.toLowerCase() ==
+                                      'approved',
+                                )
                                 .map(
                                   (e) => GestureDetector(
                                     onTap: () {
@@ -20043,140 +20135,20 @@ class PharmViewModel extends BaseViewModel {
     );
   }
 
-  // void additionalResourceInfo(context, {String? des, String? desLink}) {
-  //   showDialog(
-  //     context: context,
-  //     barrierDismissible: false, // prevent closing by tapping outside
-  //     builder: (BuildContext context) {
-  //       return ViewModelBuilder<PharmViewModel>.reactive(
-  //         viewModelBuilder: () => PharmViewModel(),
-  //         onViewModelReady: (model) async {},
-  //         disposeViewModel: false,
-  //         onDispose: (viewModel) {},
-  //         builder: (_, PharmViewModel model, _) {
-  //           return Container(
-  //             color: AppColors.transparent,
-  //             child: Column(
-  //               mainAxisAlignment: MainAxisAlignment.center,
-  //               crossAxisAlignment: CrossAxisAlignment.center,
-  //               children: [
-  //                 Align(
-  //                   alignment: Alignment.topCenter,
-  //                   child: TextButton.icon(
-  //                     onPressed: () => Navigator.pop(context),
-  //                     icon: Icon(Icons.close, color: Colors.white, size: 18),
-  //                     label: Text(
-  //                       "Close",
-  //                       style: TextStyle(color: Colors.white),
-  //                     ),
-  //                     style: TextButton.styleFrom(
-  //                       backgroundColor: AppColors.primary,
-  //                       shape: RoundedRectangleBorder(
-  //                         borderRadius: BorderRadius.circular(20),
-  //                       ),
-  //                       padding: EdgeInsets.symmetric(
-  //                         horizontal: 10.w,
-  //                         vertical: 4.w,
-  //                       ),
-  //                     ),
-  //                   ),
-  //                 ),
-  //                 SizedBox(height: 6.10.h),
-  //                 Dialog(
-  //                   insetPadding: EdgeInsets.all(16.20.w),
-  //                   shape: RoundedRectangleBorder(
-  //                     borderRadius: BorderRadius.circular(12),
-  //                   ),
-  //                   backgroundColor: AppColors.white,
-  //                   child: Padding(
-  //                     padding: EdgeInsets.all(20.w),
-  //                     child: Column(
-  //                       crossAxisAlignment: CrossAxisAlignment.start,
-  //                       mainAxisAlignment: MainAxisAlignment.start,
-  //                       children: [
-  //                         TextView(
-  //                           text: 'Additional Resource Info',
-  //                           textStyle: TextStyle(
-  //                             fontFamily: 'DMSans',
-  //                             color: AppColors.black,
-  //                             fontSize: 16.20.sp,
-  //                             fontWeight: FontWeight.w500,
-  //                           ),
-  //                         ),
-  //                         SizedBox(height: 8.0.h),
-  //                         Divider(color: AppColors.infoGrey1),
-  //                         SizedBox(height: 10.h),
-  //                         TextView(
-  //                           text: des ?? '',
-  //                           textStyle: TextStyle(
-  //                             fontFamily: 'DMSans',
-  //                             color: AppColors.black,
-  //                             fontSize: 13.20.sp,
-  //                             fontWeight: FontWeight.w400,
-  //                           ),
-  //                         ),
-  //                         SizedBox(height: 20.h),
+  int getDistributedQuantity({
+    required int totalQuantity,
+    required int addressIndex,
+    required int addressCount,
+  }) {
+    if (addressCount <= 0 || totalQuantity <= 0) {
+      return 0;
+    }
 
-  //                         // 🔹 Save button
-  //                         SizedBox(
-  //                           width: double.infinity,
-  //                           child: ElevatedButton(
-  //                             onPressed: () {
-  //                               if (desLink != null) {
-  //                                 Navigator.push(
-  //                                   context,
-  //                                   MaterialPageRoute(
-  //                                     builder: (_) =>
-  //                                         WebViewScreen(imageUrl: desLink),
-  //                                   ),
-  //                                 );
-  //                               } else {
-  //                                 AppUtils.snackbar(
-  //                                   context,
-  //                                   message: 'No available link',
-  //                                   error: true,
-  //                                 );
-  //                               }
-  //                             },
-  //                             style: ElevatedButton.styleFrom(
-  //                               backgroundColor: AppColors.primary,
-  //                               padding: EdgeInsets.symmetric(vertical: 16),
-  //                               shape: RoundedRectangleBorder(
-  //                                 borderRadius: BorderRadius.circular(30),
-  //                               ),
-  //                             ),
-  //                             child: Row(
-  //                               mainAxisAlignment: MainAxisAlignment.center,
-  //                               crossAxisAlignment: CrossAxisAlignment.center,
-  //                               children: [
-  //                                 SvgPicture.asset(AppImage.open_link),
-  //                                 SizedBox(width: 4.w),
+    final baseQuantity = totalQuantity ~/ addressCount;
+    final remainder = totalQuantity % addressCount;
 
-  //                                 Text(
-  //                                   "Open Link",
-  //                                   style: TextStyle(
-  //                                     fontSize: 18.0,
-  //                                     fontFamily: 'DMSans',
-  //                                     color: AppColors.white,
-  //                                     fontWeight: FontWeight.w500,
-  //                                   ),
-  //                                 ),
-  //                               ],
-  //                             ),
-  //                           ),
-  //                         ),
-  //                       ],
-  //                     ),
-  //                   ),
-  //                 ),
-  //               ],
-  //             ),
-  //           );
-  //         },
-  //       );
-  //     },
-  //   );
-  // }
+    return baseQuantity + (addressIndex < remainder ? 1 : 0);
+  }
 
   void orderPaymentSuccess({context, double? amount}) {
     showDialog(
@@ -22610,8 +22582,8 @@ class PharmViewModel extends BaseViewModel {
           'some services.';
     }
     return 'Kindly upload and submit the required '
-          'documents for verification to unlock '
-          'distributor features.';
+        'documents for verification to unlock '
+        'distributor features.';
   }
 
   void pickImageDistributorKycCAC(BuildContext context) {
@@ -23793,5 +23765,4 @@ class PharmViewModel extends BaseViewModel {
       },
     );
   }
-
 }
