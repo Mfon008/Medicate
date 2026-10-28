@@ -331,9 +331,6 @@ class _PharmacyWholeSaleCheckoutState extends State<PharmacyWholeSaleCheckout> {
                                                         final product = model
                                                             .cartItems[index];
 
-                                                        // final originalQuantity =
-                                                        //     product.quantity ??
-                                                        //     0;
 
                                                         final distributedQuantity =
                                                             model
@@ -949,7 +946,7 @@ class _PharmacyWholeSaleCheckoutState extends State<PharmacyWholeSaleCheckout> {
                 Container(
                   margin: EdgeInsets.only(bottom: 20.w),
                   padding: EdgeInsets.symmetric(
-                    horizontal: 14.20.w,
+                    horizontal: 14.0.w,
                     vertical: 20.w,
                   ),
                   decoration: BoxDecoration(
@@ -1311,6 +1308,7 @@ class _PharmacyWholeSaleCheckoutState extends State<PharmacyWholeSaleCheckout> {
                                                                           return Column(
                                                                             children: [
                                                                               Row(
+                                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                                 children: [
                                                                                   SizedBox(
                                                                                     width: 180.w,
@@ -1327,79 +1325,84 @@ class _PharmacyWholeSaleCheckoutState extends State<PharmacyWholeSaleCheckout> {
                                                                                       ),
                                                                                     ),
                                                                                   ),
-                                                                                  SizedBox(
-                                                                                    width: 12.w,
-                                                                                  ),
-                                                                                  GestureDetector(
-                                                                                    onTap: () {
-                                                                                      model.updateSplitQuantity(
-                                                                                        address: e,
-                                                                                        product: cartItem,
-                                                                                        delta: -1,
-                                                                                        approvedAddresses: model.approvedAddresses,
-                                                                                      );
-                                                                                    },
-                                                                                    child: Container(
-                                                                                      width: 18.w,
-                                                                                      height: 18.w,
-                                                                                      decoration: BoxDecoration(
-                                                                                        color:
-                                                                                            quantity >
-                                                                                                0
-                                                                                            ? AppColors.buttonGrey1
-                                                                                            : AppColors.infoGrey1,
-                                                                                        shape: BoxShape.circle,
+                                                                                  // SizedBox(
+                                                                                  //   width: 10.w,
+                                                                                  // ),
+                                                                                  Row(
+                                                                                    mainAxisAlignment: MainAxisAlignment.end,
+                                                                                    children: [
+                                                                                      GestureDetector(
+                                                                                        onTap: () {
+                                                                                          model.updateSplitQuantity(
+                                                                                            address: e,
+                                                                                            product: cartItem,
+                                                                                            delta: -1,
+                                                                                            approvedAddresses: model.approvedAddresses,
+                                                                                          );
+                                                                                        },
+                                                                                        child: Container(
+                                                                                          width: 18.w,
+                                                                                          height: 18.w,
+                                                                                          decoration: BoxDecoration(
+                                                                                            color:
+                                                                                                quantity >
+                                                                                                    0
+                                                                                                ? AppColors.buttonGrey1
+                                                                                                : AppColors.infoGrey1,
+                                                                                            shape: BoxShape.circle,
+                                                                                          ),
+                                                                                          child: Icon(
+                                                                                            Icons.remove,
+                                                                                            color: AppColors.white,
+                                                                                            size: 15.sp,
+                                                                                          ),
+                                                                                        ),
                                                                                       ),
-                                                                                      child: Icon(
-                                                                                        Icons.remove,
-                                                                                        color: AppColors.white,
-                                                                                        size: 15.sp,
+                                                                                      SizedBox(
+                                                                                        width: 10.w,
                                                                                       ),
-                                                                                    ),
-                                                                                  ),
-                                                                                  SizedBox(
-                                                                                    width: 10.w,
-                                                                                  ),
-                                                                                  TextView(
-                                                                                    text: quantity.toString(),
-                                                                                    textOverflow: TextOverflow.ellipsis,
-                                                                                    textStyle: TextStyle(
-                                                                                      fontFamily: 'DMSans',
-                                                                                      fontSize: 14.42.sp,
-                                                                                      fontWeight: FontWeight.w500,
-                                                                                      color: AppColors.reminder,
-                                                                                    ),
-                                                                                  ),
-                                                                                  SizedBox(
-                                                                                    width: 10.w,
-                                                                                  ),
-                                                                                  GestureDetector(
-                                                                                    onTap: () {
-                                                                                      final updated = model.updateSplitQuantity(
-                                                                                        address: e,
-                                                                                        product: cartItem,
-                                                                                        delta: 1,
-                                                                                        approvedAddresses: model.approvedAddresses,
-                                                                                      );
-
-                                                                                      if (!updated) {
-                                                                                        // No units are available to transfer from another address.
-                                                                                        // Optionally show a SnackBar explaining this.
-                                                                                      }
-                                                                                    },
-                                                                                    child: Container(
-                                                                                      width: 18.w,
-                                                                                      height: 18.w,
-                                                                                      decoration: BoxDecoration(
-                                                                                        color: AppColors.primary,
-                                                                                        shape: BoxShape.circle,
+                                                                                      TextView(
+                                                                                        text: quantity.toString(),
+                                                                                        textOverflow: TextOverflow.ellipsis,
+                                                                                        textStyle: TextStyle(
+                                                                                          fontFamily: 'DMSans',
+                                                                                          fontSize: 14.42.sp,
+                                                                                          fontWeight: FontWeight.w500,
+                                                                                          color: AppColors.reminder,
+                                                                                        ),
                                                                                       ),
-                                                                                      child: Icon(
-                                                                                        Icons.add,
-                                                                                        color: AppColors.white,
-                                                                                        size: 15.sp,
+                                                                                      SizedBox(
+                                                                                        width: 10.w,
                                                                                       ),
-                                                                                    ),
+                                                                                      GestureDetector(
+                                                                                        onTap: () {
+                                                                                          final updated = model.updateSplitQuantity(
+                                                                                            address: e,
+                                                                                            product: cartItem,
+                                                                                            delta: 1,
+                                                                                            approvedAddresses: model.approvedAddresses,
+                                                                                          );
+                                                                                      
+                                                                                          if (!updated) {
+                                                                                            // No units are available to transfer from another address.
+                                                                                            // Optionally show a SnackBar explaining this.
+                                                                                          }
+                                                                                        },
+                                                                                        child: Container(
+                                                                                          width: 18.w,
+                                                                                          height: 18.w,
+                                                                                          decoration: BoxDecoration(
+                                                                                            color: AppColors.primary,
+                                                                                            shape: BoxShape.circle,
+                                                                                          ),
+                                                                                          child: Icon(
+                                                                                            Icons.add,
+                                                                                            color: AppColors.white,
+                                                                                            size: 15.sp,
+                                                                                          ),
+                                                                                        ),
+                                                                                      ),
+                                                                                    ],
                                                                                   ),
                                                                                 ],
                                                                               ),
