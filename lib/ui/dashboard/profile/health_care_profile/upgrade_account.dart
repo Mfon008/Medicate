@@ -909,9 +909,9 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     model
-                                            .getMarketplaceUpgradeResponseModel
-                                            ?.data
-                                            ?.status
+                                                .getMarketplaceUpgradeResponseModel
+                                                ?.data
+                                                ?.status
                                                 ?.toLowerCase() ==
                                             'approved'
                                         ? Container(
@@ -933,9 +933,9 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                             size: 18.90.sp,
                                             color: model.kycStatusColorIcon(
                                               model
-                                            .getMarketplaceUpgradeResponseModel
-                                            ?.data
-                                            ?.status ??
+                                                      .getMarketplaceUpgradeResponseModel
+                                                      ?.data
+                                                      ?.status ??
                                                   "",
                                             ),
                                           ),
@@ -945,9 +945,9 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                       child: Text(
                                         model.upgradeStatusText(
                                           model
-                                            .getMarketplaceUpgradeResponseModel
-                                            ?.data
-                                            ?.status ??
+                                                  .getMarketplaceUpgradeResponseModel
+                                                  ?.data
+                                                  ?.status ??
                                               "",
                                         ),
                                         style: TextStyle(

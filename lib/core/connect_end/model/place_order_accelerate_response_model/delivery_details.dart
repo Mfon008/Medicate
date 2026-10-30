@@ -4,18 +4,24 @@ part 'delivery_details.g.dart';
 
 @JsonSerializable()
 class DeliveryDetails {
+  String? recipientName;
+  String? recipientIdType;
+  String? tenantId;
+  String? name;
+  String? address;
+  String? phoneNumber;
   String? state;
   String? lga;
-  String? deliveryAddress;
-  String? contactPhone;
-  String? orderNotes;
 
   DeliveryDetails({
+    this.recipientName,
+    this.recipientIdType,
+    this.tenantId,
+    this.name,
+    this.address,
+    this.phoneNumber,
     this.state,
     this.lga,
-    this.deliveryAddress,
-    this.contactPhone,
-    this.orderNotes,
   });
 
   factory DeliveryDetails.fromJson(Map<String, dynamic> json) {

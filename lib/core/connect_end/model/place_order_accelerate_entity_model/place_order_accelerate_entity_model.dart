@@ -6,9 +6,9 @@ class PlaceOrderAccelerateEntityModel {
   DeliveryDetails? deliveryDetails;
   String? paymentMethod;
   String? callbackUrl;
-  int? expectedSubtotal;
+  double? expectedSubtotal;
   int? expectedDeliveryFee;
-  int? expectedTotal;
+  double? expectedTotal;
   String? stateCode;
   String? lgaCode;
   String? timeBlockStart;
@@ -44,9 +44,9 @@ class PlaceOrderAccelerateEntityModel {
             ),
       paymentMethod: json['paymentMethod'] as String?,
       callbackUrl: json['callbackUrl'] as String?,
-      expectedSubtotal: json['expectedSubtotal'] as int?,
+      expectedSubtotal: json['expectedSubtotal'] as double?,
       expectedDeliveryFee: json['expectedDeliveryFee'] as int?,
-      expectedTotal: json['expectedTotal'] as int?,
+      expectedTotal: json['expectedTotal'] as double?,
       stateCode: json['stateCode'] as String?,
       lgaCode: json['lgaCode'] as String?,
       timeWindow: json['timeWindow'] as String?,

@@ -16,6 +16,7 @@ import 'package:medicate_app/core/connect_end/model/upload_image_response_model/
 import 'package:medicate_app/core/connect_end/model/wholesale_add_to_cart_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/wholesale_get_product_added_to_cart_response_model/wholesale_get_product_added_to_cart_response_model.dart';
 import '../connect_end/model/business_addresses_entity.dart';
+import '../connect_end/model/checkout_split_delivery_option_entity_model/checkout_split_delivery_option_entity_model.dart';
 import '../connect_end/model/create_payment_wallet_entity_model.dart';
 import '../connect_end/model/create_payment_wallet_model/create_payment_wallet_model.dart';
 import '../connect_end/model/create_reminder_response_model/create_reminder_response_model.dart';
@@ -24,6 +25,7 @@ import '../connect_end/model/create_user_entity_model.dart';
 import '../connect_end/model/distributor_wholesale_category_model/distributor_wholesale_category_model.dart';
 import '../connect_end/model/forgot_password_response_model/forgot_password_response_model.dart';
 import '../connect_end/model/get_checkout_delivery_option_response_model/get_checkout_delivery_option_response_model.dart';
+import '../connect_end/model/get_checkout_delivery_option_split_response_model/get_checkout_delivery_option_split_response_model.dart';
 import '../connect_end/model/get_created_user_response_model/get_created_user_response_model.dart';
 import '../connect_end/model/get_marketplace_upgrade_response_model/get_marketplace_upgrade_response_model.dart';
 import '../connect_end/model/get_reminder_by_id/get_reminder_by_id.dart';
@@ -44,8 +46,14 @@ import '../connect_end/model/pay_with_wallet_response_model/pay_with_wallet_resp
 import '../connect_end/model/pharmacy_login_response_model/pharmacy_login_response_model.dart';
 import '../connect_end/model/place_order_accelerate_entity_model/place_order_accelerate_entity_model.dart';
 import '../connect_end/model/place_order_accelerate_response_model/place_order_accelerate_response_model.dart';
+import '../connect_end/model/place_order_accelerate_split_entity_model/place_order_accelerate_split_entity_model.dart';
+import '../connect_end/model/place_order_accelerate_split_response_model/place_order_accelerate_split_response_model.dart';
+import '../connect_end/model/quote_instant_split_delivery_entity_model/quote_instant_split_delivery_entity_model.dart';
+import '../connect_end/model/quote_instant_split_delivery_response_model/quote_instant_split_delivery_response_model.dart';
 import '../connect_end/model/quote_schedule_delivery_eneity_model.dart';
 import '../connect_end/model/quote_schedule_delivery_response_model/quote_schedule_delivery_response_model.dart';
+import '../connect_end/model/quote_schedule_split_delivery_entity_model/quote_schedule_split_delivery_entity_model.dart';
+import '../connect_end/model/quote_schedule_split_delivery_response_model/quote_schedule_split_delivery_response_model.dart';
 import '../connect_end/model/resend_otp_entity_model.dart';
 import '../connect_end/model/resend_otp_response_model/resend_otp_response_model.dart';
 import '../connect_end/model/reset_password_entity_model.dart';
@@ -1048,6 +1056,23 @@ class PharmApi {
     }
   }
 
+  Future<QuoteInstantSplitDeliveryResponseModel> quoteInstantSplitDelivery(
+    QuoteInstantSplitDeliveryEntityModel? instantDelivery,
+  ) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.wholesale_checkout_quote,
+        RequestMethod.post,
+        data: instantDelivery?.toJson(),
+      );
+      logger.d(response.data);
+      return QuoteInstantSplitDeliveryResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
   Future<QuoteScheduleDeliveryResponseModel> quoteScheduleDelivery(
     QuoteScheduleDeliveryEneityModel? scheduleDelivery,
   ) async {
@@ -1065,6 +1090,23 @@ class PharmApi {
     }
   }
 
+  Future<QuoteScheduleSplitDeliveryResponseModel> quoteScheduleSplitDelivery(
+    QuoteScheduleSplitDeliveryEntityModel? scheduleDelivery,
+  ) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.wholesale_checkout_quote,
+        RequestMethod.post,
+        data: scheduleDelivery?.toJson(),
+      );
+      logger.d(response.data);
+      return QuoteScheduleSplitDeliveryResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
   Future<PlaceOrderAccelerateResponseModel> placeOrderAccelerate(
     PlaceOrderAccelerateEntityModel? placeOrderAccelerate,
   ) async {
@@ -1076,6 +1118,23 @@ class PharmApi {
       );
       logger.d(response.data);
       return PlaceOrderAccelerateResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<PlaceOrderAccelerateSplitResponseModel> placeOrderAccelerateSplit(
+    PlaceOrderAccelerateSplitEntityModel? placeOrderAccelerate,
+  ) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.wholesale_checkout,
+        RequestMethod.post,
+        data: placeOrderAccelerate?.toJson(),
+      );
+      logger.d(response.data);
+      return PlaceOrderAccelerateSplitResponseModel.fromJson(response.data);
     } catch (e) {
       logger.d("response:$e");
       rethrow;
@@ -1183,6 +1242,26 @@ class PharmApi {
       );
       logger.d(response.data);
       return GetCheckoutDeliveryOptionResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<GetCheckoutDeliveryOptionSplitResponseModel>
+  checkoutSplitDeliveryOption(
+    CheckoutSplitDeliveryOptionEntityModel checkoutSplitDeliveryOption,
+  ) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.wholesale_checkout_delivery_options,
+        RequestMethod.post,
+        data: checkoutSplitDeliveryOption.toJson(),
+      );
+      logger.d(response.data);
+      return GetCheckoutDeliveryOptionSplitResponseModel.fromJson(
+        response.data,
+      );
     } catch (e) {
       logger.d("response:$e");
       rethrow;

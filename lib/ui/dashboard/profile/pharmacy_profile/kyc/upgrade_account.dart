@@ -1585,8 +1585,11 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                                   model.secondLevelDistributorKycEntityModelCAC!.distributor?.documents?.cacCertificate !=
                                                                           null
                                                                       ? Padding(
-                                                                        padding:  EdgeInsets.only(left:10.0.w),
-                                                                        child: GestureDetector(
+                                                                          padding: EdgeInsets.only(
+                                                                            left:
+                                                                                10.0.w,
+                                                                          ),
+                                                                          child: GestureDetector(
                                                                             onTap: () => model.pickImageDistributorKycCAC(
                                                                               context,
                                                                             ),
@@ -1604,7 +1607,7 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                                                     AppImage.upload_arr_up,
                                                                                   ),
                                                                           ),
-                                                                      )
+                                                                        )
                                                                       : SizedBox.shrink(),
                                                                   SizedBox(
                                                                     width:
@@ -1858,8 +1861,11 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                                           model.secondLevelDistributorKycEntityModelPharmLin!.distributor!.documents!.pharmaceuticalDistributionLicense !=
                                                                               null
                                                                       ? Padding(
-                                                                        padding:  EdgeInsets.only(left:10.0.w),
-                                                                        child: GestureDetector(
+                                                                          padding: EdgeInsets.only(
+                                                                            left:
+                                                                                10.0.w,
+                                                                          ),
+                                                                          child: GestureDetector(
                                                                             onTap: () => model.pickImageDistributorKycPharmLin(
                                                                               context,
                                                                             ),
@@ -1877,7 +1883,7 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                                                     AppImage.upload_arr_up,
                                                                                   ),
                                                                           ),
-                                                                      )
+                                                                        )
                                                                       : SizedBox.shrink(),
                                                                   SizedBox(
                                                                     width:
@@ -2130,8 +2136,11 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                                   model.secondLevelDistributorKycEntityModelNAF?.distributor?.documents?.nafdacPermit !=
                                                                           null
                                                                       ? Padding(
-                                                                        padding:  EdgeInsets.only(left:10.0.w),
-                                                                        child: GestureDetector(
+                                                                          padding: EdgeInsets.only(
+                                                                            left:
+                                                                                10.0.w,
+                                                                          ),
+                                                                          child: GestureDetector(
                                                                             onTap: () => model.pickImageDistributorKycNAFPermit(
                                                                               context,
                                                                             ),
@@ -2149,7 +2158,7 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                                                     AppImage.upload_arr_up,
                                                                                   ),
                                                                           ),
-                                                                      )
+                                                                        )
                                                                       : SizedBox.shrink(),
                                                                   SizedBox(
                                                                     width:
@@ -2400,8 +2409,11 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                                   model.secondLevelDistributorKycEntityModelPharmCouncilLin?.distributor?.documents?.pharmacyCouncilLicense !=
                                                                           null
                                                                       ? Padding(
-                                                                        padding:  EdgeInsets.only(left:10.0.w),
-                                                                        child: GestureDetector(
+                                                                          padding: EdgeInsets.only(
+                                                                            left:
+                                                                                10.0.w,
+                                                                          ),
+                                                                          child: GestureDetector(
                                                                             onTap: () => model.pickImageDistributorKycPharmCouncilLin(
                                                                               context,
                                                                             ),
@@ -2419,7 +2431,7 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                                                     AppImage.upload_arr_up,
                                                                                   ),
                                                                           ),
-                                                                      )
+                                                                        )
                                                                       : SizedBox.shrink(),
                                                                   SizedBox(
                                                                     width:
@@ -2671,8 +2683,11 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                                   model.secondLevelDistributorKycEntityModelLogo?.distributor?.documents?.companyLogo !=
                                                                           null
                                                                       ? Padding(
-                                                                        padding:  EdgeInsets.only(left:10.0.w),
-                                                                        child: GestureDetector(
+                                                                          padding: EdgeInsets.only(
+                                                                            left:
+                                                                                10.0.w,
+                                                                          ),
+                                                                          child: GestureDetector(
                                                                             onTap: () => model.pickImageDistributorKycLogo(
                                                                               context,
                                                                             ),
@@ -2690,7 +2705,7 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                                                     AppImage.upload_arr_up,
                                                                                   ),
                                                                           ),
-                                                                      )
+                                                                        )
                                                                       : SizedBox.shrink(),
                                                                   SizedBox(
                                                                     width:
@@ -4061,7 +4076,11 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                                   model.secondLevelDistributorKycEntityModelManCAC?.manufacturer?.documents?.companyLogo !=
                                                                           null
                                                                       ? Padding(
-                                                                        padding:  EdgeInsets.only(left:10.0.w),child: GestureDetector(
+                                                                          padding: EdgeInsets.only(
+                                                                            left:
+                                                                                10.0.w,
+                                                                          ),
+                                                                          child: GestureDetector(
                                                                             onTap: () => model.pickImageManufacturerKycCAC(
                                                                               context,
                                                                             ),
@@ -4079,7 +4098,7 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                                                     AppImage.upload_arr_up,
                                                                                   ),
                                                                           ),
-                                                                      )
+                                                                        )
                                                                       : SizedBox.shrink(),
                                                                   SizedBox(
                                                                     width:
@@ -4338,8 +4357,11 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                                   model.secondLevelDistributorKycEntityModelManGMP?.manufacturer?.documents?.gmpCertificate !=
                                                                           null
                                                                       ? Padding(
-                                                                        padding:  EdgeInsets.only(left:10.0.w),
-                                                                        child: GestureDetector(
+                                                                          padding: EdgeInsets.only(
+                                                                            left:
+                                                                                10.0.w,
+                                                                          ),
+                                                                          child: GestureDetector(
                                                                             onTap: () => model.pickImageManufacturerKycGMP(
                                                                               context,
                                                                             ),
@@ -4357,7 +4379,7 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                                                     AppImage.upload_arr_up,
                                                                                   ),
                                                                           ),
-                                                                      )
+                                                                        )
                                                                       : SizedBox.shrink(),
                                                                   SizedBox(
                                                                     width:
@@ -4376,7 +4398,6 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                                           ),
                                                                         )
                                                                       : SizedBox.shrink(),
-                                                                
                                                                 ],
                                                               ),
                                                             )
@@ -4616,8 +4637,11 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                                   model.secondLevelDistributorKycEntityModelManNAF?.manufacturer?.documents?.nafdacManufacturingLicense !=
                                                                           null
                                                                       ? Padding(
-                                                                        padding:  EdgeInsets.only(left:10.0.w),
-                                                                        child: GestureDetector(
+                                                                          padding: EdgeInsets.only(
+                                                                            left:
+                                                                                10.0.w,
+                                                                          ),
+                                                                          child: GestureDetector(
                                                                             onTap: () => model.pickImageManufacturerKycNAFManLin(
                                                                               context,
                                                                             ),
@@ -4635,7 +4659,7 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                                                     AppImage.upload_arr_up,
                                                                                   ),
                                                                           ),
-                                                                      )
+                                                                        )
                                                                       : SizedBox.shrink(),
                                                                   SizedBox(
                                                                     width:
@@ -4895,8 +4919,11 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                                   model.secondLevelDistributorKycEntityModelManProd?.manufacturer?.documents?.productRegistrationEvidence !=
                                                                           null
                                                                       ? Padding(
-                                                                        padding:  EdgeInsets.only(left:10.0.w),
-                                                                        child: GestureDetector(
+                                                                          padding: EdgeInsets.only(
+                                                                            left:
+                                                                                10.0.w,
+                                                                          ),
+                                                                          child: GestureDetector(
                                                                             onTap: () => model.pickImageManufacturerKycProdRegEvi(
                                                                               context,
                                                                             ),
@@ -4914,7 +4941,7 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                                                     AppImage.upload_arr_up,
                                                                                   ),
                                                                           ),
-                                                                      )
+                                                                        )
                                                                       : SizedBox.shrink(),
                                                                   SizedBox(
                                                                     width:
@@ -5173,8 +5200,11 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                                   model.secondLevelDistributorKycEntityModelManLogo?.manufacturer?.documents?.companyLogo !=
                                                                           null
                                                                       ? Padding(
-                                                                        padding:  EdgeInsets.only(left:10.0.w),
-                                                                        child: GestureDetector(
+                                                                          padding: EdgeInsets.only(
+                                                                            left:
+                                                                                10.0.w,
+                                                                          ),
+                                                                          child: GestureDetector(
                                                                             onTap: () => model.pickImageManufacturerKycComLogo(
                                                                               context,
                                                                             ),
@@ -5192,7 +5222,7 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                                                     AppImage.upload_arr_up,
                                                                                   ),
                                                                           ),
-                                                                      )
+                                                                        )
                                                                       : SizedBox.shrink(),
                                                                   SizedBox(
                                                                     width:
@@ -5819,8 +5849,11 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                                   model.secondLevelDistributorKycEntityModelImpCAC?.importer?.documents?.cacCertificate !=
                                                                           null
                                                                       ? Padding(
-                                                                        padding: EdgeInsets.only(left:10.0.w),
-                                                                        child: GestureDetector(
+                                                                          padding: EdgeInsets.only(
+                                                                            left:
+                                                                                10.0.w,
+                                                                          ),
+                                                                          child: GestureDetector(
                                                                             onTap: () => model.pickImageImporterKycCAC(
                                                                               context,
                                                                             ),
@@ -5838,7 +5871,7 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                                                     AppImage.upload_arr_up,
                                                                                   ),
                                                                           ),
-                                                                      )
+                                                                        )
                                                                       : SizedBox.shrink(),
                                                                   SizedBox(
                                                                     width:
@@ -6097,8 +6130,11 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                                   model.secondLevelDistributorKycEntityModelImpPermit?.importer?.documents?.importPermit !=
                                                                           null
                                                                       ? Padding(
-                                                                        padding:  EdgeInsets.only(left:10.0.w),
-                                                                        child: GestureDetector(
+                                                                          padding: EdgeInsets.only(
+                                                                            left:
+                                                                                10.0.w,
+                                                                          ),
+                                                                          child: GestureDetector(
                                                                             onTap: () => model.pickImageImporterKycPermit(
                                                                               context,
                                                                             ),
@@ -6116,7 +6152,7 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                                                     AppImage.upload_arr_up,
                                                                                   ),
                                                                           ),
-                                                                      )
+                                                                        )
                                                                       : SizedBox.shrink(),
                                                                   SizedBox(
                                                                     width:
@@ -6374,8 +6410,11 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                                   model.secondLevelDistributorKycEntityModelImpManAuthLetter?.importer?.documents?.manufacturerAuthorizationLetter !=
                                                                           null
                                                                       ? Padding(
-                                                                        padding:  EdgeInsets.only(left:10.0.w),
-                                                                        child: GestureDetector(
+                                                                          padding: EdgeInsets.only(
+                                                                            left:
+                                                                                10.0.w,
+                                                                          ),
+                                                                          child: GestureDetector(
                                                                             onTap: () => model.pickImageImporterKycManAuthLetter(
                                                                               context,
                                                                             ),
@@ -6393,7 +6432,7 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                                                     AppImage.upload_arr_up,
                                                                                   ),
                                                                           ),
-                                                                      )
+                                                                        )
                                                                       : SizedBox.shrink(),
                                                                   SizedBox(
                                                                     width:
@@ -6651,8 +6690,11 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                                   model.secondLevelDistributorKycEntityModelImpLogo?.importer?.documents?.companyLogo !=
                                                                           null
                                                                       ? Padding(
-                                                                        padding:  EdgeInsets.only(left:10.0.w),
-                                                                        child: GestureDetector(
+                                                                          padding: EdgeInsets.only(
+                                                                            left:
+                                                                                10.0.w,
+                                                                          ),
+                                                                          child: GestureDetector(
                                                                             onTap: () => model.pickImageImporterKycLogo(
                                                                               context,
                                                                             ),
@@ -6670,7 +6712,7 @@ class _UpgradeAccountState extends State<UpgradeAccount> {
                                                                                     AppImage.upload_arr_up,
                                                                                   ),
                                                                           ),
-                                                                      )
+                                                                        )
                                                                       : SizedBox.shrink(),
                                                                   SizedBox(
                                                                     width:

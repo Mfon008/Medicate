@@ -401,7 +401,9 @@ class ManufacturerViewModel extends BaseViewModel {
 
   TextEditingController stateController = TextEditingController();
   TextEditingController lgaController = TextEditingController();
-  TextEditingController countryController = TextEditingController(text:'Nigeria');
+  TextEditingController countryController = TextEditingController(
+    text: 'Nigeria',
+  );
   TextEditingController businessAddController = TextEditingController();
 
   bool isSeeMore = false;
@@ -410,7 +412,7 @@ class ManufacturerViewModel extends BaseViewModel {
 
   int? coverageAreaIndex;
 
-  bool desAddInfoTap=false;
+  bool desAddInfoTap = false;
 
   void pickImage(BuildContext context) {
     try {

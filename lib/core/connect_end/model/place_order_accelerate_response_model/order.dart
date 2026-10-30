@@ -4,6 +4,7 @@ import 'delivery_breakdown.dart';
 import 'delivery_details.dart';
 import 'item.dart';
 import 'payment.dart';
+import 'status_counts.dart';
 
 part 'order.g.dart';
 
@@ -11,44 +12,58 @@ part 'order.g.dart';
 class Order {
   String? id;
   String? orderNumber;
-  String? buyerTenantId;
-  String? buyerUserId;
+  DateTime? placedAt;
   String? status;
-  List<Item>? items;
+  String? statusLabel;
+  String? badgeText;
+  StatusCounts? statusCounts;
+  int? distributorCount;
+  String? paymentStatus;
+  String? paymentStatusLabel;
   String? deliveryMethod;
-  DateTime? deliveryDate;
+  String? deliveryMethodLabel;
+  String? deliveryDate;
   String? timeWindow;
   String? timeWindowLabel;
   DeliveryDetails? deliveryDetails;
-  int? subtotal;
+  String? orderNotes;
+  List<Item>? items;
+  double? subtotal;
   int? deliveryFee;
-  int? total;
+  List<DeliveryBreakdown>? deliveryBreakdown;
+  bool? splitOrder;
+  List<dynamic>? deliveries;
+  double? total;
   String? currency;
   Payment? payment;
-  DateTime? createdAt;
-  DateTime? updatedAt;
-  List<DeliveryBreakdown>? deliveryBreakdown;
 
   Order({
     this.id,
     this.orderNumber,
-    this.buyerTenantId,
-    this.buyerUserId,
+    this.placedAt,
     this.status,
-    this.items,
+    this.statusLabel,
+    this.badgeText,
+    this.statusCounts,
+    this.distributorCount,
+    this.paymentStatus,
+    this.paymentStatusLabel,
     this.deliveryMethod,
+    this.deliveryMethodLabel,
     this.deliveryDate,
     this.timeWindow,
     this.timeWindowLabel,
     this.deliveryDetails,
+    this.orderNotes,
+    this.items,
     this.subtotal,
     this.deliveryFee,
+    this.deliveryBreakdown,
+    this.splitOrder,
+    this.deliveries,
     this.total,
     this.currency,
     this.payment,
-    this.createdAt,
-    this.updatedAt,
-    this.deliveryBreakdown,
   });
 
   factory Order.fromJson(Map<String, dynamic> json) => _$OrderFromJson(json);

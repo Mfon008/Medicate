@@ -6,7 +6,9 @@ part of 'market_documents.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-MarketDocuments _$MarketDocumentsFromJson(Map<String, dynamic> json) => MarketDocuments(
+MarketDocuments _$MarketDocumentsFromJson(
+  Map<String, dynamic> json,
+) => MarketDocuments(
   cacCertificate: json['cacCertificate'] == null
       ? null
       : CacCertificate.fromJson(json['cacCertificate'] as Map<String, dynamic>),
@@ -51,7 +53,9 @@ MarketDocuments _$MarketDocumentsFromJson(Map<String, dynamic> json) => MarketDo
         ),
 );
 
-Map<String, dynamic> _$MarketDocumentsToJson(MarketDocuments instance) => <String, dynamic>{
+Map<String, dynamic> _$MarketDocumentsToJson(
+  MarketDocuments instance,
+) => <String, dynamic>{
   'cacCertificate': instance.cacCertificate,
   'pharmaceuticalDistributionLicense':
       instance.pharmaceuticalDistributionLicense,

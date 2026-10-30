@@ -7,6 +7,7 @@ import 'package:medicate_app/core/connect_end/model/get_created_user_response_mo
 import '../../core_folder/app/app.locator.dart';
 import '../model/business_addresses_entity.dart';
 import '../model/checkout_delivery_option_entity_model.dart';
+import '../model/checkout_split_delivery_option_entity_model/checkout_split_delivery_option_entity_model.dart';
 import '../model/create_payment_wallet_entity_model.dart';
 import '../model/create_payment_wallet_model/create_payment_wallet_model.dart';
 import '../model/create_reminder_response_model/create_reminder_response_model.dart';
@@ -15,6 +16,7 @@ import '../model/create_user_entity_model.dart';
 import '../model/distributor_wholesale_category_model/distributor_wholesale_category_model.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
 import '../model/get_checkout_delivery_option_response_model/get_checkout_delivery_option_response_model.dart';
+import '../model/get_checkout_delivery_option_split_response_model/get_checkout_delivery_option_split_response_model.dart';
 import '../model/get_marketplace_upgrade_response_model/get_marketplace_upgrade_response_model.dart';
 import '../model/get_pharmacy_kyc_response_model/get_pharmacy_kyc_response_model.dart';
 import '../model/get_reminder_by_id/get_reminder_by_id.dart';
@@ -36,12 +38,18 @@ import '../model/pay_with_wallet_response_model/pay_with_wallet_response_model.d
 import '../model/pharmacy_login_response_model/pharmacy_login_response_model.dart';
 import '../model/place_order_accelerate_entity_model/place_order_accelerate_entity_model.dart';
 import '../model/place_order_accelerate_response_model/place_order_accelerate_response_model.dart';
+import '../model/place_order_accelerate_split_entity_model/place_order_accelerate_split_entity_model.dart';
+import '../model/place_order_accelerate_split_response_model/place_order_accelerate_split_response_model.dart';
 import '../model/place_order_wallet_entity_model/place_order_wallet_entity_model.dart';
 import '../model/place_order_wallet_response_model/place_order_wallet_response_model.dart';
 import '../model/quote_instant_delivery_entity_model.dart';
 import '../model/quote_instant_delivery_response_model/quote_instant_delivery_response_model.dart';
+import '../model/quote_instant_split_delivery_entity_model/quote_instant_split_delivery_entity_model.dart';
+import '../model/quote_instant_split_delivery_response_model/quote_instant_split_delivery_response_model.dart';
 import '../model/quote_schedule_delivery_eneity_model.dart';
 import '../model/quote_schedule_delivery_response_model/quote_schedule_delivery_response_model.dart';
+import '../model/quote_schedule_split_delivery_entity_model/quote_schedule_split_delivery_entity_model.dart';
+import '../model/quote_schedule_split_delivery_response_model/quote_schedule_split_delivery_response_model.dart';
 import '../model/resend_otp_entity_model.dart';
 import '../model/resend_otp_response_model/resend_otp_response_model.dart';
 import '../model/reset_password_entity_model.dart';
@@ -279,12 +287,23 @@ class PharmContractsImpl {
   Future<QuoteInstantDeliveryResponseModel> quoteInstantDelivery(
     QuoteInstantDeliveryEntityModel? instantDelivery,
   ) async => await _api.quoteInstantDelivery(instantDelivery);
+  Future<QuoteInstantSplitDeliveryResponseModel> quoteInstantSplitDelivery(
+    QuoteInstantSplitDeliveryEntityModel? instantSplitDelivery,
+  ) async => await _api.quoteInstantSplitDelivery(instantSplitDelivery);
   Future<QuoteScheduleDeliveryResponseModel> quoteScheduleDelivery(
     QuoteScheduleDeliveryEneityModel? scheduleDelivery,
   ) async => await _api.quoteScheduleDelivery(scheduleDelivery);
+  Future<QuoteScheduleSplitDeliveryResponseModel> quoteScheduleSplitDelivery(
+    QuoteScheduleSplitDeliveryEntityModel? scheduleSplitDelivery,
+  ) async => await _api.quoteScheduleSplitDelivery(scheduleSplitDelivery);
+
   Future<PlaceOrderAccelerateResponseModel> placeOrderAccelerate(
     PlaceOrderAccelerateEntityModel? placeOrderAccelerate,
   ) async => await _api.placeOrderAccelerate(placeOrderAccelerate);
+
+  Future<PlaceOrderAccelerateSplitResponseModel> placeOrderAccelerateSplit(
+    PlaceOrderAccelerateSplitEntityModel? placeOrderAccelerate,
+  ) async => await _api.placeOrderAccelerateSplit(placeOrderAccelerate);
   Future<PlaceOrderWalletResponseModel> placeOrderWallet(
     PlaceOrderWalletEntityModel? placeOrderWalletync,
   ) async => await _api.placeOrderWallet(placeOrderWalletync);
@@ -306,6 +325,11 @@ class PharmContractsImpl {
   Future<GetCheckoutDeliveryOptionResponseModel> checkoutDeliveryOption(
     CheckoutDeliveryOptionEntityModel checkoutDeliveryOption,
   ) async => await _api.checkoutDeliveryOption(checkoutDeliveryOption);
+  Future<GetCheckoutDeliveryOptionSplitResponseModel>
+  checkoutSplitDeliveryOption(
+    CheckoutSplitDeliveryOptionEntityModel checkoutSplitDeliveryOption,
+  ) async =>
+      await _api.checkoutSplitDeliveryOption(checkoutSplitDeliveryOption);
 
   Future<dynamic> updatePrimaryBusinessAddress(String id) async =>
       await _api.updatePrimaryBusinessAddress(id);
@@ -329,12 +353,10 @@ class PharmContractsImpl {
       await _api.retryPayment(wholesaleOrderId);
   Future<dynamic> saveMarketplaceProfileUpgrade(
     SecondLevelDistributorKycEntityModel kycEntity,
-  ) async =>
-      await _api.saveMarketplaceProfileUpgrade(kycEntity);
+  ) async => await _api.saveMarketplaceProfileUpgrade(kycEntity);
   Future<dynamic> submitMarketplaceProfileUpgrade(
     SecondLevelDistributorKycEntityModel kycEntity,
-  ) async =>
-      await _api.submitMarketplaceProfileUpgrade(kycEntity);
+  ) async => await _api.submitMarketplaceProfileUpgrade(kycEntity);
   Future<GetMarketplaceUpgradeResponseModel> getMarketplaceUpgrade() async =>
       await _api.getMarketplaceUpgrade();
 }

@@ -2835,7 +2835,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                   ),
                                                                   child: TextView(
                                                                     text:
-                                                                        '${model.getDistributorKycResponseModel?.data?.level2?.distributor?.coverageAreas?.length??0}',
+                                                                        '${model.getDistributorKycResponseModel?.data?.level2?.distributor?.coverageAreas?.length ?? 0}',
                                                                     textStyle: TextStyle(
                                                                       fontSize:
                                                                           12.6.sp,
@@ -2852,19 +2852,21 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                               ],
                                                             ),
                                                             IconButton(
-                                                              onPressed:  model
-                                                                      .getDistributorKycResponseModel!
-                                                                      .data!
-                                                                      .level2!
-                                                                      .distributor!
-                                                                      .coverageAreas!=null &&
+                                                              onPressed:
                                                                   model
-                                                                      .getDistributorKycResponseModel!
-                                                                      .data!
-                                                                      .level2!
-                                                                      .distributor!
-                                                                      .coverageAreas!
-                                                                      .isNotEmpty
+                                                                              .getDistributorKycResponseModel!
+                                                                              .data!
+                                                                              .level2!
+                                                                              .distributor!
+                                                                              .coverageAreas !=
+                                                                          null &&
+                                                                      model
+                                                                          .getDistributorKycResponseModel!
+                                                                          .data!
+                                                                          .level2!
+                                                                          .distributor!
+                                                                          .coverageAreas!
+                                                                          .isNotEmpty
                                                                   ? () {}
                                                                   : () {
                                                                       model
@@ -2879,19 +2881,16 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                     },
                                                               icon: Icon(
                                                                 Icons.add,
-                                                                color:model
-                                                                      .getDistributorKycResponseModel!
-                                                                      .data!
-                                                                      .level2!
-                                                                      .distributor!
-                                                                      .coverageAreas==null ||
-                                                                    model
-                                                                        .getDistributorKycResponseModel!
-                                                                        .data!
-                                                                        .level2!
-                                                                        .distributor!
-                                                                        .coverageAreas!
-                                                                        .isNotEmpty
+                                                                color:
+                                                                    model.getDistributorKycResponseModel!.data!.level2!.distributor!.coverageAreas ==
+                                                                            null ||
+                                                                        model
+                                                                            .getDistributorKycResponseModel!
+                                                                            .data!
+                                                                            .level2!
+                                                                            .distributor!
+                                                                            .coverageAreas!
+                                                                            .isNotEmpty
                                                                     ? AppColors
                                                                           .reminder1
                                                                           .withOpacity(
@@ -2913,16 +2912,20 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                   .getDistributorKycResponseModel!
                                                                   .data!
                                                                   .level2 !=
-                                                              null &&model
-                                                                      .getDistributorKycResponseModel!
-                                                                      .data!
-                                                                      .level2!
-                                                                      .distributor!=null &&  model
-                                                                      .getDistributorKycResponseModel!
-                                                                      .data!
-                                                                      .level2!
-                                                                      .distributor!
-                                                                      .coverageAreas!=null &&
+                                                              null &&
+                                                          model
+                                                                  .getDistributorKycResponseModel!
+                                                                  .data!
+                                                                  .level2!
+                                                                  .distributor !=
+                                                              null &&
+                                                          model
+                                                                  .getDistributorKycResponseModel!
+                                                                  .data!
+                                                                  .level2!
+                                                                  .distributor!
+                                                                  .coverageAreas !=
+                                                              null &&
                                                           model
                                                               .getDistributorKycResponseModel!
                                                               .data!
@@ -5077,87 +5080,87 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                       //         .data!
                                                       //         .level2 !=
                                                       //     null)
-                                                        // Row(
-                                                        //   mainAxisAlignment:
-                                                        //       MainAxisAlignment
-                                                        //           .spaceBetween,
-                                                        //   children: [
-                                                        //     Row(
-                                                        //       children: [
-                                                        //         TextView(
-                                                        //           text:
-                                                        //               'Area/Location ',
-                                                        //           textStyle: TextStyle(
-                                                        //             fontSize:
-                                                        //                 15.86
-                                                        //                     .sp,
-                                                        //             fontWeight:
-                                                        //                 FontWeight
-                                                        //                     .w600,
-                                                        //             color: AppColors
-                                                        //                 .reminder1,
-                                                        //             fontFamily:
-                                                        //                 'DMSans',
-                                                        //           ),
-                                                        //         ),
-                                                        //         SizedBox(
-                                                        //           width: 6.10.w,
-                                                        //         ),
-                                                        //         Container(
-                                                        //           padding: EdgeInsets.symmetric(
-                                                        //             horizontal:
-                                                        //                 6.2.w,
-                                                        //           ),
-                                                        //           decoration: BoxDecoration(
-                                                        //             borderRadius:
-                                                        //                 BorderRadius.circular(
-                                                        //                   22,
-                                                        //                 ),
-                                                        //             border: Border.all(
-                                                        //               color: AppColors
-                                                        //                   .primary1,
-                                                        //             ),
-                                                        //           ),
-                                                        //           child: TextView(
-                                                        //             text:
-                                                        //                 '${model.getDistributorKycResponseModel!.data!.level2!.distributor!.coverageAreas!.length}',
-                                                        //             textStyle: TextStyle(
-                                                        //               fontSize:
-                                                        //                   12.6.sp,
-                                                        //               fontWeight:
-                                                        //                   FontWeight
-                                                        //                       .w300,
-                                                        //               color: AppColors
-                                                        //                   .primary1,
-                                                        //               fontFamily:
-                                                        //                   'DMSans',
-                                                        //             ),
-                                                        //           ),
-                                                        //         ),
-                                                        //       ],
-                                                        //     ),
-                                                        //     IconButton(
-                                                        //       onPressed: () {
-                                                        //         model
-                                                        //             .stateController
-                                                        //             .clear();
-                                                        //         model
-                                                        //             .lgaListCopy
-                                                        //             .clear();
-                                                        //         model
-                                                        //             .showLGAAndStateDialog(
-                                                        //               context,
-                                                        //             );
-                                                        //       },
-                                                        //       icon: Icon(
-                                                        //         Icons.add,
-                                                        //         color: AppColors
-                                                        //             .reminder1,
-                                                        //         size: 22.sp,
-                                                        //       ),
-                                                        //     ),
-                                                        //   ],
-                                                        // ),
+                                                      // Row(
+                                                      //   mainAxisAlignment:
+                                                      //       MainAxisAlignment
+                                                      //           .spaceBetween,
+                                                      //   children: [
+                                                      //     Row(
+                                                      //       children: [
+                                                      //         TextView(
+                                                      //           text:
+                                                      //               'Area/Location ',
+                                                      //           textStyle: TextStyle(
+                                                      //             fontSize:
+                                                      //                 15.86
+                                                      //                     .sp,
+                                                      //             fontWeight:
+                                                      //                 FontWeight
+                                                      //                     .w600,
+                                                      //             color: AppColors
+                                                      //                 .reminder1,
+                                                      //             fontFamily:
+                                                      //                 'DMSans',
+                                                      //           ),
+                                                      //         ),
+                                                      //         SizedBox(
+                                                      //           width: 6.10.w,
+                                                      //         ),
+                                                      //         Container(
+                                                      //           padding: EdgeInsets.symmetric(
+                                                      //             horizontal:
+                                                      //                 6.2.w,
+                                                      //           ),
+                                                      //           decoration: BoxDecoration(
+                                                      //             borderRadius:
+                                                      //                 BorderRadius.circular(
+                                                      //                   22,
+                                                      //                 ),
+                                                      //             border: Border.all(
+                                                      //               color: AppColors
+                                                      //                   .primary1,
+                                                      //             ),
+                                                      //           ),
+                                                      //           child: TextView(
+                                                      //             text:
+                                                      //                 '${model.getDistributorKycResponseModel!.data!.level2!.distributor!.coverageAreas!.length}',
+                                                      //             textStyle: TextStyle(
+                                                      //               fontSize:
+                                                      //                   12.6.sp,
+                                                      //               fontWeight:
+                                                      //                   FontWeight
+                                                      //                       .w300,
+                                                      //               color: AppColors
+                                                      //                   .primary1,
+                                                      //               fontFamily:
+                                                      //                   'DMSans',
+                                                      //             ),
+                                                      //           ),
+                                                      //         ),
+                                                      //       ],
+                                                      //     ),
+                                                      //     IconButton(
+                                                      //       onPressed: () {
+                                                      //         model
+                                                      //             .stateController
+                                                      //             .clear();
+                                                      //         model
+                                                      //             .lgaListCopy
+                                                      //             .clear();
+                                                      //         model
+                                                      //             .showLGAAndStateDialog(
+                                                      //               context,
+                                                      //             );
+                                                      //       },
+                                                      //       icon: Icon(
+                                                      //         Icons.add,
+                                                      //         color: AppColors
+                                                      //             .reminder1,
+                                                      //         size: 22.sp,
+                                                      //       ),
+                                                      //     ),
+                                                      //   ],
+                                                      // ),
                                                       // Divider(
                                                       //   color: AppColors.f1,
                                                       // ),
@@ -5686,7 +5689,7 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                       //                     ),
                                                       //                   ],
                                                       //                 ),
-                                                                   
+
                                                       //               ],
                                                       //             ),
                                                       //           ),
@@ -7747,11 +7750,9 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                     model.secondLevelDistributorKycEntityModelPharmLin ==
                                                                             null ||
                                                                         model.secondLevelDistributorKycEntityModelPharmLin!.distributor ==
-                                                                            null ||model
-                                                                          .secondLevelDistributorKycEntityModelPharmLin!
-                                                                          .distributor!
-                                                                          .documents!
-                                                                          .pharmaceuticalDistributionLicense==null
+                                                                            null ||
+                                                                        model.secondLevelDistributorKycEntityModelPharmLin!.distributor!.documents!.pharmaceuticalDistributionLicense ==
+                                                                            null
                                                                     ? null
                                                                     : model
                                                                           .secondLevelDistributorKycEntityModelPharmLin!
@@ -7762,11 +7763,9 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                     model.secondLevelDistributorKycEntityModelNAF ==
                                                                             null ||
                                                                         model.secondLevelDistributorKycEntityModelNAF!.distributor ==
-                                                                            null ||model
-                                                                          .secondLevelDistributorKycEntityModelNAF!
-                                                                          .distributor!
-                                                                          .documents!
-                                                                          .nafdacPermit==null
+                                                                            null ||
+                                                                        model.secondLevelDistributorKycEntityModelNAF!.distributor!.documents!.nafdacPermit ==
+                                                                            null
                                                                     ? null
                                                                     : model
                                                                           .secondLevelDistributorKycEntityModelNAF!
@@ -7777,11 +7776,9 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                     model.secondLevelDistributorKycEntityModelPharmCouncilLin ==
                                                                             null ||
                                                                         model.secondLevelDistributorKycEntityModelPharmCouncilLin!.distributor ==
-                                                                            null || model
-                                                                          .secondLevelDistributorKycEntityModelPharmCouncilLin!
-                                                                          .distributor!
-                                                                          .documents!
-                                                                          .pharmacyCouncilLicense == null
+                                                                            null ||
+                                                                        model.secondLevelDistributorKycEntityModelPharmCouncilLin!.distributor!.documents!.pharmacyCouncilLicense ==
+                                                                            null
                                                                     ? null
                                                                     : model
                                                                           .secondLevelDistributorKycEntityModelPharmCouncilLin!
@@ -7792,11 +7789,9 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                     model.secondLevelDistributorKycEntityModelLogo ==
                                                                             null ||
                                                                         model.secondLevelDistributorKycEntityModelLogo!.distributor ==
-                                                                            null || model
-                                                                          .secondLevelDistributorKycEntityModelLogo!
-                                                                          .distributor!
-                                                                          .documents!
-                                                                          .companyLogo == null
+                                                                            null ||
+                                                                        model.secondLevelDistributorKycEntityModelLogo!.distributor!.documents!.companyLogo ==
+                                                                            null
                                                                     ? null
                                                                     : model
                                                                           .secondLevelDistributorKycEntityModelLogo!
@@ -8109,7 +8104,6 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                                         null,
                                                                   ),
                                                                   documents: DisDocuments(
-                                                                    
                                                                     cacCertificate:
                                                                         model.secondLevelDistributorKycEntityModelCAC ==
                                                                                 null ||

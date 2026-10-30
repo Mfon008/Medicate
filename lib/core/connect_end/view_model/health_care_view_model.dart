@@ -725,7 +725,6 @@ class HealthCareViewModel extends BaseViewModel {
   List<EducationalExperience> educationalExperienceList = [];
   String sortPrice = 'LOW_TO_HIGH';
 
-
   GetMarketplaceUpgradeResponseModel? _getMarketplaceUpgradeResponseModel;
   GetMarketplaceUpgradeResponseModel? get getMarketplaceUpgradeResponseModel =>
       _getMarketplaceUpgradeResponseModel;
@@ -824,7 +823,6 @@ class HealthCareViewModel extends BaseViewModel {
   SecondLevelDistributorKycEntityModel?
   get secondLevelDistributorKycEntityModelImpLogo =>
       _secondLevelDistributorKycEntityModelImpLogo;
-  
 
   UploadImageResponseModel? _uploadImageResponseModelDisCAC;
   UploadImageResponseModel? get uploadImageResponseModelDisCAC =>
@@ -867,7 +865,7 @@ class HealthCareViewModel extends BaseViewModel {
   UploadImageResponseModel? _uploadImageResponseModelComLogo;
   UploadImageResponseModel? get uploadImageResponseModelComLogo =>
       _uploadImageResponseModelComLogo;
-  
+
   int? coverageAreaIndex;
   CoverageArea? coverageAreas;
 
@@ -20059,10 +20057,9 @@ class HealthCareViewModel extends BaseViewModel {
           'some services.';
     }
     return 'Kindly upload and submit the required '
-          'documents for verification to unlock '
-          'distributor features.';
+        'documents for verification to unlock '
+        'distributor features.';
   }
-
 
   Color kycStatusColor(status) {
     if (status != null) {
@@ -20130,7 +20127,6 @@ class HealthCareViewModel extends BaseViewModel {
     return false;
   }
 
-  
   void pickImageDistributorKycCAC(BuildContext context) {
     try {
       _pickImage.pickImage(
@@ -21320,7 +21316,7 @@ class HealthCareViewModel extends BaseViewModel {
     notifyListeners();
     return phoneNo;
   }
-  
+
   Future<void> getMarketplaceUpgrade(context) async {
     try {
       _isLoading = true;

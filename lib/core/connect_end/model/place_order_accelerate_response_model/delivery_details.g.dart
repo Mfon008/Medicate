@@ -8,18 +8,24 @@ part of 'delivery_details.dart';
 
 DeliveryDetails _$DeliveryDetailsFromJson(Map<String, dynamic> json) =>
     DeliveryDetails(
+      recipientName: json['recipientName'] as String?,
+      recipientIdType: json['recipientIdType'] as String?,
+      tenantId: json['tenantId'] as String?,
+      name: json['name'] as String?,
+      address: json['address'] as String?,
+      phoneNumber: json['phoneNumber'] as String?,
       state: json['state'] as String?,
       lga: json['lga'] as String?,
-      deliveryAddress: json['deliveryAddress'] as String?,
-      contactPhone: json['contactPhone'] as String?,
-      orderNotes: json['orderNotes'] as String?,
     );
 
 Map<String, dynamic> _$DeliveryDetailsToJson(DeliveryDetails instance) =>
     <String, dynamic>{
+      'recipientName': instance.recipientName,
+      'recipientIdType': instance.recipientIdType,
+      'tenantId': instance.tenantId,
+      'name': instance.name,
+      'address': instance.address,
+      'phoneNumber': instance.phoneNumber,
       'state': instance.state,
       'lga': instance.lga,
-      'deliveryAddress': instance.deliveryAddress,
-      'contactPhone': instance.contactPhone,
-      'orderNotes': instance.orderNotes,
     };

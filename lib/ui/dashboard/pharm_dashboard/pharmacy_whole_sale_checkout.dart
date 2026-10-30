@@ -1,22 +1,25 @@
 // ignore_for_file: use_build_context_synchronously, deprecated_member_use
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:medicate_app/core/app_assets/app_utils.dart';
 import 'package:medicate_app/core/app_assets/constant.dart';
 import 'package:stacked/stacked.dart';
 import '../../../../core/app_assets/app_validation.dart';
 import '../../../../core/app_assets/image.dart';
 import '../../../../core/config/colors.dart';
 import '../../../core/connect_end/model/checkout_delivery_option_entity_model.dart';
+import '../../../core/connect_end/model/checkout_split_delivery_option_entity_model/checkout_split_delivery_option_entity_model.dart';
 import '../../../core/connect_end/view_model/pharm_auth_view_model.dart';
 import '../../widget/auto_scroll_text.dart';
 import '../../widget/button.dart';
 import '../../widget/text.dart';
 import '../../widget/text_form_widget.dart';
+import 'package:medicate_app/core/connect_end/model/checkout_split_delivery_option_entity_model/delivery.dart'
+    as chk;
 
 // ignore: must_be_immutable
 class PharmacyWholeSaleCheckout extends StatefulWidget {
@@ -29,6 +32,7 @@ class PharmacyWholeSaleCheckout extends StatefulWidget {
 
 class _PharmacyWholeSaleCheckoutState extends State<PharmacyWholeSaleCheckout> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  GlobalKey<FormState> formKeySplit = GlobalKey<FormState>();
 
   final ScrollController _orderSummaryScrollController = ScrollController();
   final ScrollController _orderSummaryScrollController2 = ScrollController();
@@ -212,7 +216,7 @@ class _PharmacyWholeSaleCheckoutState extends State<PharmacyWholeSaleCheckout> {
                                           ) {
                                             final addressIndex = o.key;
                                             final e = o.value;
-
+                                            model.getDeliveriesInList();
                                             return Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.stretch,
@@ -331,7 +335,6 @@ class _PharmacyWholeSaleCheckoutState extends State<PharmacyWholeSaleCheckout> {
                                                         final product = model
                                                             .cartItems[index];
 
-
                                                         final distributedQuantity =
                                                             model
                                                                 .getSplitQuantity(
@@ -404,7 +407,7 @@ class _PharmacyWholeSaleCheckoutState extends State<PharmacyWholeSaleCheckout> {
                                                                     ),
                                                                     TextView(
                                                                       text:
-                                                                          'Qty: $distributedQuantity | ${formatNaira(distributedTotal)}',
+                                                                          'Qty: $distributedQuantity | ${formatNaira(unitPrice)}',
                                                                       maxLines:
                                                                           1,
                                                                       textOverflow:
@@ -431,7 +434,7 @@ class _PharmacyWholeSaleCheckoutState extends State<PharmacyWholeSaleCheckout> {
                                                                 width: 120,
                                                                 child: TextView(
                                                                   text: formatNaira(
-                                                                    unitPrice ??
+                                                                    distributedTotal ??
                                                                         0,
                                                                   ),
                                                                   textAlign:
@@ -489,10 +492,26 @@ class _PharmacyWholeSaleCheckoutState extends State<PharmacyWholeSaleCheckout> {
                                                             ),
                                                           ),
                                                           TextView(
-                                                            text: formatNaira(
-                                                              model
-                                                                  .deliveryFeeAmount,
-                                                            ),
+                                                            text:
+                                                                model.getCheckoutSplitDeliveryOptionResponseModel !=
+                                                                    null
+                                                                ? formatNaira(
+                                                                    model.delivery ==
+                                                                            Delivery.instance
+                                                                        ? int.parse(
+                                                                            model.getCheckoutSplitDeliveryOptionResponseModel!.data!.deliveries![addressIndex].methods!.isNotEmpty
+                                                                                ? model.getCheckoutSplitDeliveryOptionResponseModel!.data!.deliveries![addressIndex].methods![0].deliveryFee.toString()
+                                                                                : '0',
+                                                                          )
+                                                                        : int.parse(
+                                                                            model.getCheckoutSplitDeliveryOptionResponseModel!.data!.deliveries![addressIndex].methods!.isNotEmpty
+                                                                                ? model.getCheckoutSplitDeliveryOptionResponseModel!.data!.deliveries![addressIndex].methods![1].deliveryFee.toString()
+                                                                                : '0',
+                                                                          ),
+                                                                  )
+                                                                : formatNaira(
+                                                                    0,
+                                                                  ),
                                                             textStyle: TextStyle(
                                                               fontFamily:
                                                                   'DMSans',
@@ -720,6 +739,7 @@ class _PharmacyWholeSaleCheckoutState extends State<PharmacyWholeSaleCheckout> {
                     ],
                   ),
                 ),
+
                 Container(
                   margin: EdgeInsets.only(bottom: 20.w),
                   padding: EdgeInsets.symmetric(
@@ -756,6 +776,7 @@ class _PharmacyWholeSaleCheckoutState extends State<PharmacyWholeSaleCheckout> {
                           model.delivery = Delivery.instance;
                           model.dateTimeController.clear();
                           await Future.delayed(Duration(microseconds: 10));
+
                           if (model.getCheckoutDeliveryOptionResponseModel !=
                                   null &&
                               model
@@ -777,6 +798,7 @@ class _PharmacyWholeSaleCheckoutState extends State<PharmacyWholeSaleCheckout> {
                           } else {
                             model.deliveryFeeAmount = 0;
                           }
+
                           model.notifyListeners();
                         },
                         child: Container(
@@ -942,7 +964,6 @@ class _PharmacyWholeSaleCheckoutState extends State<PharmacyWholeSaleCheckout> {
                     ],
                   ),
                 ),
-
                 Container(
                   margin: EdgeInsets.only(bottom: 20.w),
                   padding: EdgeInsets.symmetric(
@@ -982,7 +1003,7 @@ class _PharmacyWholeSaleCheckoutState extends State<PharmacyWholeSaleCheckout> {
                         Row(
                           children: [
                             GestureDetector(
-                              onTap: () {
+                              onTap: () async {
                                 if (model
                                         .getTetantResponseModel!
                                         .data!
@@ -992,6 +1013,23 @@ class _PharmacyWholeSaleCheckoutState extends State<PharmacyWholeSaleCheckout> {
                                   model.isDeliveryAddressTap =
                                       !model.isDeliveryAddressTap;
                                   model.notifyListeners();
+                                  if (model.isDeliveryAddressTap) {
+                                    await Future.delayed(Duration(seconds: 1));
+                                    model.getCheckoutSplitDeliveryOption(
+                                      context: context,
+                                      checkoutSplitDeliveryOption:
+                                          CheckoutSplitDeliveryOptionEntityModel(
+                                            splitOrder: true,
+                                            deliveries: model.deliveries!.map((
+                                              delivery,
+                                            ) {
+                                              return chk.Delivery.fromJson(
+                                                delivery.toJson(),
+                                              );
+                                            }).toList(),
+                                          ),
+                                    );
+                                  }
                                 }
                               },
                               child: Container(
@@ -1104,10 +1142,6 @@ class _PharmacyWholeSaleCheckoutState extends State<PharmacyWholeSaleCheckout> {
                                                     final productIndex =
                                                         entry.key;
                                                     final e = entry.value;
-                                                    // final items = model
-                                                    //     .getTetantResponseModel!
-                                                    //     .data!
-                                                    //     .businessAddresses;
                                                     final addressCount =
                                                         model
                                                             .getTetantResponseModel
@@ -1325,9 +1359,6 @@ class _PharmacyWholeSaleCheckoutState extends State<PharmacyWholeSaleCheckout> {
                                                                                       ),
                                                                                     ),
                                                                                   ),
-                                                                                  // SizedBox(
-                                                                                  //   width: 10.w,
-                                                                                  // ),
                                                                                   Row(
                                                                                     mainAxisAlignment: MainAxisAlignment.end,
                                                                                     children: [
@@ -1382,7 +1413,7 @@ class _PharmacyWholeSaleCheckoutState extends State<PharmacyWholeSaleCheckout> {
                                                                                             delta: 1,
                                                                                             approvedAddresses: model.approvedAddresses,
                                                                                           );
-                                                                                      
+
                                                                                           if (!updated) {
                                                                                             // No units are available to transfer from another address.
                                                                                             // Optionally show a SnackBar explaining this.
@@ -1483,182 +1514,185 @@ class _PharmacyWholeSaleCheckoutState extends State<PharmacyWholeSaleCheckout> {
                                                                         model.isSeeMore &&
                                                                                 model.businessAddressInfo ==
                                                                                     e
-                                                                            ? Column(
-                                                                                children: [
-                                                                                  Divider(
-                                                                                    color: AppColors.infoGrey1,
-                                                                                  ),
-                                                                                  SizedBox(
-                                                                                    height: 2.0.h,
-                                                                                  ),
-                                                                                  TextFormWidget(
-                                                                                    hint: 'Name',
-                                                                                    label: 'Full Name',
-                                                                                    hintWeight: FontWeight.w500,
-                                                                                    hintColor: AppColors.reminder,
-                                                                                    hintSize: Platform.isAndroid
-                                                                                        ? 14.sp
-                                                                                        : 12.sp,
-                                                                                    borderColor: AppColors.infoGrey1,
-                                                                                    borderTopLeft: 10.r,
-                                                                                    borderTopRight: 10.r,
-                                                                                    borderBottomLeft: 10.r,
-                                                                                    borderBottomRight: 10.r,
-                                                                                    fillColor: AppColors.white,
-                                                                                    isFilled: true,
-                                                                                    controller: model.nameOfPersonControllerList[productIndex],
-                                                                                    prefixWidget: Padding(
-                                                                                      padding: EdgeInsets.all(
-                                                                                        12.w,
-                                                                                      ),
-                                                                                      child: SvgPicture.asset(
-                                                                                        AppImage.profile,
-                                                                                        color: AppColors.infoGrey,
-                                                                                        height: Platform.isAndroid
-                                                                                            ? 10.h
-                                                                                            : 14.h,
-                                                                                        width: Platform.isAndroid
-                                                                                            ? 10.w
-                                                                                            : 14.w,
-                                                                                      ),
+                                                                            ? Form(
+                                                                                key: formKeySplit,
+                                                                                child: Column(
+                                                                                  children: [
+                                                                                    Divider(
+                                                                                      color: AppColors.infoGrey1,
                                                                                     ),
-                                                                                    validator: AppValidator.validateString(),
-                                                                                    style: TextStyle(
-                                                                                      fontSize: 16.20.sp,
-                                                                                      fontWeight: FontWeight.w400,
-                                                                                      fontFamily: 'DMSans',
+                                                                                    SizedBox(
+                                                                                      height: 2.0.h,
                                                                                     ),
-                                                                                    labelStyle: TextStyle(
-                                                                                      fontSize: 15.20.sp,
-                                                                                      fontWeight: FontWeight.w400,
-                                                                                      fontFamily: 'DMSans',
-                                                                                      color: AppColors.faintedGrey,
-                                                                                    ),
-                                                                                  ),
-                                                                                  SizedBox(
-                                                                                    height: 12.h,
-                                                                                  ),
-                                                                                  TextFormWidget(
-                                                                                    hint: 'Phone Number',
-                                                                                    label: '+234',
-                                                                                    hintWeight: FontWeight.w500,
-                                                                                    hintColor: AppColors.reminder,
-                                                                                    hintSize: Platform.isAndroid
-                                                                                        ? 14.sp
-                                                                                        : 12.sp,
-                                                                                    borderColor: AppColors.infoGrey1,
-                                                                                    borderTopLeft: 10.r,
-                                                                                    borderTopRight: 10.r,
-                                                                                    borderBottomLeft: 10.r,
-                                                                                    borderBottomRight: 10.r,
-                                                                                    fillColor: AppColors.white,
-                                                                                    isFilled: true,
-                                                                                    controller: model.phoneControllerList[productIndex],
-                                                                                    inputFormatters: [
-                                                                                      LengthLimitingTextInputFormatter(
-                                                                                        11,
+                                                                                    TextFormWidget(
+                                                                                      hint: 'Name',
+                                                                                      label: 'Full Name',
+                                                                                      hintWeight: FontWeight.w500,
+                                                                                      hintColor: AppColors.reminder,
+                                                                                      hintSize: Platform.isAndroid
+                                                                                          ? 14.sp
+                                                                                          : 12.sp,
+                                                                                      borderColor: AppColors.infoGrey1,
+                                                                                      borderTopLeft: 10.r,
+                                                                                      borderTopRight: 10.r,
+                                                                                      borderBottomLeft: 10.r,
+                                                                                      borderBottomRight: 10.r,
+                                                                                      fillColor: AppColors.white,
+                                                                                      isFilled: true,
+                                                                                      controller: model.nameOfPersonControllerList[productIndex],
+                                                                                      prefixWidget: Padding(
+                                                                                        padding: EdgeInsets.all(
+                                                                                          12.w,
+                                                                                        ),
+                                                                                        child: SvgPicture.asset(
+                                                                                          AppImage.profile,
+                                                                                          color: AppColors.infoGrey,
+                                                                                          height: Platform.isAndroid
+                                                                                              ? 10.h
+                                                                                              : 14.h,
+                                                                                          width: Platform.isAndroid
+                                                                                              ? 10.w
+                                                                                              : 14.w,
+                                                                                        ),
                                                                                       ),
-                                                                                      FilteringTextInputFormatter.digitsOnly,
-                                                                                    ],
-                                                                                    prefixWidget: Padding(
-                                                                                      padding: EdgeInsets.all(
-                                                                                        12.w,
+                                                                                      validator: AppValidator.validateString(),
+                                                                                      style: TextStyle(
+                                                                                        fontSize: 16.20.sp,
+                                                                                        fontWeight: FontWeight.w400,
+                                                                                        fontFamily: 'DMSans',
                                                                                       ),
-                                                                                      child: SvgPicture.asset(
-                                                                                        AppImage.phone,
-                                                                                        color: AppColors.infoGrey,
-                                                                                        height: Platform.isAndroid
-                                                                                            ? 10.h
-                                                                                            : 14.h,
-                                                                                        width: Platform.isAndroid
-                                                                                            ? 10.w
-                                                                                            : 14.w,
+                                                                                      labelStyle: TextStyle(
+                                                                                        fontSize: 15.20.sp,
+                                                                                        fontWeight: FontWeight.w400,
+                                                                                        fontFamily: 'DMSans',
+                                                                                        color: AppColors.faintedGrey,
                                                                                       ),
                                                                                     ),
-                                                                                    validator: AppValidator.validateString(),
-                                                                                    style: TextStyle(
-                                                                                      fontSize: 16.20.sp,
-                                                                                      fontWeight: FontWeight.w400,
-                                                                                      fontFamily: 'DMSans',
+                                                                                    SizedBox(
+                                                                                      height: 12.h,
                                                                                     ),
-                                                                                    labelStyle: TextStyle(
-                                                                                      fontSize: 15.20.sp,
-                                                                                      fontWeight: FontWeight.w400,
-                                                                                      fontFamily: 'DMSans',
-                                                                                      color: AppColors.faintedGrey,
+                                                                                    TextFormWidget(
+                                                                                      hint: 'Phone Number',
+                                                                                      label: '+234',
+                                                                                      hintWeight: FontWeight.w500,
+                                                                                      hintColor: AppColors.reminder,
+                                                                                      hintSize: Platform.isAndroid
+                                                                                          ? 14.sp
+                                                                                          : 12.sp,
+                                                                                      borderColor: AppColors.infoGrey1,
+                                                                                      borderTopLeft: 10.r,
+                                                                                      borderTopRight: 10.r,
+                                                                                      borderBottomLeft: 10.r,
+                                                                                      borderBottomRight: 10.r,
+                                                                                      fillColor: AppColors.white,
+                                                                                      isFilled: true,
+                                                                                      controller: model.phoneControllerList[productIndex],
+                                                                                      inputFormatters: [
+                                                                                        LengthLimitingTextInputFormatter(
+                                                                                          11,
+                                                                                        ),
+                                                                                        FilteringTextInputFormatter.digitsOnly,
+                                                                                      ],
+                                                                                      prefixWidget: Padding(
+                                                                                        padding: EdgeInsets.all(
+                                                                                          12.w,
+                                                                                        ),
+                                                                                        child: SvgPicture.asset(
+                                                                                          AppImage.phone,
+                                                                                          color: AppColors.infoGrey,
+                                                                                          height: Platform.isAndroid
+                                                                                              ? 10.h
+                                                                                              : 14.h,
+                                                                                          width: Platform.isAndroid
+                                                                                              ? 10.w
+                                                                                              : 14.w,
+                                                                                        ),
+                                                                                      ),
+                                                                                      validator: AppValidator.validateString(),
+                                                                                      style: TextStyle(
+                                                                                        fontSize: 16.20.sp,
+                                                                                        fontWeight: FontWeight.w400,
+                                                                                        fontFamily: 'DMSans',
+                                                                                      ),
+                                                                                      labelStyle: TextStyle(
+                                                                                        fontSize: 15.20.sp,
+                                                                                        fontWeight: FontWeight.w400,
+                                                                                        fontFamily: 'DMSans',
+                                                                                        color: AppColors.faintedGrey,
+                                                                                      ),
                                                                                     ),
-                                                                                  ),
-                                                                                  SizedBox(
-                                                                                    height: 12.h,
-                                                                                  ),
-                                                                                  TextFormWidget(
-                                                                                    hint: 'ID',
-                                                                                    label: 'Select ID',
-                                                                                    hintWeight: FontWeight.w500,
-                                                                                    hintColor: AppColors.reminder,
-                                                                                    hintSize: Platform.isAndroid
-                                                                                        ? 14.sp
-                                                                                        : 12.sp,
-                                                                                    borderColor: AppColors.infoGrey1,
-                                                                                    borderTopLeft: 10.r,
-                                                                                    borderTopRight: 10.r,
-                                                                                    borderBottomLeft: 10.r,
-                                                                                    borderBottomRight: 10.r,
-                                                                                    fillColor: AppColors.white,
-                                                                                    isFilled: true,
-                                                                                    readOnly: true,
-                                                                                    controller: model.formIDControllerList[productIndex],
-                                                                                    suffixWidget: model.getPopUpFormIdDialogList(
-                                                                                      context: context,
-                                                                                      index: productIndex,
+                                                                                    SizedBox(
+                                                                                      height: 12.h,
                                                                                     ),
-                                                                                    validator: AppValidator.validateString(),
-                                                                                    style: TextStyle(
-                                                                                      fontSize: 16.20.sp,
-                                                                                      fontWeight: FontWeight.w400,
-                                                                                      fontFamily: 'DMSans',
+                                                                                    TextFormWidget(
+                                                                                      hint: 'ID',
+                                                                                      label: 'Select ID',
+                                                                                      hintWeight: FontWeight.w500,
+                                                                                      hintColor: AppColors.reminder,
+                                                                                      hintSize: Platform.isAndroid
+                                                                                          ? 14.sp
+                                                                                          : 12.sp,
+                                                                                      borderColor: AppColors.infoGrey1,
+                                                                                      borderTopLeft: 10.r,
+                                                                                      borderTopRight: 10.r,
+                                                                                      borderBottomLeft: 10.r,
+                                                                                      borderBottomRight: 10.r,
+                                                                                      fillColor: AppColors.white,
+                                                                                      isFilled: true,
+                                                                                      readOnly: true,
+                                                                                      controller: model.formIDControllerList[productIndex],
+                                                                                      suffixWidget: model.getPopUpFormIdDialogList(
+                                                                                        context: context,
+                                                                                        index: productIndex,
+                                                                                      ),
+                                                                                      validator: AppValidator.validateString(),
+                                                                                      style: TextStyle(
+                                                                                        fontSize: 16.20.sp,
+                                                                                        fontWeight: FontWeight.w400,
+                                                                                        fontFamily: 'DMSans',
+                                                                                      ),
+                                                                                      labelStyle: TextStyle(
+                                                                                        fontSize: 15.20.sp,
+                                                                                        fontWeight: FontWeight.w400,
+                                                                                        fontFamily: 'DMSans',
+                                                                                        color: AppColors.faintedGrey,
+                                                                                      ),
                                                                                     ),
-                                                                                    labelStyle: TextStyle(
-                                                                                      fontSize: 15.20.sp,
-                                                                                      fontWeight: FontWeight.w400,
-                                                                                      fontFamily: 'DMSans',
-                                                                                      color: AppColors.faintedGrey,
+                                                                                    SizedBox(
+                                                                                      height: 12.h,
                                                                                     ),
-                                                                                  ),
-                                                                                  SizedBox(
-                                                                                    height: 12.h,
-                                                                                  ),
-                                                                                  TextFormWidget(
-                                                                                    hint: 'Order notes (Optional)',
-                                                                                    isShowHint: true,
-                                                                                    label: 'E.g. Call central storage clerk upon arrival',
-                                                                                    hintWeight: FontWeight.w500,
-                                                                                    hintColor: AppColors.reminder,
-                                                                                    hintSize: Platform.isAndroid
-                                                                                        ? 14.sp
-                                                                                        : 12.sp,
-                                                                                    borderColor: AppColors.infoGrey1,
-                                                                                    borderTopLeft: 10.r,
-                                                                                    borderTopRight: 10.r,
-                                                                                    borderBottomLeft: 10.r,
-                                                                                    borderBottomRight: 10.r,
-                                                                                    fillColor: AppColors.white,
-                                                                                    isFilled: true,
-                                                                                    controller: model.orderNotesControllerList[productIndex],
-                                                                                    maxline: 4,
-                                                                                    style: TextStyle(
-                                                                                      fontSize: 16.20.sp,
-                                                                                      fontWeight: FontWeight.w400,
-                                                                                      fontFamily: 'DMSans',
+                                                                                    TextFormWidget(
+                                                                                      hint: 'Order notes (Optional)',
+                                                                                      isShowHint: true,
+                                                                                      label: 'E.g. Call central storage clerk upon arrival',
+                                                                                      hintWeight: FontWeight.w500,
+                                                                                      hintColor: AppColors.reminder,
+                                                                                      hintSize: Platform.isAndroid
+                                                                                          ? 14.sp
+                                                                                          : 12.sp,
+                                                                                      borderColor: AppColors.infoGrey1,
+                                                                                      borderTopLeft: 10.r,
+                                                                                      borderTopRight: 10.r,
+                                                                                      borderBottomLeft: 10.r,
+                                                                                      borderBottomRight: 10.r,
+                                                                                      fillColor: AppColors.white,
+                                                                                      isFilled: true,
+                                                                                      controller: model.orderNotesControllerList[productIndex],
+                                                                                      maxline: 4,
+                                                                                      style: TextStyle(
+                                                                                        fontSize: 16.20.sp,
+                                                                                        fontWeight: FontWeight.w400,
+                                                                                        fontFamily: 'DMSans',
+                                                                                      ),
+                                                                                      labelStyle: TextStyle(
+                                                                                        fontSize: 15.20.sp,
+                                                                                        fontWeight: FontWeight.w400,
+                                                                                        fontFamily: 'DMSans',
+                                                                                        color: AppColors.faintedGrey,
+                                                                                      ),
                                                                                     ),
-                                                                                    labelStyle: TextStyle(
-                                                                                      fontSize: 15.20.sp,
-                                                                                      fontWeight: FontWeight.w400,
-                                                                                      fontFamily: 'DMSans',
-                                                                                      color: AppColors.faintedGrey,
-                                                                                    ),
-                                                                                  ),
-                                                                                ],
+                                                                                  ],
+                                                                                ),
                                                                               )
                                                                             : SizedBox.shrink(),
                                                                       ],
@@ -2282,7 +2316,6 @@ class _PharmacyWholeSaleCheckoutState extends State<PharmacyWholeSaleCheckout> {
                     ),
                   ),
                 ),
-
                 Container(
                   margin: EdgeInsets.only(bottom: 20.w, top: 10.w),
                   padding: EdgeInsets.symmetric(
@@ -2468,19 +2501,56 @@ class _PharmacyWholeSaleCheckoutState extends State<PharmacyWholeSaleCheckout> {
                       Center(
                         child: GestureDetector(
                           onTap: () {
-                            if (formKey.currentState!.validate()) {
-                              model.paymentMethodFlowWholesale(
-                                context,
-                                amount:
-                                    model
-                                        .wholesaleGetProductAddedToCartResponseModel!
-                                        .data!
-                                        .cart!
-                                        .subtotal! +
-                                    model.deliveryFeeAmount,
-                              );
-                              model.notifyListeners();
+                            if (model.isDeliveryAddressTap) {
+                              if (formKeySplit.currentState!.validate()) {
+                                model.paymentMethodFlowWholesale(
+                                  context,
+                                  amount:
+                                      model.quoteInstantSplitDeliveryResponseModel !=
+                                          null
+                                      ? model
+                                            .quoteInstantSplitDeliveryResponseModel
+                                            ?.data
+                                            ?.checkout
+                                            ?.total
+                                      : model
+                                            .quoteScheduleSplitDeliveryResponseModel
+                                            ?.data
+                                            ?.checkout
+                                            ?.total,
+                                  deliveries: model.deliveries,
+
+                                  nameOfPersonControllerList:
+                                      model.nameOfPersonControllerList,
+                                  orderNotesControllerList:
+                                      model.orderNotesControllerList,
+                                  formIDControllerList:
+                                      model.formIDControllerList,
+                                  phoneControllerList:
+                                      model.phoneControllerList,
+                                );
+                              } else {
+                                AppUtils.snackbar(
+                                  context,
+                                  message: 'Kindly fill all neccessary info.',
+                                  error: true,
+                                );
+                              }
+                            } else {
+                              if (formKey.currentState!.validate()) {
+                                model.paymentMethodFlowWholesale(
+                                  context,
+                                  amount:
+                                      model
+                                          .wholesaleGetProductAddedToCartResponseModel!
+                                          .data!
+                                          .cart!
+                                          .subtotal! +
+                                      model.deliveryFeeAmount,
+                                );
+                              }
                             }
+                            model.notifyListeners();
                           },
                           child: Container(
                             width: double.infinity,
@@ -2493,7 +2563,7 @@ class _PharmacyWholeSaleCheckoutState extends State<PharmacyWholeSaleCheckout> {
                               borderRadius: BorderRadius.circular(40.r),
                             ),
                             child: Center(
-                              child: model.isLoadingWallet
+                              child: model.isLoadingWallet || model.isLoading
                                   ? SpinKitFadingCircle(
                                       color: AppColors.appWhite,
                                       size: 40.sp,

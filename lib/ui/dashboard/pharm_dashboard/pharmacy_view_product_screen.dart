@@ -321,7 +321,6 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            
                           ],
                         ),
                         SizedBox(height: 10.h),
@@ -1468,7 +1467,9 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                                     ? AppColors.appWhite
                                                     : AppColors.grey,
                                                 border: Border.all(
-                                                  color:!model.desAddInfoTap?AppColors.primaryLight : AppColors.grey,
+                                                  color: !model.desAddInfoTap
+                                                      ? AppColors.primaryLight
+                                                      : AppColors.grey,
                                                 ),
                                                 borderRadius:
                                                     BorderRadius.circular(20.r),
@@ -1507,7 +1508,9 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                                     ? AppColors.appWhite
                                                     : AppColors.grey,
                                                 border: Border.all(
-                                                  color:model.desAddInfoTap?AppColors.primaryLight :  AppColors.grey,
+                                                  color: model.desAddInfoTap
+                                                      ? AppColors.primaryLight
+                                                      : AppColors.grey,
                                                 ),
                                                 borderRadius:
                                                     BorderRadius.circular(20.r),

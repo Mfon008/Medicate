@@ -9,6 +9,7 @@ import '../../core_folder/manager/shared_preference.dart';
 import '../contrast/pharm_contract_impl.dart';
 import '../model/business_addresses_entity.dart';
 import '../model/checkout_delivery_option_entity_model.dart';
+import '../model/checkout_split_delivery_option_entity_model/checkout_split_delivery_option_entity_model.dart';
 import '../model/create_payment_wallet_entity_model.dart';
 import '../model/create_payment_wallet_model/create_payment_wallet_model.dart';
 import '../model/create_reminder_response_model/create_reminder_response_model.dart';
@@ -17,6 +18,7 @@ import '../model/create_user_entity_model.dart';
 import '../model/distributor_wholesale_category_model/distributor_wholesale_category_model.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
 import '../model/get_checkout_delivery_option_response_model/get_checkout_delivery_option_response_model.dart';
+import '../model/get_checkout_delivery_option_split_response_model/get_checkout_delivery_option_split_response_model.dart';
 import '../model/get_created_user_response_model/get_created_user_response_model.dart';
 import '../model/get_marketplace_upgrade_response_model/get_marketplace_upgrade_response_model.dart';
 import '../model/get_pharmacy_kyc_response_model/get_pharmacy_kyc_response_model.dart';
@@ -39,12 +41,18 @@ import '../model/pay_with_wallet_response_model/pay_with_wallet_response_model.d
 import '../model/pharmacy_login_response_model/pharmacy_login_response_model.dart';
 import '../model/place_order_accelerate_entity_model/place_order_accelerate_entity_model.dart';
 import '../model/place_order_accelerate_response_model/place_order_accelerate_response_model.dart';
+import '../model/place_order_accelerate_split_entity_model/place_order_accelerate_split_entity_model.dart';
+import '../model/place_order_accelerate_split_response_model/place_order_accelerate_split_response_model.dart';
 import '../model/place_order_wallet_entity_model/place_order_wallet_entity_model.dart';
 import '../model/place_order_wallet_response_model/place_order_wallet_response_model.dart';
 import '../model/quote_instant_delivery_entity_model.dart';
 import '../model/quote_instant_delivery_response_model/quote_instant_delivery_response_model.dart';
+import '../model/quote_instant_split_delivery_entity_model/quote_instant_split_delivery_entity_model.dart';
+import '../model/quote_instant_split_delivery_response_model/quote_instant_split_delivery_response_model.dart';
 import '../model/quote_schedule_delivery_eneity_model.dart';
 import '../model/quote_schedule_delivery_response_model/quote_schedule_delivery_response_model.dart';
+import '../model/quote_schedule_split_delivery_entity_model/quote_schedule_split_delivery_entity_model.dart';
+import '../model/quote_schedule_split_delivery_response_model/quote_schedule_split_delivery_response_model.dart';
 import '../model/resend_otp_entity_model.dart';
 import '../model/resend_otp_response_model/resend_otp_response_model.dart';
 import '../model/reset_password_entity_model.dart';
@@ -518,6 +526,15 @@ class PharmRepoImpl {
     return response;
   }
 
+  Future<QuoteInstantSplitDeliveryResponseModel> quoteInstantSplitDelivery(
+    QuoteInstantSplitDeliveryEntityModel? instantSplitDelivery,
+  ) async {
+    final response = await _contract.quoteInstantSplitDelivery(
+      instantSplitDelivery,
+    );
+    return response;
+  }
+
   Future<QuoteScheduleDeliveryResponseModel> quoteScheduleDelivery(
     QuoteScheduleDeliveryEneityModel? scheduleDelivery,
   ) async {
@@ -525,10 +542,28 @@ class PharmRepoImpl {
     return response;
   }
 
+  Future<QuoteScheduleSplitDeliveryResponseModel> quoteScheduleSplitDelivery(
+    QuoteScheduleSplitDeliveryEntityModel? scheduleSplitDelivery,
+  ) async {
+    final response = await _contract.quoteScheduleSplitDelivery(
+      scheduleSplitDelivery,
+    );
+    return response;
+  }
+
   Future<PlaceOrderAccelerateResponseModel> placeOrderAccelerate(
     PlaceOrderAccelerateEntityModel? placeOrderAccelerate,
   ) async {
     final response = await _contract.placeOrderAccelerate(placeOrderAccelerate);
+    return response;
+  }
+
+  Future<PlaceOrderAccelerateSplitResponseModel> placeOrderAccelerateSplit(
+    PlaceOrderAccelerateSplitEntityModel? placeOrderAccelerate,
+  ) async {
+    final response = await _contract.placeOrderAccelerateSplit(
+      placeOrderAccelerate,
+    );
     return response;
   }
 
@@ -571,6 +606,16 @@ class PharmRepoImpl {
   ) async {
     final response = await _contract.checkoutDeliveryOption(
       checkoutDeliveryOption,
+    );
+    return response;
+  }
+
+  Future<GetCheckoutDeliveryOptionSplitResponseModel>
+  checkoutSplitDeliveryOption(
+    CheckoutSplitDeliveryOptionEntityModel checkoutSplitDeliveryOption,
+  ) async {
+    final response = await _contract.checkoutSplitDeliveryOption(
+      checkoutSplitDeliveryOption,
     );
     return response;
   }

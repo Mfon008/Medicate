@@ -500,7 +500,6 @@ class _LevelOneCardState extends State<LevelOneCard> {
                                 //     ],
                                 //   ),
                                 // ),
-
                                 SizedBox(height: 18.22.h),
                                 TextView(
                                   text: 'Means of ID',

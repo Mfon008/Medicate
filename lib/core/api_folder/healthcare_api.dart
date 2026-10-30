@@ -1067,7 +1067,7 @@ class HealthcareApi {
     }
   }
 
-    Future<dynamic> saveMarketplaceProfileUpgrade(
+  Future<dynamic> saveMarketplaceProfileUpgrade(
     SecondLevelDistributorKycEntityModel kycEntity,
   ) async {
     try {
@@ -1114,5 +1114,4 @@ class HealthcareApi {
       rethrow;
     }
   }
-
 }

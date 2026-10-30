@@ -1113,7 +1113,9 @@ class _HealthCarePractitionerProfileInfoScreenState
                                                         .lgaController
                                                         .text
                                                         .trim(),
-                                                    website:websiteController.text.trim(),
+                                                    website: websiteController
+                                                        .text
+                                                        .trim(),
                                                     servicesOffered: model
                                                         .selectServicePractitioner,
                                                     businessAddress:

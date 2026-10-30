@@ -1,16 +1,25 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import 'logistics_partner.dart';
+
 part 'delivery_breakdown.g.dart';
 
 @JsonSerializable()
 class DeliveryBreakdown {
-  List<dynamic>? productIds;
+  List<String>? productIds;
   List<String>? distributorIds;
   List<String>? distributorNames;
-  int? orderSubtotal;
+  double? orderSubtotal;
   String? locationId;
+  String? stateCode;
+  String? stateName;
+  String? lgaCode;
+  String? lgaName;
   String? deliveryMethod;
   int? deliveryFee;
+  int? estimatedDeliveryMinutes;
+  LogisticsPartner? logisticsPartner;
+  String? deliveryConditions;
 
   DeliveryBreakdown({
     this.productIds,
@@ -18,8 +27,15 @@ class DeliveryBreakdown {
     this.distributorNames,
     this.orderSubtotal,
     this.locationId,
+    this.stateCode,
+    this.stateName,
+    this.lgaCode,
+    this.lgaName,
     this.deliveryMethod,
     this.deliveryFee,
+    this.estimatedDeliveryMinutes,
+    this.logisticsPartner,
+    this.deliveryConditions,
   });
 
   factory DeliveryBreakdown.fromJson(Map<String, dynamic> json) {

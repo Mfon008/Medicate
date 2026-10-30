@@ -308,12 +308,10 @@ class HealthcareContractsImpl {
       await _api.deletebusinessAddress(id);
   Future<dynamic> saveMarketplaceProfileUpgrade(
     SecondLevelDistributorKycEntityModel kycEntity,
-  ) async =>
-      await _api.saveMarketplaceProfileUpgrade(kycEntity);
+  ) async => await _api.saveMarketplaceProfileUpgrade(kycEntity);
   Future<dynamic> submitMarketplaceProfileUpgrade(
     SecondLevelDistributorKycEntityModel kycEntity,
-  ) async =>
-      await _api.submitMarketplaceProfileUpgrade(kycEntity);
+  ) async => await _api.submitMarketplaceProfileUpgrade(kycEntity);
   Future<GetMarketplaceUpgradeResponseModel> getMarketplaceUpgrade() async =>
       await _api.getMarketplaceUpgrade();
 }

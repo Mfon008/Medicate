@@ -1649,10 +1649,16 @@ class _LevelTwoCardState extends State<LevelTwoCard> {
                                                               .submitLevelTwoKycEntityModelTIN
                                                               ?.taxIdentificationNumberDocument !=
                                                           null;
-                                                      
 
                                                   if (isFormValid &&
-                                                      hasRequiredDocument || hasRequiredDocument&& model.getHealthcarePractitionerKycResponseModel?.data?.level2?.bankDetails!=null) {
+                                                          hasRequiredDocument ||
+                                                      hasRequiredDocument &&
+                                                          model
+                                                                  .getHealthcarePractitionerKycResponseModel
+                                                                  ?.data
+                                                                  ?.level2
+                                                                  ?.bankDetails !=
+                                                              null) {
                                                     model.updateHealthCarePractitionerKycSubmit(
                                                       context,
                                                       updateKyc: SubmitHealthcareLevelTwoKycEntityModel(

@@ -496,7 +496,6 @@ class _LevelOneCardState extends State<LevelOneCard> {
                                 //     ],
                                 //   ),
                                 // ),
-
                                 SizedBox(height: 18.22.h),
                                 TextView(
                                   text: 'Contact Details',

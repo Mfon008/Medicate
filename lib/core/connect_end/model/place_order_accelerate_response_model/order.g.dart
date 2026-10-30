@@ -9,16 +9,21 @@ part of 'order.dart';
 Order _$OrderFromJson(Map<String, dynamic> json) => Order(
   id: json['id'] as String?,
   orderNumber: json['orderNumber'] as String?,
-  buyerTenantId: json['buyerTenantId'] as String?,
-  buyerUserId: json['buyerUserId'] as String?,
-  status: json['status'] as String?,
-  items: (json['items'] as List<dynamic>?)
-      ?.map((e) => Item.fromJson(e as Map<String, dynamic>))
-      .toList(),
-  deliveryMethod: json['deliveryMethod'] as String?,
-  deliveryDate: json['deliveryDate'] == null
+  placedAt: json['placedAt'] == null
       ? null
-      : DateTime.parse(json['deliveryDate'] as String),
+      : DateTime.parse(json['placedAt'] as String),
+  status: json['status'] as String?,
+  statusLabel: json['statusLabel'] as String?,
+  badgeText: json['badgeText'] as String?,
+  statusCounts: json['statusCounts'] == null
+      ? null
+      : StatusCounts.fromJson(json['statusCounts'] as Map<String, dynamic>),
+  distributorCount: (json['distributorCount'] as num?)?.toInt(),
+  paymentStatus: json['paymentStatus'] as String?,
+  paymentStatusLabel: json['paymentStatusLabel'] as String?,
+  deliveryMethod: json['deliveryMethod'] as String?,
+  deliveryMethodLabel: json['deliveryMethodLabel'] as String?,
+  deliveryDate: json['deliveryDate'] as String?,
   timeWindow: json['timeWindow'] as String?,
   timeWindowLabel: json['timeWindowLabel'] as String?,
   deliveryDetails: json['deliveryDetails'] == null
@@ -26,42 +31,49 @@ Order _$OrderFromJson(Map<String, dynamic> json) => Order(
       : DeliveryDetails.fromJson(
           json['deliveryDetails'] as Map<String, dynamic>,
         ),
-  subtotal: (json['subtotal'] as num?)?.toInt(),
+  orderNotes: json['orderNotes'] as String?,
+  items: (json['items'] as List<dynamic>?)
+      ?.map((e) => Item.fromJson(e as Map<String, dynamic>))
+      .toList(),
+  subtotal: (json['subtotal'] as num?)?.toDouble(),
   deliveryFee: (json['deliveryFee'] as num?)?.toInt(),
-  total: (json['total'] as num?)?.toInt(),
+  deliveryBreakdown: (json['deliveryBreakdown'] as List<dynamic>?)
+      ?.map((e) => DeliveryBreakdown.fromJson(e as Map<String, dynamic>))
+      .toList(),
+  splitOrder: json['splitOrder'] as bool?,
+  deliveries: json['deliveries'] as List<dynamic>?,
+  total: (json['total'] as num?)?.toDouble(),
   currency: json['currency'] as String?,
   payment: json['payment'] == null
       ? null
       : Payment.fromJson(json['payment'] as Map<String, dynamic>),
-  createdAt: json['createdAt'] == null
-      ? null
-      : DateTime.parse(json['createdAt'] as String),
-  updatedAt: json['updatedAt'] == null
-      ? null
-      : DateTime.parse(json['updatedAt'] as String),
-  deliveryBreakdown: (json['deliveryBreakdown'] as List<dynamic>?)
-      ?.map((e) => DeliveryBreakdown.fromJson(e as Map<String, dynamic>))
-      .toList(),
 );
 
 Map<String, dynamic> _$OrderToJson(Order instance) => <String, dynamic>{
   'id': instance.id,
   'orderNumber': instance.orderNumber,
-  'buyerTenantId': instance.buyerTenantId,
-  'buyerUserId': instance.buyerUserId,
+  'placedAt': instance.placedAt?.toIso8601String(),
   'status': instance.status,
-  'items': instance.items,
+  'statusLabel': instance.statusLabel,
+  'badgeText': instance.badgeText,
+  'statusCounts': instance.statusCounts,
+  'distributorCount': instance.distributorCount,
+  'paymentStatus': instance.paymentStatus,
+  'paymentStatusLabel': instance.paymentStatusLabel,
   'deliveryMethod': instance.deliveryMethod,
-  'deliveryDate': instance.deliveryDate?.toIso8601String(),
+  'deliveryMethodLabel': instance.deliveryMethodLabel,
+  'deliveryDate': instance.deliveryDate,
   'timeWindow': instance.timeWindow,
   'timeWindowLabel': instance.timeWindowLabel,
   'deliveryDetails': instance.deliveryDetails,
+  'orderNotes': instance.orderNotes,
+  'items': instance.items,
   'subtotal': instance.subtotal,
   'deliveryFee': instance.deliveryFee,
+  'deliveryBreakdown': instance.deliveryBreakdown,
+  'splitOrder': instance.splitOrder,
+  'deliveries': instance.deliveries,
   'total': instance.total,
   'currency': instance.currency,
   'payment': instance.payment,
-  'createdAt': instance.createdAt?.toIso8601String(),
-  'updatedAt': instance.updatedAt?.toIso8601String(),
-  'deliveryBreakdown': instance.deliveryBreakdown,
 };

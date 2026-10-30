@@ -73,6 +73,7 @@ import '../../core_folder/manager/shared_preference.dart';
 import '../model/business_addresses_entity.dart';
 import '../model/change_phone_no_response_model/change_phone_no_response_model.dart';
 import '../model/checkout_delivery_option_entity_model.dart';
+import '../model/checkout_split_delivery_option_entity_model/checkout_split_delivery_option_entity_model.dart';
 import '../model/create_payment_wallet_entity_model.dart';
 import '../model/create_payment_wallet_model/create_payment_wallet_model.dart';
 import '../model/create_tenant_reminder_entity_model/create_tenant_reminder_entity_model.dart';
@@ -85,6 +86,7 @@ import '../model/distributor_wholesale_category_model/distributor_wholesale_cate
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
 import '../model/get_checkout_delivery_option_response_model/get_checkout_delivery_option_response_model.dart';
 import '../model/get_checkout_delivery_option_response_model/time_block.dart';
+import '../model/get_checkout_delivery_option_split_response_model/get_checkout_delivery_option_split_response_model.dart';
 import '../model/get_created_user_response_model/get_created_user_response_model.dart';
 import '../model/get_created_user_response_model/staff.dart';
 import '../model/get_marketplace_upgrade_response_model/get_marketplace_upgrade_response_model.dart';
@@ -108,12 +110,18 @@ import '../model/pay_with_wallet_response_model/pay_with_wallet_response_model.d
 import '../model/pharmacy_login_response_model/pharmacy_login_response_model.dart';
 import '../model/place_order_accelerate_entity_model/place_order_accelerate_entity_model.dart';
 import '../model/place_order_accelerate_response_model/place_order_accelerate_response_model.dart';
+import '../model/place_order_accelerate_split_entity_model/place_order_accelerate_split_entity_model.dart';
+import '../model/place_order_accelerate_split_response_model/place_order_accelerate_split_response_model.dart';
 import '../model/place_order_wallet_entity_model/place_order_wallet_entity_model.dart';
 import '../model/place_order_wallet_response_model/place_order_wallet_response_model.dart';
 import '../model/quote_instant_delivery_entity_model.dart';
 import '../model/quote_instant_delivery_response_model/quote_instant_delivery_response_model.dart';
+import '../model/quote_instant_split_delivery_entity_model/quote_instant_split_delivery_entity_model.dart';
+import '../model/quote_instant_split_delivery_response_model/quote_instant_split_delivery_response_model.dart';
 import '../model/quote_schedule_delivery_eneity_model.dart';
 import '../model/quote_schedule_delivery_response_model/quote_schedule_delivery_response_model.dart';
+import '../model/quote_schedule_split_delivery_entity_model/quote_schedule_split_delivery_entity_model.dart';
+import '../model/quote_schedule_split_delivery_response_model/quote_schedule_split_delivery_response_model.dart';
 import '../model/resend_otp_entity_model.dart';
 import '../model/resend_otp_response_model/resend_otp_response_model.dart';
 import '../model/reset_password_entity_model.dart';
@@ -174,6 +182,16 @@ import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc
 import 'package:medicate_app/core/connect_end/model/get_marketplace_upgrade_response_model/coverage_area.dart';
 import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/cac_certificate.dart'
     as cac;
+import 'package:medicate_app/core/connect_end/model/quote_instant_split_delivery_entity_model/delivery.dart'
+    as inSplit;
+import 'package:medicate_app/core/connect_end/model/quote_instant_split_delivery_entity_model/item.dart'
+    as inSplitItem;
+import 'package:medicate_app/core/connect_end/model/quote_schedule_split_delivery_entity_model/delivery.dart'
+    as schSplit;
+import 'package:medicate_app/core/connect_end/model/place_order_accelerate_split_entity_model/delivery.dart'
+    as accSplit;
+import 'package:medicate_app/core/connect_end/model/place_order_accelerate_split_entity_model/item.dart'
+    as accSplitItem;
 
 class PharmViewModel extends BaseViewModel {
   final BuildContext? context;
@@ -274,6 +292,12 @@ class PharmViewModel extends BaseViewModel {
   GetCheckoutDeliveryOptionResponseModel?
   get getCheckoutDeliveryOptionResponseModel =>
       _getCheckoutDeliveryOptionResponseModel;
+
+  GetCheckoutDeliveryOptionSplitResponseModel?
+  _getCheckoutSplitDeliveryOptionResponseModel;
+  GetCheckoutDeliveryOptionSplitResponseModel?
+  get getCheckoutSplitDeliveryOptionResponseModel =>
+      _getCheckoutSplitDeliveryOptionResponseModel;
 
   GetCreatedUserResponseModel? _getCreatedUserResponseModel;
   GetCreatedUserResponseModel? get getCreatedUserResponseModel =>
@@ -390,9 +414,28 @@ class PharmViewModel extends BaseViewModel {
   QuoteScheduleDeliveryResponseModel? _quoteScheduleDeliveryResponseModel;
   QuoteScheduleDeliveryResponseModel? get quoteScheduleDeliveryResponseModel =>
       _quoteScheduleDeliveryResponseModel;
+
+  QuoteInstantSplitDeliveryResponseModel?
+  _quoteInstantSplitDeliveryResponseModel;
+  QuoteInstantSplitDeliveryResponseModel?
+  get quoteInstantSplitDeliveryResponseModel =>
+      _quoteInstantSplitDeliveryResponseModel;
+  QuoteScheduleSplitDeliveryResponseModel?
+  _quoteScheduleSplitDeliveryResponseModel;
+  QuoteScheduleSplitDeliveryResponseModel?
+  get quoteScheduleSplitDeliveryResponseModel =>
+      _quoteScheduleSplitDeliveryResponseModel;
+
   PlaceOrderAccelerateResponseModel? _placeOrderAccelerateResponseModel;
   PlaceOrderAccelerateResponseModel? get placeOrderAccelerateResponseModel =>
       _placeOrderAccelerateResponseModel;
+
+  PlaceOrderAccelerateSplitResponseModel?
+  _placeOrderAccelerateSplitResponseModel;
+  PlaceOrderAccelerateSplitResponseModel?
+  get placeOrderAccelerateSplitResponseModel =>
+      _placeOrderAccelerateSplitResponseModel;
+
   PlaceOrderWalletResponseModel? _placeOrderWalletResponseModel;
   PlaceOrderWalletResponseModel? get placeOrderWalletResponseModel =>
       _placeOrderWalletResponseModel;
@@ -829,6 +872,7 @@ class PharmViewModel extends BaseViewModel {
   List<int> intList = [];
   List<int> intListCustom = [];
   int deliveryFeeAmount = 0;
+  int splitDeliveryFeeAmount = 0;
 
   GlobalKey<FormState> formKeyEmailReminder = GlobalKey<FormState>();
   GlobalKey<FormState> formKeyPhoneReminder = GlobalKey<FormState>();
@@ -941,6 +985,7 @@ class PharmViewModel extends BaseViewModel {
   BusinessAddresses? profileUpdate;
   List<BusinessAddresses> approvedAddresses = [];
   var cartItems = [];
+  List<inSplit.Delivery>? deliveries;
 
   SubmitLevelTwoKycEntityModel _submitLevelTwoKycEntityModelMeansOfId =
       SubmitLevelTwoKycEntityModel();
@@ -962,16 +1007,40 @@ class PharmViewModel extends BaseViewModel {
   // Address ID -> Product ID -> Allocated quantity.
   final Map<String, Map<String, int>> splitQuantities = {};
 
+  getDeliveriesInList() {
+    deliveries = approvedAddresses.map((address) {
+      final List<inSplitItem.Item> items = [];
+
+      for (final product in cartItems) {
+        final quantity = getSplitQuantity(address: address, product: product);
+
+        // Only add products with allocated quantities.
+        if (quantity > 0) {
+          items.add(
+            inSplitItem.Item(
+              productId: product.productId, // Use your actual product ID field
+              quantity: quantity,
+            ),
+          );
+        }
+      }
+
+      return inSplit.Delivery(deliveryAddressId: address.id, items: items);
+    }).toList();
+  }
+
   String _addressKey(BusinessAddresses address) {
     return address.id.toString();
   }
 
   String _productKey(dynamic product) {
-    logger.d(product.product.toJson());
     return product.product.id.toString();
   }
 
-  int getSplitQuantity({required BusinessAddresses address, required dynamic product}) {
+  int getSplitQuantity({
+    required BusinessAddresses address,
+    required dynamic product,
+  }) {
     return splitQuantities[_addressKey(address)]?[_productKey(product)] ?? 0;
   }
 
@@ -1014,26 +1083,25 @@ class PharmViewModel extends BaseViewModel {
     required int delta,
     required List<BusinessAddresses> approvedAddresses,
   }) {
-  final currentQuantity = getSplitQuantity(
-    address: address,
-    product: product,
-  );
+    final currentQuantity = getSplitQuantity(
+      address: address,
+      product: product,
+    );
 
-  // Do not decrement below 1.
-  if (delta < 0 && currentQuantity <= 1) {
-    return false;
+    // Do not decrement below 1.
+    if (delta < 0 && currentQuantity <= 1) {
+      return false;
+    }
+
+    // Apply the increment or decrement.
+    final newQuantity = currentQuantity + delta;
+
+    splitQuantities[_addressKey(address)] ??= {};
+    splitQuantities[_addressKey(address)]![_productKey(product)] = newQuantity;
+
+    notifyListeners();
+    return true;
   }
-
-  // Apply the increment or decrement.
-  final newQuantity = currentQuantity + delta;
-
-  splitQuantities[_addressKey(address)] ??= {};
-  splitQuantities[_addressKey(address)]![_productKey(product)] =
-      newQuantity;
-
-  notifyListeners();
-  return true;
-}
 
   void showManufacturerDetailDialog(BuildContext context, {Product? product}) {
     showDialog(
@@ -4953,9 +5021,6 @@ class PharmViewModel extends BaseViewModel {
                         Future.delayed(Duration(milliseconds: 200), () {
                           Navigator.pop(ctx, indexDaily.toString());
                         });
-                        print(
-                          'isCusScheduleisCusScheduleisCusSchedule::: ${model.isCusSchedule} ',
-                        );
                       },
                       child: Container(
                         margin: EdgeInsets.only(bottom: 12.w),
@@ -19348,7 +19413,11 @@ class PharmViewModel extends BaseViewModel {
     return takenCount / totalCount;
   }
 
-  void makePaymentWallet({context, double? amount}) {
+  void makePaymentWallet({
+    context,
+    double? amount,
+    List<inSplit.Delivery>? deliveries,
+  }) {
     showDialog(
       context: context,
       barrierDismissible: false, // prevent closing by tapping outside
@@ -19548,119 +19617,176 @@ class PharmViewModel extends BaseViewModel {
                                         ? () {}
                                         : () async {
                                             if (delivery == Delivery.instance) {
-                                              await quoteInstantDelivery(
-                                                context: context,
-                                                instantDelivery:
-                                                    QuoteInstantDeliveryEntityModel(
-                                                      deliveryMethod: 'INSTANT',
-                                                      deliveryAddressId:
-                                                          mapLocationAddressSelected!
-                                                              .id,
-                                                    ),
-                                              );
-                                            } else {
-                                              await quoteScheduleDelivery(
-                                                context: context,
-                                                scheduleDelivery:
-                                                    QuoteScheduleDeliveryEneityModel(
-                                                      deliveryMethod:
-                                                          'SCHEDULED_BLOCK',
-                                                      deliveryAddressId:
-                                                          mapLocationAddressSelected!
-                                                              .id,
-                                                      deliveryDate: convertDate(
-                                                        dateTimeController.text,
+                                              if (isDeliveryAddressTap) {
+                                                await quoteInstantSplitDelivery(
+                                                  context: context,
+                                                  instantSplitDelivery:
+                                                      QuoteInstantSplitDeliveryEntityModel(
+                                                        deliveryMethod:
+                                                            'INSTANT',
+                                                        splitOrder: true,
+                                                        deliveries: deliveries,
                                                       ),
-                                                      timeBlockEnd:
-                                                          time!.endTime,
-                                                      timeBlockStart:
-                                                          time!.startTime,
-                                                    ),
-                                              );
+                                                );
+                                              } else {
+                                                await quoteInstantDelivery(
+                                                  context: context,
+                                                  instantDelivery:
+                                                      QuoteInstantDeliveryEntityModel(
+                                                        deliveryMethod:
+                                                            'INSTANT',
+                                                        deliveryAddressId:
+                                                            mapLocationAddressSelected!
+                                                                .id,
+                                                      ),
+                                                );
+                                              }
+                                            } else {
+                                              if (isDeliveryAddressTap) {
+                                                List<schSplit.Delivery>
+                                                schdeliveries = deliveries!.map(
+                                                  (delivery) {
+                                                    return schSplit
+                                                        .Delivery.fromJson(
+                                                      delivery.toJson(),
+                                                    );
+                                                  },
+                                                ).toList();
+                                                await Future.delayed(
+                                                  Duration(seconds: 1),
+                                                );
+                                                await quoteScheduleSplitDelivery(
+                                                  context: context,
+                                                  scheduleSplitDelivery:
+                                                      QuoteScheduleSplitDeliveryEntityModel(
+                                                        deliveryMethod:
+                                                            'SCHEDULED_BLOCK',
+                                                        deliveryDate:
+                                                            convertDate(
+                                                              dateTimeController
+                                                                  .text,
+                                                            ),
+                                                        timeBlockEnd:
+                                                            time!.endTime,
+                                                        timeBlockStart:
+                                                            time!.startTime,
+                                                        splitOrder: true,
+                                                        deliveries:
+                                                            schdeliveries,
+                                                      ),
+                                                );
+                                              } else {
+                                                await quoteScheduleDelivery(
+                                                  context: context,
+                                                  scheduleDelivery:
+                                                      QuoteScheduleDeliveryEneityModel(
+                                                        deliveryMethod:
+                                                            'SCHEDULED_BLOCK',
+                                                        deliveryAddressId:
+                                                            mapLocationAddressSelected!
+                                                                .id,
+                                                        deliveryDate:
+                                                            convertDate(
+                                                              dateTimeController
+                                                                  .text,
+                                                            ),
+                                                        timeBlockEnd:
+                                                            time!.endTime,
+                                                        timeBlockStart:
+                                                            time!.startTime,
+                                                      ),
+                                                );
+                                              }
                                             }
                                             await Future.delayed(
                                               Duration(microseconds: 100),
                                             );
-                                            placeOrderWallet(
-                                              context: context,
-                                              amount: amount,
-                                              placeOrderWallet: PlaceOrderWalletEntityModel(
-                                                deliveryMethod:
-                                                    delivery ==
-                                                        Delivery.instance
-                                                    ? 'INSTANT'
-                                                    : 'SCHEDULED_BLOCK',
-                                                deliveryAddressId:
-                                                    mapLocationAddressSelected!
-                                                        .id,
-                                                deliveryDate:
-                                                    _quoteScheduleDeliveryResponseModel !=
-                                                        null
-                                                    ? convertDate(
-                                                        dateTimeController.text,
-                                                      )
-                                                    : null,
-                                                deliveryDetails: del.DeliveryDetails(
-                                                  state:
+
+                                            if (isDeliveryAddressTap) {
+                                            } else {
+                                              placeOrderWallet(
+                                                context: context,
+                                                amount: amount,
+                                                placeOrderWallet: PlaceOrderWalletEntityModel(
+                                                  deliveryMethod:
+                                                      delivery ==
+                                                          Delivery.instance
+                                                      ? 'INSTANT'
+                                                      : 'SCHEDULED_BLOCK',
+                                                  deliveryAddressId:
                                                       mapLocationAddressSelected!
-                                                          .state,
-                                                  lga:
-                                                      mapLocationAddressSelected!
-                                                          .lga,
-                                                  contactPhone:
-                                                      phoneController.text,
-                                                  deliveryAddress:
-                                                      mapLocationAddressSelected!
-                                                          .businessAddress,
-                                                  orderNotes:
-                                                      orderNotesController.text,
+                                                          .id,
+                                                  deliveryDate:
+                                                      _quoteScheduleDeliveryResponseModel !=
+                                                          null
+                                                      ? convertDate(
+                                                          dateTimeController
+                                                              .text,
+                                                        )
+                                                      : null,
+                                                  deliveryDetails: del.DeliveryDetails(
+                                                    state:
+                                                        mapLocationAddressSelected!
+                                                            .state,
+                                                    lga:
+                                                        mapLocationAddressSelected!
+                                                            .lga,
+                                                    contactPhone:
+                                                        phoneController.text,
+                                                    deliveryAddress:
+                                                        mapLocationAddressSelected!
+                                                            .businessAddress,
+                                                    orderNotes:
+                                                        orderNotesController
+                                                            .text,
+                                                  ),
+                                                  paymentMethod: "WALLET",
+                                                  expectedDeliveryFee:
+                                                      _quoteInstantDeliveryResponseModel !=
+                                                          null
+                                                      ? _quoteInstantDeliveryResponseModel!
+                                                            .data!
+                                                            .checkout!
+                                                            .deliveryFee
+                                                      : _quoteScheduleDeliveryResponseModel!
+                                                            .data!
+                                                            .checkout!
+                                                            .deliveryFee,
+                                                  expectedSubtotal:
+                                                      _quoteInstantDeliveryResponseModel !=
+                                                          null
+                                                      ? _quoteInstantDeliveryResponseModel!
+                                                            .data!
+                                                            .checkout!
+                                                            .subtotal!
+                                                      : _quoteScheduleDeliveryResponseModel!
+                                                            .data!
+                                                            .checkout!
+                                                            .subtotal!,
+                                                  expectedTotal:
+                                                      _quoteInstantDeliveryResponseModel !=
+                                                          null
+                                                      ? _quoteInstantDeliveryResponseModel!
+                                                            .data!
+                                                            .checkout!
+                                                            .total!
+                                                      : _quoteScheduleDeliveryResponseModel!
+                                                            .data!
+                                                            .checkout!
+                                                            .total!,
+                                                  timeBlockStart:
+                                                      _quoteScheduleDeliveryResponseModel !=
+                                                          null
+                                                      ? time!.startTime
+                                                      : null,
+                                                  timeBlockEnd:
+                                                      _quoteScheduleDeliveryResponseModel !=
+                                                          null
+                                                      ? time!.endTime
+                                                      : null,
                                                 ),
-                                                paymentMethod: "WALLET",
-                                                expectedDeliveryFee:
-                                                    _quoteInstantDeliveryResponseModel !=
-                                                        null
-                                                    ? _quoteInstantDeliveryResponseModel!
-                                                          .data!
-                                                          .checkout!
-                                                          .deliveryFee
-                                                    : _quoteScheduleDeliveryResponseModel!
-                                                          .data!
-                                                          .checkout!
-                                                          .deliveryFee,
-                                                expectedSubtotal:
-                                                    _quoteInstantDeliveryResponseModel !=
-                                                        null
-                                                    ? _quoteInstantDeliveryResponseModel!
-                                                          .data!
-                                                          .checkout!
-                                                          .subtotal!
-                                                    : _quoteScheduleDeliveryResponseModel!
-                                                          .data!
-                                                          .checkout!
-                                                          .subtotal!,
-                                                expectedTotal:
-                                                    _quoteInstantDeliveryResponseModel !=
-                                                        null
-                                                    ? _quoteInstantDeliveryResponseModel!
-                                                          .data!
-                                                          .checkout!
-                                                          .total!
-                                                    : _quoteScheduleDeliveryResponseModel!
-                                                          .data!
-                                                          .checkout!
-                                                          .total!,
-                                                timeBlockStart:
-                                                    _quoteScheduleDeliveryResponseModel !=
-                                                        null
-                                                    ? time!.startTime
-                                                    : null,
-                                                timeBlockEnd:
-                                                    _quoteScheduleDeliveryResponseModel !=
-                                                        null
-                                                    ? time!.endTime
-                                                    : null,
-                                              ),
-                                            );
+                                              );
+                                            }
 
                                             model.notifyListeners();
                                           },
@@ -21461,79 +21587,190 @@ class PharmViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  paymentMethodFlowWholesale(context, {double? amount}) async {
+  paymentMethodFlowWholesale(
+    context, {
+    double? amount,
+    List<inSplit.Delivery>? deliveries,
+    List<TextEditingController>? nameOfPersonControllerList,
+    List<TextEditingController>? phoneControllerList,
+    List<TextEditingController>? formIDControllerList,
+    List<TextEditingController>? orderNotesControllerList,
+  }) async {
     if (payMethod == PayMethod.accelerate) {
       if (delivery == Delivery.instance) {
-        await quoteInstantDelivery(
+        if (isDeliveryAddressTap) {
+          await quoteInstantSplitDelivery(
+            context: context,
+            instantSplitDelivery: QuoteInstantSplitDeliveryEntityModel(
+              deliveryMethod: 'INSTANT',
+              splitOrder: true,
+              deliveries: deliveries,
+            ),
+          );
+        } else {
+          await quoteInstantDelivery(
+            context: context,
+            instantDelivery: QuoteInstantDeliveryEntityModel(
+              deliveryMethod: 'INSTANT',
+              deliveryAddressId: mapLocationAddressSelected!.id,
+            ),
+          );
+        }
+      } else {
+        if (isDeliveryAddressTap) {
+          List<schSplit.Delivery> schdeliveries = deliveries!.map((delivery) {
+            return schSplit.Delivery.fromJson(delivery.toJson());
+          }).toList();
+          await Future.delayed(Duration(seconds: 1));
+          await quoteScheduleSplitDelivery(
+            context: context,
+            scheduleSplitDelivery: QuoteScheduleSplitDeliveryEntityModel(
+              deliveryMethod: 'SCHEDULED_BLOCK',
+              deliveryDate: convertDate(dateTimeController.text),
+              timeBlockEnd: time!.endTime,
+              timeBlockStart: time!.startTime,
+              splitOrder: true,
+              deliveries: schdeliveries,
+            ),
+          );
+        } else {
+          await quoteScheduleDelivery(
+            context: context,
+            scheduleDelivery: QuoteScheduleDeliveryEneityModel(
+              deliveryMethod: 'SCHEDULED_BLOCK',
+              deliveryAddressId: mapLocationAddressSelected!.id,
+              deliveryDate: convertDate(dateTimeController.text),
+              timeBlockEnd: time!.endTime,
+              timeBlockStart: time!.startTime,
+            ),
+          );
+        }
+      }
+      await Future.delayed(Duration(microseconds: 100));
+
+      if (isDeliveryAddressTap) {
+        List<accSplit.Delivery> deliveriesSplit = deliveries!
+            .asMap()
+            .entries
+            .map((delivery) {
+              int indx = delivery.key;
+              final val = delivery.value;
+              List<accSplitItem.Item> itemSplit = val.items!.map((m) {
+                return accSplitItem.Item.fromJson(m.toJson());
+              }).toList();
+              return accSplit.Delivery(
+                deliveryAddressId: val.deliveryAddressId,
+                recipientName: nameOfPersonControllerList?[indx].text ?? '',
+                recipientIdType: formIDControllerList?[indx].text ?? '',
+                contactPhone: phoneControllerList?[indx].text ?? '',
+                orderNotes: orderNotesControllerList?[indx].text ?? '',
+                items: itemSplit,
+              );
+            })
+            .toList();
+        placeOrderAccelerateSplit(
           context: context,
-          instantDelivery: QuoteInstantDeliveryEntityModel(
-            deliveryMethod: 'INSTANT',
-            deliveryAddressId: mapLocationAddressSelected!.id,
+          placeOrderAccelerate: PlaceOrderAccelerateSplitEntityModel(
+            deliveryMethod: delivery == Delivery.instance
+                ? 'INSTANT'
+                : 'SCHEDULED_BLOCK',
+            paymentMethod: 'ACCELERATE',
+            splitOrder: true,
+            callbackUrl:
+                "https://app.medicate.health/wholesale/orders/payment-callback",
+            expectedDeliveryFee: _quoteInstantSplitDeliveryResponseModel != null
+                ? _quoteInstantSplitDeliveryResponseModel!
+                      .data!
+                      .checkout!
+                      .deliveryFee
+                : _quoteScheduleSplitDeliveryResponseModel!
+                      .data!
+                      .checkout!
+                      .deliveryFee,
+            expectedSubtotal: _quoteInstantSplitDeliveryResponseModel != null
+                ? _quoteInstantSplitDeliveryResponseModel!
+                      .data!
+                      .checkout!
+                      .subtotal!
+                : _quoteScheduleSplitDeliveryResponseModel!
+                      .data!
+                      .checkout!
+                      .subtotal!,
+            expectedTotal: _quoteInstantSplitDeliveryResponseModel != null
+                ? _quoteInstantSplitDeliveryResponseModel!
+                      .data!
+                      .checkout!
+                      .total!
+                : _quoteScheduleSplitDeliveryResponseModel!
+                      .data!
+                      .checkout!
+                      .total!,
+            deliveries: deliveriesSplit,
+            deliveryDate: delivery == Delivery.instance
+                ? null
+                : convertDate(dateTimeController.text),
           ),
         );
       } else {
-        await quoteScheduleDelivery(
+        placeOrderAccelerate(
           context: context,
-          scheduleDelivery: QuoteScheduleDeliveryEneityModel(
-            deliveryMethod: 'SCHEDULED_BLOCK',
+          placeOrderAccelerate: PlaceOrderAccelerateEntityModel(
+            deliveryMethod: delivery == Delivery.instance
+                ? 'INSTANT'
+                : 'SCHEDULED_BLOCK',
+
             deliveryAddressId: mapLocationAddressSelected!.id,
-            deliveryDate: convertDate(dateTimeController.text),
-            timeBlockEnd: time!.endTime,
-            timeBlockStart: time!.startTime,
+            deliveryDetails: DeliveryDetails(
+              state: mapLocationAddressSelected!.state,
+              lga: mapLocationAddressSelected!.lga,
+              contactPhone: phoneController.text,
+              recipientName: nameOfPersonController.text,
+              recipientIdType: formIDController.text,
+              deliveryAddress: mapLocationAddressSelected!.businessAddress,
+              orderNotes: orderNotesController.text,
+            ),
+            paymentMethod: 'ACCELERATE',
+            callbackUrl:
+                "https://app.medicate.health/wholesale/orders/payment-callback",
+            expectedDeliveryFee: _quoteInstantDeliveryResponseModel != null
+                ? _quoteInstantDeliveryResponseModel!
+                      .data!
+                      .checkout!
+                      .deliveryFee
+                : _quoteScheduleDeliveryResponseModel!
+                      .data!
+                      .checkout!
+                      .deliveryFee,
+            expectedSubtotal: _quoteInstantDeliveryResponseModel != null
+                ? _quoteInstantDeliveryResponseModel!.data!.checkout!.subtotal!
+                : _quoteScheduleDeliveryResponseModel!
+                      .data!
+                      .checkout!
+                      .subtotal!,
+            expectedTotal: _quoteInstantDeliveryResponseModel != null
+                ? _quoteInstantDeliveryResponseModel!.data!.checkout!.total!
+                : _quoteScheduleDeliveryResponseModel!.data!.checkout!.total!,
+
+            deliveryDate: delivery == Delivery.instance
+                ? null
+                : convertDate(dateTimeController.text),
+            timeBlockStart: delivery == Delivery.instance
+                ? null
+                : time!.startTime,
+            timeBlockEnd: delivery == Delivery.instance ? null : time!.endTime,
+            timeWindow: delivery == Delivery.instance
+                ? null
+                : time!.name!.toUpperCase(),
           ),
         );
       }
-      await Future.delayed(Duration(microseconds: 100));
-      placeOrderAccelerate(
-        context: context,
-        placeOrderAccelerate: PlaceOrderAccelerateEntityModel(
-          deliveryMethod: delivery == Delivery.instance
-              ? 'INSTANT'
-              : 'SCHEDULED_BLOCK',
-
-          deliveryAddressId: mapLocationAddressSelected!.id,
-          deliveryDetails: DeliveryDetails(
-            state: mapLocationAddressSelected!.state,
-            lga: mapLocationAddressSelected!.lga,
-            contactPhone: phoneController.text,
-            deliveryAddress: mapLocationAddressSelected!.businessAddress,
-            orderNotes: orderNotesController.text,
-          ),
-          paymentMethod: 'ACCELERATE',
-          callbackUrl:
-              "https://app.medicate.health/wholesale/orders/payment-callback",
-          expectedDeliveryFee: _quoteInstantDeliveryResponseModel != null
-              ? _quoteInstantDeliveryResponseModel!.data!.checkout!.deliveryFee
-              : _quoteScheduleDeliveryResponseModel!
-                    .data!
-                    .checkout!
-                    .deliveryFee,
-          expectedSubtotal: _quoteInstantDeliveryResponseModel != null
-              ? _quoteInstantDeliveryResponseModel!.data!.checkout!.subtotal!
-                    .toInt()
-              : _quoteScheduleDeliveryResponseModel!.data!.checkout!.subtotal!
-                    .toInt(),
-          expectedTotal: _quoteInstantDeliveryResponseModel != null
-              ? _quoteInstantDeliveryResponseModel!.data!.checkout!.total!
-                    .toInt()
-              : _quoteScheduleDeliveryResponseModel!.data!.checkout!.total!
-                    .toInt(),
-
-          deliveryDate: delivery == Delivery.instance
-              ? null
-              : convertDate(dateTimeController.text),
-          timeBlockStart: delivery == Delivery.instance
-              ? null
-              : time!.startTime,
-          timeBlockEnd: delivery == Delivery.instance ? null : time!.endTime,
-          timeWindow: delivery == Delivery.instance
-              ? null
-              : time!.name!.toUpperCase(),
-        ),
-      );
     }
     if (payMethod == PayMethod.wallet) {
-      makePaymentWallet(context: context, amount: amount);
+      makePaymentWallet(
+        context: context,
+        amount: amount,
+        deliveries: deliveries,
+      );
     }
     // if (payMethod == PayMethod.flutterwave) {}
     notifyListeners();
@@ -21624,7 +21861,6 @@ class PharmViewModel extends BaseViewModel {
       );
       if (_quoteInstantDeliveryResponseModel!.statusCode == 200 ||
           _quoteInstantDeliveryResponseModel!.statusCode == 201) {
-        // _wholesaleGetProductAddedToCartResponseModel = null;
         _quoteScheduleDeliveryResponseModel = null;
       }
       _isLoading = false;
@@ -21649,7 +21885,6 @@ class PharmViewModel extends BaseViewModel {
       );
       if (_quoteScheduleDeliveryResponseModel!.statusCode == 200 ||
           _quoteScheduleDeliveryResponseModel!.statusCode == 201) {
-        // _wholesaleGetProductAddedToCartResponseModel = null;
         _quoteInstantDeliveryResponseModel = null;
       }
       _isLoading = false;
@@ -21690,6 +21925,85 @@ class PharmViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  Future<void> quoteInstantSplitDelivery({
+    context,
+    QuoteInstantSplitDeliveryEntityModel? instantSplitDelivery,
+  }) async {
+    try {
+      _quoteInstantSplitDeliveryResponseModel = null;
+      _isLoading = true;
+      _quoteInstantSplitDeliveryResponseModel = await runBusyFuture(
+        repositoryImply.quoteInstantSplitDelivery(instantSplitDelivery),
+        throwException: true,
+      );
+      if (_quoteInstantSplitDeliveryResponseModel!.statusCode == 200 ||
+          _quoteInstantSplitDeliveryResponseModel!.statusCode == 201) {
+        _quoteScheduleSplitDeliveryResponseModel = null;
+      }
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> quoteScheduleSplitDelivery({
+    context,
+    QuoteScheduleSplitDeliveryEntityModel? scheduleSplitDelivery,
+  }) async {
+    try {
+      _quoteScheduleSplitDeliveryResponseModel = null;
+      _isLoading = true;
+      _quoteScheduleSplitDeliveryResponseModel = await runBusyFuture(
+        repositoryImply.quoteScheduleSplitDelivery(scheduleSplitDelivery),
+        throwException: true,
+      );
+      if (_quoteScheduleSplitDeliveryResponseModel!.statusCode == 200 ||
+          _quoteScheduleSplitDeliveryResponseModel!.statusCode == 201) {
+        _quoteInstantSplitDeliveryResponseModel = null;
+      }
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> getCheckoutSplitDeliveryOption({
+    context,
+    CheckoutSplitDeliveryOptionEntityModel? checkoutSplitDeliveryOption,
+  }) async {
+    try {
+      _getCheckoutSplitDeliveryOptionResponseModel = null;
+      _isLoading = true;
+      _getCheckoutSplitDeliveryOptionResponseModel = await runBusyFuture(
+        repositoryImply.checkoutSplitDeliveryOption(
+          checkoutSplitDeliveryOption!,
+        ),
+        throwException: true,
+      );
+      // if (delivery == Delivery.schedule &&
+      //     _getCheckoutSplitDeliveryOptionResponseModel!.data!.deliveries!.isEmpty) {
+      //   AppUtils.snackbar(
+      //     context,
+      //     message:
+      //         'Delivery is not available for ${_getCheckoutSplitDeliveryOptionResponseModel!.data!.destination!.lgaName ?? ''},  ${_getCheckoutDeliveryOptionResponseModel!.data!.destination!.stateName ?? ''}.',
+      //     error: true,
+      //   );
+      // }
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
   Future<void> placeOrderAccelerate({
     context,
     PlaceOrderAccelerateEntityModel? placeOrderAccelerate,
@@ -21705,6 +22019,34 @@ class PharmViewModel extends BaseViewModel {
           Routes.acceleratePaymentViewPharmacy,
           arguments: AcceleratePaymentViewPharmacyArguments(
             url: _placeOrderAccelerateResponseModel?.data?.payment?.redirectUrl,
+          ),
+        );
+      }
+
+      _isLoadingWallet = false;
+    } catch (e) {
+      _isLoadingWallet = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> placeOrderAccelerateSplit({
+    context,
+    PlaceOrderAccelerateSplitEntityModel? placeOrderAccelerate,
+  }) async {
+    try {
+      _isLoadingWallet = true;
+      _placeOrderAccelerateSplitResponseModel = await runBusyFuture(
+        repositoryImply.placeOrderAccelerateSplit(placeOrderAccelerate),
+        throwException: true,
+      );
+      if (_placeOrderAccelerateSplitResponseModel!.statusCode == 201) {
+        navigate.navigateTo(
+          Routes.acceleratePaymentViewPharmacy,
+          arguments: AcceleratePaymentViewPharmacyArguments(
+            url: _placeOrderAccelerateSplitResponseModel?.data?.payment?.redirectUrl,
           ),
         );
       }

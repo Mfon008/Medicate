@@ -1471,7 +1471,7 @@ class ManufacturerViewProductScreen extends StatelessWidget {
                                     ],
                                   ),
                                 ),
-                                
+
                                 // Container(
                                 //   padding: EdgeInsets.symmetric(
                                 //     vertical: 6.2.w,
