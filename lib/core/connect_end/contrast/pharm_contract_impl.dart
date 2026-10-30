@@ -42,6 +42,8 @@ import '../model/place_order_accelerate_split_entity_model/place_order_accelerat
 import '../model/place_order_accelerate_split_response_model/place_order_accelerate_split_response_model.dart';
 import '../model/place_order_wallet_entity_model/place_order_wallet_entity_model.dart';
 import '../model/place_order_wallet_response_model/place_order_wallet_response_model.dart';
+import '../model/place_order_wallet_split_entity_model/place_order_wallet_split_entity_model.dart';
+import '../model/place_order_wallet_split_response_model/place_order_wallet_split_response_model.dart';
 import '../model/quote_instant_delivery_entity_model.dart';
 import '../model/quote_instant_delivery_response_model/quote_instant_delivery_response_model.dart';
 import '../model/quote_instant_split_delivery_entity_model/quote_instant_split_delivery_entity_model.dart';
@@ -307,6 +309,9 @@ class PharmContractsImpl {
   Future<PlaceOrderWalletResponseModel> placeOrderWallet(
     PlaceOrderWalletEntityModel? placeOrderWalletync,
   ) async => await _api.placeOrderWallet(placeOrderWalletync);
+ Future<PlaceOrderWalletSplitResponseModel> placeOrderWalletSplit(
+    PlaceOrderWalletSplitEntityModel? placeOrderWalletSplit,
+  ) async => await _api.placeOrderWalletSplit(placeOrderWalletSplit);
   Future<WholesaleOrderListResponseModel> getWholesaleOrderList({
     String? page,
   }) async => await _api.getWholesaleOrderList(page: page);

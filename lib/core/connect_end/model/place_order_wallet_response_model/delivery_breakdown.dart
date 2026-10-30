@@ -1,7 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
 import 'logistics_partner.dart';
-import 'time_block.dart';
 
 part 'delivery_breakdown.g.dart';
 
@@ -10,7 +9,7 @@ class DeliveryBreakdown {
   List<String>? productIds;
   List<String>? distributorIds;
   List<String>? distributorNames;
-  int? orderSubtotal;
+  double? orderSubtotal;
   String? locationId;
   String? stateCode;
   String? stateName;
@@ -18,8 +17,7 @@ class DeliveryBreakdown {
   String? lgaName;
   String? deliveryMethod;
   int? deliveryFee;
-  DateTime? deliveryDate;
-  TimeBlock? timeBlock;
+  int? estimatedDeliveryMinutes;
   LogisticsPartner? logisticsPartner;
   String? deliveryConditions;
 
@@ -35,8 +33,7 @@ class DeliveryBreakdown {
     this.lgaName,
     this.deliveryMethod,
     this.deliveryFee,
-    this.deliveryDate,
-    this.timeBlock,
+    this.estimatedDeliveryMinutes,
     this.logisticsPartner,
     this.deliveryConditions,
   });

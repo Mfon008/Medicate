@@ -48,6 +48,8 @@ import '../connect_end/model/place_order_accelerate_entity_model/place_order_acc
 import '../connect_end/model/place_order_accelerate_response_model/place_order_accelerate_response_model.dart';
 import '../connect_end/model/place_order_accelerate_split_entity_model/place_order_accelerate_split_entity_model.dart';
 import '../connect_end/model/place_order_accelerate_split_response_model/place_order_accelerate_split_response_model.dart';
+import '../connect_end/model/place_order_wallet_split_entity_model/place_order_wallet_split_entity_model.dart';
+import '../connect_end/model/place_order_wallet_split_response_model/place_order_wallet_split_response_model.dart';
 import '../connect_end/model/quote_instant_split_delivery_entity_model/quote_instant_split_delivery_entity_model.dart';
 import '../connect_end/model/quote_instant_split_delivery_response_model/quote_instant_split_delivery_response_model.dart';
 import '../connect_end/model/quote_schedule_delivery_eneity_model.dart';
@@ -1152,6 +1154,23 @@ class PharmApi {
       );
       logger.d(response.data);
       return PlaceOrderWalletResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<PlaceOrderWalletSplitResponseModel> placeOrderWalletSplit(
+    PlaceOrderWalletSplitEntityModel? placeOrderWalletSplit,
+  ) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.wholesale_checkout,
+        RequestMethod.post,
+        data: placeOrderWalletSplit?.toJson(),
+      );
+      logger.d(response.data);
+      return PlaceOrderWalletSplitResponseModel.fromJson(response.data);
     } catch (e) {
       logger.d("response:$e");
       rethrow;

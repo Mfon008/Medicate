@@ -1,31 +1,45 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import 'tracking.dart';
+
 part 'item.g.dart';
 
 @JsonSerializable()
 class Item {
+  String? orderItemId;
   String? productId;
-  String? manufacturerDistributorId;
   String? productName;
+  String? manufacturerName;
+  String? manufacturerDistributorId;
   String? manufacturerDistributorName;
-  String? categoryId;
-  String? category;
+  String? assignedDistributorId;
+  String? assignedDistributorName;
+  String? fulfillmentGroupId;
+  List<dynamic>? statusComments;
   String? sku;
   String? imageUrl;
   int? quantity;
-  int? unitPrice;
-  int? lineTotal;
+  double? unitPrice;
+  double? lineTotal;
   int? minimumOrderQuantity;
   int? packSize;
   String? unit;
+  DateTime? estimatedDeliveryDate;
+  String? fulfillmentStatus;
+  String? fulfillmentStatusLabel;
+  List<Tracking>? tracking;
 
   Item({
+    this.orderItemId,
     this.productId,
-    this.manufacturerDistributorId,
     this.productName,
+    this.manufacturerName,
+    this.manufacturerDistributorId,
     this.manufacturerDistributorName,
-    this.categoryId,
-    this.category,
+    this.assignedDistributorId,
+    this.assignedDistributorName,
+    this.fulfillmentGroupId,
+    this.statusComments,
     this.sku,
     this.imageUrl,
     this.quantity,
@@ -34,6 +48,10 @@ class Item {
     this.minimumOrderQuantity,
     this.packSize,
     this.unit,
+    this.estimatedDeliveryDate,
+    this.fulfillmentStatus,
+    this.fulfillmentStatusLabel,
+    this.tracking,
   });
 
   factory Item.fromJson(Map<String, dynamic> json) => _$ItemFromJson(json);

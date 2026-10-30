@@ -2,59 +2,68 @@ import 'package:json_annotation/json_annotation.dart';
 
 import 'delivery_breakdown.dart';
 import 'delivery_details.dart';
-import 'distributor_fulfillment.dart';
 import 'item.dart';
 import 'payment.dart';
+import 'status_counts.dart';
 
 part 'order.g.dart';
 
 @JsonSerializable()
 class Order {
-  @JsonKey(name: '_id')
   String? id;
   String? orderNumber;
-  String? buyerTenantId;
-  String? buyerUserId;
-  String? buyerTenantName;
+  DateTime? placedAt;
   String? status;
-  List<Item>? items;
-  List<DistributorFulfillment>? distributorFulfillments;
+  String? statusLabel;
+  String? badgeText;
+  StatusCounts? statusCounts;
+  int? distributorCount;
+  String? paymentStatus;
+  String? paymentStatusLabel;
   String? deliveryMethod;
-  DateTime? deliveryDate;
+  String? deliveryMethodLabel;
+  String? deliveryDate;
+  String? timeWindow;
   String? timeWindowLabel;
   DeliveryDetails? deliveryDetails;
-  List<DeliveryBreakdown>? deliveryBreakdown;
-  int? subtotal;
+  String? orderNotes;
+  List<Item>? items;
+  double? subtotal;
   int? deliveryFee;
-  int? total;
+  List<DeliveryBreakdown>? deliveryBreakdown;
+  bool? splitOrder;
+  List<dynamic>? deliveries;
+  double? total;
   String? currency;
   Payment? payment;
-  DateTime? createdAt;
-  DateTime? updatedAt;
-  DateTime? cartClearedAt;
 
   Order({
     this.id,
     this.orderNumber,
-    this.buyerTenantId,
-    this.buyerUserId,
-    this.buyerTenantName,
+    this.placedAt,
     this.status,
-    this.items,
-    this.distributorFulfillments,
+    this.statusLabel,
+    this.badgeText,
+    this.statusCounts,
+    this.distributorCount,
+    this.paymentStatus,
+    this.paymentStatusLabel,
     this.deliveryMethod,
+    this.deliveryMethodLabel,
     this.deliveryDate,
+    this.timeWindow,
     this.timeWindowLabel,
     this.deliveryDetails,
-    this.deliveryBreakdown,
+    this.orderNotes,
+    this.items,
     this.subtotal,
     this.deliveryFee,
+    this.deliveryBreakdown,
+    this.splitOrder,
+    this.deliveries,
     this.total,
     this.currency,
     this.payment,
-    this.createdAt,
-    this.updatedAt,
-    this.cartClearedAt,
   });
 
   factory Order.fromJson(Map<String, dynamic> json) => _$OrderFromJson(json);

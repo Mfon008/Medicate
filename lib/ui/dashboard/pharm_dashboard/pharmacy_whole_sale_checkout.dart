@@ -32,6 +32,7 @@ class PharmacyWholeSaleCheckout extends StatefulWidget {
 
 class _PharmacyWholeSaleCheckoutState extends State<PharmacyWholeSaleCheckout> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  GlobalKey<FormState> formKeySch = GlobalKey<FormState>();
   GlobalKey<FormState> formKeySplit = GlobalKey<FormState>();
 
   final ScrollController _orderSummaryScrollController = ScrollController();
@@ -1931,58 +1932,61 @@ class _PharmacyWholeSaleCheckoutState extends State<PharmacyWholeSaleCheckout> {
                                 ],
                               ),
                         model.delivery == Delivery.schedule
-                            ? Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SizedBox(height: 12.h),
-                                  TextFormWidget(
-                                    hint: 'Select Delivery Date',
-                                    label: 'Pick a date',
-                                    hintWeight: FontWeight.w400,
-                                    hintColor: AppColors.reminder,
-                                    hintSize: Platform.isAndroid
-                                        ? 14.sp
-                                        : 12.sp,
-                                    borderColor: AppColors.infoGrey1,
-                                    borderTopLeft: 10.r,
-                                    borderTopRight: 10.r,
-                                    borderBottomLeft: 10.r,
-                                    borderBottomRight: 10.r,
-                                    readOnly: true,
-                                    fillColor: AppColors.white,
-                                    isFilled: true,
-                                    controller: model.dateTimeController,
-                                    suffixWidget: Padding(
-                                      padding: EdgeInsets.all(8.w),
-                                      child: GestureDetector(
-                                        onTap: () async {
-                                          await model.selectDateCheckout(
-                                            context: context,
-                                            model: model,
-                                          );
-                                          model.notifyListeners();
-                                        },
-                                        child: SvgPicture.asset(
-                                          AppImage.calendar,
-                                          fit: BoxFit.cover,
+                            ? Form(
+                                key: formKeySch,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(height: 12.h),
+                                    TextFormWidget(
+                                      hint: 'Select Delivery Date',
+                                      label: 'Pick a date',
+                                      hintWeight: FontWeight.w400,
+                                      hintColor: AppColors.reminder,
+                                      hintSize: Platform.isAndroid
+                                          ? 14.sp
+                                          : 12.sp,
+                                      borderColor: AppColors.infoGrey1,
+                                      borderTopLeft: 10.r,
+                                      borderTopRight: 10.r,
+                                      borderBottomLeft: 10.r,
+                                      borderBottomRight: 10.r,
+                                      readOnly: true,
+                                      fillColor: AppColors.white,
+                                      isFilled: true,
+                                      controller: model.dateTimeController,
+                                      suffixWidget: Padding(
+                                        padding: EdgeInsets.all(8.w),
+                                        child: GestureDetector(
+                                          onTap: () async {
+                                            await model.selectDateCheckout(
+                                              context: context,
+                                              model: model,
+                                            );
+                                            model.notifyListeners();
+                                          },
+                                          child: SvgPicture.asset(
+                                            AppImage.calendar,
+                                            fit: BoxFit.cover,
+                                          ),
                                         ),
                                       ),
+                                      validator: AppValidator.validateString(),
+                                      style: TextStyle(
+                                        fontSize: 16.20.sp,
+                                        fontWeight: FontWeight.w400,
+                                        fontFamily: 'DMSans',
+                                      ),
+                                      labelStyle: TextStyle(
+                                        fontSize: 15.20.sp,
+                                        fontWeight: FontWeight.w400,
+                                        fontFamily: 'DMSans',
+                                        color: AppColors.faintedGrey,
+                                      ),
                                     ),
-                                    validator: AppValidator.validateString(),
-                                    style: TextStyle(
-                                      fontSize: 16.20.sp,
-                                      fontWeight: FontWeight.w400,
-                                      fontFamily: 'DMSans',
-                                    ),
-                                    labelStyle: TextStyle(
-                                      fontSize: 15.20.sp,
-                                      fontWeight: FontWeight.w400,
-                                      fontFamily: 'DMSans',
-                                      color: AppColors.faintedGrey,
-                                    ),
-                                  ),
-                                  SizedBox(height: 10.h),
-                                ],
+                                    SizedBox(height: 10.h),
+                                  ],
+                                ),
                               )
                             : SizedBox.shrink(),
                         model.dateTimeController.text != ''
@@ -2418,7 +2422,7 @@ class _PharmacyWholeSaleCheckoutState extends State<PharmacyWholeSaleCheckout> {
 
                       SizedBox(height: 10.h),
                       GestureDetector(
-                        onTap: () {
+                        onTap: () async {
                           model.payMethod = PayMethod.wallet;
                           model.notifyListeners();
                         },
@@ -2505,21 +2509,25 @@ class _PharmacyWholeSaleCheckoutState extends State<PharmacyWholeSaleCheckout> {
                               if (formKeySplit.currentState!.validate()) {
                                 model.paymentMethodFlowWholesale(
                                   context,
+                                  formKeySch: formKeySch,
                                   amount:
-                                      model.quoteInstantSplitDeliveryResponseModel !=
-                                          null
-                                      ? model
-                                            .quoteInstantSplitDeliveryResponseModel
-                                            ?.data
-                                            ?.checkout
-                                            ?.total
-                                      : model
-                                            .quoteScheduleSplitDeliveryResponseModel
-                                            ?.data
-                                            ?.checkout
-                                            ?.total,
+                                      model
+                                          .quoteInstantSplitDeliveryResponseModel
+                                          ?.data
+                                          ?.checkout
+                                          ?.total ??
+                                      model
+                                          .quoteScheduleSplitDeliveryResponseModel
+                                          ?.data
+                                          ?.checkout
+                                          ?.total ??
+                                      model
+                                              .wholesaleGetProductAddedToCartResponseModel!
+                                              .data!
+                                              .cart!
+                                              .subtotal! +
+                                          model.deliveryFeeAmount,
                                   deliveries: model.deliveries,
-
                                   nameOfPersonControllerList:
                                       model.nameOfPersonControllerList,
                                   orderNotesControllerList:

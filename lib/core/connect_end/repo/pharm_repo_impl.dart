@@ -45,6 +45,8 @@ import '../model/place_order_accelerate_split_entity_model/place_order_accelerat
 import '../model/place_order_accelerate_split_response_model/place_order_accelerate_split_response_model.dart';
 import '../model/place_order_wallet_entity_model/place_order_wallet_entity_model.dart';
 import '../model/place_order_wallet_response_model/place_order_wallet_response_model.dart';
+import '../model/place_order_wallet_split_entity_model/place_order_wallet_split_entity_model.dart';
+import '../model/place_order_wallet_split_response_model/place_order_wallet_split_response_model.dart';
 import '../model/quote_instant_delivery_entity_model.dart';
 import '../model/quote_instant_delivery_response_model/quote_instant_delivery_response_model.dart';
 import '../model/quote_instant_split_delivery_entity_model/quote_instant_split_delivery_entity_model.dart';
@@ -571,6 +573,13 @@ class PharmRepoImpl {
     PlaceOrderWalletEntityModel? placeOrderWallet,
   ) async {
     final response = await _contract.placeOrderWallet(placeOrderWallet);
+    return response;
+  }
+  
+Future<PlaceOrderWalletSplitResponseModel> placeOrderWalletSplit(
+    PlaceOrderWalletSplitEntityModel? placeOrderWalletSplit,
+  ) async {
+    final response = await _contract.placeOrderWalletSplit(placeOrderWalletSplit);
     return response;
   }
 

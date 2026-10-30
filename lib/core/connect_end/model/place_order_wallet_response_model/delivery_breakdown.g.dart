@@ -17,7 +17,7 @@ DeliveryBreakdown _$DeliveryBreakdownFromJson(Map<String, dynamic> json) =>
       distributorNames: (json['distributorNames'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
-      orderSubtotal: (json['orderSubtotal'] as num?)?.toInt(),
+      orderSubtotal: (json['orderSubtotal'] as num?)?.toDouble(),
       locationId: json['locationId'] as String?,
       stateCode: json['stateCode'] as String?,
       stateName: json['stateName'] as String?,
@@ -25,12 +25,8 @@ DeliveryBreakdown _$DeliveryBreakdownFromJson(Map<String, dynamic> json) =>
       lgaName: json['lgaName'] as String?,
       deliveryMethod: json['deliveryMethod'] as String?,
       deliveryFee: (json['deliveryFee'] as num?)?.toInt(),
-      deliveryDate: json['deliveryDate'] == null
-          ? null
-          : DateTime.parse(json['deliveryDate'] as String),
-      timeBlock: json['timeBlock'] == null
-          ? null
-          : TimeBlock.fromJson(json['timeBlock'] as Map<String, dynamic>),
+      estimatedDeliveryMinutes: (json['estimatedDeliveryMinutes'] as num?)
+          ?.toInt(),
       logisticsPartner: json['logisticsPartner'] == null
           ? null
           : LogisticsPartner.fromJson(
@@ -52,8 +48,7 @@ Map<String, dynamic> _$DeliveryBreakdownToJson(DeliveryBreakdown instance) =>
       'lgaName': instance.lgaName,
       'deliveryMethod': instance.deliveryMethod,
       'deliveryFee': instance.deliveryFee,
-      'deliveryDate': instance.deliveryDate?.toIso8601String(),
-      'timeBlock': instance.timeBlock,
+      'estimatedDeliveryMinutes': instance.estimatedDeliveryMinutes,
       'logisticsPartner': instance.logisticsPartner,
       'deliveryConditions': instance.deliveryConditions,
     };

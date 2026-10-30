@@ -114,6 +114,8 @@ import '../model/place_order_accelerate_split_entity_model/place_order_accelerat
 import '../model/place_order_accelerate_split_response_model/place_order_accelerate_split_response_model.dart';
 import '../model/place_order_wallet_entity_model/place_order_wallet_entity_model.dart';
 import '../model/place_order_wallet_response_model/place_order_wallet_response_model.dart';
+import '../model/place_order_wallet_split_entity_model/place_order_wallet_split_entity_model.dart';
+import '../model/place_order_wallet_split_response_model/place_order_wallet_split_response_model.dart';
 import '../model/quote_instant_delivery_entity_model.dart';
 import '../model/quote_instant_delivery_response_model/quote_instant_delivery_response_model.dart';
 import '../model/quote_instant_split_delivery_entity_model/quote_instant_split_delivery_entity_model.dart';
@@ -192,6 +194,10 @@ import 'package:medicate_app/core/connect_end/model/place_order_accelerate_split
     as accSplit;
 import 'package:medicate_app/core/connect_end/model/place_order_accelerate_split_entity_model/item.dart'
     as accSplitItem;
+import 'package:medicate_app/core/connect_end/model/place_order_wallet_split_entity_model/delivery.dart'
+    as walSplit;
+import 'package:medicate_app/core/connect_end/model/place_order_wallet_split_entity_model/item.dart'
+    as walSplitItem;
 
 class PharmViewModel extends BaseViewModel {
   final BuildContext? context;
@@ -439,6 +445,11 @@ class PharmViewModel extends BaseViewModel {
   PlaceOrderWalletResponseModel? _placeOrderWalletResponseModel;
   PlaceOrderWalletResponseModel? get placeOrderWalletResponseModel =>
       _placeOrderWalletResponseModel;
+
+  PlaceOrderWalletSplitResponseModel? _placeOrderWalletResponseModelSplit;
+  PlaceOrderWalletSplitResponseModel? get placeOrderWalletResponseModelSplit =>
+      _placeOrderWalletResponseModelSplit;
+
   WholesaleOrderListResponseModel? _wholesaleOrderListResponseModel;
   WholesaleOrderListResponseModel? get wholesaleOrderListResponseModel =>
       _wholesaleOrderListResponseModel;
@@ -19699,10 +19710,100 @@ class PharmViewModel extends BaseViewModel {
                                               }
                                             }
                                             await Future.delayed(
-                                              Duration(microseconds: 100),
+                                              Duration(microseconds: 200),
                                             );
 
                                             if (isDeliveryAddressTap) {
+                                              List<walSplit.Delivery>
+                                              deliveriesSplit = deliveries!
+                                                  .asMap()
+                                                  .entries
+                                                  .map((delivery) {
+                                                    int indx = delivery.key;
+                                                    final val = delivery.value;
+                                                    List<walSplitItem.Item>
+                                                    itemSplit = val.items!.map((
+                                                      m,
+                                                    ) {
+                                                      return walSplitItem
+                                                          .Item.fromJson(
+                                                        m.toJson(),
+                                                      );
+                                                    }).toList();
+                                                    return walSplit.Delivery(
+                                                      deliveryAddressId:
+                                                          val.deliveryAddressId,
+                                                      recipientName:
+                                                          nameOfPersonControllerList[indx]
+                                                              .text,
+                                                      recipientIdType:
+                                                          formIDControllerList[indx]
+                                                              .text,
+                                                      contactPhone:
+                                                          phoneControllerList[indx]
+                                                              .text,
+                                                      orderNotes:
+                                                          orderNotesControllerList[indx]
+                                                              .text,
+                                                      items: itemSplit,
+                                                    );
+                                                  })
+                                                  .toList();
+                                              placeOrderWalletSplit(
+                                                context: context,
+                                                amount: amount,
+                                                placeOrderWallet: PlaceOrderWalletSplitEntityModel(
+                                                  deliveryMethod:
+                                                      delivery ==
+                                                          Delivery.instance
+                                                      ? 'INSTANT'
+                                                      : 'SCHEDULED_BLOCK',
+                                                  deliveryDate:
+                                                      _quoteScheduleSplitDeliveryResponseModel !=
+                                                          null
+                                                      ? convertDate(
+                                                          dateTimeController
+                                                              .text,
+                                                        )
+                                                      : null,
+                                                  splitOrder: true,
+                                                  paymentMethod: "WALLET",
+                                                  expectedDeliveryFee:
+                                                      _quoteInstantSplitDeliveryResponseModel !=
+                                                          null
+                                                      ? _quoteInstantSplitDeliveryResponseModel!
+                                                            .data!
+                                                            .checkout!
+                                                            .deliveryFee
+                                                      : _quoteScheduleSplitDeliveryResponseModel!
+                                                            .data!
+                                                            .checkout!
+                                                            .deliveryFee,
+                                                  expectedSubtotal:
+                                                      _quoteInstantSplitDeliveryResponseModel !=
+                                                          null
+                                                      ? _quoteInstantSplitDeliveryResponseModel!
+                                                            .data!
+                                                            .checkout!
+                                                            .subtotal!
+                                                      : _quoteScheduleSplitDeliveryResponseModel!
+                                                            .data!
+                                                            .checkout!
+                                                            .subtotal!,
+                                                  expectedTotal:
+                                                      _quoteInstantSplitDeliveryResponseModel !=
+                                                          null
+                                                      ? _quoteInstantSplitDeliveryResponseModel!
+                                                            .data!
+                                                            .checkout!
+                                                            .total!
+                                                      : _quoteScheduleSplitDeliveryResponseModel!
+                                                            .data!
+                                                            .checkout!
+                                                            .total!,
+                                                  deliveries: deliveriesSplit,
+                                                ),
+                                              );
                                             } else {
                                               placeOrderWallet(
                                                 context: context,
@@ -19733,6 +19834,11 @@ class PharmViewModel extends BaseViewModel {
                                                             .lga,
                                                     contactPhone:
                                                         phoneController.text,
+                                                    recipientName:
+                                                        nameOfPersonController
+                                                            .text,
+                                                    recipientIdType:
+                                                        formIDController.text,
                                                     deliveryAddress:
                                                         mapLocationAddressSelected!
                                                             .businessAddress,
@@ -21590,33 +21696,34 @@ class PharmViewModel extends BaseViewModel {
   paymentMethodFlowWholesale(
     context, {
     double? amount,
+    GlobalKey<FormState>? formKeySch,
     List<inSplit.Delivery>? deliveries,
     List<TextEditingController>? nameOfPersonControllerList,
     List<TextEditingController>? phoneControllerList,
     List<TextEditingController>? formIDControllerList,
     List<TextEditingController>? orderNotesControllerList,
   }) async {
-    if (payMethod == PayMethod.accelerate) {
-      if (delivery == Delivery.instance) {
-        if (isDeliveryAddressTap) {
-          await quoteInstantSplitDelivery(
-            context: context,
-            instantSplitDelivery: QuoteInstantSplitDeliveryEntityModel(
-              deliveryMethod: 'INSTANT',
-              splitOrder: true,
-              deliveries: deliveries,
-            ),
-          );
-        } else {
-          await quoteInstantDelivery(
-            context: context,
-            instantDelivery: QuoteInstantDeliveryEntityModel(
-              deliveryMethod: 'INSTANT',
-              deliveryAddressId: mapLocationAddressSelected!.id,
-            ),
-          );
-        }
+    if (delivery == Delivery.instance) {
+      if (isDeliveryAddressTap) {
+        await quoteInstantSplitDelivery(
+          context: context,
+          instantSplitDelivery: QuoteInstantSplitDeliveryEntityModel(
+            deliveryMethod: 'INSTANT',
+            splitOrder: true,
+            deliveries: deliveries,
+          ),
+        );
       } else {
+        await quoteInstantDelivery(
+          context: context,
+          instantDelivery: QuoteInstantDeliveryEntityModel(
+            deliveryMethod: 'INSTANT',
+            deliveryAddressId: mapLocationAddressSelected!.id,
+          ),
+        );
+      }
+    } else {
+      if (formKeySch!.currentState!.validate()) {
         if (isDeliveryAddressTap) {
           List<schSplit.Delivery> schdeliveries = deliveries!.map((delivery) {
             return schSplit.Delivery.fromJson(delivery.toJson());
@@ -21646,6 +21753,9 @@ class PharmViewModel extends BaseViewModel {
           );
         }
       }
+    }
+
+    if (payMethod == PayMethod.accelerate) {
       await Future.delayed(Duration(microseconds: 100));
 
       if (isDeliveryAddressTap) {
@@ -21986,15 +22096,6 @@ class PharmViewModel extends BaseViewModel {
         ),
         throwException: true,
       );
-      // if (delivery == Delivery.schedule &&
-      //     _getCheckoutSplitDeliveryOptionResponseModel!.data!.deliveries!.isEmpty) {
-      //   AppUtils.snackbar(
-      //     context,
-      //     message:
-      //         'Delivery is not available for ${_getCheckoutSplitDeliveryOptionResponseModel!.data!.destination!.lgaName ?? ''},  ${_getCheckoutDeliveryOptionResponseModel!.data!.destination!.stateName ?? ''}.',
-      //     error: true,
-      //   );
-      // }
       _isLoading = false;
     } catch (e) {
       _isLoading = false;
@@ -22046,7 +22147,10 @@ class PharmViewModel extends BaseViewModel {
         navigate.navigateTo(
           Routes.acceleratePaymentViewPharmacy,
           arguments: AcceleratePaymentViewPharmacyArguments(
-            url: _placeOrderAccelerateSplitResponseModel?.data?.payment?.redirectUrl,
+            url: _placeOrderAccelerateSplitResponseModel
+                ?.data
+                ?.payment
+                ?.redirectUrl,
           ),
         );
       }
@@ -22084,7 +22188,38 @@ class PharmViewModel extends BaseViewModel {
     } catch (e) {
       _isLoadingWallet = false;
       logger.d(e);
-      AppUtils.snackbar(context, message: e.toString(), error: true);
+      await AppUtils.snackbar(context, message: e.toString(), error: true);
+      Navigator.pop(context);
+    }
+    notifyListeners();
+  }
+
+  Future<void> placeOrderWalletSplit({
+    context,
+    PlaceOrderWalletSplitEntityModel? placeOrderWallet,
+    double? amount,
+  }) async {
+    try {
+      _isLoadingWallet = true;
+      _placeOrderWalletResponseModelSplit = await runBusyFuture(
+        repositoryImply.placeOrderWalletSplit(placeOrderWallet),
+        throwException: true,
+      );
+      if (_placeOrderWalletResponseModelSplit!.statusCode == 201) {
+        await AppUtils.snackbar(
+          context,
+          message: _placeOrderWalletResponseModelSplit?.message ?? '',
+        );
+        Navigator.pop(context);
+        await Future.delayed(Duration(microseconds: 10));
+        orderPaymentSuccess(context: context, amount: amount!);
+      }
+      _isLoadingWallet = false;
+    } catch (e) {
+      _isLoadingWallet = false;
+      logger.d(e);
+      await AppUtils.snackbar(context, message: e.toString(), error: true);
+      Navigator.pop(context);
     }
     notifyListeners();
   }
