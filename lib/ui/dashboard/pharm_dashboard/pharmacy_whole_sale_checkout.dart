@@ -1335,10 +1335,10 @@ class _PharmacyWholeSaleCheckoutState extends State<PharmacyWholeSaleCheckout> {
                                                                           );
 
                                                                           // Hide this product when this address has no allocated units.
-                                                                          if (quantity ==
-                                                                              0) {
-                                                                            return const SizedBox.shrink();
-                                                                          }
+                                                                          // if (quantity ==
+                                                                          //     0) {
+                                                                          //   return const SizedBox.shrink();
+                                                                          // }
 
                                                                           return Column(
                                                                             children: [

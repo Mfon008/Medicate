@@ -9,9 +9,7 @@ part of 'order.dart';
 Order _$OrderFromJson(Map<String, dynamic> json) => Order(
   id: json['id'] as String?,
   orderNumber: json['orderNumber'] as String?,
-  placedAt: json['placedAt'] == null
-      ? null
-      : DateTime.parse(json['placedAt'] as String),
+  placedAt: json['placedAt'],
   status: json['status'] as String?,
   statusLabel: json['statusLabel'] as String?,
   badgeText: json['badgeText'] as String?,

@@ -1055,6 +1055,15 @@ class PharmViewModel extends BaseViewModel {
     return splitQuantities[_addressKey(address)]?[_productKey(product)] ?? 0;
   }
 
+  int getTotalSplitQuantity({
+    required List<BusinessAddresses> addresses,
+    required dynamic product,
+  }) {
+    return addresses.fold<int>(0, (total, address) {
+      return total + getSplitQuantity(address: address, product: product);
+    });
+  }
+
   /// Initialize an even split. Call when entering split checkout
   /// or when the address/cart data changes, not inside build().
   void initializeSplitQuantities({
@@ -1099,10 +1108,20 @@ class PharmViewModel extends BaseViewModel {
       product: product,
     );
 
+    final totalSplitQuantity = getTotalSplitQuantity(
+    addresses: approvedAddresses,
+    product: product,
+  );
+
     // Do not decrement below 1.
-    if (delta < 0 && currentQuantity <= 1) {
+    if (delta < 0 && currentQuantity <= 0) {
       return false;
     }
+
+    // Do not increament above general quantity
+    if (delta > 0 && totalSplitQuantity + delta > product.quantity) {
+    return false;
+  }
 
     // Apply the increment or decrement.
     final newQuantity = currentQuantity + delta;
