@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import 'deliveries/deliveries.dart';
 import 'delivery_breakdown.dart';
 import 'delivery_details.dart';
 import 'item.dart';
@@ -29,6 +30,8 @@ class Order {
   double? subtotal;
   int? deliveryFee;
   List<DeliveryBreakdown>? deliveryBreakdown;
+  List<Deliveries>? deliveries;
+  bool? splitOrder;
   double? total;
   String? currency;
   Payment? payment;
@@ -56,6 +59,8 @@ class Order {
     this.total,
     this.currency,
     this.payment,
+    this.deliveries,
+    this.splitOrder,
   });
 
   factory Order.fromJson(Map<String, dynamic> json) => _$OrderFromJson(json);

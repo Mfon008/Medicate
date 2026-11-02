@@ -575,11 +575,13 @@ class PharmRepoImpl {
     final response = await _contract.placeOrderWallet(placeOrderWallet);
     return response;
   }
-  
-Future<PlaceOrderWalletSplitResponseModel> placeOrderWalletSplit(
+
+  Future<PlaceOrderWalletSplitResponseModel> placeOrderWalletSplit(
     PlaceOrderWalletSplitEntityModel? placeOrderWalletSplit,
   ) async {
-    final response = await _contract.placeOrderWalletSplit(placeOrderWalletSplit);
+    final response = await _contract.placeOrderWalletSplit(
+      placeOrderWalletSplit,
+    );
     return response;
   }
 

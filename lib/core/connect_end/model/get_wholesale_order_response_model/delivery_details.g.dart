@@ -8,6 +8,8 @@ part of 'delivery_details.dart';
 
 DeliveryDetails _$DeliveryDetailsFromJson(Map<String, dynamic> json) =>
     DeliveryDetails(
+      recipientName: json['recipientName'] as String?,
+      recipientIdType: json['recipientIdType'] as String?,
       tenantId: json['tenantId'] as String?,
       name: json['name'] as String?,
       address: json['address'] as String?,
@@ -18,6 +20,8 @@ DeliveryDetails _$DeliveryDetailsFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$DeliveryDetailsToJson(DeliveryDetails instance) =>
     <String, dynamic>{
+      'recipientName': instance.recipientName,
+      'recipientIdType': instance.recipientIdType,
       'tenantId': instance.tenantId,
       'name': instance.name,
       'address': instance.address,

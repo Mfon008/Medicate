@@ -24,6 +24,7 @@ Order _$OrderFromJson(Map<String, dynamic> json) => Order(
   deliveryDate: json['deliveryDate'],
   timeWindow: json['timeWindow'] as String?,
   timeWindowLabel: json['timeWindowLabel'] as String?,
+  splitOrder: json['splitOrder'] as bool?,
   deliveryDetails: json['deliveryDetails'] == null
       ? null
       : DeliveryDetails.fromJson(
@@ -37,6 +38,9 @@ Order _$OrderFromJson(Map<String, dynamic> json) => Order(
   deliveryFee: (json['deliveryFee'] as num?)?.toInt(),
   deliveryBreakdown: (json['deliveryBreakdown'] as List<dynamic>?)
       ?.map((e) => DeliveryBreakdown.fromJson(e as Map<String, dynamic>))
+      .toList(),
+  deliveries: (json['deliveries'] as List<dynamic>?)
+      ?.map((e) => Deliveries.fromJson(e as Map<String, dynamic>))
       .toList(),
   total: (json['total'] as num?)?.toDouble(),
   currency: json['currency'] as String?,
@@ -67,5 +71,7 @@ Map<String, dynamic> _$OrderToJson(Order instance) => <String, dynamic>{
   'deliveryBreakdown': instance.deliveryBreakdown,
   'total': instance.total,
   'currency': instance.currency,
+  'deliveries': instance.deliveries,
+  'splitOrder': instance.splitOrder,
   'payment': instance.payment,
 };

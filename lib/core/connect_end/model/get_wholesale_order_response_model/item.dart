@@ -6,6 +6,10 @@ part 'item.g.dart';
 
 @JsonSerializable()
 class Item {
+  dynamic statusComments;
+  String? fulfillmentGroupId;
+  String? assignedDistributorName;
+  String? assignedDistributorId;
   String? productId;
   String? productName;
   String? manufacturerDistributorId;
@@ -44,6 +48,10 @@ class Item {
     this.tracking,
     this.manufacturerName,
     this.orderItemId,
+    this.assignedDistributorId,
+    this.assignedDistributorName,
+    this.fulfillmentGroupId,
+    this.statusComments,
   });
 
   factory Item.fromJson(Map<String, dynamic> json) => _$ItemFromJson(json);

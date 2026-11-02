@@ -29,9 +29,17 @@ Item _$ItemFromJson(Map<String, dynamic> json) => Item(
       .toList(),
   manufacturerName: json['manufacturerName'] as String?,
   orderItemId: json['orderItemId'] as String?,
+  assignedDistributorId: json['assignedDistributorId'] as String?,
+  assignedDistributorName: json['assignedDistributorName'] as String?,
+  fulfillmentGroupId: json['fulfillmentGroupId'] as String?,
+  statusComments: json['statusComments'],
 );
 
 Map<String, dynamic> _$ItemToJson(Item instance) => <String, dynamic>{
+  'statusComments': instance.statusComments,
+  'fulfillmentGroupId': instance.fulfillmentGroupId,
+  'assignedDistributorName': instance.assignedDistributorName,
+  'assignedDistributorId': instance.assignedDistributorId,
   'productId': instance.productId,
   'productName': instance.productName,
   'manufacturerDistributorId': instance.manufacturerDistributorId,

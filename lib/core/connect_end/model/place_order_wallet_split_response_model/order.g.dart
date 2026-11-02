@@ -52,7 +52,7 @@ Order _$OrderFromJson(Map<String, dynamic> json) => Order(
 Map<String, dynamic> _$OrderToJson(Order instance) => <String, dynamic>{
   'id': instance.id,
   'orderNumber': instance.orderNumber,
-  'placedAt': instance.placedAt?.toIso8601String(),
+  'placedAt': instance.placedAt,
   'status': instance.status,
   'statusLabel': instance.statusLabel,
   'badgeText': instance.badgeText,

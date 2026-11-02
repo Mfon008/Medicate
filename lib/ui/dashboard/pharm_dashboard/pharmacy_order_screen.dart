@@ -675,187 +675,723 @@ class PharmacyOrderScreen extends StatelessWidget {
                                           ],
                                         ),
                                       ),
-                                Container(
-                                  width: double.infinity,
-                                  margin: EdgeInsets.symmetric(
-                                    vertical: 12.w,
-                                    horizontal: 16.20.w,
-                                  ),
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 18.w,
-                                    vertical: 16.w,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(12.r),
-                                    border: Border.all(
-                                      color: AppColors.infoGrey1,
-                                      width: 1,
-                                    ),
-                                  ),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      TextView(
-                                        text: 'Delivery Details',
-                                        textStyle: TextStyle(
-                                          fontFamily: 'DMSans',
-                                          fontSize: 15.4.sp,
-                                          fontWeight: FontWeight.w500,
-                                          color: AppColors.reminder,
+                                model
+                                        .getWholesaleOrderResponseModel!
+                                        .data!
+                                        .order!
+                                        .splitOrder!
+                                    ? Container(
+                                        width: double.infinity,
+                                        margin: EdgeInsets.symmetric(
+                                          vertical: 12.w,
+                                          horizontal: 16.20.w,
+                                        ),
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 18.w,
+                                          vertical: 16.w,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(
+                                            12.r,
+                                          ),
+                                          border: Border.all(
+                                            color: AppColors.infoGrey1,
+                                            width: 1,
+                                          ),
+                                        ),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                TextView(
+                                                  text:
+                                                      'Delivery ${model.orderSplitInfoIndex} of ${model.getWholesaleOrderResponseModel!.data!.order!.deliveries?.length}',
+                                                  textStyle: TextStyle(
+                                                    fontFamily: 'DMSans',
+                                                    fontSize: 15.4.sp,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: AppColors.reminder,
+                                                  ),
+                                                ),
+
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                  children: [
+                                                    Container(
+                                                      color:
+                                                          AppColors.transparent,
+                                                      width: 20.w,
+                                                      height: 20.h,
+                                                      child: IconButton(
+                                                        onPressed: model
+                                                            .prevOrderSplitInfo,
+                                                        padding:
+                                                            EdgeInsets.zero,
+                                                        icon: Icon(
+                                                          Icons.arrow_back,
+                                                          size: 20.sp,
+                                                          color:
+                                                              AppColors.bblack,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    SizedBox(width: 12.w),
+                                                    Container(
+                                                      color:
+                                                          AppColors.transparent,
+                                                      width: 20.w,
+                                                      height: 20.h,
+                                                      child: IconButton(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                              bottom: 4.w,
+                                                            ),
+                                                        onPressed: model
+                                                            .nextOrderSplitInfo,
+                                                        icon: Icon(
+                                                          Icons.arrow_forward,
+                                                          size: 20.sp,
+                                                          color:
+                                                              AppColors.bblack,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+
+                                            SizedBox(height: 10.h),
+                                            Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Padding(
+                                                  padding: EdgeInsets.only(
+                                                    top: 10.w,
+                                                  ),
+                                                  child: SvgPicture.asset(
+                                                    AppImage.locator,
+                                                    height: 15.20.h,
+                                                    width: 15.20.w,
+                                                  ),
+                                                ),
+                                                SizedBox(width: 10.w),
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    TextView(
+                                                      text:
+                                                          'Delivery Destination',
+                                                      textStyle: TextStyle(
+                                                        fontFamily: 'DMSans',
+                                                        fontSize: 12.4.sp,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color:
+                                                            AppColors.infoGrey,
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 230.w,
+                                                      child: TextView(
+                                                        text:
+                                                            '${model.getWholesaleOrderResponseModel!.data!.order!.deliveries?[model.orderSplitInfoIndex - 1].deliveryAddress?.capitalize()}',
+                                                        maxLines: 4,
+                                                        textStyle: TextStyle(
+                                                          fontFamily: 'DMSans',
+                                                          fontSize: 12.4.sp,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          color: AppColors
+                                                              .reminder,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                            Divider(color: AppColors.infoGrey1),
+                                            Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Padding(
+                                                  padding: EdgeInsets.only(
+                                                    top: 10.w,
+                                                  ),
+                                                  child: SvgPicture.asset(
+                                                    AppImage.person2,
+                                                    height: 15.20.h,
+                                                    width: 15.20.w,
+                                                  ),
+                                                ),
+                                                SizedBox(width: 10.w),
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    TextView(
+                                                      text: 'Full Name',
+                                                      textStyle: TextStyle(
+                                                        fontFamily: 'DMSans',
+                                                        fontSize: 12.4.sp,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color:
+                                                            AppColors.infoGrey,
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 230.w,
+                                                      child: TextView(
+                                                        text:
+                                                            model
+                                                                .getWholesaleOrderResponseModel!
+                                                                .data!
+                                                                .order!
+                                                                .deliveries?[model
+                                                                        .orderSplitInfoIndex -
+                                                                    1]
+                                                                .recipientName ??
+                                                            '',
+                                                        maxLines: 4,
+                                                        textStyle: TextStyle(
+                                                          fontFamily: 'DMSans',
+                                                          fontSize: 12.4.sp,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          color: AppColors
+                                                              .reminder,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+
+                                            Divider(color: AppColors.infoGrey1),
+                                            Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Padding(
+                                                  padding: EdgeInsets.only(
+                                                    top: 10.w,
+                                                  ),
+                                                  child: SvgPicture.asset(
+                                                    AppImage.phone,
+                                                    height: 15.20.h,
+                                                    width: 15.20.w,
+                                                  ),
+                                                ),
+                                                SizedBox(width: 10.w),
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    TextView(
+                                                      text: 'Phone Number',
+                                                      textStyle: TextStyle(
+                                                        fontFamily: 'DMSans',
+                                                        fontSize: 12.4.sp,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color:
+                                                            AppColors.infoGrey,
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 230.w,
+                                                      child: TextView(
+                                                        text:
+                                                            model
+                                                                .getWholesaleOrderResponseModel!
+                                                                .data!
+                                                                .order!
+                                                                .deliveries?[model
+                                                                        .orderSplitInfoIndex -
+                                                                    1]
+                                                                .contactPhone ??
+                                                            '',
+                                                        maxLines: 4,
+                                                        textStyle: TextStyle(
+                                                          fontFamily: 'DMSans',
+                                                          fontSize: 12.4.sp,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          color: AppColors
+                                                              .reminder,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                            Divider(color: AppColors.infoGrey1),
+                                            Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Padding(
+                                                  padding: EdgeInsets.only(
+                                                    top: 12.w,
+                                                  ),
+                                                  child: SvgPicture.asset(
+                                                    AppImage.order_notes,
+                                                    height: 15.20.h,
+                                                    width: 15.20.w,
+                                                  ),
+                                                ),
+                                                SizedBox(width: 10.w),
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    TextView(
+                                                      text: 'Order Notes',
+                                                      textStyle: TextStyle(
+                                                        fontFamily: 'DMSans',
+                                                        fontSize: 12.4.sp,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color:
+                                                            AppColors.infoGrey,
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 230.w,
+                                                      child: TextView(
+                                                        text:
+                                                            model
+                                                                    .getWholesaleOrderResponseModel!
+                                                                    .data!
+                                                                    .order!
+                                                                    .deliveries?[model
+                                                                            .orderSplitInfoIndex -
+                                                                        1]
+                                                                    .orderNotes !=
+                                                                ''
+                                                            ? model
+                                                                  .getWholesaleOrderResponseModel!
+                                                                  .data!
+                                                                  .order!
+                                                                  .deliveries![model
+                                                                          .orderSplitInfoIndex -
+                                                                      1]
+                                                                  .orderNotes
+                                                                  .toString()
+                                                            : 'No note',
+                                                        maxLines: 4,
+                                                        textStyle: TextStyle(
+                                                          fontFamily: 'DMSans',
+                                                          fontSize: 12.4.sp,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          color: AppColors
+                                                              .reminder,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+
+                                            Divider(color: AppColors.infoGrey1),
+                                            Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Padding(
+                                                  padding: EdgeInsets.only(
+                                                    top: 10.w,
+                                                  ),
+                                                  child: SvgPicture.asset(
+                                                    AppImage.person2,
+                                                    height: 15.20.h,
+                                                    width: 15.20.w,
+                                                  ),
+                                                ),
+                                                SizedBox(width: 10.w),
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    TextView(
+                                                      text: 'Form of ID',
+                                                      textStyle: TextStyle(
+                                                        fontFamily: 'DMSans',
+                                                        fontSize: 12.4.sp,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color:
+                                                            AppColors.infoGrey,
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 230.w,
+                                                      child: TextView(
+                                                        text:
+                                                            model
+                                                                .getWholesaleOrderResponseModel!
+                                                                .data!
+                                                                .order!
+                                                                .deliveries?[model
+                                                                        .orderSplitInfoIndex -
+                                                                    1]
+                                                                .recipientIdType ??
+                                                            '',
+                                                        maxLines: 4,
+                                                        textStyle: TextStyle(
+                                                          fontFamily: 'DMSans',
+                                                          fontSize: 12.4.sp,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          color: AppColors
+                                                              .reminder,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    : Container(
+                                        width: double.infinity,
+                                        margin: EdgeInsets.symmetric(
+                                          vertical: 12.w,
+                                          horizontal: 16.20.w,
+                                        ),
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 18.w,
+                                          vertical: 16.w,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(
+                                            12.r,
+                                          ),
+                                          border: Border.all(
+                                            color: AppColors.infoGrey1,
+                                            width: 1,
+                                          ),
+                                        ),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            TextView(
+                                              text: 'Delivery Details',
+                                              textStyle: TextStyle(
+                                                fontFamily: 'DMSans',
+                                                fontSize: 15.4.sp,
+                                                fontWeight: FontWeight.w500,
+                                                color: AppColors.reminder,
+                                              ),
+                                            ),
+                                            SizedBox(height: 10.h),
+                                            Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Padding(
+                                                  padding: EdgeInsets.only(
+                                                    top: 10.w,
+                                                  ),
+                                                  child: SvgPicture.asset(
+                                                    AppImage.locator,
+                                                    height: 15.20.h,
+                                                    width: 15.20.w,
+                                                  ),
+                                                ),
+                                                SizedBox(width: 10.w),
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    TextView(
+                                                      text:
+                                                          'Delivery Destination',
+                                                      textStyle: TextStyle(
+                                                        fontFamily: 'DMSans',
+                                                        fontSize: 12.4.sp,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color:
+                                                            AppColors.infoGrey,
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 230.w,
+                                                      child: TextView(
+                                                        text:
+                                                            '${model.getWholesaleOrderResponseModel!.data!.order!.deliveryDetails?.address?.capitalize()}',
+                                                        maxLines: 4,
+                                                        textStyle: TextStyle(
+                                                          fontFamily: 'DMSans',
+                                                          fontSize: 12.4.sp,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          color: AppColors
+                                                              .reminder,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                            Divider(color: AppColors.infoGrey1),
+                                            Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Padding(
+                                                  padding: EdgeInsets.only(
+                                                    top: 10.w,
+                                                  ),
+                                                  child: SvgPicture.asset(
+                                                    AppImage.person2,
+                                                    height: 15.20.h,
+                                                    width: 15.20.w,
+                                                  ),
+                                                ),
+                                                SizedBox(width: 10.w),
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    TextView(
+                                                      text: 'Full Name',
+                                                      textStyle: TextStyle(
+                                                        fontFamily: 'DMSans',
+                                                        fontSize: 12.4.sp,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color:
+                                                            AppColors.infoGrey,
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 230.w,
+                                                      child: TextView(
+                                                        text:
+                                                            model
+                                                                .getWholesaleOrderResponseModel!
+                                                                .data!
+                                                                .order!
+                                                                .deliveryDetails
+                                                                ?.recipientName ??
+                                                            '',
+                                                        maxLines: 4,
+                                                        textStyle: TextStyle(
+                                                          fontFamily: 'DMSans',
+                                                          fontSize: 12.4.sp,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          color: AppColors
+                                                              .reminder,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+
+                                            Divider(color: AppColors.infoGrey1),
+                                            Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Padding(
+                                                  padding: EdgeInsets.only(
+                                                    top: 10.w,
+                                                  ),
+                                                  child: SvgPicture.asset(
+                                                    AppImage.phone,
+                                                    height: 15.20.h,
+                                                    width: 15.20.w,
+                                                  ),
+                                                ),
+                                                SizedBox(width: 10.w),
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    TextView(
+                                                      text: 'Phone Number',
+                                                      textStyle: TextStyle(
+                                                        fontFamily: 'DMSans',
+                                                        fontSize: 12.4.sp,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color:
+                                                            AppColors.infoGrey,
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 230.w,
+                                                      child: TextView(
+                                                        text:
+                                                            model
+                                                                .getWholesaleOrderResponseModel!
+                                                                .data!
+                                                                .order!
+                                                                .deliveryDetails
+                                                                ?.phoneNumber ??
+                                                            '',
+                                                        maxLines: 4,
+                                                        textStyle: TextStyle(
+                                                          fontFamily: 'DMSans',
+                                                          fontSize: 12.4.sp,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          color: AppColors
+                                                              .reminder,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                            Divider(color: AppColors.infoGrey1),
+                                            Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Padding(
+                                                  padding: EdgeInsets.only(
+                                                    top: 12.w,
+                                                  ),
+                                                  child: SvgPicture.asset(
+                                                    AppImage.order_notes,
+                                                    height: 15.20.h,
+                                                    width: 15.20.w,
+                                                  ),
+                                                ),
+                                                SizedBox(width: 10.w),
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    TextView(
+                                                      text: 'Order Notes',
+                                                      textStyle: TextStyle(
+                                                        fontFamily: 'DMSans',
+                                                        fontSize: 12.4.sp,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color:
+                                                            AppColors.infoGrey,
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 230.w,
+                                                      child: TextView(
+                                                        text:
+                                                            model
+                                                                    .getWholesaleOrderResponseModel!
+                                                                    .data!
+                                                                    .order!
+                                                                    .orderNotes !=
+                                                                ''
+                                                            ? model
+                                                                  .getWholesaleOrderResponseModel!
+                                                                  .data!
+                                                                  .order!
+                                                                  .orderNotes
+                                                                  .toString()
+                                                            : 'No note',
+                                                        maxLines: 4,
+                                                        textStyle: TextStyle(
+                                                          fontFamily: 'DMSans',
+                                                          fontSize: 12.4.sp,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          color: AppColors
+                                                              .reminder,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                            Divider(color: AppColors.infoGrey1),
+                                            Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Padding(
+                                                  padding: EdgeInsets.only(
+                                                    top: 10.w,
+                                                  ),
+                                                  child: SvgPicture.asset(
+                                                    AppImage.person2,
+                                                    height: 15.20.h,
+                                                    width: 15.20.w,
+                                                  ),
+                                                ),
+                                                SizedBox(width: 10.w),
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    TextView(
+                                                      text: 'Form of ID',
+                                                      textStyle: TextStyle(
+                                                        fontFamily: 'DMSans',
+                                                        fontSize: 12.4.sp,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color:
+                                                            AppColors.infoGrey,
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 230.w,
+                                                      child: TextView(
+                                                        text:
+                                                            model
+                                                                .getWholesaleOrderResponseModel!
+                                                                .data!
+                                                                .order!
+                                                                .deliveryDetails
+                                                                ?.recipientIdType ??
+                                                            '',
+                                                        maxLines: 4,
+                                                        textStyle: TextStyle(
+                                                          fontFamily: 'DMSans',
+                                                          fontSize: 12.4.sp,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          color: AppColors
+                                                              .reminder,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                      SizedBox(height: 10.h),
-                                      Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Padding(
-                                            padding: EdgeInsets.only(top: 10.w),
-                                            child: SvgPicture.asset(
-                                              AppImage.locator,
-                                              height: 15.20.h,
-                                              width: 15.20.w,
-                                            ),
-                                          ),
-                                          SizedBox(width: 10.w),
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              TextView(
-                                                text: 'Delivery Destination',
-                                                textStyle: TextStyle(
-                                                  fontFamily: 'DMSans',
-                                                  fontSize: 12.4.sp,
-                                                  fontWeight: FontWeight.w500,
-                                                  color: AppColors.infoGrey,
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: 230.w,
-                                                child: TextView(
-                                                  text:
-                                                      '${model.getWholesaleOrderResponseModel!.data!.order!.deliveryDetails?.address?.capitalize()}',
-                                                  //,${model.getWholesaleOrderResponseModel!.data!.order!.deliveryDetails?.lga ?? ''},${model.getWholesaleOrderResponseModel!.data!.order!.deliveryDetails?.state ?? ''}
-                                                  maxLines: 4,
-                                                  textStyle: TextStyle(
-                                                    fontFamily: 'DMSans',
-                                                    fontSize: 12.4.sp,
-                                                    fontWeight: FontWeight.w500,
-                                                    color: AppColors.reminder,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-
-                                      Divider(color: AppColors.infoGrey1),
-                                      Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Padding(
-                                            padding: EdgeInsets.only(top: 10.w),
-                                            child: SvgPicture.asset(
-                                              AppImage.phone,
-                                              height: 15.20.h,
-                                              width: 15.20.w,
-                                            ),
-                                          ),
-                                          SizedBox(width: 10.w),
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              TextView(
-                                                text: 'Phone Number',
-                                                textStyle: TextStyle(
-                                                  fontFamily: 'DMSans',
-                                                  fontSize: 12.4.sp,
-                                                  fontWeight: FontWeight.w500,
-                                                  color: AppColors.infoGrey,
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: 230.w,
-                                                child: TextView(
-                                                  text:
-                                                      model
-                                                          .getWholesaleOrderResponseModel!
-                                                          .data!
-                                                          .order!
-                                                          .deliveryDetails
-                                                          ?.phoneNumber ??
-                                                      '',
-                                                  maxLines: 4,
-                                                  textStyle: TextStyle(
-                                                    fontFamily: 'DMSans',
-                                                    fontSize: 12.4.sp,
-                                                    fontWeight: FontWeight.w500,
-                                                    color: AppColors.reminder,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                      Divider(color: AppColors.infoGrey1),
-                                      Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Padding(
-                                            padding: EdgeInsets.only(top: 12.w),
-                                            child: SvgPicture.asset(
-                                              AppImage.order_notes,
-                                              height: 15.20.h,
-                                              width: 15.20.w,
-                                            ),
-                                          ),
-                                          SizedBox(width: 10.w),
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              TextView(
-                                                text: 'Order Notes',
-                                                textStyle: TextStyle(
-                                                  fontFamily: 'DMSans',
-                                                  fontSize: 12.4.sp,
-                                                  fontWeight: FontWeight.w500,
-                                                  color: AppColors.infoGrey,
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: 230.w,
-                                                child: TextView(
-                                                  text:
-                                                      model
-                                                          .getWholesaleOrderResponseModel!
-                                                          .data!
-                                                          .order!
-                                                          .orderNotes ??
-                                                      '',
-                                                  maxLines: 4,
-                                                  textStyle: TextStyle(
-                                                    fontFamily: 'DMSans',
-                                                    fontSize: 12.4.sp,
-                                                    fontWeight: FontWeight.w500,
-                                                    color: AppColors.reminder,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
 
                                 Padding(
                                   padding: EdgeInsets.symmetric(
@@ -891,128 +1427,263 @@ class PharmacyOrderScreen extends StatelessWidget {
                                 ),
 
                                 model
-                                            .getWholesaleOrderResponseModel!
-                                            .data!
-                                            .order!
-                                            .items!
-                                            .length >
-                                        1
+                                        .getWholesaleOrderResponseModel!
+                                        .data!
+                                        .order!
+                                        .splitOrder!
                                     ? Column(
                                         children: [
-                                          ...model.getWholesaleOrderResponseModel!.data!.order!.items!.map(
-                                            (e) => Container(
-                                              margin: EdgeInsets.only(
-                                                top: 20,
-                                                left: 16.20.w,
-                                                right: 16.20.w,
-                                              ),
-                                              padding: EdgeInsets.all(17.20.w),
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(12.r),
-                                                border: Border.all(
-                                                  color: AppColors.infoGrey1,
-                                                ),
-                                              ),
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                children: [
-                                                  Row(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Container(
+                                          model
+                                                      .getWholesaleOrderResponseModel!
+                                                      .data!
+                                                      .order!
+                                                      .items!
+                                                      .length >
+                                                  1
+                                              ? Column(
+                                                  children: [
+                                                    ...model.getWholesaleOrderResponseModel!.data!.order!.items!.asMap().entries.map(
+                                                      (e) => Container(
+                                                        margin: EdgeInsets.only(
+                                                          top: 20,
+                                                          left: 16.20.w,
+                                                          right: 16.20.w,
+                                                        ),
                                                         padding: EdgeInsets.all(
-                                                          10.w,
+                                                          17.20.w,
                                                         ),
                                                         decoration: BoxDecoration(
-                                                          color:
-                                                              AppColors.grey2,
                                                           borderRadius:
                                                               BorderRadius.circular(
-                                                                10.r,
+                                                                12.r,
                                                               ),
-                                                        ),
-                                                        child: Container(
-                                                          padding:
-                                                              EdgeInsets.all(
-                                                                5.62.w,
-                                                              ),
-                                                          decoration:
-                                                              BoxDecoration(
-                                                                shape: BoxShape
-                                                                    .circle,
-                                                                color: AppColors
-                                                                    .infoGrey2,
-                                                              ),
-                                                          child: ClipOval(
-                                                            child: CachedNetworkImage(
-                                                              imageUrl:
-                                                                  e.imageUrl ??
-                                                                  '',
-                                                              height:
-                                                                  isTablet(
-                                                                    context,
-                                                                  )
-                                                                  ? 38.0.h
-                                                                  : 28.8.h,
-                                                              width:
-                                                                  isTablet(
-                                                                    context,
-                                                                  )
-                                                                  ? 38.0.w
-                                                                  : 28.8.w,
-                                                              errorWidget:
-                                                                  (
-                                                                    context,
-                                                                    url,
-                                                                    error,
-                                                                  ) => SvgPicture.asset(
-                                                                    AppImage
-                                                                        .box_cart,
-                                                                    height:
-                                                                        isTablet(
-                                                                          context,
-                                                                        )
-                                                                        ? 28.0.h
-                                                                        : 18.h,
-                                                                    width:
-                                                                        isTablet(
-                                                                          context,
-                                                                        )
-                                                                        ? 28.0.w
-                                                                        : 18.w,
-                                                                    color: AppColors
-                                                                        .infoGrey,
-                                                                  ),
-                                                              fit: BoxFit.cover,
-                                                            ),
+                                                          border: Border.all(
+                                                            color: AppColors
+                                                                .infoGrey1,
                                                           ),
                                                         ),
-                                                      ),
-                                                      SizedBox(width: 12.w),
-                                                      Expanded(
                                                         child: Column(
                                                           crossAxisAlignment:
                                                               CrossAxisAlignment
                                                                   .start,
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .start,
                                                           children: [
+                                                            Row(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Container(
+                                                                  padding:
+                                                                      EdgeInsets.all(
+                                                                        10.w,
+                                                                      ),
+                                                                  decoration: BoxDecoration(
+                                                                    color: AppColors
+                                                                        .grey2,
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                          10.r,
+                                                                        ),
+                                                                  ),
+                                                                  child: Container(
+                                                                    padding:
+                                                                        EdgeInsets.all(
+                                                                          5.62.w,
+                                                                        ),
+                                                                    decoration: BoxDecoration(
+                                                                      shape: BoxShape
+                                                                          .circle,
+                                                                      color: AppColors
+                                                                          .infoGrey2,
+                                                                    ),
+                                                                    child: ClipOval(
+                                                                      child: CachedNetworkImage(
+                                                                        imageUrl:
+                                                                            e.value.imageUrl ??
+                                                                            '',
+                                                                        height:
+                                                                            isTablet(
+                                                                              context,
+                                                                            )
+                                                                            ? 38.0.h
+                                                                            : 28.8.h,
+                                                                        width:
+                                                                            isTablet(
+                                                                              context,
+                                                                            )
+                                                                            ? 38.0.w
+                                                                            : 28.8.w,
+                                                                        errorWidget:
+                                                                            (
+                                                                              context,
+                                                                              url,
+                                                                              error,
+                                                                            ) => SvgPicture.asset(
+                                                                              AppImage.box_cart,
+                                                                              height:
+                                                                                  isTablet(
+                                                                                    context,
+                                                                                  )
+                                                                                  ? 28.0.h
+                                                                                  : 18.h,
+                                                                              width:
+                                                                                  isTablet(
+                                                                                    context,
+                                                                                  )
+                                                                                  ? 28.0.w
+                                                                                  : 18.w,
+                                                                              color: AppColors.infoGrey,
+                                                                            ),
+                                                                        fit: BoxFit
+                                                                            .cover,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                SizedBox(
+                                                                  width: 12.w,
+                                                                ),
+                                                                Expanded(
+                                                                  child: Column(
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .start,
+                                                                    mainAxisSize:
+                                                                        MainAxisSize
+                                                                            .min,
+                                                                    children: [
+                                                                      SizedBox(
+                                                                        width:
+                                                                            200.w,
+                                                                        child: TextView(
+                                                                          text:
+                                                                              e.value.productName?.capitalize() ??
+                                                                              '',
+                                                                          maxLines:
+                                                                              2,
+                                                                          textStyle: TextStyle(
+                                                                            fontFamily:
+                                                                                'DMSans',
+                                                                            fontSize:
+                                                                                16.20.sp,
+                                                                            fontWeight:
+                                                                                FontWeight.w500,
+                                                                            color:
+                                                                                AppColors.reminder,
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                      Row(
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.spaceBetween,
+                                                                        children: [
+                                                                          TextView(
+                                                                            text:
+                                                                                'Qty ${model.getWholesaleOrderResponseModel!.data!.order!.deliveries![model.orderSplitInfoIndex - 1].items![e.key].quantity!} of ${e.value.quantity} | ${formatNaira(e.value.unitPrice!)}',
+                                                                            textStyle: TextStyle(
+                                                                              fontFamily: 'DMSans',
+                                                                              fontSize: 13.20.sp,
+                                                                              fontWeight: FontWeight.w400,
+                                                                              color: AppColors.infoGrey,
+                                                                              letterSpacing: -0.1,
+                                                                            ),
+                                                                          ),
+                                                                          TextView(
+                                                                            text: formatNaira(
+                                                                              e.value.unitPrice! *
+                                                                                  e.value.quantity!,
+                                                                            ),
+                                                                            textStyle: TextStyle(
+                                                                              fontFamily: 'DMSans',
+                                                                              fontSize: 15.20.sp,
+                                                                              fontWeight: FontWeight.w500,
+                                                                              color: AppColors.reminder,
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                      SizedBox(
+                                                                        height:
+                                                                            10.h,
+                                                                      ),
+                                                                      Container(
+                                                                        padding: EdgeInsets.symmetric(
+                                                                          vertical:
+                                                                              4.w,
+                                                                          horizontal:
+                                                                              8.w,
+                                                                        ),
+                                                                        decoration: BoxDecoration(
+                                                                          borderRadius: BorderRadius.circular(
+                                                                            22.r,
+                                                                          ),
+                                                                          color:
+                                                                              AppColors.grey,
+                                                                        ),
+                                                                        child: Row(
+                                                                          mainAxisAlignment:
+                                                                              MainAxisAlignment.start,
+                                                                          children: [
+                                                                            TextView(
+                                                                              text: 'Manufacturer: ',
+                                                                              textStyle: TextStyle(
+                                                                                fontFamily: 'DMSans',
+                                                                                fontSize: 12.0.sp,
+                                                                                fontWeight: FontWeight.w400,
+                                                                                color: AppColors.infoGrey,
+                                                                                letterSpacing: -0.22,
+                                                                              ),
+                                                                            ),
+                                                                            SizedBox(
+                                                                              width: 100.w,
+                                                                              child: TextView(
+                                                                                text:
+                                                                                    e.value.manufacturerName !=
+                                                                                            null ||
+                                                                                        e.value.manufacturerName !=
+                                                                                            ''
+                                                                                    ? ' ${e.value.manufacturerName}'
+                                                                                    : 'Not Available',
+                                                                                maxLines: 1,
+                                                                                textOverflow: TextOverflow.ellipsis,
+                                                                                textStyle: TextStyle(
+                                                                                  fontFamily: 'DMSans',
+                                                                                  fontSize: 12.0.sp,
+                                                                                  fontWeight: FontWeight.w500,
+                                                                                  color: AppColors.reminder,
+                                                                                  letterSpacing: -0.22,
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            SizedBox(
+                                                              height: 10.h,
+                                                            ),
+                                                            Divider(
+                                                              color: AppColors
+                                                                  .grey,
+                                                            ),
+                                                            SizedBox(
+                                                              height: 10.h,
+                                                            ),
                                                             TextView(
                                                               text:
-                                                                  e.productName
-                                                                      ?.capitalize() ??
-                                                                  '',
+                                                                  'Order Tracking',
                                                               textStyle: TextStyle(
                                                                 fontFamily:
                                                                     'DMSans',
                                                                 fontSize:
-                                                                    16.20.sp,
+                                                                    15.4.sp,
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .w500,
@@ -1020,15 +1691,502 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                                     .reminder,
                                                               ),
                                                             ),
+                                                            SizedBox(
+                                                              height: 5.60.h,
+                                                            ),
+                                                            Row(
+                                                              children: [
+                                                                TextView(
+                                                                  text:
+                                                                      'Est. Delivery:',
+                                                                  textStyle: TextStyle(
+                                                                    fontFamily:
+                                                                        'DMSans',
+                                                                    fontSize:
+                                                                        13.10
+                                                                            .sp,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w400,
+                                                                    color: AppColors
+                                                                        .infoGrey,
+                                                                  ),
+                                                                ),
+                                                                TextView(
+                                                                  text:
+                                                                      ' ${formatDateNoTime(e.value.estimatedDeliveryDate?.toString() ?? '')}',
+                                                                  textStyle: TextStyle(
+                                                                    fontFamily:
+                                                                        'DMSans',
+                                                                    fontSize:
+                                                                        14.sp,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500,
+                                                                    color: AppColors
+                                                                        .reminder,
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+
+                                                            SizedBox(
+                                                              height: 14.h,
+                                                            ),
+                                                            Row(
+                                                              children: [
+                                                                Container(
+                                                                  padding: EdgeInsets.symmetric(
+                                                                    horizontal:
+                                                                        10.64.w,
+                                                                    vertical:
+                                                                        3.42.w,
+                                                                  ),
+                                                                  decoration: BoxDecoration(
+                                                                    color: model.orderStatusColorConfirmed(
+                                                                      e
+                                                                          .value
+                                                                          .tracking![0]
+                                                                          .completed,
+                                                                    ),
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                          22,
+                                                                        ),
+                                                                  ),
+                                                                  child: Row(
+                                                                    mainAxisSize:
+                                                                        MainAxisSize
+                                                                            .min,
+                                                                    children: [
+                                                                      model.orderStatusIconConfirmed(
+                                                                        e
+                                                                            .value
+                                                                            .tracking![0]
+                                                                            .completed,
+                                                                      ),
+                                                                      SizedBox(
+                                                                        width:
+                                                                            4.w,
+                                                                      ),
+                                                                      TextView(
+                                                                        text:
+                                                                            'Order Confirmed',
+                                                                        textStyle: TextStyle(
+                                                                          fontFamily:
+                                                                              'DMSans',
+                                                                          fontSize:
+                                                                              12.sp,
+                                                                          fontWeight:
+                                                                              FontWeight.w400,
+                                                                          color:
+                                                                              AppColors.white,
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                                SizedBox(
+                                                                  width: 16.w,
+                                                                ),
+                                                                Container(
+                                                                  padding: EdgeInsets.symmetric(
+                                                                    horizontal:
+                                                                        10.64.w,
+                                                                    vertical:
+                                                                        3.42.w,
+                                                                  ),
+                                                                  decoration: BoxDecoration(
+                                                                    color: model.orderStatusColorPackaging(
+                                                                      completed: e
+                                                                          .value
+                                                                          .tracking![1]
+                                                                          .completed,
+                                                                      current: e
+                                                                          .value
+                                                                          .tracking![1]
+                                                                          .current,
+                                                                    ),
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                          22,
+                                                                        ),
+                                                                  ),
+                                                                  child: Row(
+                                                                    mainAxisSize:
+                                                                        MainAxisSize
+                                                                            .min,
+                                                                    children: [
+                                                                      model.orderStatusIconPackaging(
+                                                                        completed: e
+                                                                            .value
+                                                                            .tracking![1]
+                                                                            .completed,
+                                                                        current: e
+                                                                            .value
+                                                                            .tracking![1]
+                                                                            .completed,
+                                                                      ),
+                                                                      SizedBox(
+                                                                        width:
+                                                                            4.w,
+                                                                      ),
+                                                                      TextView(
+                                                                        text:
+                                                                            'Packaging',
+                                                                        textStyle: TextStyle(
+                                                                          fontFamily:
+                                                                              'DMSans',
+                                                                          fontSize:
+                                                                              12.sp,
+                                                                          fontWeight:
+                                                                              FontWeight.w400,
+                                                                          color: model.orderStatusTextColorPackaging(
+                                                                            completed:
+                                                                                e.value.tracking![1].completed,
+                                                                            current:
+                                                                                e.value.tracking![1].current,
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+
+                                                            SizedBox(
+                                                              height: 14.h,
+                                                            ),
+                                                            Row(
+                                                              children: [
+                                                                Container(
+                                                                  padding: EdgeInsets.symmetric(
+                                                                    horizontal:
+                                                                        10.64.w,
+                                                                    vertical:
+                                                                        3.42.w,
+                                                                  ),
+                                                                  decoration: BoxDecoration(
+                                                                    color:
+                                                                        e.value.tracking?[2].status?.toLowerCase() ==
+                                                                                'in_transit' &&
+                                                                            e.value.tracking?[2].completed ==
+                                                                                true
+                                                                        ? AppColors
+                                                                              .amber
+                                                                        : AppColors.grey,
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                          22,
+                                                                        ),
+                                                                  ),
+                                                                  child: Row(
+                                                                    mainAxisSize:
+                                                                        MainAxisSize
+                                                                            .min,
+                                                                    children: [
+                                                                      model.orderStatusIconIntransit(
+                                                                        completed: e
+                                                                            .value
+                                                                            .tracking![2]
+                                                                            .completed,
+                                                                        current: e
+                                                                            .value
+                                                                            .tracking![2]
+                                                                            .current,
+                                                                      ),
+                                                                      SizedBox(
+                                                                        width:
+                                                                            4.w,
+                                                                      ),
+                                                                      TextView(
+                                                                        text:
+                                                                            'In Transit',
+                                                                        textStyle: TextStyle(
+                                                                          fontFamily:
+                                                                              'DMSans',
+                                                                          fontSize:
+                                                                              12.sp,
+                                                                          fontWeight:
+                                                                              FontWeight.w400,
+                                                                          color: model.orderStatusTextColorIntransit(
+                                                                            completed:
+                                                                                e.value.tracking![2].completed,
+                                                                            current:
+                                                                                e.value.tracking![2].current,
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                                SizedBox(
+                                                                  width: 16.w,
+                                                                ),
+                                                                Container(
+                                                                  padding: EdgeInsets.symmetric(
+                                                                    horizontal:
+                                                                        10.64.w,
+                                                                    vertical:
+                                                                        3.42.w,
+                                                                  ),
+                                                                  decoration: BoxDecoration(
+                                                                    color: model.orderStatusColorDelivered(
+                                                                      completed: e
+                                                                          .value
+                                                                          .tracking![3]
+                                                                          .completed,
+                                                                      current: e
+                                                                          .value
+                                                                          .tracking![3]
+                                                                          .current,
+                                                                    ),
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                          22,
+                                                                        ),
+                                                                  ),
+                                                                  child: Row(
+                                                                    mainAxisSize:
+                                                                        MainAxisSize
+                                                                            .min,
+                                                                    children: [
+                                                                      model.orderStatusIconDelivered(
+                                                                        completed: e
+                                                                            .value
+                                                                            .tracking![3]
+                                                                            .completed,
+                                                                        current: e
+                                                                            .value
+                                                                            .tracking![3]
+                                                                            .completed,
+                                                                      ),
+
+                                                                      SizedBox(
+                                                                        width:
+                                                                            4.w,
+                                                                      ),
+                                                                      TextView(
+                                                                        text:
+                                                                            'Delivery',
+                                                                        textStyle: TextStyle(
+                                                                          fontFamily:
+                                                                              'DMSans',
+                                                                          fontSize:
+                                                                              12.sp,
+                                                                          fontWeight:
+                                                                              FontWeight.w400,
+                                                                          color: model.orderStatusTextColorDelivered(
+                                                                            completed:
+                                                                                e.value.tracking![3].completed,
+                                                                            current:
+                                                                                e.value.tracking![3].completed,
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                )
+                                              : Column(
+                                                  children: [
+                                                    ...model.getWholesaleOrderResponseModel!.data!.order!.items!.asMap().entries.map(
+                                                      (e) => Container(
+                                                        margin: EdgeInsets.only(
+                                                          top: 20,
+                                                          left: 16.20.w,
+                                                          right: 16.20.w,
+                                                        ),
+                                                        padding: EdgeInsets.all(
+                                                          17.20.w,
+                                                        ),
+                                                        decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                12.r,
+                                                              ),
+                                                          border: Border.all(
+                                                            color: AppColors
+                                                                .infoGrey1,
+                                                          ),
+                                                        ),
+                                                        child: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
                                                             Row(
                                                               mainAxisAlignment:
                                                                   MainAxisAlignment
-                                                                      .spaceBetween,
+                                                                      .start,
                                                               children: [
+                                                                Container(
+                                                                  padding:
+                                                                      EdgeInsets.all(
+                                                                        10.w,
+                                                                      ),
+                                                                  decoration: BoxDecoration(
+                                                                    color: AppColors
+                                                                        .grey2,
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                          10.r,
+                                                                        ),
+                                                                  ),
+                                                                  child: Container(
+                                                                    padding:
+                                                                        EdgeInsets.all(
+                                                                          5.62.w,
+                                                                        ),
+                                                                    decoration: BoxDecoration(
+                                                                      shape: BoxShape
+                                                                          .circle,
+                                                                      color: AppColors
+                                                                          .infoGrey2,
+                                                                    ),
+                                                                    child: ClipOval(
+                                                                      child: CachedNetworkImage(
+                                                                        imageUrl:
+                                                                            e.value.imageUrl ??
+                                                                            '',
+                                                                        height:
+                                                                            isTablet(
+                                                                              context,
+                                                                            )
+                                                                            ? 38.0.h
+                                                                            : 28.8.h,
+                                                                        width:
+                                                                            isTablet(
+                                                                              context,
+                                                                            )
+                                                                            ? 38.0.w
+                                                                            : 28.8.w,
+                                                                        errorWidget:
+                                                                            (
+                                                                              context,
+                                                                              url,
+                                                                              error,
+                                                                            ) => SvgPicture.asset(
+                                                                              AppImage.box_cart,
+                                                                              height:
+                                                                                  isTablet(
+                                                                                    context,
+                                                                                  )
+                                                                                  ? 28.0.h
+                                                                                  : 18.h,
+                                                                              width:
+                                                                                  isTablet(
+                                                                                    context,
+                                                                                  )
+                                                                                  ? 28.0.w
+                                                                                  : 18.w,
+                                                                              color: AppColors.infoGrey,
+                                                                            ),
+                                                                        fit: BoxFit
+                                                                            .cover,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                SizedBox(
+                                                                  width: 12.w,
+                                                                ),
                                                                 Expanded(
-                                                                  child: TextView(
+                                                                  child: Column(
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .start,
+                                                                    mainAxisSize:
+                                                                        MainAxisSize
+                                                                            .min,
+                                                                    children: [
+                                                                      TextView(
+                                                                        text:
+                                                                            e.value.productName?.capitalize() ??
+                                                                            '',
+                                                                        textStyle: TextStyle(
+                                                                          fontFamily:
+                                                                              'DMSans',
+                                                                          fontSize:
+                                                                              16.20.sp,
+                                                                          fontWeight:
+                                                                              FontWeight.w500,
+                                                                          color:
+                                                                              AppColors.reminder,
+                                                                        ),
+                                                                      ),
+                                                                      Row(
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.spaceBetween,
+                                                                        children: [
+                                                                          Expanded(
+                                                                            child: TextView(
+                                                                              text: 'Qty ${model.getWholesaleOrderResponseModel!.data!.order!.deliveries![model.orderSplitInfoIndex - 1].items![e.key].quantity!} of  ${e.value.quantity} | ${formatNaira(e.value.unitPrice!)}',
+                                                                              textStyle: TextStyle(
+                                                                                fontFamily: 'DMSans',
+                                                                                fontSize: 13.20.sp,
+                                                                                fontWeight: FontWeight.w400,
+                                                                                color: AppColors.infoGrey,
+                                                                                letterSpacing: -0.1,
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                          Expanded(
+                                                                            child: TextView(
+                                                                              text: formatNaira(
+                                                                                e.value.unitPrice! *
+                                                                                    e.value.quantity!,
+                                                                              ),
+                                                                              textStyle: TextStyle(
+                                                                                fontFamily: 'DMSans',
+                                                                                fontSize: 15.20.sp,
+                                                                                fontWeight: FontWeight.w500,
+                                                                                color: AppColors.reminder,
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            SizedBox(
+                                                              height: 10.h,
+                                                            ),
+                                                            Container(
+                                                              padding:
+                                                                  EdgeInsets.symmetric(
+                                                                    vertical:
+                                                                        4.w,
+                                                                    horizontal:
+                                                                        14.w,
+                                                                  ),
+                                                              decoration: BoxDecoration(
+                                                                borderRadius:
+                                                                    BorderRadius.circular(
+                                                                      22.r,
+                                                                    ),
+                                                                color: AppColors
+                                                                    .grey,
+                                                              ),
+                                                              child: Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  TextView(
                                                                     text:
-                                                                        'Qty ${e.quantity} | ${formatNaira(e.unitPrice!)}',
+                                                                        'Manufacturer: ',
                                                                     textStyle: TextStyle(
                                                                       fontFamily:
                                                                           'DMSans',
@@ -1041,31 +2199,34 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                                       color: AppColors
                                                                           .infoGrey,
                                                                       letterSpacing:
-                                                                          -0.1,
+                                                                          -0.21,
                                                                     ),
                                                                   ),
-                                                                ),
-                                                                Expanded(
-                                                                  child: TextView(
-                                                                    text: formatNaira(
-                                                                      e.unitPrice! *
-                                                                          e.quantity!,
-                                                                    ),
-                                                                    textStyle: TextStyle(
-                                                                      fontFamily:
-                                                                          'DMSans',
-                                                                      fontSize:
-                                                                          15.20
-                                                                              .sp,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w500,
-                                                                      color: AppColors
-                                                                          .reminder,
+                                                                  Expanded(
+                                                                    child: TextView(
+                                                                      text:
+                                                                          e.value.manufacturerName !=
+                                                                                  null ||
+                                                                              e.value.manufacturerName !=
+                                                                                  ''
+                                                                          ? ' ${e.value.manufacturerName ?? 'Not Available'}'
+                                                                          : 'Not Available',
+                                                                      textStyle: TextStyle(
+                                                                        fontFamily:
+                                                                            'DMSans',
+                                                                        fontSize:
+                                                                            13.20.sp,
+                                                                        fontWeight:
+                                                                            FontWeight.w500,
+                                                                        color: AppColors
+                                                                            .reminder,
+                                                                        letterSpacing:
+                                                                            -0.21,
+                                                                      ),
                                                                     ),
                                                                   ),
-                                                                ),
-                                                              ],
+                                                                ],
+                                                              ),
                                                             ),
                                                             SizedBox(
                                                               height: 10.h,
@@ -1073,483 +2234,773 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                           ],
                                                         ),
                                                       ),
-                                                    ],
-                                                  ),
-
-                                                  Container(
-                                                    margin: EdgeInsets.only(
-                                                      bottom: 10.w,
                                                     ),
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                          vertical: 4.w,
-                                                          horizontal: 14.w,
-                                                        ),
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                            22.r,
-                                                          ),
-                                                      color: AppColors.grey,
-                                                    ),
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        TextView(
-                                                          text:
-                                                              'Manufacturer: ',
-                                                          textStyle: TextStyle(
-                                                            fontFamily:
-                                                                'DMSans',
-                                                            fontSize: 13.20.sp,
-                                                            fontWeight:
-                                                                FontWeight.w400,
-                                                            color: AppColors
-                                                                .infoGrey,
-                                                            letterSpacing:
-                                                                -0.21,
-                                                          ),
-                                                        ),
-                                                        Expanded(
-                                                          child: TextView(
-                                                            text:
-                                                                e.manufacturerName !=
-                                                                        null ||
-                                                                    e.manufacturerName !=
-                                                                        ''
-                                                                ? ' ${e.manufacturerName}'
-                                                                : 'Not Available',
-                                                            textStyle: TextStyle(
-                                                              fontFamily:
-                                                                  'DMSans',
-                                                              fontSize:
-                                                                  13.20.sp,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
-                                                              color: AppColors
-                                                                  .reminder,
-                                                              letterSpacing:
-                                                                  -0.21,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  SizedBox(height: 10.h),
-                                                  Divider(
-                                                    color: AppColors.grey,
-                                                  ),
-                                                  SizedBox(height: 10.h),
-                                                  TextView(
-                                                    text: 'Order Tracking',
-                                                    textStyle: TextStyle(
-                                                      fontFamily: 'DMSans',
-                                                      fontSize: 15.4.sp,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      color: AppColors.reminder,
-                                                    ),
-                                                  ),
-                                                  SizedBox(height: 5.60.h),
-                                                  Row(
-                                                    children: [
-                                                      TextView(
-                                                        text: 'Est. Delivery:',
-                                                        textStyle: TextStyle(
-                                                          fontFamily: 'DMSans',
-                                                          fontSize: 13.10.sp,
-                                                          fontWeight:
-                                                              FontWeight.w400,
-                                                          color: AppColors
-                                                              .infoGrey,
-                                                        ),
-                                                      ),
-                                                      TextView(
-                                                        text:
-                                                            ' ${formatDateNoTime(e.estimatedDeliveryDate?.toString() ?? '')}',
-                                                        textStyle: TextStyle(
-                                                          fontFamily: 'DMSans',
-                                                          fontSize: 14.sp,
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          color: AppColors
-                                                              .reminder,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-
-                                                  SizedBox(height: 14.h),
-                                                  Row(
-                                                    children: [
-                                                      Container(
-                                                        padding:
-                                                            EdgeInsets.symmetric(
-                                                              horizontal:
-                                                                  10.64.w,
-                                                              vertical: 3.42.w,
-                                                            ),
-                                                        decoration: BoxDecoration(
-                                                          color: model
-                                                              .orderStatusColorConfirmed(
-                                                                e
-                                                                    .tracking![0]
-                                                                    .completed,
-                                                              ),
-                                                          borderRadius:
-                                                              BorderRadius.circular(
-                                                                22,
-                                                              ),
-                                                        ),
-                                                        child: Row(
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          children: [
-                                                            model.orderStatusIconConfirmed(
-                                                              e
-                                                                  .tracking![0]
-                                                                  .completed,
-                                                            ),
-                                                            SizedBox(
-                                                              width: 4.w,
-                                                            ),
-                                                            TextView(
-                                                              text:
-                                                                  'Order Confirmed',
-                                                              textStyle: TextStyle(
-                                                                fontFamily:
-                                                                    'DMSans',
-                                                                fontSize: 12.sp,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
-                                                                color: AppColors
-                                                                    .white,
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      SizedBox(width: 16.w),
-                                                      Container(
-                                                        padding:
-                                                            EdgeInsets.symmetric(
-                                                              horizontal:
-                                                                  10.64.w,
-                                                              vertical: 3.42.w,
-                                                            ),
-                                                        decoration: BoxDecoration(
-                                                          color: model
-                                                              .orderStatusColorPackaging(
-                                                                completed: e
-                                                                    .tracking![1]
-                                                                    .completed,
-                                                                current: e
-                                                                    .tracking![1]
-                                                                    .current,
-                                                              ),
-                                                          borderRadius:
-                                                              BorderRadius.circular(
-                                                                22,
-                                                              ),
-                                                        ),
-                                                        child: Row(
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          children: [
-                                                            model.orderStatusIconPackaging(
-                                                              completed: e
-                                                                  .tracking![1]
-                                                                  .completed,
-                                                              current: e
-                                                                  .tracking![1]
-                                                                  .completed,
-                                                            ),
-                                                            SizedBox(
-                                                              width: 4.w,
-                                                            ),
-                                                            TextView(
-                                                              text: 'Packaging',
-                                                              textStyle: TextStyle(
-                                                                fontFamily:
-                                                                    'DMSans',
-                                                                fontSize: 12.sp,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
-                                                                color: model.orderStatusTextColorPackaging(
-                                                                  completed: e
-                                                                      .tracking![1]
-                                                                      .completed,
-                                                                  current: e
-                                                                      .tracking![1]
-                                                                      .current,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-
-                                                  SizedBox(height: 14.h),
-                                                  Row(
-                                                    children: [
-                                                      Container(
-                                                        padding:
-                                                            EdgeInsets.symmetric(
-                                                              horizontal:
-                                                                  10.64.w,
-                                                              vertical: 3.42.w,
-                                                            ),
-                                                        decoration: BoxDecoration(
-                                                          color:
-                                                              e.tracking?[2].status
-                                                                          ?.toLowerCase() ==
-                                                                      'in_transit' &&
-                                                                  e.tracking?[2].completed ==
-                                                                      true
-                                                              ? AppColors.amber
-                                                              : AppColors.grey,
-                                                          borderRadius:
-                                                              BorderRadius.circular(
-                                                                22,
-                                                              ),
-                                                        ),
-                                                        child: Row(
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          children: [
-                                                            model.orderStatusIconIntransit(
-                                                              completed: e
-                                                                  .tracking![2]
-                                                                  .completed,
-                                                              current: e
-                                                                  .tracking![2]
-                                                                  .current,
-                                                            ),
-                                                            SizedBox(
-                                                              width: 4.w,
-                                                            ),
-                                                            TextView(
-                                                              text:
-                                                                  'In Transit',
-                                                              textStyle: TextStyle(
-                                                                fontFamily:
-                                                                    'DMSans',
-                                                                fontSize: 12.sp,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
-                                                                color: model.orderStatusTextColorIntransit(
-                                                                  completed: e
-                                                                      .tracking![2]
-                                                                      .completed,
-                                                                  current: e
-                                                                      .tracking![2]
-                                                                      .current,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      SizedBox(width: 16.w),
-                                                      Container(
-                                                        padding:
-                                                            EdgeInsets.symmetric(
-                                                              horizontal:
-                                                                  10.64.w,
-                                                              vertical: 3.42.w,
-                                                            ),
-                                                        decoration: BoxDecoration(
-                                                          color: model
-                                                              .orderStatusColorDelivered(
-                                                                completed: e
-                                                                    .tracking![3]
-                                                                    .completed,
-                                                                current: e
-                                                                    .tracking![3]
-                                                                    .current,
-                                                              ),
-                                                          borderRadius:
-                                                              BorderRadius.circular(
-                                                                22,
-                                                              ),
-                                                        ),
-                                                        child: Row(
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          children: [
-                                                            model.orderStatusIconDelivered(
-                                                              completed: e
-                                                                  .tracking![3]
-                                                                  .completed,
-                                                              current: e
-                                                                  .tracking![3]
-                                                                  .completed,
-                                                            ),
-
-                                                            SizedBox(
-                                                              width: 4.w,
-                                                            ),
-                                                            TextView(
-                                                              text: 'Delivery',
-                                                              textStyle: TextStyle(
-                                                                fontFamily:
-                                                                    'DMSans',
-                                                                fontSize: 12.sp,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
-                                                                color: model.orderStatusTextColorDelivered(
-                                                                  completed: e
-                                                                      .tracking![3]
-                                                                      .completed,
-                                                                  current: e
-                                                                      .tracking![3]
-                                                                      .completed,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
+                                                  ],
+                                                ),
                                         ],
                                       )
-                                    : Container(
-                                        margin: EdgeInsets.only(
-                                          top: 20,
-                                          left: 16.20.w,
-                                          right: 16.20.w,
-                                        ),
-                                        padding: EdgeInsets.all(17.20.w),
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(
-                                            12.r,
-                                          ),
-                                          border: Border.all(
-                                            color: AppColors.infoGrey1,
-                                          ),
-                                        ),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: [
-                                                Container(
-                                                  padding: EdgeInsets.all(10.w),
-                                                  decoration: BoxDecoration(
-                                                    color: AppColors.grey2,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                          10.r,
+                                    : Column(
+                                        children: [
+                                          model
+                                                      .getWholesaleOrderResponseModel!
+                                                      .data!
+                                                      .order!
+                                                      .items!
+                                                      .length >
+                                                  1
+                                              ? Column(
+                                                  children: [
+                                                    ...model.getWholesaleOrderResponseModel!.data!.order!.items!.map(
+                                                      (e) => Container(
+                                                        margin: EdgeInsets.only(
+                                                          top: 20,
+                                                          left: 16.20.w,
+                                                          right: 16.20.w,
                                                         ),
-                                                  ),
-                                                  child: Container(
-                                                    padding: EdgeInsets.all(
-                                                      5.62.w,
-                                                    ),
-                                                    decoration: BoxDecoration(
-                                                      shape: BoxShape.circle,
-                                                      color:
-                                                          AppColors.infoGrey2,
-                                                    ),
-                                                    child: ClipOval(
-                                                      child: CachedNetworkImage(
-                                                        imageUrl:
-                                                            model
-                                                                .getWholesaleOrderResponseModel!
-                                                                .data!
-                                                                .order!
-                                                                .items![0]
-                                                                .imageUrl ??
-                                                            '',
-                                                        height:
-                                                            isTablet(context)
-                                                            ? 38.0.h
-                                                            : 28.8.h,
-                                                        width: isTablet(context)
-                                                            ? 38.0.w
-                                                            : 28.8.w,
-                                                        errorWidget:
-                                                            (
-                                                              context,
-                                                              url,
-                                                              error,
-                                                            ) => SvgPicture.asset(
-                                                              AppImage.box_cart,
-                                                              height:
-                                                                  isTablet(
-                                                                    context,
-                                                                  )
-                                                                  ? 28.0.h
-                                                                  : 18.h,
-                                                              width:
-                                                                  isTablet(
-                                                                    context,
-                                                                  )
-                                                                  ? 28.0.w
-                                                                  : 18.w,
-                                                              color: AppColors
-                                                                  .infoGrey,
+                                                        padding: EdgeInsets.all(
+                                                          17.20.w,
+                                                        ),
+                                                        decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                12.r,
+                                                              ),
+                                                          border: Border.all(
+                                                            color: AppColors
+                                                                .infoGrey1,
+                                                          ),
+                                                        ),
+                                                        child: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Row(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Container(
+                                                                  padding:
+                                                                      EdgeInsets.all(
+                                                                        10.w,
+                                                                      ),
+                                                                  decoration: BoxDecoration(
+                                                                    color: AppColors
+                                                                        .grey2,
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                          10.r,
+                                                                        ),
+                                                                  ),
+                                                                  child: Container(
+                                                                    padding:
+                                                                        EdgeInsets.all(
+                                                                          5.62.w,
+                                                                        ),
+                                                                    decoration: BoxDecoration(
+                                                                      shape: BoxShape
+                                                                          .circle,
+                                                                      color: AppColors
+                                                                          .infoGrey2,
+                                                                    ),
+                                                                    child: ClipOval(
+                                                                      child: CachedNetworkImage(
+                                                                        imageUrl:
+                                                                            e.imageUrl ??
+                                                                            '',
+                                                                        height:
+                                                                            isTablet(
+                                                                              context,
+                                                                            )
+                                                                            ? 38.0.h
+                                                                            : 28.8.h,
+                                                                        width:
+                                                                            isTablet(
+                                                                              context,
+                                                                            )
+                                                                            ? 38.0.w
+                                                                            : 28.8.w,
+                                                                        errorWidget:
+                                                                            (
+                                                                              context,
+                                                                              url,
+                                                                              error,
+                                                                            ) => SvgPicture.asset(
+                                                                              AppImage.box_cart,
+                                                                              height:
+                                                                                  isTablet(
+                                                                                    context,
+                                                                                  )
+                                                                                  ? 28.0.h
+                                                                                  : 18.h,
+                                                                              width:
+                                                                                  isTablet(
+                                                                                    context,
+                                                                                  )
+                                                                                  ? 28.0.w
+                                                                                  : 18.w,
+                                                                              color: AppColors.infoGrey,
+                                                                            ),
+                                                                        fit: BoxFit
+                                                                            .cover,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                SizedBox(
+                                                                  width: 12.w,
+                                                                ),
+                                                                Expanded(
+                                                                  child: Column(
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .start,
+                                                                    mainAxisSize:
+                                                                        MainAxisSize
+                                                                            .min,
+                                                                    children: [
+                                                                      SizedBox(
+                                                                        width:
+                                                                            200.w,
+                                                                        child: TextView(
+                                                                          text:
+                                                                              e.productName?.capitalize() ??
+                                                                              '',
+                                                                          maxLines:
+                                                                              2,
+                                                                          textStyle: TextStyle(
+                                                                            fontFamily:
+                                                                                'DMSans',
+                                                                            fontSize:
+                                                                                16.20.sp,
+                                                                            fontWeight:
+                                                                                FontWeight.w500,
+                                                                            color:
+                                                                                AppColors.reminder,
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                      Row(
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.spaceBetween,
+                                                                        children: [
+                                                                          TextView(
+                                                                            text:
+                                                                                'Qty ${e.quantity} | ${formatNaira(e.unitPrice!)}',
+                                                                            textStyle: TextStyle(
+                                                                              fontFamily: 'DMSans',
+                                                                              fontSize: 13.20.sp,
+                                                                              fontWeight: FontWeight.w400,
+                                                                              color: AppColors.infoGrey,
+                                                                              letterSpacing: -0.1,
+                                                                            ),
+                                                                          ),
+                                                                          TextView(
+                                                                            text: formatNaira(
+                                                                              e.unitPrice! *
+                                                                                  e.quantity!,
+                                                                            ),
+                                                                            textStyle: TextStyle(
+                                                                              fontFamily: 'DMSans',
+                                                                              fontSize: 15.20.sp,
+                                                                              fontWeight: FontWeight.w500,
+                                                                              color: AppColors.reminder,
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                      SizedBox(
+                                                                        height:
+                                                                            10.h,
+                                                                      ),
+                                                                      Container(
+                                                                        padding: EdgeInsets.symmetric(
+                                                                          vertical:
+                                                                              4.w,
+                                                                          horizontal:
+                                                                              8.w,
+                                                                        ),
+                                                                        decoration: BoxDecoration(
+                                                                          borderRadius: BorderRadius.circular(
+                                                                            22.r,
+                                                                          ),
+                                                                          color:
+                                                                              AppColors.grey,
+                                                                        ),
+                                                                        child: Row(
+                                                                          mainAxisAlignment:
+                                                                              MainAxisAlignment.start,
+                                                                          mainAxisSize:
+                                                                              MainAxisSize.min,
+                                                                          children: [
+                                                                            TextView(
+                                                                              text: 'Manufacturer: ',
+                                                                              textStyle: TextStyle(
+                                                                                fontFamily: 'DMSans',
+                                                                                fontSize: 12.0.sp,
+                                                                                fontWeight: FontWeight.w400,
+                                                                                color: AppColors.infoGrey,
+                                                                                letterSpacing: -0.22,
+                                                                              ),
+                                                                            ),
+                                                                            Expanded(
+                                                                              child: TextView(
+                                                                                text:
+                                                                                    e.manufacturerName !=
+                                                                                            null ||
+                                                                                        e.manufacturerName !=
+                                                                                            ''
+                                                                                    ? ' ${e.manufacturerName}'
+                                                                                    : 'Not Available',
+                                                                                maxLines: 1,
+                                                                                textOverflow: TextOverflow.ellipsis,
+                                                                                textStyle: TextStyle(
+                                                                                  fontFamily: 'DMSans',
+                                                                                  fontSize: 12.0.sp,
+                                                                                  fontWeight: FontWeight.w500,
+                                                                                  color: AppColors.reminder,
+                                                                                  letterSpacing: -0.22,
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ],
                                                             ),
-                                                        fit: BoxFit.cover,
+                                                            SizedBox(
+                                                              height: 10.h,
+                                                            ),
+                                                            Divider(
+                                                              color: AppColors
+                                                                  .grey,
+                                                            ),
+                                                            SizedBox(
+                                                              height: 10.h,
+                                                            ),
+                                                            TextView(
+                                                              text:
+                                                                  'Order Tracking',
+                                                              textStyle: TextStyle(
+                                                                fontFamily:
+                                                                    'DMSans',
+                                                                fontSize:
+                                                                    15.4.sp,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                                color: AppColors
+                                                                    .reminder,
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              height: 5.60.h,
+                                                            ),
+                                                            Row(
+                                                              children: [
+                                                                TextView(
+                                                                  text:
+                                                                      'Est. Delivery:',
+                                                                  textStyle: TextStyle(
+                                                                    fontFamily:
+                                                                        'DMSans',
+                                                                    fontSize:
+                                                                        13.10
+                                                                            .sp,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w400,
+                                                                    color: AppColors
+                                                                        .infoGrey,
+                                                                  ),
+                                                                ),
+                                                                TextView(
+                                                                  text:
+                                                                      ' ${formatDateNoTime(e.estimatedDeliveryDate?.toString() ?? '')}',
+                                                                  textStyle: TextStyle(
+                                                                    fontFamily:
+                                                                        'DMSans',
+                                                                    fontSize:
+                                                                        14.sp,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500,
+                                                                    color: AppColors
+                                                                        .reminder,
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+
+                                                            SizedBox(
+                                                              height: 14.h,
+                                                            ),
+                                                            Row(
+                                                              children: [
+                                                                Container(
+                                                                  padding: EdgeInsets.symmetric(
+                                                                    horizontal:
+                                                                        10.64.w,
+                                                                    vertical:
+                                                                        3.42.w,
+                                                                  ),
+                                                                  decoration: BoxDecoration(
+                                                                    color: model
+                                                                        .orderStatusColorConfirmed(
+                                                                          e.tracking![0].completed,
+                                                                        ),
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                          22,
+                                                                        ),
+                                                                  ),
+                                                                  child: Row(
+                                                                    mainAxisSize:
+                                                                        MainAxisSize
+                                                                            .min,
+                                                                    children: [
+                                                                      model.orderStatusIconConfirmed(
+                                                                        e
+                                                                            .tracking![0]
+                                                                            .completed,
+                                                                      ),
+                                                                      SizedBox(
+                                                                        width:
+                                                                            4.w,
+                                                                      ),
+                                                                      TextView(
+                                                                        text:
+                                                                            'Order Confirmed',
+                                                                        textStyle: TextStyle(
+                                                                          fontFamily:
+                                                                              'DMSans',
+                                                                          fontSize:
+                                                                              12.sp,
+                                                                          fontWeight:
+                                                                              FontWeight.w400,
+                                                                          color:
+                                                                              AppColors.white,
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                                SizedBox(
+                                                                  width: 16.w,
+                                                                ),
+                                                                Container(
+                                                                  padding: EdgeInsets.symmetric(
+                                                                    horizontal:
+                                                                        10.64.w,
+                                                                    vertical:
+                                                                        3.42.w,
+                                                                  ),
+                                                                  decoration: BoxDecoration(
+                                                                    color: model.orderStatusColorPackaging(
+                                                                      completed: e
+                                                                          .tracking![1]
+                                                                          .completed,
+                                                                      current: e
+                                                                          .tracking![1]
+                                                                          .current,
+                                                                    ),
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                          22,
+                                                                        ),
+                                                                  ),
+                                                                  child: Row(
+                                                                    mainAxisSize:
+                                                                        MainAxisSize
+                                                                            .min,
+                                                                    children: [
+                                                                      model.orderStatusIconPackaging(
+                                                                        completed: e
+                                                                            .tracking![1]
+                                                                            .completed,
+                                                                        current: e
+                                                                            .tracking![1]
+                                                                            .completed,
+                                                                      ),
+                                                                      SizedBox(
+                                                                        width:
+                                                                            4.w,
+                                                                      ),
+                                                                      TextView(
+                                                                        text:
+                                                                            'Packaging',
+                                                                        textStyle: TextStyle(
+                                                                          fontFamily:
+                                                                              'DMSans',
+                                                                          fontSize:
+                                                                              12.sp,
+                                                                          fontWeight:
+                                                                              FontWeight.w400,
+                                                                          color: model.orderStatusTextColorPackaging(
+                                                                            completed:
+                                                                                e.tracking![1].completed,
+                                                                            current:
+                                                                                e.tracking![1].current,
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+
+                                                            SizedBox(
+                                                              height: 14.h,
+                                                            ),
+                                                            Row(
+                                                              children: [
+                                                                Container(
+                                                                  padding: EdgeInsets.symmetric(
+                                                                    horizontal:
+                                                                        10.64.w,
+                                                                    vertical:
+                                                                        3.42.w,
+                                                                  ),
+                                                                  decoration: BoxDecoration(
+                                                                    color:
+                                                                        e.tracking?[2].status?.toLowerCase() ==
+                                                                                'in_transit' &&
+                                                                            e.tracking?[2].completed ==
+                                                                                true
+                                                                        ? AppColors
+                                                                              .amber
+                                                                        : AppColors.grey,
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                          22,
+                                                                        ),
+                                                                  ),
+                                                                  child: Row(
+                                                                    mainAxisSize:
+                                                                        MainAxisSize
+                                                                            .min,
+                                                                    children: [
+                                                                      model.orderStatusIconIntransit(
+                                                                        completed: e
+                                                                            .tracking![2]
+                                                                            .completed,
+                                                                        current: e
+                                                                            .tracking![2]
+                                                                            .current,
+                                                                      ),
+                                                                      SizedBox(
+                                                                        width:
+                                                                            4.w,
+                                                                      ),
+                                                                      TextView(
+                                                                        text:
+                                                                            'In Transit',
+                                                                        textStyle: TextStyle(
+                                                                          fontFamily:
+                                                                              'DMSans',
+                                                                          fontSize:
+                                                                              12.sp,
+                                                                          fontWeight:
+                                                                              FontWeight.w400,
+                                                                          color: model.orderStatusTextColorIntransit(
+                                                                            completed:
+                                                                                e.tracking![2].completed,
+                                                                            current:
+                                                                                e.tracking![2].current,
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                                SizedBox(
+                                                                  width: 16.w,
+                                                                ),
+                                                                Container(
+                                                                  padding: EdgeInsets.symmetric(
+                                                                    horizontal:
+                                                                        10.64.w,
+                                                                    vertical:
+                                                                        3.42.w,
+                                                                  ),
+                                                                  decoration: BoxDecoration(
+                                                                    color: model.orderStatusColorDelivered(
+                                                                      completed: e
+                                                                          .tracking![3]
+                                                                          .completed,
+                                                                      current: e
+                                                                          .tracking![3]
+                                                                          .current,
+                                                                    ),
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                          22,
+                                                                        ),
+                                                                  ),
+                                                                  child: Row(
+                                                                    mainAxisSize:
+                                                                        MainAxisSize
+                                                                            .min,
+                                                                    children: [
+                                                                      model.orderStatusIconDelivered(
+                                                                        completed: e
+                                                                            .tracking![3]
+                                                                            .completed,
+                                                                        current: e
+                                                                            .tracking![3]
+                                                                            .completed,
+                                                                      ),
+
+                                                                      SizedBox(
+                                                                        width:
+                                                                            4.w,
+                                                                      ),
+                                                                      TextView(
+                                                                        text:
+                                                                            'Delivery',
+                                                                        textStyle: TextStyle(
+                                                                          fontFamily:
+                                                                              'DMSans',
+                                                                          fontSize:
+                                                                              12.sp,
+                                                                          fontWeight:
+                                                                              FontWeight.w400,
+                                                                          color: model.orderStatusTextColorDelivered(
+                                                                            completed:
+                                                                                e.tracking![3].completed,
+                                                                            current:
+                                                                                e.tracking![3].completed,
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ],
+                                                        ),
                                                       ),
                                                     ),
+                                                  ],
+                                                )
+                                              : Container(
+                                                  margin: EdgeInsets.only(
+                                                    top: 20,
+                                                    left: 16.20.w,
+                                                    right: 16.20.w,
                                                   ),
-                                                ),
-                                                SizedBox(width: 12.w),
-                                                Expanded(
+                                                  padding: EdgeInsets.all(
+                                                    17.20.w,
+                                                  ),
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          12.r,
+                                                        ),
+                                                    border: Border.all(
+                                                      color:
+                                                          AppColors.infoGrey1,
+                                                    ),
+                                                  ),
                                                   child: Column(
                                                     crossAxisAlignment:
                                                         CrossAxisAlignment
                                                             .start,
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
                                                     children: [
-                                                      TextView(
-                                                        text:
-                                                            model
-                                                                .getWholesaleOrderResponseModel!
-                                                                .data!
-                                                                .order!
-                                                                .items![0]
-                                                                .productName
-                                                                ?.capitalize() ??
-                                                            '',
-                                                        textStyle: TextStyle(
-                                                          fontFamily: 'DMSans',
-                                                          fontSize: 16.20.sp,
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          color: AppColors
-                                                              .reminder,
-                                                        ),
-                                                      ),
                                                       Row(
                                                         mainAxisAlignment:
                                                             MainAxisAlignment
-                                                                .spaceBetween,
+                                                                .start,
                                                         children: [
+                                                          Container(
+                                                            padding:
+                                                                EdgeInsets.all(
+                                                                  10.w,
+                                                                ),
+                                                            decoration:
+                                                                BoxDecoration(
+                                                                  color:
+                                                                      AppColors
+                                                                          .grey2,
+                                                                  borderRadius:
+                                                                      BorderRadius.circular(
+                                                                        10.r,
+                                                                      ),
+                                                                ),
+                                                            child: Container(
+                                                              padding:
+                                                                  EdgeInsets.all(
+                                                                    5.62.w,
+                                                                  ),
+                                                              decoration: BoxDecoration(
+                                                                shape: BoxShape
+                                                                    .circle,
+                                                                color: AppColors
+                                                                    .infoGrey2,
+                                                              ),
+                                                              child: ClipOval(
+                                                                child: CachedNetworkImage(
+                                                                  imageUrl:
+                                                                      model
+                                                                          .getWholesaleOrderResponseModel!
+                                                                          .data!
+                                                                          .order!
+                                                                          .items![0]
+                                                                          .imageUrl ??
+                                                                      '',
+                                                                  height:
+                                                                      isTablet(
+                                                                        context,
+                                                                      )
+                                                                      ? 38.0.h
+                                                                      : 28.8.h,
+                                                                  width:
+                                                                      isTablet(
+                                                                        context,
+                                                                      )
+                                                                      ? 38.0.w
+                                                                      : 28.8.w,
+                                                                  errorWidget:
+                                                                      (
+                                                                        context,
+                                                                        url,
+                                                                        error,
+                                                                      ) => SvgPicture.asset(
+                                                                        AppImage
+                                                                            .box_cart,
+                                                                        height:
+                                                                            isTablet(
+                                                                              context,
+                                                                            )
+                                                                            ? 28.0.h
+                                                                            : 18.h,
+                                                                        width:
+                                                                            isTablet(
+                                                                              context,
+                                                                            )
+                                                                            ? 28.0.w
+                                                                            : 18.w,
+                                                                        color: AppColors
+                                                                            .infoGrey,
+                                                                      ),
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          SizedBox(width: 12.w),
                                                           Expanded(
-                                                            child: TextView(
+                                                            child: Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              mainAxisSize:
+                                                                  MainAxisSize
+                                                                      .min,
+                                                              children: [
+                                                                TextView(
+                                                                  text:
+                                                                      model
+                                                                          .getWholesaleOrderResponseModel!
+                                                                          .data!
+                                                                          .order!
+                                                                          .items![0]
+                                                                          .productName
+                                                                          ?.capitalize() ??
+                                                                      '',
+                                                                  textStyle: TextStyle(
+                                                                    fontFamily:
+                                                                        'DMSans',
+                                                                    fontSize:
+                                                                        16.20
+                                                                            .sp,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500,
+                                                                    color: AppColors
+                                                                        .reminder,
+                                                                  ),
+                                                                ),
+                                                                Row(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .spaceBetween,
+                                                                  children: [
+                                                                    Expanded(
+                                                                      child: TextView(
+                                                                        text:
+                                                                            'Qty ${model.getWholesaleOrderResponseModel!.data!.order!.items![0].quantity} | ${formatNaira(model.getWholesaleOrderResponseModel!.data!.order!.items![0].unitPrice!)}',
+                                                                        textStyle: TextStyle(
+                                                                          fontFamily:
+                                                                              'DMSans',
+                                                                          fontSize:
+                                                                              13.20.sp,
+                                                                          fontWeight:
+                                                                              FontWeight.w400,
+                                                                          color:
+                                                                              AppColors.infoGrey,
+                                                                          letterSpacing:
+                                                                              -0.1,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    Expanded(
+                                                                      child: TextView(
+                                                                        text: formatNaira(
+                                                                          model.getWholesaleOrderResponseModel!.data!.order!.items![0].unitPrice! *
+                                                                              model.getWholesaleOrderResponseModel!.data!.order!.items![0].quantity!,
+                                                                        ),
+                                                                        textStyle: TextStyle(
+                                                                          fontFamily:
+                                                                              'DMSans',
+                                                                          fontSize:
+                                                                              15.20.sp,
+                                                                          fontWeight:
+                                                                              FontWeight.w500,
+                                                                          color:
+                                                                              AppColors.reminder,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      SizedBox(height: 10.h),
+                                                      Container(
+                                                        padding:
+                                                            EdgeInsets.symmetric(
+                                                              vertical: 4.w,
+                                                              horizontal: 14.w,
+                                                            ),
+                                                        decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                22.r,
+                                                              ),
+                                                          color: AppColors.grey,
+                                                        ),
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            TextView(
                                                               text:
-                                                                  'Qty ${model.getWholesaleOrderResponseModel!.data!.order!.items![0].quantity} | ${formatNaira(model.getWholesaleOrderResponseModel!.data!.order!.items![0].unitPrice!)}',
+                                                                  'Manufacturer: ',
                                                               textStyle: TextStyle(
                                                                 fontFamily:
                                                                     'DMSans',
@@ -1561,108 +3012,46 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                                 color: AppColors
                                                                     .infoGrey,
                                                                 letterSpacing:
-                                                                    -0.1,
+                                                                    -0.21,
                                                               ),
                                                             ),
-                                                          ),
-                                                          Expanded(
-                                                            child: TextView(
-                                                              text: formatNaira(
-                                                                model
-                                                                        .getWholesaleOrderResponseModel!
-                                                                        .data!
-                                                                        .order!
-                                                                        .items![0]
-                                                                        .unitPrice! *
-                                                                    model
-                                                                        .getWholesaleOrderResponseModel!
-                                                                        .data!
-                                                                        .order!
-                                                                        .items![0]
-                                                                        .quantity!,
-                                                              ),
-                                                              textStyle: TextStyle(
-                                                                fontFamily:
-                                                                    'DMSans',
-                                                                fontSize:
-                                                                    15.20.sp,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500,
-                                                                color: AppColors
-                                                                    .reminder,
+                                                            Expanded(
+                                                              child: TextView(
+                                                                text:
+                                                                    model.getWholesaleOrderResponseModel!.data!.order!.items![0].manufacturerName !=
+                                                                            null ||
+                                                                        model.getWholesaleOrderResponseModel!.data!.order!.items![0].manufacturerName !=
+                                                                            ''
+                                                                    ? ' ${model.getWholesaleOrderResponseModel!.data!.order!.items![0].manufacturerName ?? 'Not Available'}'
+                                                                    : 'Not Available',
+
+                                                                textOverflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                                maxLines: 1,
+                                                                textStyle: TextStyle(
+                                                                  fontFamily:
+                                                                      'DMSans',
+                                                                  fontSize:
+                                                                      13.20.sp,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                  color: AppColors
+                                                                      .reminder,
+                                                                  letterSpacing:
+                                                                      -0.21,
+                                                                ),
                                                               ),
                                                             ),
-                                                          ),
-                                                        ],
+                                                          ],
+                                                        ),
                                                       ),
+                                                      SizedBox(height: 10.h),
                                                     ],
                                                   ),
                                                 ),
-                                              ],
-                                            ),
-                                            SizedBox(height: 10.h),
-                                            Container(
-                                              padding: EdgeInsets.symmetric(
-                                                vertical: 4.w,
-                                                horizontal: 14.w,
-                                              ),
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(22.r),
-                                                color: AppColors.grey,
-                                              ),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                children: [
-                                                  TextView(
-                                                    text: 'Manufacturer: ',
-                                                    textStyle: TextStyle(
-                                                      fontFamily: 'DMSans',
-                                                      fontSize: 13.20.sp,
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      color: AppColors.infoGrey,
-                                                      letterSpacing: -0.21,
-                                                    ),
-                                                  ),
-                                                  Expanded(
-                                                    child: TextView(
-                                                      text:
-                                                          model
-                                                                      .getWholesaleOrderResponseModel!
-                                                                      .data!
-                                                                      .order!
-                                                                      .items![0]
-                                                                      .manufacturerName !=
-                                                                  null ||
-                                                              model
-                                                                      .getWholesaleOrderResponseModel!
-                                                                      .data!
-                                                                      .order!
-                                                                      .items![0]
-                                                                      .manufacturerName !=
-                                                                  ''
-                                                          ? ' ${model.getWholesaleOrderResponseModel!.data!.order!.items![0].manufacturerName ?? 'Not Available'}'
-                                                          : 'Not Available',
-                                                      textStyle: TextStyle(
-                                                        fontFamily: 'DMSans',
-                                                        fontSize: 13.20.sp,
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                        color:
-                                                            AppColors.reminder,
-                                                        letterSpacing: -0.21,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            SizedBox(height: 10.h),
-                                          ],
-                                        ),
+                                        ],
                                       ),
                                 Container(
                                   margin: EdgeInsets.symmetric(
@@ -2252,6 +3641,7 @@ class PharmacyOrderScreen extends StatelessWidget {
                                           wholesaleOrderId:
                                               model.wholesaleOrder!.id!,
                                         );
+                                        model.orderSplitInfoIndex = 1;
                                         model.notifyListeners();
                                       },
                                       child: Container(

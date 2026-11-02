@@ -4,6 +4,8 @@ part 'delivery_details.g.dart';
 
 @JsonSerializable()
 class DeliveryDetails {
+  String? recipientName;
+  String? recipientIdType;
   String? tenantId;
   String? name;
   String? address;
@@ -12,6 +14,8 @@ class DeliveryDetails {
   String? lga;
 
   DeliveryDetails({
+    this.recipientName,
+    this.recipientIdType,
     this.tenantId,
     this.name,
     this.address,

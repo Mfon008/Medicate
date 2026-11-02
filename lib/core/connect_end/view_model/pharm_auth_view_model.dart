@@ -457,6 +457,7 @@ class PharmViewModel extends BaseViewModel {
   GetWholesaleOrderResponseModel? get getWholesaleOrderResponseModel =>
       _getWholesaleOrderResponseModel;
 
+  int orderSplitInfoIndex = 1;
   int linIndex = 1;
   int linIndexUpdate = 1;
   int indexOfMedicationClassList = 0;
@@ -1048,6 +1049,23 @@ class PharmViewModel extends BaseViewModel {
     return product.product.id.toString();
   }
 
+  void prevOrderSplitInfo() {
+    if (orderSplitInfoIndex > 0 && orderSplitInfoIndex!=1) {
+      orderSplitInfoIndex--;
+    }
+    notifyListeners();
+  }
+
+  void nextOrderSplitInfo() {
+    final deliveriesLength =
+        getWholesaleOrderResponseModel?.data?.order?.deliveries?.length ?? 0;
+
+    if (orderSplitInfoIndex < deliveriesLength) {
+      orderSplitInfoIndex++;
+      notifyListeners();
+    }
+  }
+
   int getSplitQuantity({
     required BusinessAddresses address,
     required dynamic product,
@@ -1109,9 +1127,9 @@ class PharmViewModel extends BaseViewModel {
     );
 
     final totalSplitQuantity = getTotalSplitQuantity(
-    addresses: approvedAddresses,
-    product: product,
-  );
+      addresses: approvedAddresses,
+      product: product,
+    );
 
     // Do not decrement below 1.
     if (delta < 0 && currentQuantity <= 0) {
@@ -1120,8 +1138,8 @@ class PharmViewModel extends BaseViewModel {
 
     // Do not increament above general quantity
     if (delta > 0 && totalSplitQuantity + delta > product.quantity) {
-    return false;
-  }
+      return false;
+    }
 
     // Apply the increment or decrement.
     final newQuantity = currentQuantity + delta;

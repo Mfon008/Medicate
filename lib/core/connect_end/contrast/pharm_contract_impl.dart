@@ -309,7 +309,7 @@ class PharmContractsImpl {
   Future<PlaceOrderWalletResponseModel> placeOrderWallet(
     PlaceOrderWalletEntityModel? placeOrderWalletync,
   ) async => await _api.placeOrderWallet(placeOrderWalletync);
- Future<PlaceOrderWalletSplitResponseModel> placeOrderWalletSplit(
+  Future<PlaceOrderWalletSplitResponseModel> placeOrderWalletSplit(
     PlaceOrderWalletSplitEntityModel? placeOrderWalletSplit,
   ) async => await _api.placeOrderWalletSplit(placeOrderWalletSplit);
   Future<WholesaleOrderListResponseModel> getWholesaleOrderList({
