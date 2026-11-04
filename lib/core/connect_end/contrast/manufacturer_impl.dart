@@ -12,7 +12,7 @@ import '../model/distributor_wholesale_category_model/distributor_wholesale_cate
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
 import '../model/get_all_product_list_response_model/get_all_product_list_response_model.dart';
 import '../model/get_distributor_kyc_response_model/get_distributor_kyc_response_model.dart';
-import '../model/get_incoming_order_ddetail_response_model/get_incoming_order_ddetail_response_model.dart';
+import '../model/get_incoming_order_ddetails_response_model/get_incoming_order_ddetails_response_model.dart';
 import '../model/get_single_product_response_model/get_single_product_response_model.dart';
 import '../model/get_user_details_response_model/get_user_details_response_model.dart';
 import '../model/level_three_distributor_kyc_entity_model.dart';
@@ -139,7 +139,7 @@ class ManufacturerContractImpl {
     String? search,
   }) async =>
       await _api.listIncomingOrder(page: page, status: status, search: search);
-  Future<GetIncomingOrderDdetailResponseModel> getIncomingOrder({
+  Future<GetIncomingOrderDdetailsResponseModel> getIncomingOrder({
     String? wholesaleOrderId,
   }) async => await _api.getIncomingOrder(wholesaleOrderId: wholesaleOrderId);
   Future<dynamic> advanceIncomingOrder({String? wholesaleOrderId}) async =>

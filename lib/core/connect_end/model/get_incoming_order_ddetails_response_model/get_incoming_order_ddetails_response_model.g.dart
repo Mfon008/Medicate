@@ -1,14 +1,14 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'get_incoming_order_ddetail_response_model.dart';
+part of 'get_incoming_order_ddetails_response_model.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-GetIncomingOrderDdetailResponseModel
-_$GetIncomingOrderDdetailResponseModelFromJson(Map<String, dynamic> json) =>
-    GetIncomingOrderDdetailResponseModel(
+GetIncomingOrderDdetailsResponseModel
+_$GetIncomingOrderDdetailsResponseModelFromJson(Map<String, dynamic> json) =>
+    GetIncomingOrderDdetailsResponseModel(
       success: json['success'] as bool?,
       statusCode: (json['statusCode'] as num?)?.toInt(),
       message: json['message'] as String?,
@@ -17,8 +17,8 @@ _$GetIncomingOrderDdetailResponseModelFromJson(Map<String, dynamic> json) =>
           : Data.fromJson(json['data'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$GetIncomingOrderDdetailResponseModelToJson(
-  GetIncomingOrderDdetailResponseModel instance,
+Map<String, dynamic> _$GetIncomingOrderDdetailsResponseModelToJson(
+  GetIncomingOrderDdetailsResponseModel instance,
 ) => <String, dynamic>{
   'success': instance.success,
   'statusCode': instance.statusCode,

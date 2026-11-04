@@ -6,16 +6,20 @@ part 'actions.g.dart';
 class Actions {
   bool? canView;
   bool? canAdvance;
-  bool? canCancel;
   bool? canReject;
   bool? canReturn;
+  bool? canCancel;
+  bool? requiresOrderItemId;
+  bool? requiresDeliveryId;
 
   Actions({
     this.canView,
     this.canAdvance,
-    this.canCancel,
     this.canReject,
     this.canReturn,
+    this.canCancel,
+    this.requiresOrderItemId,
+    this.requiresDeliveryId,
   });
 
   factory Actions.fromJson(Map<String, dynamic> json) {

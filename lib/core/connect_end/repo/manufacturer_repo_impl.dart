@@ -16,7 +16,7 @@ import '../model/forgot_password_response_model/forgot_password_response_model.d
 import '../model/get_all_product_list_response_model/get_all_product_list_response_model.dart';
 import '../model/get_distributor_kyc_response_model/get_distributor_kyc_response_model.dart';
 import '../model/get_distributor_profile_response_model/get_distributor_profile_response_model.dart';
-import '../model/get_incoming_order_ddetail_response_model/get_incoming_order_ddetail_response_model.dart';
+import '../model/get_incoming_order_ddetails_response_model/get_incoming_order_ddetails_response_model.dart';
 import '../model/get_single_product_response_model/get_single_product_response_model.dart';
 import '../model/level_three_distributor_kyc_entity_model.dart';
 import '../model/list_incoming_orders_response_model/list_incoming_orders_response_model.dart';
@@ -228,7 +228,7 @@ class ManufacturerRepoImpl {
     return response;
   }
 
-  Future<GetIncomingOrderDdetailResponseModel> getIncomingOrder({
+  Future<GetIncomingOrderDdetailsResponseModel> getIncomingOrder({
     String? wholesaleOrderId,
   }) async {
     final response = await _contract.getIncomingOrder(

@@ -24,7 +24,6 @@ Order _$OrderFromJson(Map<String, dynamic> json) => Order(
   deliveryDate: json['deliveryDate'],
   timeWindow: json['timeWindow'] as String?,
   timeWindowLabel: json['timeWindowLabel'] as String?,
-  splitOrder: json['splitOrder'] as bool?,
   deliveryDetails: json['deliveryDetails'] == null
       ? null
       : DeliveryDetails.fromJson(
@@ -39,14 +38,15 @@ Order _$OrderFromJson(Map<String, dynamic> json) => Order(
   deliveryBreakdown: (json['deliveryBreakdown'] as List<dynamic>?)
       ?.map((e) => DeliveryBreakdown.fromJson(e as Map<String, dynamic>))
       .toList(),
-  deliveries: (json['deliveries'] as List<dynamic>?)
-      ?.map((e) => Deliveries.fromJson(e as Map<String, dynamic>))
-      .toList(),
   total: (json['total'] as num?)?.toDouble(),
   currency: json['currency'] as String?,
   payment: json['payment'] == null
       ? null
       : Payment.fromJson(json['payment'] as Map<String, dynamic>),
+  deliveries: (json['deliveries'] as List<dynamic>?)
+      ?.map((e) => Deliveries.fromJson(e as Map<String, dynamic>))
+      .toList(),
+  splitOrder: json['splitOrder'] as bool?,
 );
 
 Map<String, dynamic> _$OrderToJson(Order instance) => <String, dynamic>{
@@ -69,9 +69,9 @@ Map<String, dynamic> _$OrderToJson(Order instance) => <String, dynamic>{
   'subtotal': instance.subtotal,
   'deliveryFee': instance.deliveryFee,
   'deliveryBreakdown': instance.deliveryBreakdown,
-  'total': instance.total,
-  'currency': instance.currency,
   'deliveries': instance.deliveries,
   'splitOrder': instance.splitOrder,
+  'total': instance.total,
+  'currency': instance.currency,
   'payment': instance.payment,
 };

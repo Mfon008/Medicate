@@ -1005,10 +1005,7 @@ class _PharmacyWholeSaleCheckoutState extends State<PharmacyWholeSaleCheckout> {
                           children: [
                             GestureDetector(
                               onTap: () async {
-                                if (model
-                                        .getTetantResponseModel!
-                                        .data!
-                                        .businessAddresses!
+                                if (model.approvedAddresses
                                         .length >
                                     1) {
                                   model.isDeliveryAddressTap =

@@ -1,32 +1,48 @@
 import 'package:json_annotation/json_annotation.dart';
 
 import 'actions.dart';
+import 'current_allocation.dart';
 import 'fulfillment_timeline.dart';
 
 part 'item.g.dart';
 
 @JsonSerializable()
 class Item {
+  String? fulfillmentGroupId;
+  String? nafdacRegistrationNumber;
   String? orderItemId;
   String? productId;
+  String? manufacturerDistributorId;
   String? productName;
+  String? manufacturerName;
+  String? manufacturerDistributorName;
+  String? categoryId;
+  String? category;
   String? sku;
   String? imageUrl;
   int? quantity;
-  double? unitPrice;
-  double? lineTotal;
+  int? unitPrice;
+  int? lineTotal;
   int? minimumOrderQuantity;
   int? packSize;
   String? unit;
   String? fulfillmentStatus;
-  String? fulfillmentStatusLabel;
   List<FulfillmentTimeline>? fulfillmentTimeline;
+  CurrentAllocation? currentAllocation;
+  String? fulfillmentStatusLabel;
   Actions? actions;
 
   Item({
+    this.fulfillmentGroupId,
+    this.nafdacRegistrationNumber,
     this.orderItemId,
     this.productId,
+    this.manufacturerDistributorId,
     this.productName,
+    this.manufacturerName,
+    this.manufacturerDistributorName,
+    this.categoryId,
+    this.category,
     this.sku,
     this.imageUrl,
     this.quantity,
@@ -36,8 +52,9 @@ class Item {
     this.packSize,
     this.unit,
     this.fulfillmentStatus,
-    this.fulfillmentStatusLabel,
     this.fulfillmentTimeline,
+    this.currentAllocation,
+    this.fulfillmentStatusLabel,
     this.actions,
   });
 

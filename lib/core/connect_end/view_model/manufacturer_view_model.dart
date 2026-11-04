@@ -51,7 +51,7 @@ import '../model/get_all_product_list_response_model/get_all_product_list_respon
 import '../model/get_distributor_kyc_response_model/get_distributor_kyc_response_model.dart';
 import '../model/get_distributor_profile_response_model/business_addresses.dart';
 import '../model/get_distributor_profile_response_model/get_distributor_profile_response_model.dart';
-import '../model/get_incoming_order_ddetail_response_model/get_incoming_order_ddetail_response_model.dart';
+import '../model/get_incoming_order_ddetails_response_model/get_incoming_order_ddetails_response_model.dart';
 import '../model/get_single_product_response_model/get_single_product_response_model.dart';
 import '../model/get_transaction_wallet_response_model/get_transaction_wallet_response_model.dart';
 import '../model/get_user_details_response_model/get_user_details_response_model.dart';
@@ -93,9 +93,15 @@ import 'package:medicate_app/core/connect_end/model/get_single_product_response_
 import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/coverage_areas.dart'
     as cov;
 
+import 'package:medicate_app/core/connect_end/model/get_incoming_order_ddetails_response_model/order.dart'
+    as or;
+
 class ManufacturerViewModel extends BaseViewModel {
   final BuildContext? context;
   final logger = getLogger(' ManufacturerViewModel');
+
+  or.Order? dDetailOrder;
+  String? orderNote;
 
   final repositoryImply = ManufacturerRepoImpl();
 
@@ -184,8 +190,8 @@ class ManufacturerViewModel extends BaseViewModel {
   ListIncomingOrdersResponseModel? _listIncomingOrdersResponseModel;
   ListIncomingOrdersResponseModel? get listIncomingOrdersResponseModel =>
       _listIncomingOrdersResponseModel;
-  GetIncomingOrderDdetailResponseModel? _getIncomingOrderDdetailResponseModel;
-  GetIncomingOrderDdetailResponseModel?
+  GetIncomingOrderDdetailsResponseModel? _getIncomingOrderDdetailResponseModel;
+  GetIncomingOrderDdetailsResponseModel?
   get getIncomingOrderDdetailResponseModel =>
       _getIncomingOrderDdetailResponseModel;
 
@@ -413,6 +419,24 @@ class ManufacturerViewModel extends BaseViewModel {
   int? coverageAreaIndex;
 
   bool desAddInfoTap = false;
+
+  int deliveryIndexSplit = 1;
+
+  void prevOrderSplitInfo() {
+    if (deliveryIndexSplit > 0 && deliveryIndexSplit != 1) {
+      deliveryIndexSplit--;
+    }
+    notifyListeners();
+  }
+
+  void nextOrderSplitInfo() {
+    final deliveriesLength = dDetailOrder?.deliveries?.length ?? 0;
+
+    if (deliveryIndexSplit < deliveriesLength) {
+      deliveryIndexSplit++;
+      notifyListeners();
+    }
+  }
 
   void pickImage(BuildContext context) {
     try {
@@ -2475,7 +2499,7 @@ class ManufacturerViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void getIncomingOrderDetail(context, {String? id}) async {
+  Future<void> getIncomingOrderDetail(context, {String? id}) async {
     try {
       _isLoading = true;
       _getIncomingOrderDdetailResponseModel = await runBusyFuture(

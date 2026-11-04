@@ -1585,7 +1585,7 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                                                 'Qty ${model.getWholesaleOrderResponseModel!.data!.order!.deliveries![model.orderSplitInfoIndex - 1].items![e.key].quantity!} of ${e.value.quantity} | ${formatNaira(e.value.unitPrice!)}',
                                                                             textStyle: TextStyle(
                                                                               fontFamily: 'DMSans',
-                                                                              fontSize: 13.20.sp,
+                                                                              fontSize: 12.0.sp,
                                                                               fontWeight: FontWeight.w400,
                                                                               color: AppColors.infoGrey,
                                                                               letterSpacing: -0.1,
@@ -2132,7 +2132,7 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                                               text: 'Qty ${model.getWholesaleOrderResponseModel!.data!.order!.deliveries![model.orderSplitInfoIndex - 1].items![e.key].quantity!} of  ${e.value.quantity} | ${formatNaira(e.value.unitPrice!)}',
                                                                               textStyle: TextStyle(
                                                                                 fontFamily: 'DMSans',
-                                                                                fontSize: 13.20.sp,
+                                                                                fontSize: 12.0.sp,
                                                                                 fontWeight: FontWeight.w400,
                                                                                 color: AppColors.infoGrey,
                                                                                 letterSpacing: -0.1,
@@ -2393,7 +2393,7 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                                                 'Qty ${e.quantity} | ${formatNaira(e.unitPrice!)}',
                                                                             textStyle: TextStyle(
                                                                               fontFamily: 'DMSans',
-                                                                              fontSize: 13.20.sp,
+                                                                              fontSize: 12.0.sp,
                                                                               fontWeight: FontWeight.w400,
                                                                               color: AppColors.infoGrey,
                                                                               letterSpacing: -0.1,
@@ -2944,7 +2944,7 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                                           fontFamily:
                                                                               'DMSans',
                                                                           fontSize:
-                                                                              13.20.sp,
+                                                                              12.0.sp,
                                                                           fontWeight:
                                                                               FontWeight.w400,
                                                                           color:

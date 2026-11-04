@@ -25,6 +25,7 @@ class AppImage {
   static const String pending_meds = 'assets/svgs/pending_meds.svg';
   static const String padlock = 'assets/svgs/padlock.svg';
   static const String fa = 'assets/svgs/2fa.svg';
+  static const String person_frame = 'assets/svgs/person_frame.svg';
   static const String pen = 'assets/svgs/pen.svg';
   static const String upgrade_account = 'assets/svgs/upgrade_account.svg';
   static const String validate = 'assets/svgs/validate.svg';

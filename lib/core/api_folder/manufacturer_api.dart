@@ -5,7 +5,6 @@ import 'package:medicate_app/core/connect_end/model/distributor_wholesale_catego
 import 'package:medicate_app/core/connect_end/model/get_all_product_list_response_model/get_all_product_list_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/get_distributor_kyc_response_model/get_distributor_kyc_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/get_distributor_profile_response_model/get_distributor_profile_response_model.dart';
-import 'package:medicate_app/core/connect_end/model/get_incoming_order_ddetail_response_model/get_incoming_order_ddetail_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/get_single_product_response_model/get_single_product_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/get_user_details_response_model/get_user_details_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/manufacturer_signup_entity_model.dart';
@@ -17,6 +16,7 @@ import 'package:medicate_app/core/connect_end/model/update_distributor_profile_e
 import '../connect_end/model/business_addresses_entity.dart';
 import '../connect_end/model/create_distributor_product_entity_model/create_distributor_product_entity_model.dart';
 import '../connect_end/model/forgot_password_response_model/forgot_password_response_model.dart';
+import '../connect_end/model/get_incoming_order_ddetails_response_model/get_incoming_order_ddetails_response_model.dart';
 import '../connect_end/model/level_three_distributor_kyc_entity_model.dart';
 import '../connect_end/model/list_incoming_orders_response_model/list_incoming_orders_response_model.dart';
 import '../connect_end/model/login_entity_model.dart';
@@ -447,7 +447,7 @@ class ManufacturerApi {
     }
   }
 
-  Future<GetIncomingOrderDdetailResponseModel> getIncomingOrder({
+  Future<GetIncomingOrderDdetailsResponseModel> getIncomingOrder({
     String? wholesaleOrderId,
   }) async {
     try {
@@ -456,7 +456,7 @@ class ManufacturerApi {
         RequestMethod.get,
       );
       logger.d(response.data);
-      return GetIncomingOrderDdetailResponseModel.fromJson(response.data);
+      return GetIncomingOrderDdetailsResponseModel.fromJson(response.data);
     } catch (e) {
       logger.d("response:$e");
       rethrow;

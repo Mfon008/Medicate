@@ -1050,7 +1050,7 @@ class PharmViewModel extends BaseViewModel {
   }
 
   void prevOrderSplitInfo() {
-    if (orderSplitInfoIndex > 0 && orderSplitInfoIndex!=1) {
+    if (orderSplitInfoIndex > 0 && orderSplitInfoIndex != 1) {
       orderSplitInfoIndex--;
     }
     notifyListeners();
