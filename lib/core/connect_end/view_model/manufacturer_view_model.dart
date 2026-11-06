@@ -3649,8 +3649,7 @@ class ManufacturerViewModel extends BaseViewModel {
                                                 AdvanceFullfillmentEntityModel.fromJson(
                                                   {
                                                     'requestId': requestId,
-                                                    'expectedRevision':
-                                                        expectedRevision,
+                                                    'expectedRevision':int.parse(expectedRevision!),
                                                   },
                                                 ),
                                             delivery: delivery,
@@ -4075,8 +4074,7 @@ class ManufacturerViewModel extends BaseViewModel {
                                           rejectEntity:
                                               AdvanceFullfillmentReasonEntityModel.fromJson({
                                                 "requestId": requestId,
-                                                "expectedRevision":
-                                                    expectedRevision,
+                                                "expectedRevision":int.parse(expectedRevision!),
                                                 "reason":
                                                     rejectOrderReasonController
                                                         .text

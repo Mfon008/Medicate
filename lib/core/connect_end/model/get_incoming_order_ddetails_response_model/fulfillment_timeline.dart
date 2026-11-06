@@ -4,6 +4,7 @@ part 'fulfillment_timeline.g.dart';
 
 @JsonSerializable()
 class FulfillmentTimeline {
+  String? note;
   String? status;
   String? label;
   bool? current;
@@ -12,6 +13,7 @@ class FulfillmentTimeline {
 
   FulfillmentTimeline({
     this.status,
+    this.note,
     this.label,
     this.current,
     this.completed,
