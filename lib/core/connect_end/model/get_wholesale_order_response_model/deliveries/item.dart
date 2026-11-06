@@ -14,6 +14,9 @@ class Item {
   String? distributorId;
   String? distributorName;
   String? orderItemId;
+  String? manufacturerName;
+  int? minimumOrderQuantity;
+  String? imageUrl;
 
   Item({
     this.productId,
@@ -26,6 +29,9 @@ class Item {
     this.distributorId,
     this.distributorName,
     this.orderItemId,
+    this.imageUrl,
+    this.manufacturerName,
+    this.minimumOrderQuantity
   });
 
   factory Item.fromJson(Map<String, dynamic> json) => _$ItemFromJson(json);

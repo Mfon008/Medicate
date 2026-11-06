@@ -3661,6 +3661,7 @@ class ManufacturerViewModel extends BaseViewModel {
                                       if (!dialogContext.mounted) return;
 
                                       if (success) {
+                                        
                                         Navigator.pop(dialogContext);
                                       }
                                     }

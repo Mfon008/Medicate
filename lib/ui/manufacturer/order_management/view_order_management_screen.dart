@@ -3191,7 +3191,7 @@ class ViewOrderManagementScreen extends StatelessWidget {
                                                           .order!
                                                           .items?[0]
                                                           .fulfillmentTimeline?[5]
-                                                          .status ??
+                                                          .note ??
                                                       '',
                                                   textStyle: TextStyle(
                                                     fontFamily: 'DMSans',
