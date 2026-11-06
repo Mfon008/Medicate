@@ -44,6 +44,8 @@ import '../../core_folder/app/app.locator.dart';
 import '../../core_folder/app/app.logger.dart';
 import '../../core_folder/app/app.router.dart';
 import '../../core_folder/manager/shared_preference.dart';
+import '../model/advance_fullfillment_entity_model.dart';
+import '../model/advance_fullfillment_reason_entity_model.dart';
 import '../model/business_addresses_entity.dart';
 import '../model/create_distributor_product_entity_model/create_distributor_product_entity_model.dart';
 import '../model/distributor_wholesale_category_model/category.dart';
@@ -2499,11 +2501,18 @@ class ManufacturerViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Future<void> getIncomingOrderDetail(context, {String? id}) async {
+  Future<void> getIncomingOrderDetail(
+    context, {
+    String? id,
+    String? wholesaleGroupId,
+  }) async {
     try {
       _isLoading = true;
       _getIncomingOrderDdetailResponseModel = await runBusyFuture(
-        repositoryImply.getIncomingOrder(wholesaleOrderId: id),
+        repositoryImply.getIncomingOrder(
+          wholesaleOrderId: id,
+          wholesaleGroupId: wholesaleGroupId,
+        ),
         throwException: true,
       );
       _isLoading = false;
@@ -2518,11 +2527,19 @@ class ManufacturerViewModel extends BaseViewModel {
   Future<bool> advaceIncomingOrder(
     BuildContext context, {
     String? orderId,
+    String? wholesaleFulfillmentGroupId,
+    String? delivery,
+    AdvanceFullfillmentEntityModel? advanceEntity,
   }) async {
     try {
       _isLoading = true;
       var v = await runBusyFuture(
-        repositoryImply.advanceIncomingOrder(wholesaleOrderId: orderId),
+        repositoryImply.advanceIncomingOrder(
+          wholesaleOrderId: orderId,
+          advanceEntity: advanceEntity,
+          delivery: delivery,
+          wholesaleFulfillmentGroupId: wholesaleFulfillmentGroupId,
+        ),
         throwException: true,
       );
       await AppUtils.snackbar(context, message: v['message']);
@@ -2572,14 +2589,18 @@ class ManufacturerViewModel extends BaseViewModel {
   Future<bool> rejectIncomingOrder(
     BuildContext context, {
     String? orderId,
-    String? reason,
+    String? delivery,
+    String? wholesaleFulfillmentGroupId,
+    AdvanceFullfillmentReasonEntityModel? rejectEntity,
   }) async {
     try {
       _isLoading = true;
       var v = await runBusyFuture(
         repositoryImply.rejectIncomingOrder(
           wholesaleOrderId: orderId,
-          reason: reason,
+          wholesaleFulfillmentGroupId: wholesaleFulfillmentGroupId,
+          rejectEntity: rejectEntity,
+          delivery:delivery
         ),
         throwException: true,
       );
@@ -2602,11 +2623,18 @@ class ManufacturerViewModel extends BaseViewModel {
   Future<bool> returnIncomingOrder(
     BuildContext context, {
     String? orderId,
+    String? delivery,
+    String? wholesaleFulfillmentGroupId,
+    AdvanceFullfillmentReasonEntityModel? rejectEntity,
   }) async {
     try {
       _isLoading = true;
       var v = await runBusyFuture(
-        repositoryImply.returnIncomingOrder(wholesaleOrderId: orderId),
+        repositoryImply.returnIncomingOrder(
+          wholesaleOrderId: orderId,
+          wholesaleFulfillmentGroupId: wholesaleFulfillmentGroupId,
+          returnEntity: rejectEntity,delivery:delivery
+        ),
         throwException: true,
       );
       await AppUtils.snackbar(context, message: v['message']);
@@ -3234,6 +3262,10 @@ class ManufacturerViewModel extends BaseViewModel {
   Future<void> advanceDetailedIncomingOrderDialog({
     BuildContext? context,
     String? orderId,
+    String? delivery,
+    String? requestId,
+    String? expectedRevision,
+    String? wholesaleFulfillmentsGroupId,
     String? text,
     ManufacturerViewModel? model,
   }) async {
@@ -3353,11 +3385,20 @@ class ManufacturerViewModel extends BaseViewModel {
                                 ? null
                                 : () async {
                                     bool success = true;
-                                    final result = await model
-                                        .advaceIncomingOrder(
-                                          context,
-                                          orderId: orderId,
-                                        );
+                                    final result = await model.advaceIncomingOrder(
+                                      context,
+                                      orderId: orderId,
+                                      wholesaleFulfillmentGroupId:
+                                          wholesaleFulfillmentsGroupId,
+                                      delivery: delivery,
+                                      advanceEntity:
+                                          AdvanceFullfillmentEntityModel.fromJson(
+                                            {
+                                              'requestId': requestId,
+                                              'expectedRevision':int.parse(expectedRevision!)
+                                            },
+                                          ),
+                                    );
 
                                     if (!result) {
                                       success = false;
@@ -3416,7 +3457,11 @@ class ManufacturerViewModel extends BaseViewModel {
 
   Future<void> advanceIncomingOrderDialog({
     BuildContext? context,
+    String? wholesaleGroupId,
     String? orderId,
+    String? requestId,
+    String? delivery,
+    String? expectedRevision,
     String? text,
     ManufacturerViewModel? model,
   }) async {
@@ -3542,6 +3587,8 @@ class ManufacturerViewModel extends BaseViewModel {
                                           .returnIncomingOrder(
                                             context,
                                             orderId: orderId,
+                                            wholesaleFulfillmentGroupId:
+                                                wholesaleGroupId,
                                           );
 
                                       if (!result) {
@@ -3596,6 +3643,17 @@ class ManufacturerViewModel extends BaseViewModel {
                                           .advaceIncomingOrder(
                                             context,
                                             orderId: orderId,
+                                            wholesaleFulfillmentGroupId:
+                                                wholesaleGroupId,
+                                            advanceEntity:
+                                                AdvanceFullfillmentEntityModel.fromJson(
+                                                  {
+                                                    'requestId': requestId,
+                                                    'expectedRevision':
+                                                        expectedRevision,
+                                                  },
+                                                ),
+                                            delivery: delivery,
                                           );
 
                                       if (!result) {
@@ -3679,7 +3737,7 @@ class ManufacturerViewModel extends BaseViewModel {
                   SizedBox(height: 10.h),
 
                   TextView(
-                    text: "Cancel Order",
+                    text: "Reject Order",
                     textStyle: TextStyle(
                       fontFamily: 'DMSans',
                       fontSize: 22.sp,
@@ -3691,7 +3749,7 @@ class ManufacturerViewModel extends BaseViewModel {
                   SizedBox(height: 10.h),
 
                   TextView(
-                    text: "This action will cancel this order.",
+                    text: "This action will reject this order.",
                     textStyle: TextStyle(
                       fontFamily: 'DMSans',
                       fontSize: 14.sp,
@@ -3834,7 +3892,7 @@ class ManufacturerViewModel extends BaseViewModel {
                                       color: AppColors.white,
                                     )
                                   : TextView(
-                                      text: "Yes, Continue",
+                                      text: "Yes, Reject",
                                       textStyle: TextStyle(
                                         fontFamily: 'DMSans',
                                         fontSize: 15.6.sp,
@@ -3860,6 +3918,10 @@ class ManufacturerViewModel extends BaseViewModel {
   Future<void> rejectIncomingOrderDialog({
     BuildContext? context,
     String? orderId,
+    String? wholesaleGroupId,
+    String? requestId,
+    String? delivery,
+    String? expectedRevision,
     ManufacturerViewModel? model,
   }) async {
     if (context == null || model == null) {
@@ -4004,15 +4066,23 @@ class ManufacturerViewModel extends BaseViewModel {
                                         bool success = true;
 
                                         // for (final item in itemsOrderId) {
-                                        final result = await model
-                                            .rejectIncomingOrder(
-                                              context,
-                                              orderId: orderId,
-                                              reason:
-                                                  rejectOrderReasonController
-                                                      .text
-                                                      .trim(),
-                                            );
+                                        final result = await model.rejectIncomingOrder(
+                                          context,
+                                          orderId: orderId,
+                                          delivery: delivery,
+                                          wholesaleFulfillmentGroupId:
+                                              wholesaleGroupId,
+                                          rejectEntity:
+                                              AdvanceFullfillmentReasonEntityModel.fromJson({
+                                                "requestId": requestId,
+                                                "expectedRevision":
+                                                    expectedRevision,
+                                                "reason":
+                                                    rejectOrderReasonController
+                                                        .text
+                                                        .trim(),
+                                              }),
+                                        );
 
                                         if (!result) {
                                           success = false;

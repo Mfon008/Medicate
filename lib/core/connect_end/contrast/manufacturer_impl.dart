@@ -6,6 +6,8 @@ import 'package:medicate_app/core/connect_end/model/manufacturer_signup_entity_m
 
 import '../../api_folder/manufacturer_api.dart';
 import '../../core_folder/app/app.locator.dart';
+import '../model/advance_fullfillment_entity_model.dart';
+import '../model/advance_fullfillment_reason_entity_model.dart';
 import '../model/business_addresses_entity.dart';
 import '../model/create_distributor_product_entity_model/create_distributor_product_entity_model.dart';
 import '../model/distributor_wholesale_category_model/distributor_wholesale_category_model.dart';
@@ -141,9 +143,22 @@ class ManufacturerContractImpl {
       await _api.listIncomingOrder(page: page, status: status, search: search);
   Future<GetIncomingOrderDdetailsResponseModel> getIncomingOrder({
     String? wholesaleOrderId,
-  }) async => await _api.getIncomingOrder(wholesaleOrderId: wholesaleOrderId);
-  Future<dynamic> advanceIncomingOrder({String? wholesaleOrderId}) async =>
-      await _api.advanceIncomingOrder(wholesaleOrderId: wholesaleOrderId);
+    String? wholesaleGroupId,
+  }) async => await _api.getIncomingOrder(
+    wholesaleOrderId: wholesaleOrderId,
+    wholesaleGroupId: wholesaleGroupId,
+  );
+  Future<dynamic> advanceIncomingOrder({
+    String? wholesaleOrderId,
+    String? wholesaleFulfillmentGroupId,
+    String? delivery,
+    AdvanceFullfillmentEntityModel? advanceEntity,
+  }) async => await _api.advanceIncomingOrder(
+    wholesaleOrderId: wholesaleOrderId,
+    delivery: delivery,
+    wholesaleFulfillmentGroupId: wholesaleFulfillmentGroupId,
+    advanceEntity: advanceEntity,
+  );
   Future<dynamic> cancelIncomingOrder({
     String? wholesaleOrderId,
     String? reason,
@@ -153,14 +168,19 @@ class ManufacturerContractImpl {
   );
   Future<dynamic> rejectIncomingOrder({
     String? wholesaleOrderId,
-    String? reason,
+    String? wholesaleFulfillmentGroupId,
+    String? delivery,
+    AdvanceFullfillmentReasonEntityModel? rejectFullfillmentEntity,
   }) async => await _api.rejectIncomingOrder(
     wholesaleOrderId: wholesaleOrderId,
-    reason: reason,
+    wholesaleFulfillmentGroupId: wholesaleFulfillmentGroupId,
+    rejectFullfillmentEntity: rejectFullfillmentEntity,delivery:delivery
   );
 
-  Future<dynamic> returnIncomingOrder({String? wholesaleOrderId}) async =>
-      await _api.returnIncomingOrder(wholesaleOrderId: wholesaleOrderId);
+  Future<dynamic> returnIncomingOrder({String? wholesaleOrderId,String? wholesaleFulfillmentGroupId,
+  String? delivery,
+  AdvanceFullfillmentReasonEntityModel? returnFullfillmentEntity,}) async =>
+      await _api.returnIncomingOrder(wholesaleOrderId: wholesaleOrderId,wholesaleFulfillmentGroupId: wholesaleFulfillmentGroupId,returnFullfillmentEntity: returnFullfillmentEntity,delivery: delivery);
   Future<GetDistributorProfileResponseModel> getUserDetails() async =>
       await _api.getUserDetails();
   Future<dynamic> updateDistributorProfile(

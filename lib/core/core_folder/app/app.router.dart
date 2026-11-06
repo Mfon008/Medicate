@@ -2587,8 +2587,12 @@ class StackedRouter extends _i1.RouterBase {
         nullOk: false,
       );
       return _i152.MaterialPageRoute<dynamic>(
-        builder: (context) =>
-            _i138.ViewOrderManagementScreen(key: args.key, id: args.id),
+        builder: (context) => _i138.ViewOrderManagementScreen(
+          key: args.key,
+          id: args.id,
+          wholesaleGroupId: args.wholesaleGroupId,
+          requestId: args.requestId,
+        ),
         settings: data,
       );
     },
@@ -6085,26 +6089,41 @@ class ManufacturerLoginScreenArguments {
 }
 
 class ViewOrderManagementScreenArguments {
-  const ViewOrderManagementScreenArguments({this.key, required this.id});
+  const ViewOrderManagementScreenArguments({
+    this.key,
+    required this.id,
+    required this.wholesaleGroupId,
+    required this.requestId,
+  });
 
   final _i152.Key? key;
 
   final String? id;
 
+  final String? wholesaleGroupId;
+
+  final String? requestId;
+
   @override
   String toString() {
-    return '{"key": "$key", "id": "$id"}';
+    return '{"key": "$key", "id": "$id", "wholesaleGroupId": "$wholesaleGroupId", "requestId": "$requestId"}';
   }
 
   @override
   bool operator ==(covariant ViewOrderManagementScreenArguments other) {
     if (identical(this, other)) return true;
-    return other.key == key && other.id == id;
+    return other.key == key &&
+        other.id == id &&
+        other.wholesaleGroupId == wholesaleGroupId &&
+        other.requestId == requestId;
   }
 
   @override
   int get hashCode {
-    return key.hashCode ^ id.hashCode;
+    return key.hashCode ^
+        id.hashCode ^
+        wholesaleGroupId.hashCode ^
+        requestId.hashCode;
   }
 }
 
@@ -9042,6 +9061,8 @@ extension NavigatorStateExtension on _i156.NavigationService {
   Future<dynamic> navigateToViewOrderManagementScreen({
     _i152.Key? key,
     required String? id,
+    required String? wholesaleGroupId,
+    required String? requestId,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -9050,7 +9071,12 @@ extension NavigatorStateExtension on _i156.NavigationService {
   }) async {
     return navigateTo<dynamic>(
       Routes.viewOrderManagementScreen,
-      arguments: ViewOrderManagementScreenArguments(key: key, id: id),
+      arguments: ViewOrderManagementScreenArguments(
+        key: key,
+        id: id,
+        wholesaleGroupId: wholesaleGroupId,
+        requestId: requestId,
+      ),
       id: routerId,
       preventDuplicates: preventDuplicates,
       parameters: parameters,
@@ -11936,6 +11962,8 @@ extension NavigatorStateExtension on _i156.NavigationService {
   Future<dynamic> replaceWithViewOrderManagementScreen({
     _i152.Key? key,
     required String? id,
+    required String? wholesaleGroupId,
+    required String? requestId,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -11944,7 +11972,12 @@ extension NavigatorStateExtension on _i156.NavigationService {
   }) async {
     return replaceWith<dynamic>(
       Routes.viewOrderManagementScreen,
-      arguments: ViewOrderManagementScreenArguments(key: key, id: id),
+      arguments: ViewOrderManagementScreenArguments(
+        key: key,
+        id: id,
+        wholesaleGroupId: wholesaleGroupId,
+        requestId: requestId,
+      ),
       id: routerId,
       preventDuplicates: preventDuplicates,
       parameters: parameters,

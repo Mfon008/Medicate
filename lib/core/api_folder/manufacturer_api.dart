@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
+import 'package:medicate_app/core/connect_end/model/advance_fullfillment_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/distributor_wholesale_category_model/distributor_wholesale_category_model.dart';
 import 'package:medicate_app/core/connect_end/model/get_all_product_list_response_model/get_all_product_list_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/get_distributor_kyc_response_model/get_distributor_kyc_response_model.dart';
@@ -13,6 +14,7 @@ import 'package:medicate_app/core/connect_end/model/nafdac_registration_number_r
 import 'package:medicate_app/core/connect_end/model/second_level_distributor_kyc_entity_model/second_level_distributor_kyc_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/update_distributor_profile_entity_model.dart';
 
+import '../connect_end/model/advance_fullfillment_reason_entity_model.dart';
 import '../connect_end/model/business_addresses_entity.dart';
 import '../connect_end/model/create_distributor_product_entity_model/create_distributor_product_entity_model.dart';
 import '../connect_end/model/forgot_password_response_model/forgot_password_response_model.dart';
@@ -449,10 +451,11 @@ class ManufacturerApi {
 
   Future<GetIncomingOrderDdetailsResponseModel> getIncomingOrder({
     String? wholesaleOrderId,
+    String? wholesaleGroupId,
   }) async {
     try {
       final response = await _service.call(
-        '${UrlConfig.wholesale_incoming_orders}/$wholesaleOrderId',
+        '${UrlConfig.wholesale_incoming_orders}/$wholesaleOrderId/fulfillments/$wholesaleGroupId',
         RequestMethod.get,
       );
       logger.d(response.data);
@@ -463,11 +466,17 @@ class ManufacturerApi {
     }
   }
 
-  Future<dynamic> advanceIncomingOrder({String? wholesaleOrderId}) async {
+  Future<dynamic> advanceIncomingOrder({
+    String? wholesaleOrderId,
+    String? wholesaleFulfillmentGroupId,
+    String? delivery,
+    AdvanceFullfillmentEntityModel? advanceEntity,
+  }) async {
     try {
       final response = await _service.call(
-        '${UrlConfig.wholesale_incoming_orders}/$wholesaleOrderId/advance',
+        '${UrlConfig.wholesale_incoming_orders}/$wholesaleOrderId/fulfillments/$wholesaleFulfillmentGroupId/deliveries/DELIVERY-$delivery/advance',
         RequestMethod.patch,
+        data: advanceEntity?.toJson(),
       );
       logger.d(response.data);
       return response.data;
@@ -479,6 +488,7 @@ class ManufacturerApi {
 
   Future<dynamic> cancelIncomingOrder({
     String? wholesaleOrderId,
+    String? wholesaleFulfillmentGroupId,
     String? reason,
   }) async {
     try {
@@ -497,12 +507,14 @@ class ManufacturerApi {
 
   Future<dynamic> rejectIncomingOrder({
     String? wholesaleOrderId,
-    String? reason,
+    String? wholesaleFulfillmentGroupId,
+    String? delivery,
+    AdvanceFullfillmentReasonEntityModel? rejectFullfillmentEntity,
   }) async {
     try {
       final response = await _service.call(
-        '${UrlConfig.wholesale_incoming_orders}/$wholesaleOrderId/reject',
-        data: {"reason": reason},
+        '${UrlConfig.wholesale_incoming_orders}/$wholesaleOrderId/fulfillments/$wholesaleFulfillmentGroupId/deliveries/DELIVERY-$delivery/reject',
+        data: rejectFullfillmentEntity?.toJson(),
         RequestMethod.patch,
       );
       logger.d(response.data);
@@ -513,11 +525,17 @@ class ManufacturerApi {
     }
   }
 
-  Future<dynamic> returnIncomingOrder({String? wholesaleOrderId}) async {
+  Future<dynamic> returnIncomingOrder({
+    String? wholesaleOrderId,
+    String? wholesaleFulfillmentGroupId,
+    String? delivery,
+    AdvanceFullfillmentReasonEntityModel? returnFullfillmentEntity,
+  }) async {
     try {
       final response = await _service.call(
-        '${UrlConfig.wholesale_incoming_orders}/$wholesaleOrderId/return',
+        '${UrlConfig.wholesale_incoming_orders}/$wholesaleOrderId/fulfillments/$wholesaleFulfillmentGroupId/deliveries/DELIVERY-$delivery/return',
         RequestMethod.patch,
+        data: returnFullfillmentEntity?.toJson(),
       );
       logger.d(response.data);
       return response.data;

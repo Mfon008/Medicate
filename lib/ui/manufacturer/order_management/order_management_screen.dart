@@ -7,6 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:medicate_app/core/app_assets/constant.dart';
 import 'package:medicate_app/core/connect_end/model/list_incoming_orders_response_model/order.dart';
 import 'package:stacked/stacked.dart';
+import 'package:uuid/uuid.dart';
 import '../../../core/app_assets/image.dart';
 import '../../../core/config/colors.dart';
 import '../../../core/connect_end/view_model/manufacturer_view_model.dart';
@@ -47,6 +48,8 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
 
   String s = 'All';
   String adStats = '';
+  String? requestId;
+
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +59,9 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
       viewModelBuilder: () => ManufacturerViewModel(),
       onViewModelReady: (model) {
         model.listIncomingOrder(context, status: s);
+        const uuid = Uuid();
+        // Generate a random UUID (v4)
+        requestId = uuid.v4();
       },
       disposeViewModel: false,
       onDispose: (viewModel) {},
@@ -335,303 +341,260 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
                               .data!
                               .orders!
                               .isNotEmpty)
-                        ...model.listIncomingOrdersResponseModel!.data!.orders!.map(
-                          (ord) => GestureDetector(
-                            onTap: () => navigate.navigateTo(
-                              Routes.viewOrderManagementScreen,
-                              arguments: ViewOrderManagementScreenArguments(
-                                id: ord.id.toString(),
-                              ),
-                            ),
-                            child: Container(
-                              width: double.infinity,
-                              margin: EdgeInsets.only(bottom: 14.w),
-                              padding: EdgeInsets.symmetric(
-                                vertical: 15.22.w,
-                                horizontal: 13.0.w,
-                              ),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8.r),
-                                border: Border.all(color: AppColors.infoGrey1),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  IntrinsicWidth(
-                                    child: Container(
-                                      padding: EdgeInsets.symmetric(
-                                        vertical: 2.w,
-                                        horizontal: 12.0.w,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: model.getOrderStatusColorBorder(
-                                          ord.status!,
-                                        ),
-                                        borderRadius: BorderRadius.circular(
-                                          12.r,
-                                        ),
-                                        border: Border.all(
-                                          color: model.getOrderStatusColor(
-                                            ord.status!,
-                                          ),
-                                        ),
-                                      ),
-                                      child: Center(
-                                        child: TextView(
-                                          text: '${ord.statusLabel}',
-                                          textStyle: TextStyle(
-                                            fontFamily: 'DMSans',
-                                            fontSize: 12.2.sp,
-                                            fontWeight: FontWeight.w500,
-                                            color: model.getOrderStatusColor(
-                                              ord.status!,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
+                        ...model.listIncomingOrdersResponseModel!.data!.orders!
+                            .map(
+                              (ord) => GestureDetector(
+                                onTap: () => navigate.navigateTo(
+                                  Routes.viewOrderManagementScreen,
+                                  arguments: ViewOrderManagementScreenArguments(
+                                    id: ord.id.toString(),
+                                    wholesaleGroupId: ord.fulfillmentGroupId.toString(),
+                                    requestId: requestId
+                                  ),
+                                ),
+                                child: Container(
+                                  width: double.infinity,
+                                  margin: EdgeInsets.only(bottom: 14.w),
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: 15.22.w,
+                                    horizontal: 13.0.w,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8.r),
+                                    border: Border.all(
+                                      color: AppColors.infoGrey1,
                                     ),
                                   ),
-                                  SizedBox(height: 8.2.h),
-                                  TextView(
-                                    text: ord.orderNumber ?? '',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'DMSans',
-                                      fontSize: 16.22.sp,
-                                      fontWeight: FontWeight.w700,
-                                      color: AppColors.reminder,
-                                    ),
-                                  ),
-                                  SizedBox(height: 8.2.h),
-                                  TextView(
-                                    text: '${ord.customer?.address}'
-                                        .capitalizeWords(),
-                                    textStyle: TextStyle(
-                                      fontFamily: 'DMSans',
-                                      fontSize: 15.22.sp,
-                                      fontWeight: FontWeight.w500,
-                                      color: AppColors.reminder,
-                                      letterSpacing: -0.52,
-                                    ),
-                                  ),
-                                  SizedBox(height: 12.h),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          TextView(
-                                            text: 'No of items',
-                                            textStyle: TextStyle(
-                                              fontFamily: 'DMSans',
-                                              fontSize: 15.22.sp,
-                                              fontWeight: FontWeight.w500,
-                                              color: AppColors.infoGrey,
-                                              letterSpacing: -0.92,
+                                      IntrinsicWidth(
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(
+                                            vertical: 2.w,
+                                            horizontal: 12.0.w,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: model
+                                                .getOrderStatusColorBorder(
+                                                  ord.status!,
+                                                ),
+                                            borderRadius: BorderRadius.circular(
+                                              12.r,
+                                            ),
+                                            border: Border.all(
+                                              color: model.getOrderStatusColor(
+                                                ord.status!,
+                                              ),
                                             ),
                                           ),
-                                          SizedBox(height: 2.h),
-                                          TextView(
-                                            text: '${ord.itemsOrdered}',
-                                            textStyle: TextStyle(
-                                              fontFamily: 'DMSans',
-                                              fontSize: 15.22.sp,
-                                              fontWeight: FontWeight.w600,
-                                              color: AppColors.reminder,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        width: 100.w,
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            TextView(
-                                              text: 'Total',
+                                          child: Center(
+                                            child: TextView(
+                                              text: '${ord.statusLabel}',
                                               textStyle: TextStyle(
                                                 fontFamily: 'DMSans',
-                                                fontSize: 15.22.sp,
+                                                fontSize: 12.2.sp,
                                                 fontWeight: FontWeight.w500,
-                                                color: AppColors.infoGrey,
-                                                letterSpacing: -0.92,
+                                                color: model
+                                                    .getOrderStatusColor(
+                                                      ord.status!,
+                                                    ),
                                               ),
                                             ),
-                                            SizedBox(height: 2.h),
-                                            TextView(
-                                              text: formatNaira(
-                                                ord.orderTotal!.toDouble(),
-                                              ),
-                                              maxLines: 1,
-                                              textOverflow:
-                                                  TextOverflow.ellipsis,
-                                              textStyle: TextStyle(
-                                                fontFamily: 'DMSans',
-                                                fontSize: 15.22.sp,
-                                                fontWeight: FontWeight.w600,
-                                                color: AppColors.reminder,
-                                              ),
-                                            ),
-                                          ],
+                                          ),
                                         ),
                                       ),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          TextView(
-                                            text: 'Date',
-                                            textStyle: TextStyle(
-                                              fontFamily: 'DMSans',
-                                              fontSize: 15.22.sp,
-                                              fontWeight: FontWeight.w500,
-                                              color: AppColors.infoGrey,
-                                              letterSpacing: -0.92,
-                                            ),
-                                          ),
-                                          SizedBox(height: 2.h),
-                                          TextView(
-                                            text: formatDateNoTime(
-                                              ord.dateOrdered!.toString(),
-                                            ),
-                                            textStyle: TextStyle(
-                                              fontFamily: 'DMSans',
-                                              fontSize: 15.22.sp,
-                                              fontWeight: FontWeight.w600,
-                                              color: AppColors.reminder,
-                                            ),
-                                          ),
-                                        ],
+                                      SizedBox(height: 8.2.h),
+                                      TextView(
+                                        text: ord.orderNumber ?? '',
+                                        textStyle: TextStyle(
+                                          fontFamily: 'DMSans',
+                                          fontSize: 16.22.sp,
+                                          fontWeight: FontWeight.w700,
+                                          color: AppColors.reminder,
+                                        ),
                                       ),
-                                    ],
-                                  ),
-                                  // SizedBox(height: 16.20.h),
-                                  // Column(
-                                  //   crossAxisAlignment:
-                                  //       CrossAxisAlignment.start,
-                                  //   children: [
-                                  //     TextView(
-                                  //       text: 'Payment Status',
-                                  //       textStyle: TextStyle(
-                                  //         fontFamily: 'DMSans',
-                                  //         fontSize: 15.22.sp,
-                                  //         fontWeight: FontWeight.w500,
-                                  //         color: AppColors.infoGrey,
-                                  //         letterSpacing: -0.92,
-                                  //       ),
-                                  //     ),
-                                  //     SizedBox(height: 10.h),
-                                  //     IntrinsicWidth(
-                                  //       child: Container(
-                                  //         padding: EdgeInsets.symmetric(
-                                  //           vertical: 2.w,
-                                  //           horizontal: 12.0.w,
-                                  //         ),
-                                  //         decoration: BoxDecoration(
-                                  //           color: model
-                                  //               .getOrderPaymentStatusColor(
-                                  //                 ord.paymentStatus!,
-                                  //               )
-                                  //               .withOpacity(.1),
-                                  //           borderRadius: BorderRadius.circular(
-                                  //             12.r,
-                                  //           ),
-                                  //           border: Border.all(
-                                  //             color: model
-                                  //                 .getOrderPaymentStatusColor(
-                                  //                   ord.paymentStatus!,
-                                  //                 ),
-                                  //           ),
-                                  //         ),
-                                  //         child: Center(
-                                  //           child: TextView(
-                                  //             text: '${ord.paymentStatusLabel}',
-                                  //             textStyle: TextStyle(
-                                  //               fontFamily: 'DMSans',
-                                  //               fontSize: 12.2.sp,
-                                  //               fontWeight: FontWeight.w500,
-                                  //               color: model
-                                  //                   .getOrderPaymentStatusColor(
-                                  //                     ord.paymentStatus!,
-                                  //                   ),
-                                  //             ),
-                                  //           ),
-                                  //         ),
-                                  //       ),
-                                  //     ),
-                                  //   ],
-                                  // ),
-                                  // SizedBox(height: 16.20.h),
-                                  ord.paymentStatus?.toLowerCase() ==
-                                              'success' &&
-                                          ord.status?.toLowerCase() !=
-                                              'cancelled' &&
-                                          ord.status?.toLowerCase() !=
-                                              'rejected' &&
-                                          ord.status?.toLowerCase() !=
-                                              'returned'
-                                      ? GestureDetector(
-                                          onTap: () =>
-                                              _showAdvanceStatusListMenu(
-                                                context: context,
-                                                model: model,
-                                                order: ord,
+                                      SizedBox(height: 8.2.h),
+                                      TextView(
+                                        text: '${ord.customer?.address}'
+                                            .capitalizeWords(),
+                                        textStyle: TextStyle(
+                                          fontFamily: 'DMSans',
+                                          fontSize: 15.22.sp,
+                                          fontWeight: FontWeight.w500,
+                                          color: AppColors.reminder,
+                                          letterSpacing: -0.52,
+                                        ),
+                                      ),
+                                      SizedBox(height: 12.h),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              TextView(
+                                                text: 'No of items',
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'DMSans',
+                                                  fontSize: 15.22.sp,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: AppColors.infoGrey,
+                                                  letterSpacing: -0.92,
+                                                ),
                                               ),
-                                          child: Container(
-                                            margin: EdgeInsets.only(
-                                              top: 16.0.w,
-                                            ),
-                                            padding: EdgeInsets.symmetric(
-                                              vertical: 8.10.w,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              border: Border.all(
-                                                color: AppColors.primary,
-                                                width: 1.42,
+                                              SizedBox(height: 2.h),
+                                              TextView(
+                                                text: '${ord.itemsOrdered}',
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'DMSans',
+                                                  fontSize: 15.22.sp,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: AppColors.reminder,
+                                                ),
                                               ),
-                                              borderRadius:
-                                                  BorderRadius.circular(40.r),
-                                            ),
-                                            child: Row(
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            width: 100.w,
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
                                               mainAxisAlignment:
                                                   MainAxisAlignment.center,
                                               children: [
-                                                SvgPicture.asset(
-                                                  AppImage.van,
-                                                  height: isTablet(context)
-                                                      ? 28.40.h
-                                                      : 14.20.h,
-                                                  width: isTablet(context)
-                                                      ? 28.40.w
-                                                      : 14.20.w,
-                                                  color: AppColors.primary,
-                                                ),
-                                                SizedBox(width: 7.10.w),
                                                 TextView(
-                                                  text: 'Advance',
+                                                  text: 'Total',
                                                   textStyle: TextStyle(
                                                     fontFamily: 'DMSans',
-                                                    fontSize: 16.20.sp,
+                                                    fontSize: 15.22.sp,
                                                     fontWeight: FontWeight.w500,
-                                                    color: AppColors.primary,
+                                                    color: AppColors.infoGrey,
+                                                    letterSpacing: -0.92,
+                                                  ),
+                                                ),
+                                                SizedBox(height: 2.h),
+                                                TextView(
+                                                  text: formatNaira(
+                                                    ord.orderTotal!.toDouble(),
+                                                  ),
+                                                  maxLines: 1,
+                                                  textOverflow:
+                                                      TextOverflow.ellipsis,
+                                                  textStyle: TextStyle(
+                                                    fontFamily: 'DMSans',
+                                                    fontSize: 15.22.sp,
+                                                    fontWeight: FontWeight.w600,
+                                                    color: AppColors.reminder,
                                                   ),
                                                 ),
                                               ],
                                             ),
                                           ),
-                                        )
-                                      : SizedBox.shrink(),
-                                  SizedBox(height: 2.0.h),
-                                ],
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              TextView(
+                                                text: 'Date',
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'DMSans',
+                                                  fontSize: 15.22.sp,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: AppColors.infoGrey,
+                                                  letterSpacing: -0.92,
+                                                ),
+                                              ),
+                                              SizedBox(height: 2.h),
+                                              TextView(
+                                                text: formatDateNoTime(
+                                                  ord.dateOrdered!.toString(),
+                                                ),
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'DMSans',
+                                                  fontSize: 15.22.sp,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: AppColors.reminder,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                      ord.splitOrder != true &&
+                                              ord.paymentStatus
+                                                      ?.toLowerCase() ==
+                                                  'success' &&
+                                              ord.status?.toLowerCase() !=
+                                                  'cancelled' &&
+                                              ord.status?.toLowerCase() !=
+                                                  'rejected' &&
+                                              ord.status?.toLowerCase() !=
+                                                  'returned'
+                                          ? GestureDetector(
+                                              onTap: () =>
+                                                  _showAdvanceStatusListMenu(
+                                                    context: context,
+                                                    model: model,
+                                                    order: ord,
+                                                  ),
+                                              child: Container(
+                                                margin: EdgeInsets.only(
+                                                  top: 16.0.w,
+                                                ),
+                                                padding: EdgeInsets.symmetric(
+                                                  vertical: 8.10.w,
+                                                ),
+                                                decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                    color: AppColors.primary,
+                                                    width: 1.42,
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                        40.r,
+                                                      ),
+                                                ),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    SvgPicture.asset(
+                                                      AppImage.van,
+                                                      height: isTablet(context)
+                                                          ? 28.40.h
+                                                          : 14.20.h,
+                                                      width: isTablet(context)
+                                                          ? 28.40.w
+                                                          : 14.20.w,
+                                                      color: AppColors.primary,
+                                                    ),
+                                                    SizedBox(width: 7.10.w),
+                                                    TextView(
+                                                      text: 'Advance',
+                                                      textStyle: TextStyle(
+                                                        fontFamily: 'DMSans',
+                                                        fontSize: 16.20.sp,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color:
+                                                            AppColors.primary,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            )
+                                          : SizedBox.shrink(),
+                                      SizedBox(height: 2.0.h),
+                                    ],
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                        ),
 
                       SizedBox(height: 30.h),
                       Padding(
@@ -994,6 +957,10 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
                             model.advanceIncomingOrderDialog(
                               context: context,
                               orderId: order!.id,
+                              wholesaleGroupId: order.fulfillmentGroupId,
+                              delivery: order.deliveries![model.deliveryIndexSplit-1].deliveryNumber.toString(),
+                              requestId: requestId,
+                              expectedRevision: order.revision.toString(),
                               text: e,
                               model: model,
                             );

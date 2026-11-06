@@ -13,8 +13,15 @@ import '../../widget/button.dart';
 import '../../widget/text.dart';
 
 class ViewOrderManagementScreen extends StatelessWidget {
-  ViewOrderManagementScreen({super.key, required this.id});
+  ViewOrderManagementScreen({
+    super.key,
+    required this.id,
+    required this.wholesaleGroupId,
+    required this.requestId,
+  });
   String? id;
+  String? wholesaleGroupId;
+  String? requestId;
 
   @override
   Widget build(BuildContext context) {
@@ -23,9 +30,14 @@ class ViewOrderManagementScreen extends StatelessWidget {
     return ViewModelBuilder<ManufacturerViewModel>.reactive(
       viewModelBuilder: () => ManufacturerViewModel(),
       onViewModelReady: (model) async {
-        await model.getIncomingOrderDetail(context, id: id);
+        await model.getIncomingOrderDetail(
+          context,
+          id: id,
+          wholesaleGroupId: wholesaleGroupId,
+        );
         model.dDetailOrder =
             model.getIncomingOrderDdetailResponseModel!.data!.order;
+        requestId = requestId;
       },
       disposeViewModel: false,
       onDispose: (viewModel) {},
@@ -911,29 +923,37 @@ class ViewOrderManagementScreen extends StatelessWidget {
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                               children: [
-                                                SvgPicture.asset(
-                                                  AppImage.profile,
-                                                  height: 14.h,
-                                                  width: 10.w,
-                                                  color: AppColors.primary,
-                                                ),
-                                                SizedBox(width: 10.h),
-                                                TextView(
-                                                  text:
-                                                      model
-                                                          .getIncomingOrderDdetailResponseModel!
-                                                          .data!
-                                                          .order!
-                                                          .customer
-                                                          ?.name
-                                                          ?.capitalize() ??
-                                                      '',
-                                                  textStyle: TextStyle(
-                                                    fontFamily: 'DMSans',
-                                                    fontSize: 16.32.sp,
-                                                    fontWeight: FontWeight.w500,
-                                                    color: AppColors.reminder,
-                                                  ),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: [
+                                                    SvgPicture.asset(
+                                                      AppImage.profile,
+                                                      height: 14.h,
+                                                      width: 10.w,
+                                                      color: AppColors.primary,
+                                                    ),
+                                                    SizedBox(width: 10.h),
+                                                    TextView(
+                                                      text:
+                                                          model
+                                                              .getIncomingOrderDdetailResponseModel!
+                                                              .data!
+                                                              .order!
+                                                              .customer
+                                                              ?.name
+                                                              ?.capitalize() ??
+                                                          '',
+                                                      textStyle: TextStyle(
+                                                        fontFamily: 'DMSans',
+                                                        fontSize: 16.32.sp,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color:
+                                                            AppColors.reminder,
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
                                                 SizedBox(height: 10.h),
                                                 Row(
@@ -986,7 +1006,7 @@ class ViewOrderManagementScreen extends StatelessWidget {
                                                               .data!
                                                               .order!
                                                               .customer
-                                                              ?.address ??
+                                                              ?.recipientIdType ??
                                                           '',
                                                       textStyle: TextStyle(
                                                         fontFamily: 'DMSans',
@@ -1114,55 +1134,881 @@ class ViewOrderManagementScreen extends StatelessWidget {
                                             color: AppColors.reminder,
                                           ),
                                         ),
-                                        Wrap(
-                                          crossAxisAlignment:
-                                              WrapCrossAlignment.center,
-                                          spacing: 10,
-                                          runSpacing: 3.72,
-                                          children: [
-                                            Container(
-                                              decoration: BoxDecoration(
-                                                color: model.getFulfillmentOrderColor(
-                                                  completed: model
-                                                      .getIncomingOrderDdetailResponseModel!
-                                                      .data!
-                                                      .order!
-                                                      .items![0]
-                                                      .fulfillmentTimeline![0]
-                                                      .completed,
-                                                  current: model
-                                                      .getIncomingOrderDdetailResponseModel!
-                                                      .data!
-                                                      .order!
-                                                      .items![0]
-                                                      .fulfillmentTimeline![0]
-                                                      .current,
-                                                  completed2: model
-                                                      .getIncomingOrderDdetailResponseModel!
-                                                      .data!
-                                                      .order!
-                                                      .items![0]
-                                                      .fulfillmentTimeline![1]
-                                                      .completed,
-                                                  current2: model
-                                                      .getIncomingOrderDdetailResponseModel!
-                                                      .data!
-                                                      .order!
-                                                      .items![0]
-                                                      .fulfillmentTimeline![1]
-                                                      .current,
-                                                ),
-                                                shape: BoxShape.circle,
-                                              ),
-                                              child: Padding(
-                                                padding: EdgeInsets.all(10.w),
-                                                child: TextView(
-                                                  text: '1',
-                                                  textStyle: TextStyle(
-                                                    fontFamily: 'DMSans',
-                                                    fontSize: 14.20.sp,
-                                                    fontWeight: FontWeight.w400,
-                                                    color: model.getFulfillmentOrderTextColor(
+
+                                        model.dDetailOrder!.splitOrder == true
+                                            ? Wrap(
+                                                crossAxisAlignment:
+                                                    WrapCrossAlignment.center,
+                                                spacing: 10,
+                                                runSpacing: 3.72,
+                                                children: [
+                                                  Container(
+                                                    decoration: BoxDecoration(
+                                                      color: model.getFulfillmentOrderColor(
+                                                        completed: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .deliveries![model
+                                                                    .deliveryIndexSplit -
+                                                                1]
+                                                            .fulfillmentTimeline![0]
+                                                            .completed,
+                                                        current: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .deliveries![model
+                                                                    .deliveryIndexSplit -
+                                                                1]
+                                                            .fulfillmentTimeline![0]
+                                                            .current,
+                                                        completed2: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .deliveries![model
+                                                                    .deliveryIndexSplit -
+                                                                1]
+                                                            .fulfillmentTimeline![1]
+                                                            .completed,
+                                                        current2: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .deliveries![model
+                                                                    .deliveryIndexSplit -
+                                                                1]
+                                                            .fulfillmentTimeline![1]
+                                                            .current,
+                                                      ),
+                                                      shape: BoxShape.circle,
+                                                    ),
+                                                    child: Padding(
+                                                      padding: EdgeInsets.all(
+                                                        10.w,
+                                                      ),
+                                                      child: TextView(
+                                                        text: '1',
+                                                        textStyle: TextStyle(
+                                                          fontFamily: 'DMSans',
+                                                          fontSize: 14.20.sp,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color: model.getFulfillmentOrderTextColor(
+                                                            completed: model
+                                                                .getIncomingOrderDdetailResponseModel!
+                                                                .data!
+                                                                .order!
+                                                                .deliveries![model
+                                                                        .deliveryIndexSplit -
+                                                                    1]
+                                                                .fulfillmentTimeline![0]
+                                                                .completed,
+                                                            current: model
+                                                                .getIncomingOrderDdetailResponseModel!
+                                                                .data!
+                                                                .order!
+                                                                .deliveries![model
+                                                                        .deliveryIndexSplit -
+                                                                    1]
+                                                                .fulfillmentTimeline![0]
+                                                                .current,
+                                                            completed2: model
+                                                                .getIncomingOrderDdetailResponseModel!
+                                                                .data!
+                                                                .order!
+                                                                .deliveries![model
+                                                                        .deliveryIndexSplit -
+                                                                    1]
+                                                                .fulfillmentTimeline![1]
+                                                                .completed,
+                                                            current2: model
+                                                                .getIncomingOrderDdetailResponseModel!
+                                                                .data!
+                                                                .order!
+                                                                .items![0]
+                                                                .fulfillmentTimeline![1]
+                                                                .current,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  TextView(
+                                                    text:
+                                                        model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .deliveries![model
+                                                                    .deliveryIndexSplit -
+                                                                1]
+                                                            .fulfillmentTimeline![1]
+                                                            .label ??
+                                                        '',
+                                                    textStyle: TextStyle(
+                                                      fontFamily: 'DMSans',
+                                                      fontSize: 15.20.sp,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      color: model.getFulfillmentOrderTextStatusColor(
+                                                        completed: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .deliveries![model
+                                                                    .deliveryIndexSplit -
+                                                                1]
+                                                            .fulfillmentTimeline![0]
+                                                            .completed,
+                                                        current: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .deliveries![model
+                                                                    .deliveryIndexSplit -
+                                                                1]
+                                                            .fulfillmentTimeline![0]
+                                                            .current,
+                                                        completed2: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .deliveries![model
+                                                                    .deliveryIndexSplit -
+                                                                1]
+                                                            .fulfillmentTimeline![1]
+                                                            .completed,
+                                                        current2: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .deliveries![model
+                                                                    .deliveryIndexSplit -
+                                                                1]
+                                                            .fulfillmentTimeline![1]
+                                                            .current,
+                                                      ),
+                                                      letterSpacing: -0.21,
+                                                    ),
+                                                  ),
+                                                  SvgPicture.asset(
+                                                    AppImage.arrow_right,
+                                                    color: model.getFulfillmentOrderColorArrow(
+                                                      completed: model
+                                                          .getIncomingOrderDdetailResponseModel!
+                                                          .data!
+                                                          .order!
+                                                          .deliveries![model
+                                                                  .deliveryIndexSplit -
+                                                              1]
+                                                          .fulfillmentTimeline![0]
+                                                          .completed,
+                                                      current: model
+                                                          .getIncomingOrderDdetailResponseModel!
+                                                          .data!
+                                                          .order!
+                                                          .deliveries![model
+                                                                  .deliveryIndexSplit -
+                                                              1]
+                                                          .fulfillmentTimeline![0]
+                                                          .current,
+                                                      completed2: model
+                                                          .getIncomingOrderDdetailResponseModel!
+                                                          .data!
+                                                          .order!
+                                                          .deliveries![model
+                                                                  .deliveryIndexSplit -
+                                                              1]
+                                                          .fulfillmentTimeline![1]
+                                                          .completed,
+                                                      current2: model
+                                                          .getIncomingOrderDdetailResponseModel!
+                                                          .data!
+                                                          .order!
+                                                          .deliveries![model
+                                                                  .deliveryIndexSplit -
+                                                              1]
+                                                          .fulfillmentTimeline![1]
+                                                          .current,
+                                                    ),
+                                                    height: 12.h,
+                                                    width: 10.w,
+                                                  ),
+                                                  Container(
+                                                    decoration: BoxDecoration(
+                                                      color: model.getFulfillmentOrderColor(
+                                                        completed: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .deliveries![model
+                                                                    .deliveryIndexSplit -
+                                                                1]
+                                                            .fulfillmentTimeline![1]
+                                                            .completed,
+                                                        current: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .deliveries![model
+                                                                    .deliveryIndexSplit -
+                                                                1]
+                                                            .fulfillmentTimeline![1]
+                                                            .current,
+                                                        completed2: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .deliveries![model
+                                                                    .deliveryIndexSplit -
+                                                                1]
+                                                            .fulfillmentTimeline![2]
+                                                            .completed,
+                                                        current2: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .deliveries![model
+                                                                    .deliveryIndexSplit -
+                                                                1]
+                                                            .fulfillmentTimeline![2]
+                                                            .current,
+                                                      ),
+                                                      shape: BoxShape.circle,
+                                                    ),
+                                                    child: Padding(
+                                                      padding: EdgeInsets.all(
+                                                        10.w,
+                                                      ),
+                                                      child: TextView(
+                                                        text: '2',
+                                                        textStyle: TextStyle(
+                                                          fontFamily: 'DMSans',
+                                                          fontSize: 14.20.sp,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color: model.getFulfillmentOrderTextColor(
+                                                            completed: model
+                                                                .getIncomingOrderDdetailResponseModel!
+                                                                .data!
+                                                                .order!
+                                                                .deliveries![model
+                                                                        .deliveryIndexSplit -
+                                                                    1]
+                                                                .fulfillmentTimeline![1]
+                                                                .completed,
+                                                            current: model
+                                                                .getIncomingOrderDdetailResponseModel!
+                                                                .data!
+                                                                .order!
+                                                                .deliveries![model
+                                                                        .deliveryIndexSplit -
+                                                                    1]
+                                                                .fulfillmentTimeline![1]
+                                                                .current,
+                                                            completed2: model
+                                                                .getIncomingOrderDdetailResponseModel!
+                                                                .data!
+                                                                .order!
+                                                                .deliveries![model
+                                                                        .deliveryIndexSplit -
+                                                                    1]
+                                                                .fulfillmentTimeline![2]
+                                                                .completed,
+                                                            current2: model
+                                                                .getIncomingOrderDdetailResponseModel!
+                                                                .data!
+                                                                .order!
+                                                                .deliveries![model
+                                                                        .deliveryIndexSplit -
+                                                                    1]
+                                                                .fulfillmentTimeline![2]
+                                                                .current,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  TextView(
+                                                    text:
+                                                        model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .deliveries![model
+                                                                    .deliveryIndexSplit -
+                                                                1]
+                                                            .fulfillmentTimeline![2]
+                                                            .label ??
+                                                        '',
+                                                    textStyle: TextStyle(
+                                                      fontFamily: 'DMSans',
+                                                      fontSize: 15.20.sp,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      color: model.getFulfillmentOrderTextStatusColor(
+                                                        completed: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .deliveries![model
+                                                                    .deliveryIndexSplit -
+                                                                1]
+                                                            .fulfillmentTimeline![1]
+                                                            .completed,
+                                                        current: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .deliveries![model
+                                                                    .deliveryIndexSplit -
+                                                                1]
+                                                            .fulfillmentTimeline![1]
+                                                            .current,
+                                                        completed2: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .deliveries![model
+                                                                    .deliveryIndexSplit -
+                                                                1]
+                                                            .fulfillmentTimeline![2]
+                                                            .completed,
+                                                        current2: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .deliveries![model
+                                                                    .deliveryIndexSplit -
+                                                                1]
+                                                            .fulfillmentTimeline![2]
+                                                            .current,
+                                                      ),
+                                                      letterSpacing: -0.21,
+                                                    ),
+                                                  ),
+                                                  SvgPicture.asset(
+                                                    AppImage.arrow_right,
+                                                    color: model.getFulfillmentOrderColorArrow(
+                                                      completed: model
+                                                          .getIncomingOrderDdetailResponseModel!
+                                                          .data!
+                                                          .order!
+                                                          .deliveries![model
+                                                                  .deliveryIndexSplit -
+                                                              1]
+                                                          .fulfillmentTimeline![1]
+                                                          .completed,
+                                                      current: model
+                                                          .getIncomingOrderDdetailResponseModel!
+                                                          .data!
+                                                          .order!
+                                                          .deliveries![model
+                                                                  .deliveryIndexSplit -
+                                                              1]
+                                                          .fulfillmentTimeline![1]
+                                                          .current,
+                                                      completed2: model
+                                                          .getIncomingOrderDdetailResponseModel!
+                                                          .data!
+                                                          .order!
+                                                          .deliveries![model
+                                                                  .deliveryIndexSplit -
+                                                              1]
+                                                          .fulfillmentTimeline![2]
+                                                          .completed,
+                                                      current2: model
+                                                          .getIncomingOrderDdetailResponseModel!
+                                                          .data!
+                                                          .order!
+                                                          .deliveries![model
+                                                                  .deliveryIndexSplit -
+                                                              1]
+                                                          .fulfillmentTimeline![2]
+                                                          .current,
+                                                    ),
+                                                    height: 12.h,
+                                                    width: 10.w,
+                                                  ),
+                                                  Container(
+                                                    decoration: BoxDecoration(
+                                                      color: model.getFulfillmentOrderColor(
+                                                        completed: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .deliveries![model
+                                                                    .deliveryIndexSplit -
+                                                                1]
+                                                            .fulfillmentTimeline![2]
+                                                            .completed,
+                                                        current: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .deliveries![model
+                                                                    .deliveryIndexSplit -
+                                                                1]
+                                                            .fulfillmentTimeline![2]
+                                                            .current,
+                                                        completed2: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .deliveries![model
+                                                                    .deliveryIndexSplit -
+                                                                1]
+                                                            .fulfillmentTimeline![3]
+                                                            .completed,
+                                                        current2: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .deliveries![model
+                                                                    .deliveryIndexSplit -
+                                                                1]
+                                                            .fulfillmentTimeline![3]
+                                                            .current,
+                                                      ),
+                                                      shape: BoxShape.circle,
+                                                    ),
+                                                    child: Padding(
+                                                      padding: EdgeInsets.all(
+                                                        10.w,
+                                                      ),
+                                                      child: TextView(
+                                                        text: '3',
+                                                        textStyle: TextStyle(
+                                                          fontFamily: 'DMSans',
+                                                          fontSize: 14.20.sp,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color: model.getFulfillmentOrderTextColor(
+                                                            completed: model
+                                                                .getIncomingOrderDdetailResponseModel!
+                                                                .data!
+                                                                .order!
+                                                                .deliveries![model
+                                                                        .deliveryIndexSplit -
+                                                                    1]
+                                                                .fulfillmentTimeline![2]
+                                                                .completed,
+                                                            current: model
+                                                                .getIncomingOrderDdetailResponseModel!
+                                                                .data!
+                                                                .order!
+                                                                .deliveries![model
+                                                                        .deliveryIndexSplit -
+                                                                    1]
+                                                                .fulfillmentTimeline![2]
+                                                                .current,
+                                                            completed2: model
+                                                                .getIncomingOrderDdetailResponseModel!
+                                                                .data!
+                                                                .order!
+                                                                .deliveries![model
+                                                                        .deliveryIndexSplit -
+                                                                    1]
+                                                                .fulfillmentTimeline![3]
+                                                                .completed,
+                                                            current2: model
+                                                                .getIncomingOrderDdetailResponseModel!
+                                                                .data!
+                                                                .order!
+                                                                .deliveries![model
+                                                                        .deliveryIndexSplit -
+                                                                    1]
+                                                                .fulfillmentTimeline![3]
+                                                                .current,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  TextView(
+                                                    text: 'Out for Delivery',
+                                                    textStyle: TextStyle(
+                                                      fontFamily: 'DMSans',
+                                                      fontSize: 15.20.sp,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      color: model.getFulfillmentOrderTextStatusColor(
+                                                        completed: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .deliveries![model
+                                                                    .deliveryIndexSplit -
+                                                                1]
+                                                            .fulfillmentTimeline![2]
+                                                            .completed,
+                                                        current: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .deliveries![model
+                                                                    .deliveryIndexSplit -
+                                                                1]
+                                                            .fulfillmentTimeline![2]
+                                                            .current,
+                                                        completed2: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .deliveries![model
+                                                                    .deliveryIndexSplit -
+                                                                1]
+                                                            .fulfillmentTimeline![3]
+                                                            .completed,
+                                                        current2: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .deliveries![model
+                                                                    .deliveryIndexSplit -
+                                                                1]
+                                                            .fulfillmentTimeline![3]
+                                                            .current,
+                                                      ),
+                                                      letterSpacing: -0.21,
+                                                    ),
+                                                  ),
+                                                  SvgPicture.asset(
+                                                    AppImage.arrow_right,
+                                                    color: model.getFulfillmentOrderColorArrow(
+                                                      completed: model
+                                                          .getIncomingOrderDdetailResponseModel!
+                                                          .data!
+                                                          .order!
+                                                          .deliveries![model
+                                                                  .deliveryIndexSplit -
+                                                              1]
+                                                          .fulfillmentTimeline![2]
+                                                          .completed,
+                                                      current: model
+                                                          .getIncomingOrderDdetailResponseModel!
+                                                          .data!
+                                                          .order!
+                                                          .deliveries![model
+                                                                  .deliveryIndexSplit -
+                                                              1]
+                                                          .fulfillmentTimeline![2]
+                                                          .current,
+                                                      completed2: model
+                                                          .getIncomingOrderDdetailResponseModel!
+                                                          .data!
+                                                          .order!
+                                                          .deliveries![model
+                                                                  .deliveryIndexSplit -
+                                                              1]
+                                                          .fulfillmentTimeline![3]
+                                                          .completed,
+                                                      current2: model
+                                                          .getIncomingOrderDdetailResponseModel!
+                                                          .data!
+                                                          .order!
+                                                          .deliveries![model
+                                                                  .deliveryIndexSplit -
+                                                              1]
+                                                          .fulfillmentTimeline![3]
+                                                          .current,
+                                                    ),
+                                                    height: 12.h,
+                                                    width: 10.w,
+                                                  ),
+                                                  Container(
+                                                    decoration: BoxDecoration(
+                                                      color: model.getFulfillmentOrderColor(
+                                                        completed: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .deliveries![model
+                                                                    .deliveryIndexSplit -
+                                                                1]
+                                                            .fulfillmentTimeline![3]
+                                                            .completed,
+                                                        current: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .deliveries![model
+                                                                    .deliveryIndexSplit -
+                                                                1]
+                                                            .fulfillmentTimeline![3]
+                                                            .current,
+                                                        completed2: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .deliveries![model
+                                                                    .deliveryIndexSplit -
+                                                                1]
+                                                            .fulfillmentTimeline![4]
+                                                            .completed,
+                                                        current2: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .deliveries![model
+                                                                    .deliveryIndexSplit -
+                                                                1]
+                                                            .fulfillmentTimeline![4]
+                                                            .current,
+                                                      ),
+                                                      shape: BoxShape.circle,
+                                                    ),
+                                                    child: Padding(
+                                                      padding: EdgeInsets.all(
+                                                        10.w,
+                                                      ),
+                                                      child: TextView(
+                                                        text: '4',
+                                                        textStyle: TextStyle(
+                                                          fontFamily: 'DMSans',
+                                                          fontSize: 14.20.sp,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color: model.getFulfillmentOrderTextColor(
+                                                            completed: model
+                                                                .getIncomingOrderDdetailResponseModel!
+                                                                .data!
+                                                                .order!
+                                                                .deliveries![model
+                                                                        .deliveryIndexSplit -
+                                                                    1]
+                                                                .fulfillmentTimeline![3]
+                                                                .completed,
+                                                            current: model
+                                                                .getIncomingOrderDdetailResponseModel!
+                                                                .data!
+                                                                .order!
+                                                                .deliveries![model
+                                                                        .deliveryIndexSplit -
+                                                                    1]
+                                                                .fulfillmentTimeline![3]
+                                                                .current,
+                                                            completed2: model
+                                                                .getIncomingOrderDdetailResponseModel!
+                                                                .data!
+                                                                .order!
+                                                                .deliveries![model
+                                                                        .deliveryIndexSplit -
+                                                                    1]
+                                                                .fulfillmentTimeline![4]
+                                                                .completed,
+                                                            current2: model
+                                                                .getIncomingOrderDdetailResponseModel!
+                                                                .data!
+                                                                .order!
+                                                                .deliveries![model
+                                                                        .deliveryIndexSplit -
+                                                                    1]
+                                                                .fulfillmentTimeline![4]
+                                                                .current,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  TextView(
+                                                    text:
+                                                        model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .deliveries![model
+                                                                    .deliveryIndexSplit -
+                                                                1]
+                                                            .fulfillmentTimeline![4]
+                                                            .label ??
+                                                        '',
+                                                    textStyle: TextStyle(
+                                                      fontFamily: 'DMSans',
+                                                      fontSize: 15.20.sp,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      color: model.getFulfillmentOrderTextStatusColor(
+                                                        completed: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .deliveries![model
+                                                                    .deliveryIndexSplit -
+                                                                1]
+                                                            .fulfillmentTimeline![3]
+                                                            .completed,
+                                                        current: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .deliveries![model
+                                                                    .deliveryIndexSplit -
+                                                                1]
+                                                            .fulfillmentTimeline![3]
+                                                            .current,
+                                                        completed2: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .deliveries![model
+                                                                    .deliveryIndexSplit -
+                                                                1]
+                                                            .fulfillmentTimeline![4]
+                                                            .completed,
+                                                        current2: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .deliveries![model
+                                                                    .deliveryIndexSplit -
+                                                                1]
+                                                            .fulfillmentTimeline![4]
+                                                            .current,
+                                                      ),
+                                                      letterSpacing: -0.21,
+                                                    ),
+                                                  ),
+                                                ],
+                                              )
+                                            : Wrap(
+                                                crossAxisAlignment:
+                                                    WrapCrossAlignment.center,
+                                                spacing: 10,
+                                                runSpacing: 3.72,
+                                                children: [
+                                                  Container(
+                                                    decoration: BoxDecoration(
+                                                      color: model.getFulfillmentOrderColor(
+                                                        completed: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .items![0]
+                                                            .fulfillmentTimeline![0]
+                                                            .completed,
+                                                        current: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .items![0]
+                                                            .fulfillmentTimeline![0]
+                                                            .current,
+                                                        completed2: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .items![0]
+                                                            .fulfillmentTimeline![1]
+                                                            .completed,
+                                                        current2: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .items![0]
+                                                            .fulfillmentTimeline![1]
+                                                            .current,
+                                                      ),
+                                                      shape: BoxShape.circle,
+                                                    ),
+                                                    child: Padding(
+                                                      padding: EdgeInsets.all(
+                                                        10.w,
+                                                      ),
+                                                      child: TextView(
+                                                        text: '1',
+                                                        textStyle: TextStyle(
+                                                          fontFamily: 'DMSans',
+                                                          fontSize: 14.20.sp,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color: model.getFulfillmentOrderTextColor(
+                                                            completed: model
+                                                                .getIncomingOrderDdetailResponseModel!
+                                                                .data!
+                                                                .order!
+                                                                .items![0]
+                                                                .fulfillmentTimeline![0]
+                                                                .completed,
+                                                            current: model
+                                                                .getIncomingOrderDdetailResponseModel!
+                                                                .data!
+                                                                .order!
+                                                                .items![0]
+                                                                .fulfillmentTimeline![0]
+                                                                .current,
+                                                            completed2: model
+                                                                .getIncomingOrderDdetailResponseModel!
+                                                                .data!
+                                                                .order!
+                                                                .items![0]
+                                                                .fulfillmentTimeline![1]
+                                                                .completed,
+                                                            current2: model
+                                                                .getIncomingOrderDdetailResponseModel!
+                                                                .data!
+                                                                .order!
+                                                                .items![0]
+                                                                .fulfillmentTimeline![1]
+                                                                .current,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  TextView(
+                                                    text:
+                                                        model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .items![0]
+                                                            .fulfillmentTimeline![1]
+                                                            .label ??
+                                                        '',
+                                                    textStyle: TextStyle(
+                                                      fontFamily: 'DMSans',
+                                                      fontSize: 15.20.sp,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      color: model.getFulfillmentOrderTextStatusColor(
+                                                        completed: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .items![0]
+                                                            .fulfillmentTimeline![0]
+                                                            .completed,
+                                                        current: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .items![0]
+                                                            .fulfillmentTimeline![0]
+                                                            .current,
+                                                        completed2: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .items![0]
+                                                            .fulfillmentTimeline![1]
+                                                            .completed,
+                                                        current2: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .items![0]
+                                                            .fulfillmentTimeline![1]
+                                                            .current,
+                                                      ),
+                                                      letterSpacing: -0.21,
+                                                    ),
+                                                  ),
+                                                  SvgPicture.asset(
+                                                    AppImage.arrow_right,
+                                                    color: model.getFulfillmentOrderColorArrow(
                                                       completed: model
                                                           .getIncomingOrderDdetailResponseModel!
                                                           .data!
@@ -1192,135 +2038,139 @@ class ViewOrderManagementScreen extends StatelessWidget {
                                                           .fulfillmentTimeline![1]
                                                           .current,
                                                     ),
+                                                    height: 12.h,
+                                                    width: 10.w,
                                                   ),
-                                                ),
-                                              ),
-                                            ),
-                                            TextView(
-                                              text:
-                                                  model
-                                                      .getIncomingOrderDdetailResponseModel!
-                                                      .data!
-                                                      .order!
-                                                      .items![0]
-                                                      .fulfillmentTimeline![1]
-                                                      .label ??
-                                                  '',
-                                              textStyle: TextStyle(
-                                                fontFamily: 'DMSans',
-                                                fontSize: 15.20.sp,
-                                                fontWeight: FontWeight.w400,
-                                                color: model.getFulfillmentOrderTextStatusColor(
-                                                  completed: model
-                                                      .getIncomingOrderDdetailResponseModel!
-                                                      .data!
-                                                      .order!
-                                                      .items![0]
-                                                      .fulfillmentTimeline![0]
-                                                      .completed,
-                                                  current: model
-                                                      .getIncomingOrderDdetailResponseModel!
-                                                      .data!
-                                                      .order!
-                                                      .items![0]
-                                                      .fulfillmentTimeline![0]
-                                                      .current,
-                                                  completed2: model
-                                                      .getIncomingOrderDdetailResponseModel!
-                                                      .data!
-                                                      .order!
-                                                      .items![0]
-                                                      .fulfillmentTimeline![1]
-                                                      .completed,
-                                                  current2: model
-                                                      .getIncomingOrderDdetailResponseModel!
-                                                      .data!
-                                                      .order!
-                                                      .items![0]
-                                                      .fulfillmentTimeline![1]
-                                                      .current,
-                                                ),
-                                                letterSpacing: -0.21,
-                                              ),
-                                            ),
-                                            SvgPicture.asset(
-                                              AppImage.arrow_right,
-                                              color: model.getFulfillmentOrderColorArrow(
-                                                completed: model
-                                                    .getIncomingOrderDdetailResponseModel!
-                                                    .data!
-                                                    .order!
-                                                    .items![0]
-                                                    .fulfillmentTimeline![0]
-                                                    .completed,
-                                                current: model
-                                                    .getIncomingOrderDdetailResponseModel!
-                                                    .data!
-                                                    .order!
-                                                    .items![0]
-                                                    .fulfillmentTimeline![0]
-                                                    .current,
-                                                completed2: model
-                                                    .getIncomingOrderDdetailResponseModel!
-                                                    .data!
-                                                    .order!
-                                                    .items![0]
-                                                    .fulfillmentTimeline![1]
-                                                    .completed,
-                                                current2: model
-                                                    .getIncomingOrderDdetailResponseModel!
-                                                    .data!
-                                                    .order!
-                                                    .items![0]
-                                                    .fulfillmentTimeline![1]
-                                                    .current,
-                                              ),
-                                              height: 12.h,
-                                              width: 10.w,
-                                            ),
-                                            Container(
-                                              decoration: BoxDecoration(
-                                                color: model.getFulfillmentOrderColor(
-                                                  completed: model
-                                                      .getIncomingOrderDdetailResponseModel!
-                                                      .data!
-                                                      .order!
-                                                      .items![0]
-                                                      .fulfillmentTimeline![1]
-                                                      .completed,
-                                                  current: model
-                                                      .getIncomingOrderDdetailResponseModel!
-                                                      .data!
-                                                      .order!
-                                                      .items![0]
-                                                      .fulfillmentTimeline![1]
-                                                      .current,
-                                                  completed2: model
-                                                      .getIncomingOrderDdetailResponseModel!
-                                                      .data!
-                                                      .order!
-                                                      .items![0]
-                                                      .fulfillmentTimeline![2]
-                                                      .completed,
-                                                  current2: model
-                                                      .getIncomingOrderDdetailResponseModel!
-                                                      .data!
-                                                      .order!
-                                                      .items![0]
-                                                      .fulfillmentTimeline![2]
-                                                      .current,
-                                                ),
-                                                shape: BoxShape.circle,
-                                              ),
-                                              child: Padding(
-                                                padding: EdgeInsets.all(10.w),
-                                                child: TextView(
-                                                  text: '2',
-                                                  textStyle: TextStyle(
-                                                    fontFamily: 'DMSans',
-                                                    fontSize: 14.20.sp,
-                                                    fontWeight: FontWeight.w400,
-                                                    color: model.getFulfillmentOrderTextColor(
+                                                  Container(
+                                                    decoration: BoxDecoration(
+                                                      color: model.getFulfillmentOrderColor(
+                                                        completed: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .items![0]
+                                                            .fulfillmentTimeline![1]
+                                                            .completed,
+                                                        current: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .items![0]
+                                                            .fulfillmentTimeline![1]
+                                                            .current,
+                                                        completed2: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .items![0]
+                                                            .fulfillmentTimeline![2]
+                                                            .completed,
+                                                        current2: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .items![0]
+                                                            .fulfillmentTimeline![2]
+                                                            .current,
+                                                      ),
+                                                      shape: BoxShape.circle,
+                                                    ),
+                                                    child: Padding(
+                                                      padding: EdgeInsets.all(
+                                                        10.w,
+                                                      ),
+                                                      child: TextView(
+                                                        text: '2',
+                                                        textStyle: TextStyle(
+                                                          fontFamily: 'DMSans',
+                                                          fontSize: 14.20.sp,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color: model.getFulfillmentOrderTextColor(
+                                                            completed: model
+                                                                .getIncomingOrderDdetailResponseModel!
+                                                                .data!
+                                                                .order!
+                                                                .items![0]
+                                                                .fulfillmentTimeline![1]
+                                                                .completed,
+                                                            current: model
+                                                                .getIncomingOrderDdetailResponseModel!
+                                                                .data!
+                                                                .order!
+                                                                .items![0]
+                                                                .fulfillmentTimeline![1]
+                                                                .current,
+                                                            completed2: model
+                                                                .getIncomingOrderDdetailResponseModel!
+                                                                .data!
+                                                                .order!
+                                                                .items![0]
+                                                                .fulfillmentTimeline![2]
+                                                                .completed,
+                                                            current2: model
+                                                                .getIncomingOrderDdetailResponseModel!
+                                                                .data!
+                                                                .order!
+                                                                .items![0]
+                                                                .fulfillmentTimeline![2]
+                                                                .current,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  TextView(
+                                                    text:
+                                                        model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .items![0]
+                                                            .fulfillmentTimeline![2]
+                                                            .label ??
+                                                        '',
+                                                    textStyle: TextStyle(
+                                                      fontFamily: 'DMSans',
+                                                      fontSize: 15.20.sp,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      color: model.getFulfillmentOrderTextStatusColor(
+                                                        completed: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .items![0]
+                                                            .fulfillmentTimeline![1]
+                                                            .completed,
+                                                        current: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .items![0]
+                                                            .fulfillmentTimeline![1]
+                                                            .current,
+                                                        completed2: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .items![0]
+                                                            .fulfillmentTimeline![2]
+                                                            .completed,
+                                                        current2: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .items![0]
+                                                            .fulfillmentTimeline![2]
+                                                            .current,
+                                                      ),
+                                                      letterSpacing: -0.21,
+                                                    ),
+                                                  ),
+                                                  SvgPicture.asset(
+                                                    AppImage.arrow_right,
+                                                    color: model.getFulfillmentOrderColorArrow(
                                                       completed: model
                                                           .getIncomingOrderDdetailResponseModel!
                                                           .data!
@@ -1350,135 +2200,131 @@ class ViewOrderManagementScreen extends StatelessWidget {
                                                           .fulfillmentTimeline![2]
                                                           .current,
                                                     ),
+                                                    height: 12.h,
+                                                    width: 10.w,
                                                   ),
-                                                ),
-                                              ),
-                                            ),
-                                            TextView(
-                                              text:
-                                                  model
-                                                      .getIncomingOrderDdetailResponseModel!
-                                                      .data!
-                                                      .order!
-                                                      .items![0]
-                                                      .fulfillmentTimeline![2]
-                                                      .label ??
-                                                  '',
-                                              textStyle: TextStyle(
-                                                fontFamily: 'DMSans',
-                                                fontSize: 15.20.sp,
-                                                fontWeight: FontWeight.w400,
-                                                color: model.getFulfillmentOrderTextStatusColor(
-                                                  completed: model
-                                                      .getIncomingOrderDdetailResponseModel!
-                                                      .data!
-                                                      .order!
-                                                      .items![0]
-                                                      .fulfillmentTimeline![1]
-                                                      .completed,
-                                                  current: model
-                                                      .getIncomingOrderDdetailResponseModel!
-                                                      .data!
-                                                      .order!
-                                                      .items![0]
-                                                      .fulfillmentTimeline![1]
-                                                      .current,
-                                                  completed2: model
-                                                      .getIncomingOrderDdetailResponseModel!
-                                                      .data!
-                                                      .order!
-                                                      .items![0]
-                                                      .fulfillmentTimeline![2]
-                                                      .completed,
-                                                  current2: model
-                                                      .getIncomingOrderDdetailResponseModel!
-                                                      .data!
-                                                      .order!
-                                                      .items![0]
-                                                      .fulfillmentTimeline![2]
-                                                      .current,
-                                                ),
-                                                letterSpacing: -0.21,
-                                              ),
-                                            ),
-                                            SvgPicture.asset(
-                                              AppImage.arrow_right,
-                                              color: model.getFulfillmentOrderColorArrow(
-                                                completed: model
-                                                    .getIncomingOrderDdetailResponseModel!
-                                                    .data!
-                                                    .order!
-                                                    .items![0]
-                                                    .fulfillmentTimeline![1]
-                                                    .completed,
-                                                current: model
-                                                    .getIncomingOrderDdetailResponseModel!
-                                                    .data!
-                                                    .order!
-                                                    .items![0]
-                                                    .fulfillmentTimeline![1]
-                                                    .current,
-                                                completed2: model
-                                                    .getIncomingOrderDdetailResponseModel!
-                                                    .data!
-                                                    .order!
-                                                    .items![0]
-                                                    .fulfillmentTimeline![2]
-                                                    .completed,
-                                                current2: model
-                                                    .getIncomingOrderDdetailResponseModel!
-                                                    .data!
-                                                    .order!
-                                                    .items![0]
-                                                    .fulfillmentTimeline![2]
-                                                    .current,
-                                              ),
-                                              height: 12.h,
-                                              width: 10.w,
-                                            ),
-                                            Container(
-                                              decoration: BoxDecoration(
-                                                color: model.getFulfillmentOrderColor(
-                                                  completed: model
-                                                      .getIncomingOrderDdetailResponseModel!
-                                                      .data!
-                                                      .order!
-                                                      .items![0]
-                                                      .fulfillmentTimeline![2]
-                                                      .completed,
-                                                  current: model
-                                                      .getIncomingOrderDdetailResponseModel!
-                                                      .data!
-                                                      .order!
-                                                      .items![0]
-                                                      .fulfillmentTimeline![2]
-                                                      .current,
-                                                  completed2: model
-                                                      .getIncomingOrderDdetailResponseModel!
-                                                      .data!
-                                                      .order!
-                                                      .items![0]
-                                                      .fulfillmentTimeline![3]
-                                                      .completed,
-                                                  current2: model
-                                                      .getIncomingOrderDdetailResponseModel!
-                                                      .data!
-                                                      .order!
-                                                      .items![0]
-                                                      .fulfillmentTimeline![3]
-                                                      .current,
-                                                ),
-                                                shape: BoxShape.circle,
-                                              ),
-                                              child: Padding(
-                                                padding: EdgeInsets.all(10.w),
-                                                child: TextView(
-                                                  text: '3',
-                                                  textStyle: TextStyle(
-                                                    fontFamily: 'DMSans',
-                                                    fontSize: 14.20.sp,
-                                                    fontWeight: FontWeight.w400,
-                                                    color: model.getFulfillmentOrderTextColor(
+                                                  Container(
+                                                    decoration: BoxDecoration(
+                                                      color: model.getFulfillmentOrderColor(
+                                                        completed: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .items![0]
+                                                            .fulfillmentTimeline![2]
+                                                            .completed,
+                                                        current: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .items![0]
+                                                            .fulfillmentTimeline![2]
+                                                            .current,
+                                                        completed2: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .items![0]
+                                                            .fulfillmentTimeline![3]
+                                                            .completed,
+                                                        current2: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .items![0]
+                                                            .fulfillmentTimeline![3]
+                                                            .current,
+                                                      ),
+                                                      shape: BoxShape.circle,
+                                                    ),
+                                                    child: Padding(
+                                                      padding: EdgeInsets.all(
+                                                        10.w,
+                                                      ),
+                                                      child: TextView(
+                                                        text: '3',
+                                                        textStyle: TextStyle(
+                                                          fontFamily: 'DMSans',
+                                                          fontSize: 14.20.sp,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color: model.getFulfillmentOrderTextColor(
+                                                            completed: model
+                                                                .getIncomingOrderDdetailResponseModel!
+                                                                .data!
+                                                                .order!
+                                                                .items![0]
+                                                                .fulfillmentTimeline![2]
+                                                                .completed,
+                                                            current: model
+                                                                .getIncomingOrderDdetailResponseModel!
+                                                                .data!
+                                                                .order!
+                                                                .items![0]
+                                                                .fulfillmentTimeline![2]
+                                                                .current,
+                                                            completed2: model
+                                                                .getIncomingOrderDdetailResponseModel!
+                                                                .data!
+                                                                .order!
+                                                                .items![0]
+                                                                .fulfillmentTimeline![3]
+                                                                .completed,
+                                                            current2: model
+                                                                .getIncomingOrderDdetailResponseModel!
+                                                                .data!
+                                                                .order!
+                                                                .items![0]
+                                                                .fulfillmentTimeline![3]
+                                                                .current,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  TextView(
+                                                    text: 'Out for Delivery',
+                                                    textStyle: TextStyle(
+                                                      fontFamily: 'DMSans',
+                                                      fontSize: 15.20.sp,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      color: model.getFulfillmentOrderTextStatusColor(
+                                                        completed: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .items![0]
+                                                            .fulfillmentTimeline![2]
+                                                            .completed,
+                                                        current: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .items![0]
+                                                            .fulfillmentTimeline![2]
+                                                            .current,
+                                                        completed2: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .items![0]
+                                                            .fulfillmentTimeline![3]
+                                                            .completed,
+                                                        current2: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .items![0]
+                                                            .fulfillmentTimeline![3]
+                                                            .current,
+                                                      ),
+                                                      letterSpacing: -0.21,
+                                                    ),
+                                                  ),
+                                                  SvgPicture.asset(
+                                                    AppImage.arrow_right,
+                                                    color: model.getFulfillmentOrderColorArrow(
                                                       completed: model
                                                           .getIncomingOrderDdetailResponseModel!
                                                           .data!
@@ -1508,209 +2354,139 @@ class ViewOrderManagementScreen extends StatelessWidget {
                                                           .fulfillmentTimeline![3]
                                                           .current,
                                                     ),
+                                                    height: 12.h,
+                                                    width: 10.w,
                                                   ),
-                                                ),
-                                              ),
-                                            ),
-                                            TextView(
-                                              text: 'Out for Delivery',
-                                              textStyle: TextStyle(
-                                                fontFamily: 'DMSans',
-                                                fontSize: 15.20.sp,
-                                                fontWeight: FontWeight.w400,
-                                                color: model.getFulfillmentOrderTextStatusColor(
-                                                  completed: model
-                                                      .getIncomingOrderDdetailResponseModel!
-                                                      .data!
-                                                      .order!
-                                                      .items![0]
-                                                      .fulfillmentTimeline![2]
-                                                      .completed,
-                                                  current: model
-                                                      .getIncomingOrderDdetailResponseModel!
-                                                      .data!
-                                                      .order!
-                                                      .items![0]
-                                                      .fulfillmentTimeline![2]
-                                                      .current,
-                                                  completed2: model
-                                                      .getIncomingOrderDdetailResponseModel!
-                                                      .data!
-                                                      .order!
-                                                      .items![0]
-                                                      .fulfillmentTimeline![3]
-                                                      .completed,
-                                                  current2: model
-                                                      .getIncomingOrderDdetailResponseModel!
-                                                      .data!
-                                                      .order!
-                                                      .items![0]
-                                                      .fulfillmentTimeline![3]
-                                                      .current,
-                                                ),
-                                                letterSpacing: -0.21,
-                                              ),
-                                            ),
-                                            SvgPicture.asset(
-                                              AppImage.arrow_right,
-                                              color: model.getFulfillmentOrderColorArrow(
-                                                completed: model
-                                                    .getIncomingOrderDdetailResponseModel!
-                                                    .data!
-                                                    .order!
-                                                    .items![0]
-                                                    .fulfillmentTimeline![2]
-                                                    .completed,
-                                                current: model
-                                                    .getIncomingOrderDdetailResponseModel!
-                                                    .data!
-                                                    .order!
-                                                    .items![0]
-                                                    .fulfillmentTimeline![2]
-                                                    .current,
-                                                completed2: model
-                                                    .getIncomingOrderDdetailResponseModel!
-                                                    .data!
-                                                    .order!
-                                                    .items![0]
-                                                    .fulfillmentTimeline![3]
-                                                    .completed,
-                                                current2: model
-                                                    .getIncomingOrderDdetailResponseModel!
-                                                    .data!
-                                                    .order!
-                                                    .items![0]
-                                                    .fulfillmentTimeline![3]
-                                                    .current,
-                                              ),
-                                              height: 12.h,
-                                              width: 10.w,
-                                            ),
-                                            Container(
-                                              decoration: BoxDecoration(
-                                                color: model.getFulfillmentOrderColor(
-                                                  completed: model
-                                                      .getIncomingOrderDdetailResponseModel!
-                                                      .data!
-                                                      .order!
-                                                      .items![0]
-                                                      .fulfillmentTimeline![3]
-                                                      .completed,
-                                                  current: model
-                                                      .getIncomingOrderDdetailResponseModel!
-                                                      .data!
-                                                      .order!
-                                                      .items![0]
-                                                      .fulfillmentTimeline![3]
-                                                      .current,
-                                                  completed2: model
-                                                      .getIncomingOrderDdetailResponseModel!
-                                                      .data!
-                                                      .order!
-                                                      .items![0]
-                                                      .fulfillmentTimeline![4]
-                                                      .completed,
-                                                  current2: model
-                                                      .getIncomingOrderDdetailResponseModel!
-                                                      .data!
-                                                      .order!
-                                                      .items![0]
-                                                      .fulfillmentTimeline![4]
-                                                      .current,
-                                                ),
-                                                shape: BoxShape.circle,
-                                              ),
-                                              child: Padding(
-                                                padding: EdgeInsets.all(10.w),
-                                                child: TextView(
-                                                  text: '4',
-                                                  textStyle: TextStyle(
-                                                    fontFamily: 'DMSans',
-                                                    fontSize: 14.20.sp,
-                                                    fontWeight: FontWeight.w400,
-                                                    color: model.getFulfillmentOrderTextColor(
-                                                      completed: model
-                                                          .getIncomingOrderDdetailResponseModel!
-                                                          .data!
-                                                          .order!
-                                                          .items![0]
-                                                          .fulfillmentTimeline![3]
-                                                          .completed,
-                                                      current: model
-                                                          .getIncomingOrderDdetailResponseModel!
-                                                          .data!
-                                                          .order!
-                                                          .items![0]
-                                                          .fulfillmentTimeline![3]
-                                                          .current,
-                                                      completed2: model
-                                                          .getIncomingOrderDdetailResponseModel!
-                                                          .data!
-                                                          .order!
-                                                          .items![0]
-                                                          .fulfillmentTimeline![4]
-                                                          .completed,
-                                                      current2: model
-                                                          .getIncomingOrderDdetailResponseModel!
-                                                          .data!
-                                                          .order!
-                                                          .items![0]
-                                                          .fulfillmentTimeline![4]
-                                                          .current,
+                                                  Container(
+                                                    decoration: BoxDecoration(
+                                                      color: model.getFulfillmentOrderColor(
+                                                        completed: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .items![0]
+                                                            .fulfillmentTimeline![3]
+                                                            .completed,
+                                                        current: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .items![0]
+                                                            .fulfillmentTimeline![3]
+                                                            .current,
+                                                        completed2: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .items![0]
+                                                            .fulfillmentTimeline![4]
+                                                            .completed,
+                                                        current2: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .items![0]
+                                                            .fulfillmentTimeline![4]
+                                                            .current,
+                                                      ),
+                                                      shape: BoxShape.circle,
+                                                    ),
+                                                    child: Padding(
+                                                      padding: EdgeInsets.all(
+                                                        10.w,
+                                                      ),
+                                                      child: TextView(
+                                                        text: '4',
+                                                        textStyle: TextStyle(
+                                                          fontFamily: 'DMSans',
+                                                          fontSize: 14.20.sp,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color: model.getFulfillmentOrderTextColor(
+                                                            completed: model
+                                                                .getIncomingOrderDdetailResponseModel!
+                                                                .data!
+                                                                .order!
+                                                                .items![0]
+                                                                .fulfillmentTimeline![3]
+                                                                .completed,
+                                                            current: model
+                                                                .getIncomingOrderDdetailResponseModel!
+                                                                .data!
+                                                                .order!
+                                                                .items![0]
+                                                                .fulfillmentTimeline![3]
+                                                                .current,
+                                                            completed2: model
+                                                                .getIncomingOrderDdetailResponseModel!
+                                                                .data!
+                                                                .order!
+                                                                .items![0]
+                                                                .fulfillmentTimeline![4]
+                                                                .completed,
+                                                            current2: model
+                                                                .getIncomingOrderDdetailResponseModel!
+                                                                .data!
+                                                                .order!
+                                                                .items![0]
+                                                                .fulfillmentTimeline![4]
+                                                                .current,
+                                                          ),
+                                                        ),
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
+                                                  TextView(
+                                                    text:
+                                                        model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .items![0]
+                                                            .fulfillmentTimeline![4]
+                                                            .label ??
+                                                        '',
+                                                    textStyle: TextStyle(
+                                                      fontFamily: 'DMSans',
+                                                      fontSize: 15.20.sp,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      color: model.getFulfillmentOrderTextStatusColor(
+                                                        completed: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .items![0]
+                                                            .fulfillmentTimeline![3]
+                                                            .completed,
+                                                        current: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .items![0]
+                                                            .fulfillmentTimeline![3]
+                                                            .current,
+                                                        completed2: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .items![0]
+                                                            .fulfillmentTimeline![4]
+                                                            .completed,
+                                                        current2: model
+                                                            .getIncomingOrderDdetailResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .items![0]
+                                                            .fulfillmentTimeline![4]
+                                                            .current,
+                                                      ),
+                                                      letterSpacing: -0.21,
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
-                                            ),
-                                            TextView(
-                                              text:
-                                                  model
-                                                      .getIncomingOrderDdetailResponseModel!
-                                                      .data!
-                                                      .order!
-                                                      .items![0]
-                                                      .fulfillmentTimeline![4]
-                                                      .label ??
-                                                  '',
-                                              textStyle: TextStyle(
-                                                fontFamily: 'DMSans',
-                                                fontSize: 15.20.sp,
-                                                fontWeight: FontWeight.w400,
-                                                color: model.getFulfillmentOrderTextStatusColor(
-                                                  completed: model
-                                                      .getIncomingOrderDdetailResponseModel!
-                                                      .data!
-                                                      .order!
-                                                      .items![0]
-                                                      .fulfillmentTimeline![3]
-                                                      .completed,
-                                                  current: model
-                                                      .getIncomingOrderDdetailResponseModel!
-                                                      .data!
-                                                      .order!
-                                                      .items![0]
-                                                      .fulfillmentTimeline![3]
-                                                      .current,
-                                                  completed2: model
-                                                      .getIncomingOrderDdetailResponseModel!
-                                                      .data!
-                                                      .order!
-                                                      .items![0]
-                                                      .fulfillmentTimeline![4]
-                                                      .completed,
-                                                  current2: model
-                                                      .getIncomingOrderDdetailResponseModel!
-                                                      .data!
-                                                      .order!
-                                                      .items![0]
-                                                      .fulfillmentTimeline![4]
-                                                      .current,
-                                                ),
-                                                letterSpacing: -0.21,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
+
                                         SizedBox(
                                           height:
                                               model
@@ -1761,6 +2537,163 @@ class ViewOrderManagementScreen extends StatelessWidget {
                                                     .toLowerCase() ==
                                                 'pending'
                                         ? SizedBox.shrink()
+                                        : model.dDetailOrder!.splitOrder == true
+                                        ? Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Expanded(
+                                                child: IntrinsicWidth(
+                                                  child: GestureDetector(
+                                                    onTap: () => model.rejectIncomingOrderDialog(
+                                                      context: context,
+                                                      model: model,
+                                                      orderId: id,
+                                                      delivery: model
+                                                          .getIncomingOrderDdetailResponseModel!
+                                                          .data!
+                                                          .order!
+                                                          .deliveries![model
+                                                                  .deliveryIndexSplit -
+                                                              1]
+                                                          .deliveryNumber
+                                                          .toString(),
+                                                      requestId: requestId,
+                                                      expectedRevision: model
+                                                          .getIncomingOrderDdetailResponseModel!
+                                                          .data!
+                                                          .order!
+                                                          .deliveries![model
+                                                                  .deliveryIndexSplit -
+                                                              1]
+                                                          .revision
+                                                          .toString(),
+                                                      wholesaleGroupId:
+                                                          wholesaleGroupId,
+                                                    ),
+                                                    child: Container(
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                            vertical: 12.w,
+                                                            horizontal: 13.30.w,
+                                                          ),
+                                                      decoration: BoxDecoration(
+                                                        border: Border.all(
+                                                          color:
+                                                              AppColors.primary,
+                                                          width: 1.42,
+                                                        ),
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                              40.r,
+                                                            ),
+                                                      ),
+                                                      child: TextView(
+                                                        text:
+                                                            'Reject delivery ${model.getIncomingOrderDdetailResponseModel!.data!.order!.deliveries![model.deliveryIndexSplit - 1].deliveryNumber}',
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        textStyle: TextStyle(
+                                                          fontFamily: 'DMSans',
+                                                          fontSize: 15.20.sp,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          color:
+                                                              AppColors.primary,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              SizedBox(width: 16.40.w),
+                                              IntrinsicWidth(
+                                                child: GestureDetector(
+                                                  onTap: () => model.advanceDetailedIncomingOrderDialog(
+                                                    context: context,
+                                                    orderId: id,
+                                                    delivery: model
+                                                        .getIncomingOrderDdetailResponseModel!
+                                                        .data!
+                                                        .order!
+                                                        .deliveries![model
+                                                                .deliveryIndexSplit -
+                                                            1]
+                                                        .deliveryNumber
+                                                        .toString(),
+                                                    requestId: requestId,
+                                                    expectedRevision: model
+                                                        .getIncomingOrderDdetailResponseModel!
+                                                        .data!
+                                                        .order!
+                                                        .deliveries![model
+                                                                .deliveryIndexSplit -
+                                                            1]
+                                                        .revision
+                                                        .toString(),
+                                                    wholesaleFulfillmentsGroupId:
+                                                        wholesaleGroupId,
+                                                    text: model
+                                                        .returnFulfillmentIncomingOrderText(
+                                                          model
+                                                              .getIncomingOrderDdetailResponseModel!
+                                                              .data!
+                                                              .order!
+                                                              .status!,
+                                                        ),
+                                                    model: model,
+                                                  ),
+                                                  child: Container(
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                          vertical: 14.w,
+                                                          horizontal: 22.w,
+                                                        ),
+                                                    decoration: BoxDecoration(
+                                                      color: AppColors.primary,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            40.r,
+                                                          ),
+                                                    ),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        SvgPicture.asset(
+                                                          AppImage.van,
+                                                          height:
+                                                              isTablet(context)
+                                                              ? 28.40.h
+                                                              : 14.20.h,
+                                                          width:
+                                                              isTablet(context)
+                                                              ? 28.40.w
+                                                              : 14.20.w,
+                                                          color:
+                                                              AppColors.white,
+                                                        ),
+                                                        SizedBox(width: 7.10.w),
+                                                        TextView(
+                                                          text: 'Advance',
+                                                          textStyle: TextStyle(
+                                                            fontFamily:
+                                                                'DMSans',
+                                                            fontSize: 15.60.sp,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                            color:
+                                                                AppColors.white,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          )
                                         : Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
@@ -1768,10 +2701,25 @@ class ViewOrderManagementScreen extends StatelessWidget {
                                               IntrinsicWidth(
                                                 child: GestureDetector(
                                                   onTap: () => model
-                                                      .cancelIncomingOrderDialog(
+                                                      .rejectIncomingOrderDialog(
                                                         context: context,
                                                         model: model,
                                                         orderId: id,
+                                                         delivery: model
+                                                          .getIncomingOrderDdetailResponseModel!
+                                                          .data!
+                                                          .order!.deliveries![0].deliveryNumber
+                                                          .toString(),
+                                                      requestId: requestId,
+                                                      expectedRevision: model
+                                                          .getIncomingOrderDdetailResponseModel!
+                                                          .data!
+                                                          .order!
+                                                          .revision
+                                                          .toString(),
+                                                      wholesaleGroupId:
+                                                          wholesaleGroupId,
+                                                        
                                                       ),
                                                   child: Container(
                                                     padding:
@@ -1791,7 +2739,7 @@ class ViewOrderManagementScreen extends StatelessWidget {
                                                           ),
                                                     ),
                                                     child: TextView(
-                                                      text: 'Cancel Order',
+                                                      text: 'Reject Order',
                                                       textStyle: TextStyle(
                                                         fontFamily: 'DMSans',
                                                         fontSize: 15.20.sp,
@@ -1809,7 +2757,20 @@ class ViewOrderManagementScreen extends StatelessWidget {
                                                   onTap: () => model
                                                       .advanceDetailedIncomingOrderDialog(
                                                         context: context,
-                                                        orderId: id,
+                                                        orderId: id, delivery: model
+                                                          .getIncomingOrderDdetailResponseModel!
+                                                          .data!
+                                                          .order!.deliveries![0].deliveryNumber
+                                                          .toString(),
+                                                      requestId: requestId,
+                                                      expectedRevision: model
+                                                          .getIncomingOrderDdetailResponseModel!
+                                                          .data!
+                                                          .order!
+                                                          .revision
+                                                          .toString(),
+                                                      wholesaleFulfillmentsGroupId:
+                                                          wholesaleGroupId,
                                                         text: model
                                                             .returnFulfillmentIncomingOrderText(
                                                               model

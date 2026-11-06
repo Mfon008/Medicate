@@ -7,6 +7,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:medicate_app/ui/widget/text.dart';
 import 'package:stacked/stacked.dart';
+import 'package:uuid/uuid.dart';
 import '../../core/app_assets/constant.dart';
 import '../../core/app_assets/image.dart';
 import '../../core/config/colors.dart';
@@ -19,6 +20,7 @@ class OverviewScreen extends StatelessWidget {
 
   GlobalKey<FormState> formKeyBulkUploads = GlobalKey<FormState>();
 
+  String? requestId;
   @override
   Widget build(BuildContext context) {
     bool isTablet(BuildContext context) =>
@@ -27,6 +29,9 @@ class OverviewScreen extends StatelessWidget {
       viewModelBuilder: () => ManufacturerViewModel(),
       onViewModelReady: (model) {
         model.listIncomingOrder(context, status: 'All');
+        const uuid = Uuid();
+        // Generate a random UUID (v4)
+        requestId = uuid.v4();
       },
       disposeViewModel: false,
       onDispose: (viewModel) {},
@@ -577,6 +582,9 @@ class OverviewScreen extends StatelessWidget {
                               Routes.viewOrderManagementScreen,
                               arguments: ViewOrderManagementScreenArguments(
                                 id: ord.id.toString(),
+                                wholesaleGroupId: ord.fulfillmentGroupId
+                                    .toString(),
+                                requestId: requestId,
                               ),
                             ),
                             child: Container(

@@ -4,10 +4,12 @@ part 'status_counts.g.dart';
 
 @JsonSerializable()
 class StatusCounts {
-  @JsonKey(name: 'DELIVERED')
-  int? delivered;
+  @JsonKey(name: 'CONFIRMED')
+  int? confirmed;
+  @JsonKey(name: 'PENDING')
+  int? pending;
 
-  StatusCounts({this.delivered});
+  StatusCounts({this.confirmed, this.pending});
 
   factory StatusCounts.fromJson(Map<String, dynamic> json) {
     return _$StatusCountsFromJson(json);
