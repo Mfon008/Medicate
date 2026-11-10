@@ -241,11 +241,17 @@ class ManufacturerRepoImpl {
     return response;
   }
 
-  Future<dynamic> advanceIncomingOrder({String? wholesaleOrderId, String? wholesaleFulfillmentGroupId,
+  Future<dynamic> advanceIncomingOrder({
+    String? wholesaleOrderId,
+    String? wholesaleFulfillmentGroupId,
     String? delivery,
-    AdvanceFullfillmentEntityModel? advanceEntity}) async {
+    AdvanceFullfillmentEntityModel? advanceEntity,
+  }) async {
     final response = await _contract.advanceIncomingOrder(
-      wholesaleOrderId: wholesaleOrderId,wholesaleFulfillmentGroupId: wholesaleFulfillmentGroupId,delivery: delivery,advanceEntity: advanceEntity
+      wholesaleOrderId: wholesaleOrderId,
+      wholesaleFulfillmentGroupId: wholesaleFulfillmentGroupId,
+      delivery: delivery,
+      advanceEntity: advanceEntity,
     );
     return response;
   }
@@ -270,19 +276,23 @@ class ManufacturerRepoImpl {
     final response = await _contract.rejectIncomingOrder(
       wholesaleOrderId: wholesaleOrderId,
       wholesaleFulfillmentGroupId: wholesaleFulfillmentGroupId,
-      rejectFullfillmentEntity: rejectEntity,delivery:delivery
+      rejectFullfillmentEntity: rejectEntity,
+      delivery: delivery,
     );
     return response;
   }
 
-  Future<dynamic> returnIncomingOrder({String? wholesaleOrderId,
+  Future<dynamic> returnIncomingOrder({
+    String? wholesaleOrderId,
     String? wholesaleFulfillmentGroupId,
     String? delivery,
-    AdvanceFullfillmentReasonEntityModel? returnEntity,}) async {
+    AdvanceFullfillmentReasonEntityModel? returnEntity,
+  }) async {
     final response = await _contract.returnIncomingOrder(
       wholesaleOrderId: wholesaleOrderId,
       wholesaleFulfillmentGroupId: wholesaleFulfillmentGroupId,
-      returnFullfillmentEntity: returnEntity,delivery:delivery
+      returnFullfillmentEntity: returnEntity,
+      delivery: delivery,
     );
     return response;
   }

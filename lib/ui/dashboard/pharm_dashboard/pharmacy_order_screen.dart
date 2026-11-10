@@ -171,60 +171,130 @@ class PharmacyOrderScreen extends StatelessWidget {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          TextView(
-                                            text:
-                                                model
-                                                    .getWholesaleOrderResponseModel!
-                                                    .data!
-                                                    .order!
-                                                    .orderNumber ??
-                                                '',
-                                            textStyle: TextStyle(
-                                              fontFamily: 'DMSans',
-                                              fontSize: 17.2.sp,
-                                              fontWeight: FontWeight.w500,
-                                              color: AppColors.white,
-                                            ),
-                                          ),
-                                          SizedBox(width: 10.2.w),
-                                          Expanded(
-                                            child: Container(
-                                              padding: EdgeInsets.symmetric(
-                                                horizontal: 3.4.w,
-                                                vertical: 3.42.w,
-                                              ),
-                                              decoration: BoxDecoration(
-                                                color: AppColors.appWhite,
-                                                borderRadius:
-                                                    BorderRadius.circular(22),
-                                              ),
-                                              child: TextView(
-                                                text:
-                                                    model
-                                                        .getWholesaleOrderResponseModel!
-                                                        .data!
-                                                        .order!
-                                                        .badgeText ??
-                                                    '',
-                                                textOverflow: TextOverflow.fade,
-                                                maxLines: 1,
-                                                textAlign: TextAlign.center,
-                                                textStyle: TextStyle(
-                                                  fontFamily: 'DMSans',
-                                                  fontSize: 13.2.sp,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: AppColors.primary,
+                                      model
+                                              .getWholesaleOrderResponseModel!
+                                              .data!
+                                              .order!
+                                              .splitOrder!
+                                          ? Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                TextView(
+                                                  text:
+                                                      model
+                                                          .getWholesaleOrderResponseModel!
+                                                          .data!
+                                                          .order!
+                                                          .orderNumber ??
+                                                      '',
+                                                  textStyle: TextStyle(
+                                                    fontFamily: 'DMSans',
+                                                    fontSize: 17.2.sp,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: AppColors.white,
+                                                  ),
                                                 ),
-                                              ),
+                                                SizedBox(height: 10.2.w),
+                                                Container(
+                                                  padding:
+                                                      EdgeInsets.symmetric(
+                                                        horizontal: 10.w,
+                                                        vertical: 3.42.w,
+                                                      ),
+                                                  decoration: BoxDecoration(
+                                                    color: AppColors.appWhite.withOpacity(.2),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          24,
+                                                        ),
+                                                  ),
+                                                  child: TextView(
+                                                    text:
+                                                        model
+                                                            .getWholesaleOrderResponseModel!
+                                                            .data!
+                                                            .order!
+                                                            .badgeText ??
+                                                        '',
+                                                    textOverflow:
+                                                        TextOverflow.fade,
+                                                    maxLines: 1,
+                                                    textAlign:
+                                                        TextAlign.center,
+                                                    textStyle: TextStyle(
+                                                      fontFamily: 'DMSans',
+                                                      fontSize: 13.2.sp,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      color:
+                                                          AppColors.white,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                          : Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                TextView(
+                                                  text:
+                                                      model
+                                                          .getWholesaleOrderResponseModel!
+                                                          .data!
+                                                          .order!
+                                                          .orderNumber ??
+                                                      '',
+                                                  textStyle: TextStyle(
+                                                    fontFamily: 'DMSans',
+                                                    fontSize: 17.2.sp,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: AppColors.white,
+                                                  ),
+                                                ),
+                                                SizedBox(width: 10.2.w),
+                                                Expanded(
+                                                  child: Container(
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                          horizontal: 3.4.w,
+                                                          vertical: 3.42.w,
+                                                        ),
+                                                    decoration: BoxDecoration(
+                                                      color: AppColors.appWhite,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            22,
+                                                          ),
+                                                    ),
+                                                    child: TextView(
+                                                      text:
+                                                          model
+                                                              .getWholesaleOrderResponseModel!
+                                                              .data!
+                                                              .order!
+                                                              .badgeText ??
+                                                          '',
+                                                      textOverflow:
+                                                          TextOverflow.fade,
+                                                      maxLines: 1,
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      textStyle: TextStyle(
+                                                        fontFamily: 'DMSans',
+                                                        fontSize: 13.2.sp,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        color:
+                                                            AppColors.primary,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(height: 4.10.h),
+                                      SizedBox(height: 5.10.h),
                                       TextView(
                                         text:
                                             'Placed on ${formatDate(model.getWholesaleOrderResponseModel!.data!.order!.placedAt!.toString())}',
@@ -819,7 +889,7 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                 ),
                                               ],
                                             ),
-                                            Divider(color: AppColors.infoGrey1),
+                                            Divider(color: AppColors.infoGrey2.withOpacity(.6)),
                                             Row(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
@@ -879,7 +949,7 @@ class PharmacyOrderScreen extends StatelessWidget {
                                               ],
                                             ),
 
-                                            Divider(color: AppColors.infoGrey1),
+                                            Divider(color: AppColors.infoGrey2.withOpacity(.6)),
                                             Row(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
@@ -938,7 +1008,7 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                 ),
                                               ],
                                             ),
-                                            Divider(color: AppColors.infoGrey1),
+                                            Divider(color: AppColors.infoGrey2.withOpacity(.6)),
                                             Row(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
@@ -1008,7 +1078,7 @@ class PharmacyOrderScreen extends StatelessWidget {
                                               ],
                                             ),
 
-                                            Divider(color: AppColors.infoGrey1),
+                                            Divider(color: AppColors.infoGrey2.withOpacity(.6)),
                                             Row(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
@@ -1154,7 +1224,7 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                 ),
                                               ],
                                             ),
-                                            Divider(color: AppColors.infoGrey1),
+                                            Divider(color: AppColors.infoGrey2.withOpacity(.6)),
                                             Row(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
@@ -1212,7 +1282,7 @@ class PharmacyOrderScreen extends StatelessWidget {
                                               ],
                                             ),
 
-                                            Divider(color: AppColors.infoGrey1),
+                                            Divider(color: AppColors.infoGrey2.withOpacity(.6)),
                                             Row(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
@@ -1269,7 +1339,7 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                 ),
                                               ],
                                             ),
-                                            Divider(color: AppColors.infoGrey1),
+                                            Divider(color: AppColors.infoGrey2.withOpacity(.6)),
                                             Row(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
@@ -1332,7 +1402,7 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                 ),
                                               ],
                                             ),
-                                            Divider(color: AppColors.infoGrey1),
+                                            Divider(color: AppColors.infoGrey2.withOpacity(.6)),
                                             Row(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
@@ -1502,7 +1572,9 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                               ),
                                                           child: ClipOval(
                                                             child: CachedNetworkImage(
-                                                              imageUrl:e.value
+                                                              imageUrl:
+                                                                  e
+                                                                      .value
                                                                       .imageUrl ??
                                                                   '',
                                                               height:
@@ -1584,7 +1656,7 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                               children: [
                                                                 TextView(
                                                                   text:
-                                                                      'Qty ${model.getWholesaleOrderResponseModel!.data!.order!.deliveries![model.orderSplitInfoIndex - 1].items![e.key].quantity!} of ${e.value.quantity} | ${formatNaira(e.value.unitPrice!)}',
+                                                                      'Qty ${e.value.quantity!} of ${e.value.minimumOrderQuantity} | ${formatNaira(e.value.unitPrice!)}',
                                                                   textStyle: TextStyle(
                                                                     fontFamily:
                                                                         'DMSans',
@@ -1667,23 +1739,11 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                                         100.w,
                                                                     child: TextView(
                                                                       text:
-                                                                          model
-                                                                                      .getWholesaleOrderResponseModel!
-                                                                                      .data!
-                                                                                      .order!
-                                                                                      .items![model.orderSplitInfoIndex -
-                                                                                          1]
-                                                                                      .manufacturerName !=
+                                                                          e.value.manufacturerName !=
                                                                                   null ||
-                                                                              model
-                                                                                      .getWholesaleOrderResponseModel!
-                                                                                      .data!
-                                                                                      .order!
-                                                                                      .items![model.orderSplitInfoIndex -
-                                                                                          1]
-                                                                                      .manufacturerName !=
+                                                                              e.value.manufacturerName !=
                                                                                   ''
-                                                                          ? ' ${model.getWholesaleOrderResponseModel!.data!.order!.items![model.orderSplitInfoIndex - 1].manufacturerName}'
+                                                                          ? ' ${e.value.manufacturerName}'
                                                                           : 'Not Available',
                                                                       maxLines:
                                                                           1,
@@ -1768,14 +1828,7 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                             ),
                                                         decoration: BoxDecoration(
                                                           color: model.orderStatusColorConfirmed(
-                                                            model
-                                                                .getWholesaleOrderResponseModel!
-                                                                .data!
-                                                                .order!
-                                                                .items![model
-                                                                        .orderSplitInfoIndex -
-                                                                    1]
-                                                                .tracking![0]
+                                                            model.getWholesaleOrderResponseModel!.data!.order!.deliveries![model.orderSplitInfoIndex - 1].items![e.key].fulfillmentTimeline![1]
                                                                 .completed,
                                                           ),
                                                           borderRadius:
@@ -1788,14 +1841,7 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                               MainAxisSize.min,
                                                           children: [
                                                             model.orderStatusIconConfirmed(
-                                                              model
-                                                                  .getWholesaleOrderResponseModel!
-                                                                  .data!
-                                                                  .order!
-                                                                  .items![model
-                                                                          .orderSplitInfoIndex -
-                                                                      1]
-                                                                  .tracking![0]
+                                                              model.getWholesaleOrderResponseModel!.data!.order!.deliveries![model.orderSplitInfoIndex - 1].items![e.key].fulfillmentTimeline![1]
                                                                   .completed,
                                                             ),
                                                             SizedBox(
@@ -1828,23 +1874,9 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                             ),
                                                         decoration: BoxDecoration(
                                                           color: model.orderStatusColorPackaging(
-                                                            completed: model
-                                                                .getWholesaleOrderResponseModel!
-                                                                .data!
-                                                                .order!
-                                                                .items![model
-                                                                        .orderSplitInfoIndex -
-                                                                    1]
-                                                                .tracking![1]
+                                                            completed: model.getWholesaleOrderResponseModel!.data!.order!.deliveries![model.orderSplitInfoIndex - 1].items![e.key].fulfillmentTimeline![2]
                                                                 .completed,
-                                                            current: model
-                                                                .getWholesaleOrderResponseModel!
-                                                                .data!
-                                                                .order!
-                                                                .items![model
-                                                                        .orderSplitInfoIndex -
-                                                                    1]
-                                                                .tracking![1]
+                                                            current: model.getWholesaleOrderResponseModel!.data!.order!.deliveries![model.orderSplitInfoIndex - 1].items![e.key].fulfillmentTimeline![2]
                                                                 .current,
                                                           ),
                                                           borderRadius:
@@ -1857,24 +1889,10 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                               MainAxisSize.min,
                                                           children: [
                                                             model.orderStatusIconPackaging(
-                                                              completed: model
-                                                                  .getWholesaleOrderResponseModel!
-                                                                  .data!
-                                                                  .order!
-                                                                  .items![model
-                                                                          .orderSplitInfoIndex -
-                                                                      1]
-                                                                  .tracking![1]
+                                                              completed: model.getWholesaleOrderResponseModel!.data!.order!.deliveries![model.orderSplitInfoIndex - 1].items![e.key].fulfillmentTimeline![2]
                                                                   .completed,
-                                                              current: model
-                                                                  .getWholesaleOrderResponseModel!
-                                                                  .data!
-                                                                  .order!
-                                                                  .items![model
-                                                                          .orderSplitInfoIndex -
-                                                                      1]
-                                                                  .tracking![1]
-                                                                  .completed,
+                                                              current: model.getWholesaleOrderResponseModel!.data!.order!.deliveries![model.orderSplitInfoIndex - 1].items![e.key].fulfillmentTimeline![2]
+                                                                  .current,
                                                             ),
                                                             SizedBox(
                                                               width: 4.w,
@@ -1889,23 +1907,9 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                                     FontWeight
                                                                         .w400,
                                                                 color: model.orderStatusTextColorPackaging(
-                                                                  completed: model
-                                                                      .getWholesaleOrderResponseModel!
-                                                                      .data!
-                                                                      .order!
-                                                                      .items![model
-                                                                              .orderSplitInfoIndex -
-                                                                          1]
-                                                                      .tracking![1]
+                                                                  completed: model.getWholesaleOrderResponseModel!.data!.order!.deliveries![model.orderSplitInfoIndex - 1].items![e.key].fulfillmentTimeline![2]
                                                                       .completed,
-                                                                  current: model
-                                                                      .getWholesaleOrderResponseModel!
-                                                                      .data!
-                                                                      .order!
-                                                                      .items![model
-                                                                              .orderSplitInfoIndex -
-                                                                          1]
-                                                                      .tracking![1]
+                                                                  current: model.getWholesaleOrderResponseModel!.data!.order!.deliveries![model.orderSplitInfoIndex - 1].items![e.key].fulfillmentTimeline![2]
                                                                       .current,
                                                                 ),
                                                               ),
@@ -1928,23 +1932,11 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                             ),
                                                         decoration: BoxDecoration(
                                                           color:
-                                                              model
-                                                                          .getWholesaleOrderResponseModel!
-                                                                          .data!
-                                                                          .order!
-                                                                          .items![model.orderSplitInfoIndex -
-                                                                              1]
-                                                                          .tracking?[2]
+                                                              model.getWholesaleOrderResponseModel!.data!.order!.deliveries![model.orderSplitInfoIndex - 1].items![e.key].fulfillmentTimeline![3]
                                                                           .status
                                                                           ?.toLowerCase() ==
-                                                                      'in_transit' &&
-                                                                  model
-                                                                          .getWholesaleOrderResponseModel!
-                                                                          .data!
-                                                                          .order!
-                                                                          .items![model.orderSplitInfoIndex -
-                                                                              1]
-                                                                          .tracking?[2]
+                                                                      'SHIPPED'.toLowerCase() &&
+                                                                 model.getWholesaleOrderResponseModel!.data!.order!.deliveries![model.orderSplitInfoIndex - 1].items![e.key].fulfillmentTimeline![3]
                                                                           .completed ==
                                                                       true
                                                               ? AppColors.amber
@@ -1959,23 +1951,9 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                               MainAxisSize.min,
                                                           children: [
                                                             model.orderStatusIconIntransit(
-                                                              completed: model
-                                                                  .getWholesaleOrderResponseModel!
-                                                                  .data!
-                                                                  .order!
-                                                                  .items![model
-                                                                          .orderSplitInfoIndex -
-                                                                      1]
-                                                                  .tracking![2]
+                                                              completed: model.getWholesaleOrderResponseModel!.data!.order!.deliveries![model.orderSplitInfoIndex - 1].items![e.key].fulfillmentTimeline![3]
                                                                   .completed,
-                                                              current: model
-                                                                  .getWholesaleOrderResponseModel!
-                                                                  .data!
-                                                                  .order!
-                                                                  .items![model
-                                                                          .orderSplitInfoIndex -
-                                                                      1]
-                                                                  .tracking![2]
+                                                              current: model.getWholesaleOrderResponseModel!.data!.order!.deliveries![model.orderSplitInfoIndex - 1].items![e.key].fulfillmentTimeline![3]
                                                                   .current,
                                                             ),
                                                             SizedBox(
@@ -1992,23 +1970,9 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                                     FontWeight
                                                                         .w400,
                                                                 color: model.orderStatusTextColorIntransit(
-                                                                  completed: model
-                                                                      .getWholesaleOrderResponseModel!
-                                                                      .data!
-                                                                      .order!
-                                                                      .items![model
-                                                                              .orderSplitInfoIndex -
-                                                                          1]
-                                                                      .tracking![2]
+                                                                  completed: model.getWholesaleOrderResponseModel!.data!.order!.deliveries![model.orderSplitInfoIndex - 1].items![e.key].fulfillmentTimeline![3]
                                                                       .completed,
-                                                                  current: model
-                                                                      .getWholesaleOrderResponseModel!
-                                                                      .data!
-                                                                      .order!
-                                                                      .items![model
-                                                                              .orderSplitInfoIndex -
-                                                                          1]
-                                                                      .tracking![2]
+                                                                  current: model.getWholesaleOrderResponseModel!.data!.order!.deliveries![model.orderSplitInfoIndex - 1].items![e.key].fulfillmentTimeline![3]
                                                                       .current,
                                                                 ),
                                                               ),
@@ -2026,23 +1990,9 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                             ),
                                                         decoration: BoxDecoration(
                                                           color: model.orderStatusColorDelivered(
-                                                            completed: model
-                                                                .getWholesaleOrderResponseModel!
-                                                                .data!
-                                                                .order!
-                                                                .items![model
-                                                                        .orderSplitInfoIndex -
-                                                                    1]
-                                                                .tracking![3]
+                                                            completed: model.getWholesaleOrderResponseModel!.data!.order!.deliveries![model.orderSplitInfoIndex - 1].items![e.key].fulfillmentTimeline![4]
                                                                 .completed,
-                                                            current: model
-                                                                .getWholesaleOrderResponseModel!
-                                                                .data!
-                                                                .order!
-                                                                .items![model
-                                                                        .orderSplitInfoIndex -
-                                                                    1]
-                                                                .tracking![3]
+                                                            current: model.getWholesaleOrderResponseModel!.data!.order!.deliveries![model.orderSplitInfoIndex - 1].items![e.key].fulfillmentTimeline![4]
                                                                 .current,
                                                           ),
                                                           borderRadius:
@@ -2055,24 +2005,10 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                               MainAxisSize.min,
                                                           children: [
                                                             model.orderStatusIconDelivered(
-                                                              completed: model
-                                                                  .getWholesaleOrderResponseModel!
-                                                                  .data!
-                                                                  .order!
-                                                                  .items![model
-                                                                          .orderSplitInfoIndex -
-                                                                      1]
-                                                                  .tracking![3]
+                                                              completed: model.getWholesaleOrderResponseModel!.data!.order!.deliveries![model.orderSplitInfoIndex - 1].items![e.key].fulfillmentTimeline![4]
                                                                   .completed,
-                                                              current: model
-                                                                  .getWholesaleOrderResponseModel!
-                                                                  .data!
-                                                                  .order!
-                                                                  .items![model
-                                                                          .orderSplitInfoIndex -
-                                                                      1]
-                                                                  .tracking![3]
-                                                                  .completed,
+                                                              current: model.getWholesaleOrderResponseModel!.data!.order!.deliveries![model.orderSplitInfoIndex - 1].items![e.key].fulfillmentTimeline![4]
+                                                                  .current,
                                                             ),
 
                                                             SizedBox(
@@ -2088,24 +2024,10 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                                     FontWeight
                                                                         .w400,
                                                                 color: model.orderStatusTextColorDelivered(
-                                                                  completed: model
-                                                                      .getWholesaleOrderResponseModel!
-                                                                      .data!
-                                                                      .order!
-                                                                      .items![model
-                                                                              .orderSplitInfoIndex -
-                                                                          1]
-                                                                      .tracking![3]
+                                                                  completed: model.getWholesaleOrderResponseModel!.data!.order!.deliveries![model.orderSplitInfoIndex - 1].items![e.key].fulfillmentTimeline![4]
                                                                       .completed,
-                                                                  current: model
-                                                                      .getWholesaleOrderResponseModel!
-                                                                      .data!
-                                                                      .order!
-                                                                      .items![model
-                                                                              .orderSplitInfoIndex -
-                                                                          1]
-                                                                      .tracking![3]
-                                                                      .completed,
+                                                                  current: model.getWholesaleOrderResponseModel!.data!.order!.deliveries![model.orderSplitInfoIndex - 1].items![e.key].fulfillmentTimeline![4]
+                                                                      .current,
                                                                 ),
                                                               ),
                                                             ),
@@ -2120,7 +2042,6 @@ class PharmacyOrderScreen extends StatelessWidget {
                                           ),
                                         ],
                                       )
-                                   
                                     : Column(
                                         children: [
                                           model
@@ -2509,7 +2430,7 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                                             .completed,
                                                                         current: e
                                                                             .tracking![1]
-                                                                            .completed,
+                                                                            .current,
                                                                       ),
                                                                       SizedBox(
                                                                         width:
@@ -2638,7 +2559,7 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                                             .completed,
                                                                         current: e
                                                                             .tracking![3]
-                                                                            .completed,
+                                                                            .current,
                                                                       ),
 
                                                                       SizedBox(
@@ -2659,7 +2580,7 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                                             completed:
                                                                                 e.tracking![3].completed,
                                                                             current:
-                                                                                e.tracking![3].completed,
+                                                                                e.tracking![3].current,
                                                                           ),
                                                                         ),
                                                                       ),
@@ -2963,7 +2884,7 @@ class PharmacyOrderScreen extends StatelessWidget {
                                             text: 'Subtotal',
                                             textStyle: TextStyle(
                                               fontFamily: 'DMSans',
-                                              fontSize: 14.2.sp,
+                                              fontSize: 15.2.sp,
                                               fontWeight: FontWeight.w400,
                                               color: AppColors.black,
                                             ),
@@ -2978,8 +2899,8 @@ class PharmacyOrderScreen extends StatelessWidget {
                                             ),
                                             textStyle: TextStyle(
                                               fontFamily: 'DMSans',
-                                              fontSize: 14.42.sp,
-                                              fontWeight: FontWeight.w600,
+                                              fontSize: 15.42.sp,
+                                              fontWeight: FontWeight.w500,
                                               color: AppColors.reminder1,
                                               letterSpacing: -0.1,
                                             ),
@@ -2995,7 +2916,7 @@ class PharmacyOrderScreen extends StatelessWidget {
                                             text: 'Delivery',
                                             textStyle: TextStyle(
                                               fontFamily: 'DMSans',
-                                              fontSize: 14.2.sp,
+                                              fontSize: 15.2.sp,
                                               fontWeight: FontWeight.w400,
                                               color: AppColors.black,
                                             ),
@@ -3010,8 +2931,8 @@ class PharmacyOrderScreen extends StatelessWidget {
                                             ),
                                             textStyle: TextStyle(
                                               fontFamily: 'DMSans',
-                                              fontSize: 14.42.sp,
-                                              fontWeight: FontWeight.w600,
+                                              fontSize: 15.42.sp,
+                                              fontWeight: FontWeight.w500,
                                               color: AppColors.reminder1,
                                               letterSpacing: -0.1,
                                             ),

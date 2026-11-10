@@ -174,13 +174,21 @@ class ManufacturerContractImpl {
   }) async => await _api.rejectIncomingOrder(
     wholesaleOrderId: wholesaleOrderId,
     wholesaleFulfillmentGroupId: wholesaleFulfillmentGroupId,
-    rejectFullfillmentEntity: rejectFullfillmentEntity,delivery:delivery
+    rejectFullfillmentEntity: rejectFullfillmentEntity,
+    delivery: delivery,
   );
 
-  Future<dynamic> returnIncomingOrder({String? wholesaleOrderId,String? wholesaleFulfillmentGroupId,
-  String? delivery,
-  AdvanceFullfillmentReasonEntityModel? returnFullfillmentEntity,}) async =>
-      await _api.returnIncomingOrder(wholesaleOrderId: wholesaleOrderId,wholesaleFulfillmentGroupId: wholesaleFulfillmentGroupId,returnFullfillmentEntity: returnFullfillmentEntity,delivery: delivery);
+  Future<dynamic> returnIncomingOrder({
+    String? wholesaleOrderId,
+    String? wholesaleFulfillmentGroupId,
+    String? delivery,
+    AdvanceFullfillmentReasonEntityModel? returnFullfillmentEntity,
+  }) async => await _api.returnIncomingOrder(
+    wholesaleOrderId: wholesaleOrderId,
+    wholesaleFulfillmentGroupId: wholesaleFulfillmentGroupId,
+    returnFullfillmentEntity: returnFullfillmentEntity,
+    delivery: delivery,
+  );
   Future<GetDistributorProfileResponseModel> getUserDetails() async =>
       await _api.getUserDetails();
   Future<dynamic> updateDistributorProfile(

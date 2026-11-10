@@ -11,15 +11,18 @@ Item _$ItemFromJson(Map<String, dynamic> json) => Item(
   productName: json['productName'] as String?,
   sku: json['sku'] as String?,
   unit: json['unit'] as String?,
-  imageUrl: json['imageUrl'] as String?,
-  manufacturerName: json['manufacturerName'] as String?,
-  minimumOrderQuantity: (json['minimumOrderQuantity'] as num?)?.toInt(),
   quantity: (json['quantity'] as num?)?.toInt(),
   unitPrice: (json['unitPrice'] as num?)?.toDouble(),
   lineTotal: (json['lineTotal'] as num?)?.toDouble(),
   distributorId: json['distributorId'] as String?,
   distributorName: json['distributorName'] as String?,
   orderItemId: json['orderItemId'] as String?,
+  imageUrl: json['imageUrl'] as String?,
+  manufacturerName: json['manufacturerName'] as String?,
+  minimumOrderQuantity: (json['minimumOrderQuantity'] as num?)?.toInt(),
+  fulfillmentTimeline: (json['fulfillmentTimeline'] as List<dynamic>?)
+      ?.map((e) => FulfillmentTimeline.fromJson(e as Map<String, dynamic>))
+      .toList(),
 );
 
 Map<String, dynamic> _$ItemToJson(Item instance) => <String, dynamic>{
@@ -36,4 +39,5 @@ Map<String, dynamic> _$ItemToJson(Item instance) => <String, dynamic>{
   'manufacturerName': instance.manufacturerName,
   'minimumOrderQuantity': instance.minimumOrderQuantity,
   'imageUrl': instance.imageUrl,
+  'fulfillmentTimeline': instance.fulfillmentTimeline,
 };

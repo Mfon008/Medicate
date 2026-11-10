@@ -27,6 +27,18 @@ Deliveries _$DeliveriesFromJson(Map<String, dynamic> json) => Deliveries(
   deliveryBreakdown: (json['deliveryBreakdown'] as List<dynamic>?)
       ?.map((e) => DeliveryBreakdown.fromJson(e as Map<String, dynamic>))
       .toList(),
+  fulfillments: (json['fulfillments'] as List<dynamic>?)
+      ?.map((e) => Fulfillments.fromJson(e as Map<String, dynamic>))
+      .toList(),
+  deliveryId: json['deliveryId'] as String?,
+  deliveryNumber: json['deliveryNumber'] as int?,
+  status: json['status'] as String?,
+  statusLabel: json['statusLabel'] as String?,
+  timeline: json['timeline'],
+  fulfillmentTimeline: json['fulfillmentTimeline'],
+  statusCounts: json['statusCounts'] == null
+      ? null
+      : StatusCounts.fromJson(json['statusCounts'] as Map<String, dynamic>),
 );
 
 Map<String, dynamic> _$DeliveriesToJson(Deliveries instance) =>
@@ -47,4 +59,12 @@ Map<String, dynamic> _$DeliveriesToJson(Deliveries instance) =>
       'deliveryFee': instance.deliveryFee,
       'total': instance.total,
       'deliveryBreakdown': instance.deliveryBreakdown,
+      'fulfillments': instance.fulfillments,
+      'deliveryId': instance.deliveryId,
+      'deliveryNumber': instance.deliveryNumber,
+      'status': instance.status,
+      'statusLabel': instance.statusLabel,
+      'timeline': instance.timeline,
+      'fulfillmentTimeline': instance.fulfillmentTimeline,
+      'statusCounts': instance.statusCounts,
     };

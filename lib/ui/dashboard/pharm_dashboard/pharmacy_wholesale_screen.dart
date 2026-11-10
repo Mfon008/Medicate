@@ -230,8 +230,9 @@ class _PharmacyWholesaleScreenState extends State<PharmacyWholesaleScreen> {
                               SizedBox(height: 3.h),
 
                               AutoScrollingText(
-                                text:
-                                    '${model.mapLocationAddressSelected?.lga ?? '${model.getTetantResponseModel?.data?.lga}'}, ${model.mapLocationAddressSelected?.state ?? model.getTetantResponseModel?.data?.state}, ${model.mapLocationAddressSelected?.country ?? '${model.getTetantResponseModel?.data?.country}'}',
+                                text: capitalizeUnderscore(
+                                  '${model.mapLocationAddressSelected?.lga ?? '${model.getTetantResponseModel?.data?.lga}'}, ${model.mapLocationAddressSelected?.state ?? model.getTetantResponseModel?.data?.state}, ${model.mapLocationAddressSelected?.country ?? '${model.getTetantResponseModel?.data?.country}'}',
+                                ),
                                 textStyle: TextStyle(
                                   fontFamily: 'DMSans',
                                   fontSize: 13.20.sp,

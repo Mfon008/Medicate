@@ -2600,7 +2600,7 @@ class ManufacturerViewModel extends BaseViewModel {
           wholesaleOrderId: orderId,
           wholesaleFulfillmentGroupId: wholesaleFulfillmentGroupId,
           rejectEntity: rejectEntity,
-          delivery:delivery
+          delivery: delivery,
         ),
         throwException: true,
       );
@@ -2633,7 +2633,8 @@ class ManufacturerViewModel extends BaseViewModel {
         repositoryImply.returnIncomingOrder(
           wholesaleOrderId: orderId,
           wholesaleFulfillmentGroupId: wholesaleFulfillmentGroupId,
-          returnEntity: rejectEntity,delivery:delivery
+          returnEntity: rejectEntity,
+          delivery: delivery,
         ),
         throwException: true,
       );
@@ -3395,7 +3396,9 @@ class ManufacturerViewModel extends BaseViewModel {
                                           AdvanceFullfillmentEntityModel.fromJson(
                                             {
                                               'requestId': requestId,
-                                              'expectedRevision':int.parse(expectedRevision!)
+                                              'expectedRevision': int.parse(
+                                                expectedRevision!,
+                                              ),
                                             },
                                           ),
                                     );
@@ -3649,7 +3652,10 @@ class ManufacturerViewModel extends BaseViewModel {
                                                 AdvanceFullfillmentEntityModel.fromJson(
                                                   {
                                                     'requestId': requestId,
-                                                    'expectedRevision':int.parse(expectedRevision!),
+                                                    'expectedRevision':
+                                                        int.parse(
+                                                          expectedRevision!,
+                                                        ),
                                                   },
                                                 ),
                                             delivery: delivery,
@@ -3661,7 +3667,6 @@ class ManufacturerViewModel extends BaseViewModel {
                                       if (!dialogContext.mounted) return;
 
                                       if (success) {
-                                        
                                         Navigator.pop(dialogContext);
                                       }
                                     }
@@ -4075,7 +4080,9 @@ class ManufacturerViewModel extends BaseViewModel {
                                           rejectEntity:
                                               AdvanceFullfillmentReasonEntityModel.fromJson({
                                                 "requestId": requestId,
-                                                "expectedRevision":int.parse(expectedRevision!),
+                                                "expectedRevision": int.parse(
+                                                  expectedRevision!,
+                                                ),
                                                 "reason":
                                                     rejectOrderReasonController
                                                         .text

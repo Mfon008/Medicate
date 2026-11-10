@@ -10,6 +10,19 @@ extension StringExtension on String {
   }
 }
 
+String capitalizeUnderscore(String value) {
+  return value
+      .toLowerCase()
+      .replaceAll('_', ' ')
+      .split(' ')
+      .map(
+        (word) => word.isEmpty
+            ? word
+            : '${word[0].toUpperCase()}${word.substring(1)}',
+      )
+      .join(' ');
+}
+
 String formatNaira(num amount) {
   final formatter = NumberFormat.currency(
     locale: 'en_NG',

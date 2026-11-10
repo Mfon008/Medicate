@@ -728,20 +728,29 @@ class ViewOrderManagementScreen extends StatelessWidget {
                                       model
                                           .getIncomingOrderDdetailResponseModel!
                                           .data!
-                                          .order!.deliveries![model.deliveryIndexSplit-1]
+                                          .order!
+                                          .deliveries![model
+                                                  .deliveryIndexSplit -
+                                              1]
                                           .items!
                                           .isNotEmpty)
                                     model
                                                     .getIncomingOrderDdetailResponseModel!
                                                     .data!
-                                                    .order!.deliveries![model.deliveryIndexSplit-1]
+                                                    .order!
+                                                    .deliveries![model
+                                                            .deliveryIndexSplit -
+                                                        1]
                                                     .status!
                                                     .toLowerCase() ==
                                                 'cancelled' ||
                                             model
                                                     .getIncomingOrderDdetailResponseModel!
                                                     .data!
-                                                    .order!.deliveries![model.deliveryIndexSplit-1]
+                                                    .order!
+                                                    .deliveries![model
+                                                            .deliveryIndexSplit -
+                                                        1]
                                                     .status!
                                                     .toLowerCase() ==
                                                 'rejected'
@@ -779,7 +788,10 @@ class ViewOrderManagementScreen extends StatelessWidget {
                                                       model
                                                           .getIncomingOrderDdetailResponseModel!
                                                           .data!
-                                                          .order!.deliveries![model.deliveryIndexSplit-1]
+                                                          .order!
+                                                          .deliveries![model
+                                                                  .deliveryIndexSplit -
+                                                              1]
                                                           .fulfillmentTimeline?[5]
                                                           .note ??
                                                       '',

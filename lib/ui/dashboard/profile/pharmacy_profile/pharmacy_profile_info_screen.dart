@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:medicate_app/core/app_assets/constant.dart';
 import 'package:medicate_app/core/connect_end/model/update_pharmacy_profile_entity_model/update_pharmacy_profile_entity_model.dart';
 import 'package:medicate_app/core/connect_end/view_model/pharm_auth_view_model.dart';
 import 'package:medicate_app/main.dart';
@@ -978,8 +979,9 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                                       ),
                                       SizedBox(height: 5.2.h),
                                       TextView(
-                                        text:
-                                            '${o.lga}, ${o.state} State, ${o.country}',
+                                        text: capitalizeUnderscore(
+                                          '${o.lga}, ${o.state} State, ${o.country}',
+                                        ),
                                         textStyle: TextStyle(
                                           fontSize: 12.86.sp,
                                           fontWeight: FontWeight.w400,

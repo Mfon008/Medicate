@@ -1,5 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:medicate_app/core/connect_end/model/get_wholesale_order_response_model/fulfillments/fulfillments.dart';
 
+import '../status_counts.dart';
 import 'delivery_breakdown.dart';
 import 'item.dart';
 
@@ -22,6 +24,14 @@ class Deliveries {
   double? subtotal;
   int? deliveryFee;
   double? total;
+  String? deliveryId;
+  int? deliveryNumber;
+  String? status;
+  String? statusLabel;
+  StatusCounts? statusCounts;
+  List<Fulfillments>? fulfillments;
+  dynamic timeline;
+  dynamic fulfillmentTimeline;
   List<DeliveryBreakdown>? deliveryBreakdown;
 
   Deliveries({
@@ -41,6 +51,15 @@ class Deliveries {
     this.deliveryFee,
     this.total,
     this.deliveryBreakdown,
+
+    this.deliveryId,
+    this.deliveryNumber,
+    this.status,
+    this.statusCounts,
+    this.statusLabel,
+    this.fulfillments,
+    this.timeline,
+    this.fulfillmentTimeline,
   });
 
   factory Deliveries.fromJson(Map<String, dynamic> json) {

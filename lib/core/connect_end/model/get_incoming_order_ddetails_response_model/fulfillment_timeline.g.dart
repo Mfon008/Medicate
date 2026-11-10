@@ -8,8 +8,8 @@ part of 'fulfillment_timeline.dart';
 
 FulfillmentTimeline _$FulfillmentTimelineFromJson(Map<String, dynamic> json) =>
     FulfillmentTimeline(
-      note: json['note'] as String?,
       status: json['status'] as String?,
+      note: json['note'] as String?,
       label: json['label'] as String?,
       current: json['current'] as bool?,
       completed: json['completed'] as bool?,

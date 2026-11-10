@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:medicate_app/core/config/colors.dart';
 import 'package:medicate_app/ui/widget/text.dart';
+import '../../../../../core/app_assets/constant.dart';
 import '../../../../../core/app_assets/image.dart';
 import '../../../../../core/connect_end/view_model/pharm_auth_view_model.dart';
 import '../../../../widget/info_item_widget.dart';
@@ -350,8 +351,9 @@ class _LevelOneCardState extends State<LevelOneCard> {
                                               ),
                                               SizedBox(height: 5.2.h),
                                               TextView(
-                                                text:
-                                                    '${o.lga}, ${o.state} State, ${o.country}',
+                                                text: capitalizeUnderscore(
+                                                  '${o.lga}, ${o.state} State, ${o.country}',
+                                                ),
                                                 textStyle: TextStyle(
                                                   fontSize: 12.86.sp,
                                                   fontWeight: FontWeight.w400,

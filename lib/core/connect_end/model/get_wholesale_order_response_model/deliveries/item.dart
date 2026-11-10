@@ -1,5 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import '../fulfillments/fulfillment_timeline.dart';
+
 part 'item.g.dart';
 
 @JsonSerializable()
@@ -17,6 +19,7 @@ class Item {
   String? manufacturerName;
   int? minimumOrderQuantity;
   String? imageUrl;
+  List<FulfillmentTimeline>? fulfillmentTimeline;
 
   Item({
     this.productId,
@@ -31,7 +34,8 @@ class Item {
     this.orderItemId,
     this.imageUrl,
     this.manufacturerName,
-    this.minimumOrderQuantity
+    this.minimumOrderQuantity,
+    this.fulfillmentTimeline,
   });
 
   factory Item.fromJson(Map<String, dynamic> json) => _$ItemFromJson(json);

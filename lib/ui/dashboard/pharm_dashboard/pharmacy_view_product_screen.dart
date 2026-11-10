@@ -569,6 +569,375 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                 ],
                               ),
                             ),
+                            SizedBox(height: 10.h),
+                            Divider(color: AppColors.infoGrey1),
+                            SizedBox(height: 5.10.h),
+
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                TextView(
+                                  text: 'Quantity',
+                                  textStyle: TextStyle(
+                                    fontFamily: 'GoogleSans',
+                                    fontSize: 19.80.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors.black,
+                                  ),
+                                ),
+                                Spacer(),
+                                Container(
+                                  height: 44.0.h,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(7.92.r),
+                                    border: Border.all(
+                                      color: const Color.fromARGB(
+                                        255,
+                                        236,
+                                        237,
+                                        237,
+                                      ),
+                                    ),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      IconButton(
+                                        onPressed:
+                                            model
+                                                    .getSingleMarketProductResponseModel!
+                                                    .data!
+                                                    .product!
+                                                    .minimumOrderQuantity! <=
+                                                model.productSinglequantity!
+                                            ? () {}
+                                            : () {
+                                                model
+                                                        .getSingleMarketProductResponseModel!
+                                                        .data!
+                                                        .product!
+                                                        .minimumOrderQuantity =
+                                                    model
+                                                        .getSingleMarketProductResponseModel!
+                                                        .data!
+                                                        .product!
+                                                        .minimumOrderQuantity! -
+                                                    1;
+                                                model.notifyListeners();
+                                              },
+                                        icon: Icon(
+                                          Icons.remove,
+                                          size: 14.0.sp,
+                                          color:
+                                              model
+                                                      .getSingleMarketProductResponseModel!
+                                                      .data!
+                                                      .product!
+                                                      .minimumOrderQuantity! <=
+                                                  model.productSinglequantity!
+                                              ? AppColors.infoGrey
+                                              : AppColors.reminder,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: model.isQuantityTapp == true
+                                            ? 10.w
+                                            : 20.w,
+                                      ),
+                                      model.isQuantityTapp == true
+                                          ? SizedBox(
+                                              width: 45.w,
+                                              height: 45.h,
+                                              child: Center(
+                                                child: Form(
+                                                  key: model
+                                                      .quantityValueFormKey,
+                                                  child: TextFormField(
+                                                    textAlign: TextAlign.center,
+                                                    keyboardType:
+                                                        TextInputType.number,
+                                                    decoration: InputDecoration(
+                                                      isDense: true,
+                                                      contentPadding:
+                                                          EdgeInsets.zero,
+                                                      border: OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                              5.r,
+                                                            ),
+                                                      ),
+                                                    ),
+                                                    controller: model
+                                                        .quantityValueController,
+                                                    showCursor: false,
+                                                    validator:
+                                                        AppValidator.validateIntProductQuantity(),
+                                                    onChanged: (value) {
+                                                      if (value.isNotEmpty) {
+                                                        model
+                                                                .getSingleMarketProductResponseModel!
+                                                                .data!
+                                                                .product!
+                                                                .minimumOrderQuantity =
+                                                            int.parse(value);
+
+                                                        model.notifyListeners();
+                                                      }
+                                                    },
+                                                  ),
+                                                ),
+                                              ),
+                                            )
+                                          : GestureDetector(
+                                              onTap: () {
+                                                model.isQuantityTapp = true;
+                                                model.notifyListeners();
+                                              },
+                                              child: TextView(
+                                                text:
+                                                    '${model.getSingleMarketProductResponseModel!.data!.product!.minimumOrderQuantity ?? 0}',
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'GoogleSans',
+                                                  fontSize: 14.80.sp,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: AppColors.reminder,
+                                                ),
+                                              ),
+                                            ),
+                                      SizedBox(
+                                        width: model.isQuantityTapp == true
+                                            ? 10.w
+                                            : 20.w,
+                                      ),
+                                      IconButton(
+                                        onPressed: () {
+                                          model
+                                                  .getSingleMarketProductResponseModel!
+                                                  .data!
+                                                  .product!
+                                                  .minimumOrderQuantity =
+                                              model
+                                                  .getSingleMarketProductResponseModel!
+                                                  .data!
+                                                  .product!
+                                                  .minimumOrderQuantity! +
+                                              1;
+                                          model.notifyListeners();
+                                        },
+                                        icon: Icon(
+                                          Icons.add,
+                                          size: 14.0.sp,
+                                          color: AppColors.reminder,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 20.h),
+                            Container(
+                              width: double.infinity,
+                              padding: EdgeInsets.symmetric(
+                                vertical: 10.w,
+                                horizontal: 12.40.w,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppColors.grey,
+                                border: Border.all(color: AppColors.infoGrey1),
+                                borderRadius: BorderRadius.circular(8.0.r),
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  TextView(
+                                    text: 'Line total',
+                                    textStyle: TextStyle(
+                                      fontFamily: 'GoogleSans',
+                                      fontSize: 14.90.sp,
+                                      fontWeight: FontWeight.w300,
+                                      color: AppColors.black,
+                                    ),
+                                  ),
+                                  TextView(
+                                    text: formatNaira(
+                                      model.getLineTotal(
+                                        model
+                                            .getSingleMarketProductResponseModel!
+                                            .data!
+                                            .product!,
+                                      ),
+                                    ),
+                                    textStyle: TextStyle(
+                                      fontFamily: 'GoogleSans',
+                                      fontSize: 22.40.sp,
+                                      fontWeight: FontWeight.w500,
+                                      color: AppColors.black,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: 20.h),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      if (model.isQuantityTapp == true) {
+                                        final value = model
+                                            .quantityValueController
+                                            .text
+                                            .trim();
+                                        if (value.isEmpty) {
+                                          return;
+                                        }
+                                        // Validate the field
+                                        if (!(model
+                                                .quantityValueFormKey
+                                                .currentState
+                                                ?.validate() ??
+                                            false)) {
+                                          return;
+                                        }
+
+                                        model
+                                                .getSingleMarketProductResponseModel!
+                                                .data!
+                                                .product!
+                                                .minimumOrderQuantity =
+                                            int.tryParse(value) ?? 0;
+
+                                        // Do nothing if the parsed quantity is invalid/zero
+                                        if (model
+                                                .getSingleMarketProductResponseModel!
+                                                .data!
+                                                .product!
+                                                .minimumOrderQuantity! <=
+                                            0) {
+                                          return;
+                                        }
+                                      }
+                                      model.addWholesaleProductToCart(
+                                        context,
+                                        wholesaleAddToCart:
+                                            WholesaleAddToCartEntityModel(
+                                              productId: model
+                                                  .getSingleMarketProductResponseModel!
+                                                  .data!
+                                                  .product!
+                                                  .id,
+                                              quantity: model
+                                                  .getSingleMarketProductResponseModel!
+                                                  .data!
+                                                  .product!
+                                                  .minimumOrderQuantity,
+                                            ),
+                                      );
+                                      model.notifyListeners();
+                                    },
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: 10.w,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: AppColors.primary,
+                                          width: 1.42,
+                                        ),
+                                        borderRadius: BorderRadius.circular(
+                                          40.r,
+                                        ),
+                                      ),
+                                      child: model.isLoading
+                                          ? SpinKitRing(
+                                              color: AppColors.primary1,
+                                              size: 22.0.sp,
+                                              lineWidth: 2,
+                                            )
+                                          : Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                SvgPicture.asset(
+                                                  AppImage.cart,
+                                                  height: isTablet(context)
+                                                      ? 38.40.h
+                                                      : 20.h,
+                                                  width: isTablet(context)
+                                                      ? 38.40.w
+                                                      : 20.w,
+                                                  color: AppColors.primary,
+                                                ),
+                                                SizedBox(width: 7.10.w),
+                                                TextView(
+                                                  text: 'Add to Cart',
+                                                  textStyle: TextStyle(
+                                                    fontFamily: 'GoogleSans',
+                                                    fontSize: 16.90.sp,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: AppColors.primary,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                    ),
+                                  ),
+                                ),
+
+                                SizedBox(width: 12.w),
+
+                                Expanded(
+                                  child: GestureDetector(
+                                    onTap: () async {
+                                      await model.addWholesaleProductToCart(
+                                        context,
+                                        wholesaleAddToCart:
+                                            WholesaleAddToCartEntityModel(
+                                              productId: model
+                                                  .getSingleMarketProductResponseModel!
+                                                  .data!
+                                                  .product!
+                                                  .id,
+                                              quantity: model
+                                                  .getSingleMarketProductResponseModel!
+                                                  .data!
+                                                  .product!
+                                                  .minimumOrderQuantity,
+                                            ),
+                                      );
+                                      navigate.navigateTo(
+                                        Routes.pharmacyWholeSaleCheckout,
+                                      );
+                                    },
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: 10.w,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: AppColors.primary,
+                                        borderRadius: BorderRadius.circular(
+                                          40.r,
+                                        ),
+                                      ),
+                                      child: TextView(
+                                        text: 'Buy Now',
+                                        textStyle: TextStyle(
+                                          fontFamily: 'GoogleSans',
+                                          fontSize: 16.90.sp,
+                                          fontWeight: FontWeight.w400,
+                                          color: AppColors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 10.h),
+
                             model
                                             .getSingleMarketProductResponseModel!
                                             .data!
@@ -1059,373 +1428,7 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                 ],
                               ),
                             ),
-                            SizedBox(height: 10.h),
-                            Divider(color: AppColors.infoGrey1),
-                            SizedBox(height: 5.10.h),
 
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                TextView(
-                                  text: 'Quantity',
-                                  textStyle: TextStyle(
-                                    fontFamily: 'GoogleSans',
-                                    fontSize: 19.80.sp,
-                                    fontWeight: FontWeight.w500,
-                                    color: AppColors.black,
-                                  ),
-                                ),
-                                Spacer(),
-                                Container(
-                                  height: 44.0.h,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(7.92.r),
-                                    border: Border.all(
-                                      color: const Color.fromARGB(
-                                        255,
-                                        236,
-                                        237,
-                                        237,
-                                      ),
-                                    ),
-                                  ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      IconButton(
-                                        onPressed:
-                                            model
-                                                    .getSingleMarketProductResponseModel!
-                                                    .data!
-                                                    .product!
-                                                    .minimumOrderQuantity! <=
-                                                model.productSinglequantity!
-                                            ? () {}
-                                            : () {
-                                                model
-                                                        .getSingleMarketProductResponseModel!
-                                                        .data!
-                                                        .product!
-                                                        .minimumOrderQuantity =
-                                                    model
-                                                        .getSingleMarketProductResponseModel!
-                                                        .data!
-                                                        .product!
-                                                        .minimumOrderQuantity! -
-                                                    1;
-                                                model.notifyListeners();
-                                              },
-                                        icon: Icon(
-                                          Icons.remove,
-                                          size: 14.0.sp,
-                                          color:
-                                              model
-                                                      .getSingleMarketProductResponseModel!
-                                                      .data!
-                                                      .product!
-                                                      .minimumOrderQuantity! <=
-                                                  model.productSinglequantity!
-                                              ? AppColors.infoGrey
-                                              : AppColors.reminder,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: model.isQuantityTapp == true
-                                            ? 10.w
-                                            : 20.w,
-                                      ),
-                                      model.isQuantityTapp == true
-                                          ? SizedBox(
-                                              width: 45.w,
-                                              height: 45.h,
-                                              child: Center(
-                                                child: Form(
-                                                  key: model
-                                                      .quantityValueFormKey,
-                                                  child: TextFormField(
-                                                    textAlign: TextAlign.center,
-                                                    keyboardType:
-                                                        TextInputType.number,
-                                                    decoration: InputDecoration(
-                                                      isDense: true,
-                                                      contentPadding:
-                                                          EdgeInsets.zero,
-                                                      border: OutlineInputBorder(
-                                                        borderRadius:
-                                                            BorderRadius.circular(
-                                                              5.r,
-                                                            ),
-                                                      ),
-                                                    ),
-                                                    controller: model
-                                                        .quantityValueController,
-                                                    showCursor: false,
-                                                    validator:
-                                                        AppValidator.validateIntProductQuantity(),
-                                                    onChanged: (value) {
-                                                      if (value.isNotEmpty) {
-                                                        model
-                                                                .getSingleMarketProductResponseModel!
-                                                                .data!
-                                                                .product!
-                                                                .minimumOrderQuantity =
-                                                            int.parse(value);
-
-                                                        model.notifyListeners();
-                                                      }
-                                                    },
-                                                  ),
-                                                ),
-                                              ),
-                                            )
-                                          : GestureDetector(
-                                              onTap: () {
-                                                model.isQuantityTapp = true;
-                                                model.notifyListeners();
-                                              },
-                                              child: TextView(
-                                                text:
-                                                    '${model.getSingleMarketProductResponseModel!.data!.product!.minimumOrderQuantity ?? 0}',
-                                                textStyle: TextStyle(
-                                                  fontFamily: 'GoogleSans',
-                                                  fontSize: 14.80.sp,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: AppColors.reminder,
-                                                ),
-                                              ),
-                                            ),
-                                      SizedBox(
-                                        width: model.isQuantityTapp == true
-                                            ? 10.w
-                                            : 20.w,
-                                      ),
-                                      IconButton(
-                                        onPressed: () {
-                                          model
-                                                  .getSingleMarketProductResponseModel!
-                                                  .data!
-                                                  .product!
-                                                  .minimumOrderQuantity =
-                                              model
-                                                  .getSingleMarketProductResponseModel!
-                                                  .data!
-                                                  .product!
-                                                  .minimumOrderQuantity! +
-                                              1;
-                                          model.notifyListeners();
-                                        },
-                                        icon: Icon(
-                                          Icons.add,
-                                          size: 14.0.sp,
-                                          color: AppColors.reminder,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 20.h),
-                            Container(
-                              width: double.infinity,
-                              padding: EdgeInsets.symmetric(
-                                vertical: 10.w,
-                                horizontal: 12.40.w,
-                              ),
-                              decoration: BoxDecoration(
-                                color: AppColors.grey,
-                                border: Border.all(color: AppColors.infoGrey1),
-                                borderRadius: BorderRadius.circular(8.0.r),
-                              ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  TextView(
-                                    text: 'Line total',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'GoogleSans',
-                                      fontSize: 14.90.sp,
-                                      fontWeight: FontWeight.w300,
-                                      color: AppColors.black,
-                                    ),
-                                  ),
-                                  TextView(
-                                    text: formatNaira(
-                                      model.getLineTotal(
-                                        model
-                                            .getSingleMarketProductResponseModel!
-                                            .data!
-                                            .product!,
-                                      ),
-                                    ),
-                                    textStyle: TextStyle(
-                                      fontFamily: 'GoogleSans',
-                                      fontSize: 22.40.sp,
-                                      fontWeight: FontWeight.w500,
-                                      color: AppColors.black,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(height: 20.h),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      if (model.isQuantityTapp == true) {
-                                        final value = model
-                                            .quantityValueController
-                                            .text
-                                            .trim();
-                                        if (value.isEmpty) {
-                                          return;
-                                        }
-                                        // Validate the field
-                                        if (!(model
-                                                .quantityValueFormKey
-                                                .currentState
-                                                ?.validate() ??
-                                            false)) {
-                                          return;
-                                        }
-
-                                        model
-                                                .getSingleMarketProductResponseModel!
-                                                .data!
-                                                .product!
-                                                .minimumOrderQuantity =
-                                            int.tryParse(value) ?? 0;
-
-                                        // Do nothing if the parsed quantity is invalid/zero
-                                        if (model
-                                                .getSingleMarketProductResponseModel!
-                                                .data!
-                                                .product!
-                                                .minimumOrderQuantity! <=
-                                            0) {
-                                          return;
-                                        }
-                                      }
-                                      model.addWholesaleProductToCart(
-                                        context,
-                                        wholesaleAddToCart:
-                                            WholesaleAddToCartEntityModel(
-                                              productId: model
-                                                  .getSingleMarketProductResponseModel!
-                                                  .data!
-                                                  .product!
-                                                  .id,
-                                              quantity: model
-                                                  .getSingleMarketProductResponseModel!
-                                                  .data!
-                                                  .product!
-                                                  .minimumOrderQuantity,
-                                            ),
-                                      );
-                                      model.notifyListeners();
-                                    },
-                                    child: Container(
-                                      padding: EdgeInsets.symmetric(
-                                        vertical: 10.w,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: AppColors.primary,
-                                          width: 1.42,
-                                        ),
-                                        borderRadius: BorderRadius.circular(
-                                          40.r,
-                                        ),
-                                      ),
-                                      child: model.isLoading
-                                          ? SpinKitRing(
-                                              color: AppColors.primary1,
-                                              size: 22.0.sp,
-                                              lineWidth: 2,
-                                            )
-                                          : Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                SvgPicture.asset(
-                                                  AppImage.cart,
-                                                  height: isTablet(context)
-                                                      ? 38.40.h
-                                                      : 20.h,
-                                                  width: isTablet(context)
-                                                      ? 38.40.w
-                                                      : 20.w,
-                                                  color: AppColors.primary,
-                                                ),
-                                                SizedBox(width: 7.10.w),
-                                                TextView(
-                                                  text: 'Add to Cart',
-                                                  textStyle: TextStyle(
-                                                    fontFamily: 'GoogleSans',
-                                                    fontSize: 16.90.sp,
-                                                    fontWeight: FontWeight.w400,
-                                                    color: AppColors.primary,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                    ),
-                                  ),
-                                ),
-
-                                SizedBox(width: 12.w),
-
-                                Expanded(
-                                  child: GestureDetector(
-                                    onTap: () async {
-                                      await model.addWholesaleProductToCart(
-                                        context,
-                                        wholesaleAddToCart:
-                                            WholesaleAddToCartEntityModel(
-                                              productId: model
-                                                  .getSingleMarketProductResponseModel!
-                                                  .data!
-                                                  .product!
-                                                  .id,
-                                              quantity: model
-                                                  .getSingleMarketProductResponseModel!
-                                                  .data!
-                                                  .product!
-                                                  .minimumOrderQuantity,
-                                            ),
-                                      );
-                                      navigate.navigateTo(
-                                        Routes.pharmacyWholeSaleCheckout,
-                                      );
-                                    },
-                                    child: Container(
-                                      alignment: Alignment.center,
-                                      padding: EdgeInsets.symmetric(
-                                        vertical: 10.w,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: AppColors.primary,
-                                        borderRadius: BorderRadius.circular(
-                                          40.r,
-                                        ),
-                                      ),
-                                      child: TextView(
-                                        text: 'Buy Now',
-                                        textStyle: TextStyle(
-                                          fontFamily: 'GoogleSans',
-                                          fontSize: 16.90.sp,
-                                          fontWeight: FontWeight.w400,
-                                          color: AppColors.white,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
                             SizedBox(height: 16.h),
                             Container(
                               padding: EdgeInsets.symmetric(

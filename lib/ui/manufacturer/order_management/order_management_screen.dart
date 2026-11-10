@@ -50,7 +50,6 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
   String adStats = '';
   String? requestId;
 
-
   @override
   Widget build(BuildContext context) {
     bool isTablet(BuildContext context) =>
@@ -348,8 +347,9 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
                                   Routes.viewOrderManagementScreen,
                                   arguments: ViewOrderManagementScreenArguments(
                                     id: ord.id.toString(),
-                                    wholesaleGroupId: ord.fulfillmentGroupId.toString(),
-                                    requestId: requestId
+                                    wholesaleGroupId: ord.fulfillmentGroupId
+                                        .toString(),
+                                    requestId: requestId,
                                   ),
                                 ),
                                 child: Container(
@@ -958,7 +958,10 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
                               context: context,
                               orderId: order!.id,
                               wholesaleGroupId: order.fulfillmentGroupId,
-                              delivery: order.deliveries![model.deliveryIndexSplit-1].deliveryNumber.toString(),
+                              delivery: order
+                                  .deliveries![model.deliveryIndexSplit - 1]
+                                  .deliveryNumber
+                                  .toString(),
                               requestId: requestId,
                               expectedRevision: order.revision.toString(),
                               text: e,

@@ -20160,8 +20160,9 @@ class PharmViewModel extends BaseViewModel {
                                                 SizedBox(height: 3.h),
 
                                                 AutoScrollingText(
-                                                  text:
-                                                      '${e.lga}, ${e.state}, ${e.country}',
+                                                  text: capitalizeUnderscore(
+                                                    '${e.lga}, ${e.state}, ${e.country}',
+                                                  ),
                                                   textStyle: TextStyle(
                                                     fontFamily: 'DMSans',
                                                     fontSize: 13.20.sp,
