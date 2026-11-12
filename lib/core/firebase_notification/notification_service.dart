@@ -34,7 +34,6 @@ class NotificationService {
   final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
   void handleMessage(RemoteMessage? message) {
-    print('serious fb ${message?.data}');
     if (message == null) return;
     navigate.navigateTo(
       Routes.dashboard,
@@ -65,7 +64,6 @@ class NotificationService {
   }) async {
     final String? payload = notificationResponse.payload;
     if (notificationResponse.payload != null) {
-      print('notification payload: $payload');
       final message = RemoteMessage.fromMap(jsonDecode(payload!));
       handleMessage(message);
     }
@@ -115,27 +113,19 @@ class NotificationService {
       badge: true,
       sound: true,
     );
-    print('settings.authorizationStatus::::: ${settings.authorizationStatus}');
 
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      print('User granted permission');
       await _fm.setAutoInitEnabled(true);
 
       // Get APNs token (iOS only)
       String? apnsToken = await _fm.getAPNSToken();
       if (apnsToken != null) {
-        print("APNs Token: $apnsToken");
       } else {
-        print(
-          "APNs token is still null. Ensure push notifications are enabled.",
-        );
       }
 
       // Get FCM token
-      String? fcmToken = await _fm.getToken();
-      print("FCM Token: $fcmToken");
+      // String? fcmToken = await _fm.getToken();
     } else {
-      print('User declined or has not accepted notification permissions');
     }
   }
 

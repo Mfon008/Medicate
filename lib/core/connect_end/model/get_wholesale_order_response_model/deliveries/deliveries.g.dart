@@ -27,44 +27,49 @@ Deliveries _$DeliveriesFromJson(Map<String, dynamic> json) => Deliveries(
   deliveryBreakdown: (json['deliveryBreakdown'] as List<dynamic>?)
       ?.map((e) => DeliveryBreakdown.fromJson(e as Map<String, dynamic>))
       .toList(),
-  fulfillments: (json['fulfillments'] as List<dynamic>?)
-      ?.map((e) => Fulfillments.fromJson(e as Map<String, dynamic>))
-      .toList(),
+  estimatedDeliveryDate: json['estimatedDeliveryDate'] == null
+      ? null
+      : DateTime.parse(json['estimatedDeliveryDate'] as String),
   deliveryId: json['deliveryId'] as String?,
-  deliveryNumber: json['deliveryNumber'] as int?,
+  deliveryNumber: (json['deliveryNumber'] as num?)?.toInt(),
   status: json['status'] as String?,
-  statusLabel: json['statusLabel'] as String?,
-  timeline: json['timeline'],
-  fulfillmentTimeline: json['fulfillmentTimeline'],
   statusCounts: json['statusCounts'] == null
       ? null
       : StatusCounts.fromJson(json['statusCounts'] as Map<String, dynamic>),
+  statusLabel: json['statusLabel'] as String?,
+  fulfillments: (json['fulfillments'] as List<dynamic>?)
+      ?.map((e) => Fulfillments.fromJson(e as Map<String, dynamic>))
+      .toList(),
+  timeline: json['timeline'],
+  fulfillmentTimeline: json['fulfillmentTimeline'],
 );
 
-Map<String, dynamic> _$DeliveriesToJson(Deliveries instance) =>
-    <String, dynamic>{
-      'deliveryAddressId': instance.deliveryAddressId,
-      'deliveryAddress': instance.deliveryAddress,
-      'country': instance.country,
-      'state': instance.state,
-      'lga': instance.lga,
-      'stateCode': instance.stateCode,
-      'lgaCode': instance.lgaCode,
-      'recipientName': instance.recipientName,
-      'contactPhone': instance.contactPhone,
-      'recipientIdType': instance.recipientIdType,
-      'orderNotes': instance.orderNotes,
-      'items': instance.items,
-      'subtotal': instance.subtotal,
-      'deliveryFee': instance.deliveryFee,
-      'total': instance.total,
-      'deliveryBreakdown': instance.deliveryBreakdown,
-      'fulfillments': instance.fulfillments,
-      'deliveryId': instance.deliveryId,
-      'deliveryNumber': instance.deliveryNumber,
-      'status': instance.status,
-      'statusLabel': instance.statusLabel,
-      'timeline': instance.timeline,
-      'fulfillmentTimeline': instance.fulfillmentTimeline,
-      'statusCounts': instance.statusCounts,
-    };
+Map<String, dynamic> _$DeliveriesToJson(
+  Deliveries instance,
+) => <String, dynamic>{
+  'deliveryAddressId': instance.deliveryAddressId,
+  'deliveryAddress': instance.deliveryAddress,
+  'country': instance.country,
+  'state': instance.state,
+  'lga': instance.lga,
+  'stateCode': instance.stateCode,
+  'lgaCode': instance.lgaCode,
+  'recipientName': instance.recipientName,
+  'contactPhone': instance.contactPhone,
+  'recipientIdType': instance.recipientIdType,
+  'orderNotes': instance.orderNotes,
+  'items': instance.items,
+  'subtotal': instance.subtotal,
+  'deliveryFee': instance.deliveryFee,
+  'total': instance.total,
+  'deliveryId': instance.deliveryId,
+  'deliveryNumber': instance.deliveryNumber,
+  'status': instance.status,
+  'statusLabel': instance.statusLabel,
+  'statusCounts': instance.statusCounts,
+  'fulfillments': instance.fulfillments,
+  'timeline': instance.timeline,
+  'fulfillmentTimeline': instance.fulfillmentTimeline,
+  'estimatedDeliveryDate': instance.estimatedDeliveryDate?.toIso8601String(),
+  'deliveryBreakdown': instance.deliveryBreakdown,
+};

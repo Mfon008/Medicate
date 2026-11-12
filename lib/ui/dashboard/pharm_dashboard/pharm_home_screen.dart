@@ -298,6 +298,8 @@ class _PharmacyHomeScreenState extends State<PharmacyHomeScreen> {
                               child: SvgPicture.asset(
                                 AppImage.search,
                                 color: AppColors.infoGrey,
+                                height: 20.h,
+                                width: 20.w,
                               ),
                             ),
                             borderBottomLeft: 12,

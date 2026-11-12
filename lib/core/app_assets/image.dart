@@ -18,8 +18,11 @@ class AppImage {
   static const String order_summary = 'assets/svgs/order_summary.svg';
   static const String search = 'assets/svgs/search.svg';
   static const String time = 'assets/svgs/time.svg';
+  static const String ref_clip = 'assets/svgs/ref_clip.svg';
+  static const String direction_img = 'assets/svgs/direction_img.svg';
   static const String manu_order = 'assets/svgs/manu_order.svg';
   static const String earth = 'assets/svgs/earth.svg';
+  static const String permission = 'assets/svgs/permission.svg';
   static const String not_sym = 'assets/svgs/not_symbol.svg';
   static const String remove_product = 'assets/svgs/remove_product.svg';
   static const String pending_meds = 'assets/svgs/pending_meds.svg';

@@ -139,6 +139,8 @@ import '../../../ui/dashboard/profile/wallet/wallet_screen.dart';
 import '../../../ui/dashboard/reminder/payment_status_screen.dart';
 import '../../../ui/dashboard/reminder/view_medication_screen.dart';
 import '../../../ui/dashboard/support/support_screen.dart';
+import '../../../ui/fulfilment/dashboard_screen.dart';
+import '../../../ui/fulfilment/view_order_screen.dart';
 import '../../../ui/manufacturer/manufacturer_view_product_screen.dart';
 import '../../../ui/manufacturer/order_management/view_order_management_screen.dart';
 import '../../../ui/manufacturer/overview_dashboard.dart';
@@ -320,6 +322,8 @@ import '../network/support_network_service.dart';
     MaterialRoute(page: ManufacturerSettingScreen),
     MaterialRoute(page: DistributorKycScreen),
     MaterialRoute(page: PharmacyWholesaleCategoryScreen),
+    MaterialRoute(page: FulfilmentDashboard),
+    MaterialRoute(page: ViewOrderScreen),
     CustomRoute(
       page: NotificationScreen,
       transitionsBuilder: TransitionsBuilders.slideLeft,

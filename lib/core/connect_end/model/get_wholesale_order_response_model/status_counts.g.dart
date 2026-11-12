@@ -6,14 +6,13 @@ part of 'status_counts.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-StatusCounts _$StatusCountsFromJson(Map<String, dynamic> json) =>
-    StatusCounts(
-      pending: (json['PENDING'] as num?)?.toInt(),
-      confirmed: (json['CONFIRMED'] as num?)?.toInt(),
-      );
+StatusCounts _$StatusCountsFromJson(Map<String, dynamic> json) => StatusCounts(
+  pending: (json['PENDING'] as num?)?.toInt(),
+  confirmed: (json['CONFIRMED'] as num?)?.toInt(),
+);
 
 Map<String, dynamic> _$StatusCountsToJson(StatusCounts instance) =>
     <String, dynamic>{
+      'CONFIRMED': instance.confirmed,
       'PENDING': instance.pending,
-      'CONFIRMED': instance.confirmed
-      };
+    };

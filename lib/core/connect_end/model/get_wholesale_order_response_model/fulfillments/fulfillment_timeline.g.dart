@@ -12,7 +12,7 @@ FulfillmentTimeline _$FulfillmentTimelineFromJson(Map<String, dynamic> json) =>
       label: json['label'] as String?,
       current: json['current'] as bool?,
       completed: json['completed'] as bool?,
-      occurredAt: json['occurredAt']
+      occurredAt: json['occurredAt'],
     );
 
 Map<String, dynamic> _$FulfillmentTimelineToJson(

@@ -32,6 +32,7 @@ class Deliveries {
   List<Fulfillments>? fulfillments;
   dynamic timeline;
   dynamic fulfillmentTimeline;
+  DateTime? estimatedDeliveryDate;
   List<DeliveryBreakdown>? deliveryBreakdown;
 
   Deliveries({
@@ -51,7 +52,7 @@ class Deliveries {
     this.deliveryFee,
     this.total,
     this.deliveryBreakdown,
-
+    this.estimatedDeliveryDate,
     this.deliveryId,
     this.deliveryNumber,
     this.status,
